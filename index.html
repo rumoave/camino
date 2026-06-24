@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#5b5bd6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Camino">
+<title>Camino — Path to U.S. Citizenship</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='42' fill='%2358cc02'/><text x='96' y='132' font-size='110' text-anchor='middle' fill='white' font-family='-apple-system,sans-serif' font-weight='900'>C</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:opsz,wght@9..144,600;9..144,800;9..144,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="stage">
+<div class="phone">
+  <div class="screen">
+    <div class="notch"></div>
+
+    <!-- ===== ONBOARDING ===== -->
+    <div class="view" id="onboarding">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="onbTopbar">
+        <button class="onbBack" id="onbBack" onclick="onbBack()" type="button">←</button>
+        <div class="onbProgress"><div class="onbProgressFill" id="onbProgressFill"></div></div>
+        <button class="onbSkipLink" onclick="useDemoData()" type="button">Demo</button>
+      </div>
+      <div class="body onbBody" id="onbBody"><div class="onbStep" id="onbStep"></div></div>
+      <div class="onbFooter hidden" id="onbFooter"></div>
+    </div>
+
+    <!-- ===== HOME ===== -->
+    <div class="view show" id="home">
+      <div class="status">
+        <span>9:41</span>
+        <span class="ico">
+          <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 2.5c2.2 0 4.2.8 5.7 2.2l1.3-1.4C13.7 1.5 11.2.5 8.5.5S3.3 1.5 1.5 3.3l1.3 1.4C4.3 3.3 6.3 2.5 8.5 2.5z" fill="currentColor"/><path d="M8.5 6c1.2 0 2.3.5 3.1 1.3l1.3-1.4C11.8 4.7 10.2 4 8.5 4S5.2 4.7 4.1 5.9l1.3 1.4C6.2 6.5 7.3 6 8.5 6z" fill="currentColor"/><circle cx="8.5" cy="9.8" r="1.6" fill="currentColor"/></svg>
+          <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/><rect x="23.5" y="4.5" width="1.6" height="4" rx="1" fill="currentColor" fill-opacity=".5"/></svg>
+        </span>
+      </div>
+
+      <div class="body">
+        <div class="hero">
+          <div class="heroTop">
+            <div class="heroText">
+              <div class="hello" id="heroGreeting">Hi 👋</div>
+              <div class="heroName" id="heroName">Hi, María</div>
+              <div class="lang" id="heroLang"></div>
+            </div>
+            <svg class="heroCami" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <!-- Cami the dove -->
+              <ellipse cx="50" cy="62" rx="24" ry="26" fill="#ffffff" stroke="#1d1d22" stroke-width="3"/>
+              <ellipse cx="34" cy="58" rx="11" ry="20" fill="#00b4a8" stroke="#1d1d22" stroke-width="3" transform="rotate(-18 34 58)"/>
+              <circle cx="56" cy="30" r="20" fill="#ffffff" stroke="#1d1d22" stroke-width="3"/>
+              <ellipse cx="63" cy="25" rx="7" ry="9" fill="#ffffff"/>
+              <circle cx="63" cy="27" r="3" fill="#1d1d22"/>
+              <circle cx="64" cy="26" r="1" fill="#ffffff"/>
+              <polygon points="73,32 84,28 73,38" fill="#ff9b21" stroke="#1d1d22" stroke-width="2" stroke-linejoin="round"/>
+              <line x1="44" y1="86" x2="40" y2="94" stroke="#ff9b21" stroke-width="4" stroke-linecap="round"/>
+              <line x1="56" y1="86" x2="60" y2="94" stroke="#ff9b21" stroke-width="4" stroke-linecap="round"/>
+              <path d="M 38 60 Q 42 55 46 60" stroke="#1d1d22" stroke-width="2" fill="none" stroke-linecap="round" opacity=".5"/>
+            </svg>
+          </div>
+          <div class="streakRow">
+            <div class="streakCard">
+              <span class="statIco" id="streakIco"></span>
+              <div class="big"><span id="streakN">0</span></div>
+              <div class="lbl" data-en="Day streak" data-es="Racha">Day streak</div>
+            </div>
+            <div class="streakCard">
+              <span class="statIco" id="xpIco"></span>
+              <div class="big"><span id="xpN">0</span></div>
+              <div class="lbl" data-en="Total XP" data-es="XP total">Total XP</div>
+            </div>
+            <div class="streakCard">
+              <span class="statIco" id="readyIco"></span>
+              <div class="big"><span id="readyN">0%</span></div>
+              <div class="lbl" data-en="Civics ready" data-es="Cívica lista">Civics ready</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pad">
+          <div class="undoBanner" id="undoBanner" style="display:none;"></div>
+          <div class="streakBanner" id="homeStreakRisk" style="display:none;"></div>
+          <div class="sec" data-en="Where you are" data-es="Dónde estás" data-zh="你所在的位置" data-vi="Bạn đang ở đâu">Where you are</div>
+          <div class="jstrip" id="homeJStrip" onclick="go('journey')"></div>
+          <div class="situationCard" id="homeSituationCard" style="display:none;"></div>
+
+          <div class="sec" data-en="Your next step" data-es="Tu próximo paso" data-zh="你的下一步" data-vi="Bước tiếp theo">Your next step</div>
+          <div class="next" id="homeNext"></div>
+
+          <div class="sec" data-en="5 minutes while you wait" data-es="5 minutos mientras esperas" data-zh="等待时的5分钟学习" data-vi="5 phút trong khi chờ">5 minutes while you wait</div>
+          <div class="lesson" id="homeLessonCard" onclick="startCurrentLesson()"></div>
+
+          <div class="sec" data-en="Test yourself" data-es="Pruébate" data-zh="自我测试" data-vi="Tự kiểm tra">Test yourself</div>
+          <div class="mockCard" id="homeMockCard" onclick="startMockTest()"></div>
+
+          <div class="flashcardCard" id="homeFlashcardCard" onclick="startFlashcards()"></div>
+
+          <div class="interviewCard" id="homeInterviewCard" onclick="startInterview()"></div>
+
+          <div class="reviewCard" id="homeReviewCard" onclick="startReviewSession()" style="display:none;"></div>
+
+          <div class="sec" data-en="Good to know" data-es="Bueno saber" data-zh="知道这些有用" data-vi="Cần biết">Good to know</div>
+          <div class="mini">
+            <div class="row" id="homeDocsRow" onclick="go('docs')">
+              <div class="rIco rIcoPlum" data-icon="folder"></div>
+              <div class="rMain"><div class="rTitle"></div><div class="rSub"></div></div>
+              <div class="chev"></div>
+            </div>
+            <div class="row" id="homeDatesRow" onclick="go('dates')">
+              <div class="rIco rIcoSky" data-icon="calendar"></div>
+              <div class="rMain"><div class="rTitle"></div><div class="rSub"></div></div>
+              <div class="chev"></div>
+            </div>
+            <div class="row" id="homeN400Row" onclick="startN400Walkthrough()">
+              <div class="rIco rIcoMarigold" data-icon="doc"></div>
+              <div class="rMain"><div class="rTitle"></div><div class="rSub"></div></div>
+              <div class="chev"></div>
+            </div>
+            <div class="row" id="homeVisaRow">
+              <div class="rIco rIcoTeal" data-icon="map" id="homeVisaIco"></div>
+              <div class="rMain"><div class="rTitle"></div><div class="rSub"></div></div>
+              <div class="chev"></div>
+            </div>
+            <div class="row" id="homeAdditionalPathsRow" onclick="go('visaPaths')">
+              <div class="rIco rIcoSky" data-icon="globe"></div>
+              <div class="rMain"><div class="rTitle"></div><div class="rSub"></div></div>
+              <div class="chev"></div>
+            </div>
+            <div class="row" id="homeEligRow" onclick="go('eligPicker')">
+              <div class="rIco rIcoTeal" data-icon="check"></div>
+              <div class="rMain"><div class="rTitle"></div><div class="rSub"></div></div>
+              <div class="chev"></div>
+            </div>
+            <div class="row" id="homeVisaBulletinRow" onclick="go('visaBulletin')" style="display:none;">
+              <div class="rIco rIcoMarigold" data-icon="clock"></div>
+              <div class="rMain"><div class="rTitle"></div><div class="rSub"></div></div>
+              <div class="chev"></div>
+            </div>
+          </div>
+          <div style="height:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LESSON ===== -->
+    <div class="view" id="lesson">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="lhead">
+        <div class="xLeft" onclick="exitLesson()" role="button" aria-label="Exit lesson" tabindex="0">✕</div>
+        <div class="lprog"><div id="lprogfill"></div></div>
+        <div class="hearts">♥ <span id="heartsN">5</span></div>
+      </div>
+      <div class="qwrap">
+        <div class="qkick" data-en="Civics question 4 of 5" data-es="Pregunta 4 de 5">Civics question 4 of 5</div>
+        <div class="q" data-en="What is one branch or part of the government?" data-es="¿Cuál es una rama o parte del gobierno?">What is one branch or part of the government?</div>
+        <div class="opts" id="opts">
+          <button class="opt" data-correct="1" onclick="pick(this)" data-en="Congress (Legislative)" data-es="Congreso (Legislativo)">Congress (Legislative)</button>
+          <button class="opt" onclick="pick(this)" data-en="The Supreme Court of your state" data-es="La Corte Suprema de tu estado">The Supreme Court of your state</button>
+          <button class="opt" onclick="pick(this)" data-en="The Department of Motor Vehicles" data-es="El Departamento de Vehículos">The Department of Motor Vehicles</button>
+          <button class="opt" onclick="pick(this)" data-en="The United Nations" data-es="Las Naciones Unidas">The United Nations</button>
+        </div>
+      </div>
+      <div class="checkbar" id="checkbar">
+        <div id="fb" style="display:none">
+          <div class="fbStreakRow" id="fbStreakRow" style="display:none;"></div>
+          <div class="fbtitle" id="fbt"></div>
+          <div class="fbCorrectAns" id="fbCorrectAns" style="display:none;"></div>
+          <div class="fbsub" id="fbs"></div>
+          <div class="fbScore" id="fbScore"></div>
+        </div>
+        <button class="checkbtn dim" id="checkbtn" onclick="check()">Check</button>
+      </div>
+    </div>
+
+    <!-- ===== JOURNEY ===== -->
+    <div class="view" id="journey">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:0">
+        <div class="jbig">
+          <div class="jbigTitle" data-en="Your journey" data-es="Tu camino">Your journey</div>
+          <div class="jbigSub" id="journeySub"></div>
+        </div>
+        <div class="pad" id="journeySteps"></div>
+      </div>
+    </div>
+
+    <!-- ===== PATH (combined Journey + Docs with sub-tabs) ===== -->
+    <div class="view" id="path">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:0">
+        <div class="pathHead">
+          <div class="pathTitle" id="pathTitle">Your path</div>
+          <div class="pathSub" id="pathSub"></div>
+          <div class="pathSegmented">
+            <button class="pathSegBtn pathSegActive" id="pathSegSteps" onclick="setPathTab('steps')"><span data-en="Steps" data-es="Etapas">Steps</span></button>
+            <button class="pathSegBtn" id="pathSegDocs" onclick="setPathTab('docs')"><span data-en="Documents" data-es="Documentos">Documents</span></button>
+          </div>
+        </div>
+        <div class="pad" id="pathContent"></div>
+      </div>
+    </div>
+
+    <!-- ===== CAMI CHAT ===== -->
+    <div class="view" id="cami">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="camiTopbar">
+        <div class="camiTopCami" id="camiTopCami"></div>
+        <div class="camiTopText">
+          <div class="camiTopName">Cami</div>
+          <div class="camiTopRole" data-en="Your immigration + civics coach" data-es="Tu tutor de inmigración + cívica">Your immigration + civics coach</div>
+        </div>
+      </div>
+      <div class="body camiContentBody" id="camiBody" style="padding-top:114px;padding-bottom:120px;"></div>
+      <div class="camiFooterBar" id="camiFooter"></div>
+    </div>
+
+    <!-- ===== FLASHCARDS ===== -->
+    <div class="view" id="flashcards">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="flashTopbar">
+        <button class="flashClose" onclick="exitFlashcards()" type="button" aria-label="Exit flashcards">✕</button>
+        <div class="flashMode" data-en="FLASHCARDS" data-es="TARJETAS">FLASHCARDS</div>
+        <div class="flashCounter" id="flashCounter">1 / 15</div>
+      </div>
+      <div class="flashProgress"><div class="flashProgressFill" id="flashProgressFill"></div></div>
+      <div class="body" style="padding-top:118px;padding-bottom:140px;">
+        <div class="pad" id="flashBody"></div>
+      </div>
+      <div class="flashFooter" id="flashFooter"></div>
+    </div>
+
+    <!-- ===== INTERVIEW SIMULATOR ===== -->
+    <div class="view" id="interview">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="intvTopbar">
+        <button class="intvClose" onclick="exitInterview()" type="button" aria-label="Exit interview">✕</button>
+        <div class="intvMode" data-en="INTERVIEW MODE" data-es="MODO ENTREVISTA">INTERVIEW MODE</div>
+        <div class="intvCounter" id="intvCounter">1 / 12</div>
+      </div>
+      <div class="intvProgress"><div class="intvProgressFill" id="intvProgressFill"></div></div>
+      <div class="body" style="padding-top:118px;padding-bottom:140px;">
+        <div class="pad" id="intvBody"></div>
+      </div>
+      <div class="intvFooter" id="intvFooter"></div>
+    </div>
+
+    <!-- ===== MOCK TEST ===== -->
+    <div class="view" id="mockTest">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="mtHead">
+        <button class="mtClose" onclick="exitMockTest()" type="button" aria-label="Exit mock test">✕</button>
+        <div class="mtMode" data-en="TEST MODE" data-es="MODO EXAMEN">TEST MODE</div>
+        <div class="mtCounter" id="mtCounter">1 / 10</div>
+      </div>
+      <div class="mtProgress"><div class="mtProgressFill" id="mtProgressFill"></div></div>
+      <div class="body" style="padding-top:118px;padding-bottom:120px;">
+        <div class="qwrap" id="mtQwrap"></div>
+      </div>
+      <div class="checkbar"><button class="checkbtn dim" id="mtNext">Next</button></div>
+    </div>
+
+    <!-- ===== N-400 WALKTHROUGH ===== -->
+    <div class="view" id="n400">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="n400Topbar">
+        <button class="n400Close" onclick="exitN400()" type="button" aria-label="Exit N-400 walkthrough">✕</button>
+        <div class="n400ProgressOuter"><div class="n400ProgressFill" id="n400ProgressFill"></div></div>
+        <div class="n400Counter" id="n400Counter">1 / 8</div>
+      </div>
+      <div class="body" style="padding-top:108px;padding-bottom:90px;">
+        <div class="pad" id="n400Body"></div>
+      </div>
+      <div class="n400Footer" id="n400Footer"></div>
+    </div>
+
+    <!-- ===== VISA PATHS GUIDE ===== -->
+    <div class="view" id="visaPaths">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:0">
+        <div class="visaHead">
+          <div class="visaHeadRow">
+            <div class="visaHeadText">
+              <div class="visaKick" data-en="Immigration paths" data-es="Vías de inmigración">Immigration paths</div>
+              <div class="visaTitle" data-en="Find your way" data-es="Encuentra tu camino">Find your way</div>
+            </div>
+            <svg class="visaCamiHead" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <ellipse cx="50" cy="62" rx="24" ry="26" fill="#ffffff" stroke="#1d1d22" stroke-width="3"/>
+              <ellipse cx="34" cy="58" rx="11" ry="20" fill="#ff9b21" stroke="#1d1d22" stroke-width="3" transform="rotate(-15 34 58)"/>
+              <ellipse cx="22" cy="42" rx="8" ry="14" fill="#ff9b21" stroke="#1d1d22" stroke-width="3" transform="rotate(40 22 42)"/>
+              <circle cx="56" cy="30" r="20" fill="#ffffff" stroke="#1d1d22" stroke-width="3"/>
+              <ellipse cx="63" cy="25" rx="7" ry="9" fill="#ffffff"/>
+              <circle cx="63" cy="27" r="3" fill="#1d1d22"/>
+              <circle cx="64" cy="26" r="1" fill="#ffffff"/>
+              <polygon points="73,32 84,28 73,38" fill="#ff9b21" stroke="#1d1d22" stroke-width="2" stroke-linejoin="round"/>
+              <line x1="44" y1="86" x2="40" y2="94" stroke="#ff9b21" stroke-width="4" stroke-linecap="round"/>
+              <line x1="56" y1="86" x2="60" y2="94" stroke="#ff9b21" stroke-width="4" stroke-linecap="round"/>
+              <path d="M 50 36 Q 56 32 62 36" stroke="#1d1d22" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="visaHeadSub" id="visaHeadSub"></div>
+        </div>
+        <div class="pad" id="visaList"></div>
+        <div style="height:20px"></div>
+      </div>
+    </div>
+
+    <!-- ===== IMPORTANT DATES ===== -->
+    <div class="view" id="dates">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:0">
+        <div class="datesHead">
+          <div class="datesKick" data-en="Calendar" data-es="Calendario">Calendar</div>
+          <div class="datesTitleBig" data-en="Important dates" data-es="Fechas importantes">Important dates</div>
+          <div class="datesSubBig" data-en="Past milestones + estimated next steps" data-es="Hitos pasados + próximos estimados">Past milestones + estimated next steps</div>
+        </div>
+        <div class="pad" id="datesList"></div>
+        <div style="height:20px"></div>
+      </div>
+    </div>
+
+    <!-- ===== LEGAL HELP DIRECTORY ===== -->
+    <div class="view" id="help">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:30px;padding-bottom:30px;">
+        <div class="pad" id="helpBody"></div>
+      </div>
+    </div>
+
+    <!-- ===== ME / PROFILE ===== -->
+    <div class="view" id="me">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:0">
+        <div class="meHero">
+          <div class="meAvatar" id="meAvatar">·</div>
+          <div class="meName" id="meName"></div>
+          <div class="meSub" id="meSub"></div>
+        </div>
+        <div class="pad" id="meBody"></div>
+        <div style="height:10px"></div>
+      </div>
+    </div>
+
+    <!-- ===== N-400 FILL-IN HELPER (Plus) ===== -->
+    <div class="view" id="n400Form">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="n400FormTop">
+        <button class="n400FormClose" onclick="exitN400Form()" type="button" aria-label="Exit N-400 form helper">✕</button>
+        <div class="n400FormHeadCounter" id="n400FormCounter"></div>
+        <div style="width:32px"></div>
+      </div>
+      <div class="n400FormProgressBar"><div class="n400FormProgressBarFill" id="n400FormProgressFill"></div></div>
+      <div class="body" style="padding-top:114px;padding-bottom:100px;">
+        <div class="pad" id="n400FormBody"></div>
+      </div>
+      <div class="n400FormFooter" id="n400FormFooter"></div>
+    </div>
+
+    <!-- ===== ELIGIBILITY WIZARD ===== -->
+    <div class="view" id="eligWiz">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="eligWizTop">
+        <button class="eligWizClose" onclick="exitEligWizard()" type="button" aria-label="Exit eligibility wizard">✕</button>
+        <div class="eligWizCounter" id="eligWizCounter"></div>
+        <div style="width:32px"></div>
+      </div>
+      <div class="eligWizProgressBar"><div class="eligWizProgressFill" id="eligWizProgressFill"></div></div>
+      <div class="body" id="eligWizBody" style="padding-top:114px;padding-bottom:100px;"></div>
+      <div class="eligWizFooter" id="eligWizFooter"></div>
+    </div>
+
+    <!-- ===== ELIGIBILITY PICKER (list of available wizards) ===== -->
+    <div class="view" id="eligPicker">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:30px;padding-bottom:30px;">
+        <div class="pad">
+          <div class="eligPickerHead">
+            <div class="eligPickerTitle" data-en="Eligibility checks" data-es="Verificación de elegibilidad">Eligibility checks</div>
+            <div class="eligPickerSub" data-en="Quick path-by-path checks. Educational only — never a substitute for an attorney." data-es="Verificaciones rápidas por vía. Solo educativo — nunca sustituye un abogado.">Quick path-by-path checks. Educational only — never a substitute for an attorney.</div>
+          </div>
+          <div id="eligPickerList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== VISA BULLETIN TRACKER ===== -->
+    <div class="view" id="visaBulletin">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:30px;padding-bottom:30px;">
+        <div class="pad" id="visaBulletinBody"></div>
+      </div>
+    </div>
+
+    <!-- ===== TRIAL OFFER (post-onboarding paywall) ===== -->
+    <div class="view" id="trialOffer">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" id="trialOfferBody" style="padding-top:64px;padding-bottom:0;overflow-y:auto;"></div>
+    </div>
+
+    <!-- ===== iOS PURCHASE CONFIRMATION SHEET ===== -->
+    <div id="purchaseSheet" class="purchaseSheet" style="display:none;">
+      <div class="purchaseSheetBg" onclick="closePurchaseSheet()"></div>
+      <div class="purchaseSheetCard" id="purchaseSheetCard"></div>
+    </div>
+
+    <!-- ===== CAMINO PLUS (UPGRADE) ===== -->
+    <div class="view" id="upgrade">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="upgTopbar">
+        <button class="upgClose" onclick="go('me')" type="button" aria-label="Close upgrade screen">✕</button>
+      </div>
+      <div class="body" style="padding-top:104px;padding-bottom:30px;">
+        <div class="pad" id="upgradeBody"></div>
+      </div>
+    </div>
+
+    <!-- ===== EDIT PROFILE FIELD ===== -->
+    <div class="view" id="editField">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="docDetailTopbar">
+        <button class="docDetailBack" onclick="closeEditField()" type="button">←</button>
+        <div class="docDetailCrumb" id="editFieldTitle"></div>
+      </div>
+      <div class="body" style="padding-top:108px;padding-bottom:120px;">
+        <div class="pad" id="editFieldBody"></div>
+      </div>
+      <div class="onbFooter hidden" id="editFieldFooter"></div>
+    </div>
+
+    <!-- ===== DOCUMENTS ===== -->
+    <div class="view" id="docs">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:0">
+        <div class="docsHead">
+          <div class="docsKick" data-en="Document vault" data-es="Bóveda de documentos">Document vault</div>
+          <div class="docsTitleBig" id="docsTitle">Documents</div>
+          <div class="docsSubBig" id="docsSubtitle">For your N-400 application</div>
+          <div class="docsProgressBar"><div class="docsProgressFill" id="docsProgressFill"></div></div>
+          <div class="docsCount" id="docsCount">0 of 0 ready</div>
+        </div>
+        <div class="pad" id="docsList"></div>
+        <div style="height:10px"></div>
+      </div>
+    </div>
+
+    <!-- ===== DOCUMENT DETAIL ===== -->
+    <div class="view" id="docDetail">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="docDetailTopbar">
+        <button class="docDetailBack" onclick="closeDocDetail()" type="button">←</button>
+        <div class="docDetailCrumb" id="docDetailCrumb"></div>
+      </div>
+      <div class="body" style="padding-top:104px;padding-bottom:96px;">
+        <div class="pad" id="docDetailBody"></div>
+      </div>
+      <div class="docDetailFooter">
+        <button class="cta docDetailToggle" id="docDetailToggle">Mark as ready ✓</button>
+      </div>
+    </div>
+
+    <!-- ===== ELIGIBILITY WIZARD ===== -->
+    <div class="view" id="eligibility">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="onbTopbar">
+        <button class="onbBack" onclick="eligBack()" type="button">←</button>
+        <div class="onbProgress"><div class="onbProgressFill" id="eligProgressFill"></div></div>
+        <button class="onbSkipLink" onclick="exitEligibility()" type="button" data-en="Exit" data-es="Salir">Exit</button>
+      </div>
+      <div class="body onbBody"><div class="onbStep" id="eligStep"></div></div>
+      <div class="onbFooter hidden" id="eligFooter"></div>
+    </div>
+
+    <!-- ===== LEARN PATH ===== -->
+    <div class="view" id="learn">
+      <div class="status"><span>9:41</span><span class="ico">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/></svg>
+        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
+      </span></div>
+      <div class="body" style="padding-top:0">
+        <div class="learnHead">
+          <div class="learnHeadRow">
+            <div class="learnHeadText">
+              <div class="learnKick" data-en="Civics path · 2025 test" data-es="Camino cívico · examen 2025">Civics path · 2025 test</div>
+              <div class="learnTitle" data-en="Learn your way to the oath" data-es="Aprende camino al juramento">Learn your way to the oath</div>
+            </div>
+            <svg class="learnCami" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <ellipse cx="50" cy="62" rx="24" ry="26" fill="#ffffff" stroke="#1d1d22" stroke-width="3"/>
+              <ellipse cx="34" cy="58" rx="11" ry="20" fill="#ff9b21" stroke="#1d1d22" stroke-width="3" transform="rotate(-25 34 58)"/>
+              <circle cx="56" cy="30" r="20" fill="#ffffff" stroke="#1d1d22" stroke-width="3"/>
+              <ellipse cx="63" cy="25" rx="7" ry="9" fill="#ffffff"/>
+              <circle cx="63" cy="27" r="3" fill="#1d1d22"/>
+              <circle cx="64" cy="26" r="1" fill="#ffffff"/>
+              <polygon points="73,32 84,28 73,38" fill="#ff9b21" stroke="#1d1d22" stroke-width="2" stroke-linejoin="round"/>
+              <line x1="44" y1="86" x2="40" y2="94" stroke="#ff9b21" stroke-width="4" stroke-linecap="round"/>
+              <line x1="56" y1="86" x2="60" y2="94" stroke="#ff9b21" stroke-width="4" stroke-linecap="round"/>
+              <path d="M 50 36 Q 56 32 62 36" stroke="#1d1d22" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="learnStat">
+            <span id="learnStreak">🔥 0</span>
+            <span id="learnXp">⚡ 0 XP</span>
+            <span id="learnMastered">📘 0 / 128 mastered</span>
+          </div>
+          <div id="learnDailyGoal"></div>
+        </div>
+
+        <div id="learnUnits"></div>
+      </div>
+    </div>
+
+    <!-- toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ===== TAB BAR ===== -->
+    <nav class="tabbar" aria-label="Main navigation">
+      <div class="tab active" id="t-home" onclick="go('home')" role="button" tabindex="0" aria-label="Today" aria-current="page">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="currentColor"/></svg>
+        <span data-en="Today" data-es="Hoy" data-zh="今天" data-vi="Hôm nay">Today</span>
+      </div>
+      <div class="tab" id="t-path" onclick="go('path')" role="button" tabindex="0" aria-label="Path">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 3v13M6 19v2M18 8v13M18 3v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="6" cy="17.5" r="2.2" fill="currentColor"/><circle cx="18" cy="6.5" r="2.2" fill="currentColor"/><path d="M8 17.5h4a4 4 0 0 0 4-4V9" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <span data-en="Path" data-es="Vía" data-zh="路径" data-vi="Lộ trình">Path</span>
+      </div>
+      <div class="tab" id="t-lesson" onclick="go('learn')" role="button" tabindex="0" aria-label="Learn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 5a2 2 0 0 1 2-2h5v16H6a2 2 0 0 0-2 2zM20 5a2 2 0 0 0-2-2h-5v16h5a2 2 0 0 1 2 2z" fill="currentColor"/></svg>
+        <span data-en="Learn" data-es="Aprender" data-zh="学习" data-vi="Học">Learn</span>
+      </div>
+      <div class="tab" id="t-cami" onclick="go('cami')" role="button" tabindex="0" aria-label="Cami AI coach">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H10l-4 4v-4H7a3 3 0 0 1-3-3z" fill="currentColor"/></svg>
+        <span data-en="Cami" data-es="Cami" data-zh="Cami" data-vi="Cami">Cami</span>
+      </div>
+      <div class="tab" id="t-me" onclick="go('me')" role="button" tabindex="0" aria-label="Me — profile and settings">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7z" fill="currentColor"/></svg>
+        <span data-en="Me" data-es="Yo" data-zh="我" data-vi="Tôi">Me</span>
+      </div>
+    </nav>
+
+  </div>
+</div>
+<div class="caption">Working name <b>Camino</b> · iOS prototype · build 1. The daily loop: <b>Where am I → one next step → 5-minute lesson</b>, with a live streak and EN/ES toggle. Tap the green lesson card, the journey strip, or the tabs.</div>
+</div>
+
+<!-- Local config (gitignored) — auto-loads your Anthropic API key. Errors gracefully if missing. -->
+<script>window.CAMINO_CONFIG = window.CAMINO_CONFIG || {};</script>
+<script src="config.local.js" onerror="/* file is optional */"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# Keep these files OUT of the Vercel deployment
+config.local.js
+*.md
+.DS_Store
+.git
+.gitignore
+node_modules

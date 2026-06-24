@@ -1,0 +1,37 @@
+# ===== Camino .gitignore =====
+
+# Secrets — never commit
+config.local.js
+.env
+.env.local
+.env.*.local
+*.local.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Claude Code local state
+.claude/
+CLAUDE.md
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Vercel
+.vercel/
+
+# Build artifacts
+dist/
+build/
+*.log
+
+# Unrelated sibling projects that happen to live in this folder
+ercf/
+evac-ai-project-2-/
+evacmodel/
+exodus/
