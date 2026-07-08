@@ -2504,8 +2504,8 @@ function speakInterview(text){
     if(!IntvVoice.officerVoice) IntvVoice.officerVoice = pickOfficerVoice();
     if(IntvVoice.officerVoice && lang !== 'es') u.voice = IntvVoice.officerVoice;
     u.lang = (lang === 'es') ? 'es-US' : 'en-US';
-    u.rate = 0.95;
-    u.pitch = 1.0;
+    u.rate = 0.97;   // natural conversational pace
+    u.pitch = 1.06;  // slightly warmer/higher — reads as a natural female voice, not flat/robotic
     u.volume = 1.0;
     window.speechSynthesis.speak(u);
   } catch(e){}
@@ -2584,8 +2584,11 @@ function pickOfficerVoice(){
     for(var i=0;i<applePremium.length;i++){
       if(name.indexOf(applePremium[i]) !== -1){ s += 22; break; }
     }
-    // Mild bias toward male/lower voices for the "officer" feel
-    if(/(^|\W)(male|alex|daniel|aaron|tom|james|fred|arthur|evan|david|guy|davis|ryan|tony|christopher)(\W|$)/.test(name)) s += 8;
+    // Prefer natural FEMALE voices for the interviewer.
+    if(/(^|\W)(female|samantha|allison|ava|susan|karen|moira|nicky|zoe|kate|victoria|serena|tessa|fiona|aria|jenny|sonia|michelle|nora|joanna|salli|kimberly|kendra|emma|amy)(\W|$)/.test(name) ||
+       /female/.test(voiceURI)) s += 32;
+    // Push obviously male voices down so we land on a female one.
+    if(/(^|\W)(male|alex|daniel|aaron|tom|james|fred|arthur|evan|david|guy|davis|ryan|tony|christopher|oliver|thomas|gordon|rishi|reed|eddy)(\W|$)/.test(name)) s -= 28;
     // Hard penalties for novelty / compact / low-quality voices that absolutely will sound robotic
     if(/compact/.test(name) || /compact/.test(voiceURI)) s -= 60;
     if(/novelty|whisper|bahh|bells|boing|bubbles|cellos|deranged|hysterical|good\s*news|bad\s*news|trinoids|pipe|albert|junior|zarvox|kathy|princess|ralph|organ/.test(name)) s -= 200;
@@ -3899,6 +3902,21 @@ function finishInterview(){
   renderInterview();
 }
 
+// Cami's head in an officer's peaked cap — the "USCIS officer" avatar in the interview sim.
+function camiOfficerSVG(size){
+  size = size || 40;
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+    + '<circle cx="50" cy="61" r="25" fill="#ffffff" stroke="#1d1d22" stroke-width="3"/>'
+    + '<circle cx="62" cy="57" r="3.4" fill="#1d1d22"/>'
+    + '<circle cx="63.3" cy="55.8" r="1.1" fill="#ffffff"/>'
+    + '<polygon points="74,59 90,56 74,67" fill="#ff9b21" stroke="#1d1d22" stroke-width="2" stroke-linejoin="round"/>'
+    + '<rect x="24" y="37" width="52" height="8" rx="1.5" fill="#16294a" stroke="#1d1d22" stroke-width="2"/>'
+    + '<path d="M25 39 Q25 19 50 19 Q75 19 75 39 Z" fill="#3a5a99" stroke="#1d1d22" stroke-width="2.5" stroke-linejoin="round"/>'
+    + '<path d="M50 25 L55 27.4 V32 Q55 36 50 37.6 Q45 36 45 32 V27.4 Z" fill="#ffc83d" stroke="#1d1d22" stroke-width="1.2" stroke-linejoin="round"/>'
+    + '<path d="M40 45 Q58 40 78 47 Q60 52 40 47 Z" fill="#0e1830" stroke="#1d1d22" stroke-width="2" stroke-linejoin="round"/>'
+    + '</svg>';
+}
+
 function renderInterview(){
   if(!intvState) return;
   var counter = document.getElementById('intvCounter');
@@ -3947,7 +3965,7 @@ function renderInterview(){
   intvState.justIncrementedStreak = false;
   var html = ''
     + '<div class="intvOfficerRow">'
-    +   '<div class="intvOfficerAvatar">'+iconSVG('person','#fff',26)+'</div>'
+    +   '<div class="intvOfficerAvatar">'+camiOfficerSVG(40)+'</div>'
     +   '<div class="intvOfficerHeadCol"><div class="intvOfficerLabel">'+(lang==='es'?'OFICIAL DE USCIS':'USCIS OFFICER')+'</div>'
     +   '<div class="intvOfficerSub">'+typeIcon+' '+typeLbl+(q.type==='civics'?' · '+(lang==='es'?'pregunta '+q.qId:'question '+q.qId):'')+'</div></div>'
     +   streakBadge

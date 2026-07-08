@@ -2138,7 +2138,7 @@ select:focus-visible,
 .pnodeWrap.l2{transform:translateX(-92px);}
 
 .lnode{
-  width:68px;height:64px;border-radius:50%;border:0;font-family:inherit;
+  width:66px;height:66px;border-radius:50%;border:0;font-family:inherit;
   display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;position:relative;
 }
 .lnode svg{display:block;}
