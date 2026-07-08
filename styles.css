@@ -101,7 +101,7 @@ body{
 .status svg{display:block;}
 
 /* scroll body */
-.body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:54px;padding-bottom:96px;}
+.body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:54px;padding-bottom:calc(96px + env(safe-area-inset-bottom, 0px));}
 .body::-webkit-scrollbar{display:none;}
 
 .pad{padding:0 20px;}
@@ -1782,9 +1782,10 @@ select:focus-visible,
 
 /* bottom tab bar */
 .tabbar{
-  position:absolute;bottom:0;left:0;right:0;height:84px;z-index:50;
+  position:absolute;bottom:0;left:0;right:0;z-index:50;
+  height:calc(84px + env(safe-area-inset-bottom, 0px));
   background:rgba(253,252,246,.96);backdrop-filter:blur(20px);border-top:1.5px solid var(--hair);
-  display:flex;padding:8px 6px 0;
+  display:flex;padding:8px 6px env(safe-area-inset-bottom, 0px);
 }
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:850;color:var(--tab);letter-spacing:.2px;cursor:pointer;}
 .tab.active{color:var(--green);}
@@ -3555,6 +3556,8 @@ select:focus-visible,
 .visaSecLbl:first-child{margin-top:0;}
 .visaList{margin:0;padding-left:20px;font-size:13.5px;color:var(--ink2);line-height:1.55;font-weight:500;}
 .visaList li{margin-bottom:5px;}
+.visaSteps li{margin-bottom:8px;}
+.visaSteps li::marker{font-weight:800;color:var(--brand,#00b4a8);}
 
 /* ===== IMPORTANT DATES ===== */
 .datesHead{

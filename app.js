@@ -4264,7 +4264,7 @@ function renderHomeInterviewCard(){
 // Full text accessible from Me tab. Designed to protect against unauthorized-practice
 // of-law / reliance-damage claims.
 
-var DISCLAIMER_VERSION = 'v1-2026-06';
+var DISCLAIMER_VERSION = 'v2-2026-07';
 
 var LEGAL_DISCLAIMER = {
   short: {
@@ -4275,17 +4275,15 @@ var LEGAL_DISCLAIMER = {
   full: {
     en: [
       'Camino is an educational and study tool. It is **not a law firm** and does **not provide legal advice**.',
-      'The information, timelines, document checklists, AI coach responses, and study materials in this app are general background — not a determination about your individual case.',
+      'The information, timelines, document checklists, and study materials in this app are general background — not a determination about your individual case.',
       'Immigration law is complex and fact-specific. The outcome of any petition or application depends on details only a licensed attorney can review with you.',
-      'Cami (the AI coach) is a knowledgeable assistant, not an attorney. Cami will explain how the system works and what forms to look up, but cannot tell you what to file or whether you qualify.',
       'Before making a decision that affects your legal status, immigration record, or eligibility — please consult a licensed U.S. immigration attorney or an accredited representative (BIA-recognized organization).',
       'Camino, its authors, and its affiliates accept no liability for actions you take based on what you read here.'
     ],
     es: [
       'Camino es una herramienta educativa y de estudio. **No es un bufete** y **no da asesoría legal**.',
-      'La información, plazos, listas de documentos, respuestas del tutor IA y materiales de estudio son contexto general — no una determinación sobre tu caso individual.',
+      'La información, plazos, listas de documentos y materiales de estudio son contexto general — no una determinación sobre tu caso individual.',
       'La ley de inmigración es compleja y depende de los hechos. El resultado de cualquier petición depende de detalles que solo un abogado licenciado puede revisar contigo.',
-      'Cami (el tutor IA) es un asistente con conocimientos, no un abogado. Cami explicará cómo funciona el sistema y qué formularios buscar, pero no puede decirte qué presentar o si calificas.',
       'Antes de tomar una decisión que afecte tu estatus legal, expediente migratorio o elegibilidad — consulta a un abogado licenciado de inmigración de EE.UU. o un representante acreditado (organización reconocida por BIA).',
       'Camino, sus autores y afiliados no aceptan responsabilidad por acciones que tomes basándote en lo que leas aquí.'
     ]
@@ -5504,8 +5502,127 @@ var PLUS_PRICING = {
   annual: {price:49.99, period:{en:'year', es:'año'}, code:'annual', monthlyEquiv:4.17, savePct:48}
 };
 
+// ===== STORE / IN-APP PURCHASES ============================================
+// One abstraction, two backends:
+//   • Native iOS (Capacitor + RevenueCat) → real StoreKit subscriptions.
+//   • Web (browser preview)               → local mock (unchanged trial behavior),
+//                                            so the app stays fully testable off-device.
+// The native branch reflects RevenueCat's entitlement into user.plan, so the rest of
+// the app (isPlus, gates, badges) keeps reading user.plan and just works.
+//
+// SETUP: create these in App Store Connect + RevenueCat, then fill in the values.
+//   NATIVE ACCESS: the RevenueCat SDK (@revenuecat/purchases-capacitor) is an ES module.
+//   Since this app has no bundler, expose it once as window.Purchases via a 5-line esbuild
+//   shim during the iOS build (see BUILD.md). Store falls back to Capacitor.Plugins.Purchases.
+var STORE_CONFIG = {
+  revenueCatApiKey: 'appl_REPLACE_WITH_REVENUECAT_IOS_KEY',
+  entitlementId: 'plus',
+  products: { annual: 'camino_plus_annual', monthly: 'camino_plus_monthly' }
+};
+
+var Store = {
+  ready: false, _offerings: null, _entitled: false,
+
+  isNative: function(){
+    return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+  },
+  _rc: function(){
+    return window.Purchases || (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Purchases) || null;
+  },
+
+  init: async function(){
+    if(!this.isNative()){ this.ready = true; return; }        // web: nothing to configure
+    var rc = this._rc();
+    if(!rc){ return; }                                        // plugin missing → isPlus() uses local fallback
+    try {
+      await rc.configure({ apiKey: STORE_CONFIG.revenueCatApiKey });
+      await this._refresh();
+      if(rc.addCustomerInfoUpdateListener){
+        rc.addCustomerInfoUpdateListener(function(info){ Store._applyCustomerInfo(info && info.customerInfo ? info.customerInfo : info); });
+      }
+      this.ready = true;
+      try { renderAll(); } catch(e){}
+    } catch(e){ /* stay not-ready; local fallback applies */ }
+  },
+
+  _refresh: async function(){
+    var rc = this._rc(); if(!rc) return;
+    try { var o = await rc.getOfferings(); this._offerings = (o && o.current) || null; } catch(e){}
+    try { var c = await rc.getCustomerInfo(); this._applyCustomerInfo(c && c.customerInfo ? c.customerInfo : c); } catch(e){}
+  },
+
+  _applyCustomerInfo: function(ci){
+    if(!ci || !user) return;
+    var active = ci.entitlements && ci.entitlements.active ? ci.entitlements.active[STORE_CONFIG.entitlementId] : null;
+    this._entitled = !!active;
+    if(active){
+      var pt = active.periodType;
+      if(pt === 'TRIAL' || pt === 'INTRO'){ user.plan = 'trial'; user.trialEndsAt = active.expirationDate || null; }
+      else { user.plan = 'plus'; }
+    } else {
+      user.plan = 'free';
+    }
+    saveUser();
+  },
+
+  // Native entitlement state, or null on web (caller uses the local mock).
+  entitled: function(){ return this.isNative() ? this._entitled : null; },
+
+  // Localized price string; falls back to hardcoded PLUS_PRICING off-device.
+  priceString: function(planCode){
+    var fallback = '$' + PLUS_PRICING[planCode].price.toFixed(2);
+    if(!this.isNative() || !this._offerings) return fallback;
+    try {
+      var want = STORE_CONFIG.products[planCode];
+      var pkgs = this._offerings.availablePackages || [];
+      for(var i=0;i<pkgs.length;i++){
+        var p = pkgs[i].product;
+        if(p && p.identifier === want && p.priceString) return p.priceString;
+      }
+    } catch(e){}
+    return fallback;
+  },
+
+  _packageFor: function(planCode){
+    if(!this._offerings) return null;
+    var want = STORE_CONFIG.products[planCode];
+    var pkgs = this._offerings.availablePackages || [];
+    for(var i=0;i<pkgs.length;i++){ if(pkgs[i].product && pkgs[i].product.identifier === want) return pkgs[i]; }
+    return null;
+  },
+
+  // Real StoreKit purchase (with its 7-day intro trial). Resolves true on success.
+  purchase: async function(planCode){
+    var rc = this._rc();
+    if(!this.isNative() || !rc) return false;               // web path handled by confirmTrialPurchase
+    var pkg = this._packageFor(planCode);
+    if(!pkg){ toast(lang==='es'?'Producto no disponible':'Product unavailable'); return false; }
+    try {
+      var r = await rc.purchasePackage({ aPackage: pkg });
+      this._applyCustomerInfo(r && r.customerInfo ? r.customerInfo : r);
+      return this._entitled === true;
+    } catch(e){
+      if(!(e && e.userCancelled)) toast(lang==='es'?'No se pudo completar la compra':'Purchase could not be completed');
+      return false;
+    }
+  },
+
+  restore: async function(){
+    var rc = this._rc(); if(!rc) return false;
+    try {
+      var r = await rc.restorePurchases();
+      this._applyCustomerInfo(r && r.customerInfo ? r.customerInfo : r);
+      var ok = this._entitled === true;
+      toast(ok ? (lang==='es'?'¡Compras restauradas!':'Purchases restored!') : (lang==='es'?'No se encontraron compras':'No purchases found'));
+      try { renderAll(); } catch(e){}
+      return ok;
+    } catch(e){ toast(lang==='es'?'No se pudo restaurar':'Could not restore'); return false; }
+  }
+};
+
 function isPlus(){
   if(!user) return false;
+  if(Store.isNative() && Store.ready) return Store.entitled() === true;  // native: RevenueCat is source of truth
   if(user.plan === 'plus') return true;
   if(user.plan === 'trial' && user.trialEndsAt){
     return Date.now() < new Date(user.trialEndsAt).getTime();
@@ -6530,8 +6647,8 @@ function renderEligPicker(){
 var FAQ_ENTRIES = [
   {
     q:{en:'What is Camino?', es:'¿Qué es Camino?'},
-    a:{en:'Camino is an educational study + coaching app for the U.S. immigration journey. We help you prepare for the civics test, understand your visa path, organize documents, and ask questions to Cami (our AI immigration coach). We are not a law firm.',
-       es:'Camino es una app educativa de estudio y orientación para el camino de inmigración en EE.UU. Te ayudamos a preparar el examen de cívica, entender tu vía de visa, organizar documentos y hacer preguntas a Cami (nuestro tutor IA). No somos un bufete.'}
+    a:{en:'Camino is an educational study + coaching app for the U.S. immigration journey. We help you prepare for the civics test, understand your visa path, and organize your documents. We are not a law firm.',
+       es:'Camino es una app educativa de estudio y orientación para el camino de inmigración en EE.UU. Te ayudamos a preparar el examen de cívica, entender tu vía de visa y organizar tus documentos. No somos un bufete.'}
   },
   {
     q:{en:'Is Camino legal advice?', es:'¿Camino es asesoría legal?'},
@@ -6550,8 +6667,8 @@ var FAQ_ENTRIES = [
   },
   {
     q:{en:'What does Camino Plus include?', es:'¿Qué incluye Camino Plus?'},
-    a:{en:'Unlimited voice interview practice, unlimited mock tests, N-400 fill-in helper with printable summary, streak freezes (2/month), and more. Cami AI coach launches soon — Plus members get first access at no extra cost.',
-       es:'Entrevista por voz ilimitada, exámenes ilimitados, asistente N-400 con resumen imprimible, congelamientos de racha (2/mes) y más. Cami con IA llega pronto — los miembros Plus obtienen acceso anticipado sin costo extra.'}
+    a:{en:'Unlimited voice interview practice, unlimited mock tests, streak freezes (2/month), and more.',
+       es:'Entrevista por voz ilimitada, exámenes ilimitados, congelamientos de racha (2/mes) y más.'}
   },
   {
     q:{en:'How do I prepare for the civics test?', es:'¿Cómo me preparo para el examen de cívica?'},
@@ -6574,9 +6691,9 @@ var FAQ_ENTRIES = [
        es:'Ve a Yo → Estado de caso USCIS. Guarda tu número de recibo. Toca "Ver en USCIS.gov" para abrir la página oficial.'}
   },
   {
-    q:{en:'What is the N-400 fill-in helper?', es:'¿Qué es el asistente del N-400?'},
-    a:{en:'A guided wizard (Plus) that walks you through the 8 main sections of Form N-400, auto-fills your profile data, and generates a printable summary you can use as reference when filling the official form.',
-       es:'Un asistente guiado (Plus) que te lleva por las 8 secciones principales del N-400, llena tus datos automáticamente y genera un resumen imprimible.'}
+    q:{en:'What is the N-400 walkthrough?', es:'¿Qué es la guía del N-400?'},
+    a:{en:'A free educational guide that walks you through the 8 main sections of Form N-400 — what USCIS asks in each, why it matters, tips, and the documents to gather — so you understand the form before you fill out the official version yourself. It is educational only and not legal advice.',
+       es:'Una guía educativa gratuita que te lleva por las 8 secciones principales del N-400 — qué pide USCIS en cada una, por qué importa, consejos, y los documentos a reunir — para que entiendas el formulario antes de llenar tú mismo la versión oficial. Es solo educativa, no asesoría legal.'}
   },
   {
     q:{en:'Is my data private?', es:'¿Mis datos son privados?'},
@@ -6679,23 +6796,16 @@ function renderTrialOffer(){
 
   var name = (user.name || '').trim() || (lang==='es' ? 'amigo/a' : 'friend');
   var pricing = PLUS_PRICING[trialOfferSelectedPlan];
-  var afterTrialPrice = '$' + pricing.price.toFixed(2);
+  var afterTrialPrice = Store.priceString(trialOfferSelectedPlan);
   var afterTrialPeriod = pricing.period[lang];
 
   var features = [
-    {iconName:'star', color:'#ffc83d',
-     title:{en:'Cami AI coach', es:'Tutor IA Cami'},
-     sub:{en:'Coming soon — Plus members get first access', es:'Próximamente — los miembros Plus tienen acceso anticipado'},
-     comingSoon:true},
     {iconName:'mic', color:'#1cb0f6',
      title:{en:'AI interview practice', es:'Práctica de entrevista IA'},
      sub:{en:'Real voice simulation that scores you', es:'Simulación de voz que te califica'}},
     {iconName:'target', color:'#ec4f93',
      title:{en:'Unlimited mock tests', es:'Exámenes ilimitados'},
      sub:{en:'Free plan caps at 3 per day', es:'Gratis: 3 por día'}},
-    {iconName:'doc', color:'#00b4a8',
-     title:{en:'N-400 fill-in helper', es:'Asistente N-400'},
-     sub:{en:'Saves answers · generates a printable summary', es:'Guarda respuestas · genera resumen imprimible'}}
   ];
 
   var featuresHtml = '';
@@ -6716,12 +6826,12 @@ function renderTrialOffer(){
     +   '<button class="trialPlanBtn'+(trialOfferSelectedPlan==='annual'?' trialPlanSel':'')+'" onclick="trialOfferSelectPlan(\'annual\')">'
     +     '<span class="trialPlanTag">'+(lang==='es'?'AHORRA 48%':'SAVE 48%')+'</span>'
     +     '<div class="trialPlanLbl">'+(lang==='es'?'Anual':'Annual')+'</div>'
-    +     '<div class="trialPlanPrice">$'+PLUS_PRICING.annual.price.toFixed(2)+'<span class="trialPlanPer">/'+PLUS_PRICING.annual.period[lang]+'</span></div>'
+    +     '<div class="trialPlanPrice">'+Store.priceString('annual')+'<span class="trialPlanPer">/'+PLUS_PRICING.annual.period[lang]+'</span></div>'
     +     '<div class="trialPlanEquiv">~$'+PLUS_PRICING.annual.monthlyEquiv.toFixed(2)+' / '+(lang==='es'?'mes':'mo')+'</div>'
     +   '</button>'
     +   '<button class="trialPlanBtn'+(trialOfferSelectedPlan==='monthly'?' trialPlanSel':'')+'" onclick="trialOfferSelectPlan(\'monthly\')">'
     +     '<div class="trialPlanLbl">'+(lang==='es'?'Mensual':'Monthly')+'</div>'
-    +     '<div class="trialPlanPrice">$'+PLUS_PRICING.monthly.price.toFixed(2)+'<span class="trialPlanPer">/'+PLUS_PRICING.monthly.period[lang]+'</span></div>'
+    +     '<div class="trialPlanPrice">'+Store.priceString('monthly')+'<span class="trialPlanPer">/'+PLUS_PRICING.monthly.period[lang]+'</span></div>'
     +     '<div class="trialPlanEquiv">'+(lang==='es'?'sin compromiso':'no commitment')+'</div>'
     +   '</button>'
     + '</div>';
@@ -6777,7 +6887,7 @@ function openPurchaseSheet(){
   var card = document.getElementById('purchaseSheetCard');
   if(!sheet || !card) return;
   var pricing = PLUS_PRICING[trialOfferSelectedPlan];
-  var afterTrialPrice = '$' + pricing.price.toFixed(2);
+  var afterTrialPrice = Store.priceString(trialOfferSelectedPlan);
   var afterTrialPeriod = pricing.period[lang];
   var planName = (lang==='es'
     ? (trialOfferSelectedPlan==='annual'?'Anual':'Mensual')
@@ -6821,11 +6931,23 @@ function closePurchaseSheet(){
 
 function confirmTrialPurchase(){
   closePurchaseSheet();
-  // Brief Face-ID-style "Confirmed" flash
-  showConfirmedFlash();
-  setTimeout(function(){
-    startFreeTrial(trialOfferSelectedPlan);
-  }, 800);
+  if(!Store.isNative()){
+    // Web preview — mock: Face-ID-style flash, then grant a local trial (unchanged behavior).
+    showConfirmedFlash();
+    setTimeout(function(){ startFreeTrial(trialOfferSelectedPlan); }, 800);
+    return;
+  }
+  // Native — real StoreKit purchase via RevenueCat (StoreKit shows its own sheet).
+  Store.purchase(trialOfferSelectedPlan).then(function(ok){
+    if(!ok) return; // cancelled or failed
+    showConfirmedFlash();
+    user.planSelected = trialOfferSelectedPlan; saveUser();
+    setTimeout(function(){
+      renderAll(); go('home');
+      toast(lang==='es' ? '¡Bienvenido a Camino Plus! 7 días gratis.' : 'Welcome to Camino Plus! 7 days free.');
+      setTimeout(maybeOfferTutorial, 1500);
+    }, 800);
+  });
 }
 
 function showConfirmedFlash(){
@@ -6842,8 +6964,11 @@ function showConfirmedFlash(){
 }
 
 function restorePurchases(){
-  // Prototype stub — would call StoreKit on real iOS
-  toast(lang==='es' ? 'No se encontraron compras previas para restaurar' : 'No prior purchases found to restore');
+  if(!Store.isNative()){
+    toast(lang==='es' ? 'Restaurar compras funciona en la app de iOS' : 'Restore purchases works in the iOS app');
+    return;
+  }
+  Store.restore();
 }
 
 function showPrivacyNote(){
@@ -6856,14 +6981,14 @@ function showPrivacyNote(){
   var text = lang==='es'
     ? [
         'Camino guarda tu perfil, progreso de estudio y configuraciones **solo en tu dispositivo** (localStorage del navegador).',
-        'Cuando usas Cami (el tutor IA), tus preguntas se envían a la API de Anthropic con tu clave personal para generar respuestas. No las almacenamos.',
+        'Tus datos nunca salen de tu dispositivo — no tenemos servidores que los reciban.',
         'No vendemos ni compartimos datos personales con terceros.',
         'No usamos analíticas de terceros que rastreen tu actividad.',
         'Para más información o para borrar todos tus datos, ve a Yo → Borrar todos los datos.'
       ]
     : [
         'Camino stores your profile, study progress, and settings **only on your device** (browser localStorage).',
-        'When you use Cami (the AI coach), your messages are sent to Anthropic\'s API with your personal key to generate replies. We do not store them.',
+        'Your data never leaves your device — we have no servers that receive it.',
         'We do not sell or share personal data with third parties.',
         'We do not use third-party analytics that track your activity.',
         'For more info or to delete all your data, go to Me → Clear all data.'
@@ -6885,11 +7010,9 @@ function showPrivacyNote(){
 }
 
 var PLUS_FEATURES = [
-  {iconName:'star',      color:'#ffc83d', title:{en:'AI study coach',           es:'Tutor IA de cívica'},   sub:{en:'Coming soon · Plus members get first access', es:'Próximamente · acceso anticipado para Plus'}, comingSoon:true},
   {iconName:'mic',       color:'#1cb0f6', title:{en:'AI interview practice',    es:'Práctica de entrevista IA'}, sub:{en:'Conversational simulation that scores you', es:'Simulación conversacional con calificación'}},
   {iconName:'target',    color:'#ec4f93', title:{en:'Unlimited mock tests',     es:'Exámenes ilimitados'},  sub:{en:'Free plan caps at 3 per day', es:'Gratis: 3 por día'}},
   {iconName:'bolt',      color:'#ff4d3a', title:{en:'Streak freeze + unlimited hearts', es:'Congelar racha + corazones ilimitados'}, sub:{en:'Never lose your streak to a busy day', es:'No pierdas tu racha por un día ocupado'}},
-  {iconName:'doc',       color:'#00b4a8', title:{en:'N-400 fill-in helper',     es:'Asistente para llenar el N-400'}, sub:{en:'Section-by-section · saves answers · generates PDF', es:'Sección por sección · guarda respuestas · genera PDF'}},
 ];
 
 function camiPlusSVG(){
@@ -7420,348 +7543,6 @@ function renderPathJourney(el){
     + html + '<div style="height:10px"></div>';
 }
 
-// ===== N-400 FILL-IN HELPER (Plus-only) =====
-// 8-section wizard that walks the user through the N-400, saves answers, and generates
-// a printable summary at the end. Pre-fills from existing user profile where possible.
-var N400_FORM_SECTIONS = [
-  {
-    id: 'basis',
-    title: {en:'Eligibility basis', es:'Base de elegibilidad'},
-    intro: {en:'Which rule are you applying under?', es:'¿Bajo qué regla aplicas?'},
-    fields: [
-      {key:'eligBasis', label:{en:'Choose your basis',es:'Elige tu base'}, type:'radio',
-       options:[
-         {value:'5yr', label:{en:'5-year rule (most permanent residents)',es:'Regla de 5 años (la mayoría de residentes)'}},
-         {value:'3yr', label:{en:'3-year rule (married to a U.S. citizen)',es:'Regla de 3 años (casado/a con ciudadano)'}},
-         {value:'mil', label:{en:'Military service basis',es:'Por servicio militar'}}
-       ]}
-    ]
-  },
-  {
-    id: 'personal',
-    title: {en:'Personal information', es:'Información personal'},
-    intro: {en:'Your legal name, date of birth, and key identifiers.', es:'Tu nombre legal, fecha de nacimiento, e identificadores clave.'},
-    fields: [
-      {key:'fullName',  label:{en:'Full legal name',es:'Nombre legal completo'}, type:'text', prefillFrom:'name', placeholder:'Maria Lopez Garcia'},
-      {key:'dob',       label:{en:'Date of birth',es:'Fecha de nacimiento'}, type:'date'},
-      {key:'countryBirth', label:{en:'Country of birth',es:'País de nacimiento'}, type:'text', prefillFrom:'countryOfBirth'},
-      {key:'aNumber',   label:{en:'A-Number (9 digits, from green card)',es:'Número A (9 dígitos, de tu residencia)'}, type:'text', placeholder:'123-456-789', hint:{en:'Starts with "A" on your green card',es:'Empieza con "A" en tu residencia'}},
-      {key:'ssn',       label:{en:'Social Security Number',es:'Número de Seguro Social'}, type:'text', placeholder:'XXX-XX-XXXX'},
-      {key:'gcDate',    label:{en:'Date you became a permanent resident',es:'Fecha en que te hiciste residente permanente'}, type:'date', prefillFrom:'greenCardDate'}
-    ]
-  },
-  {
-    id: 'names',
-    title: {en:'Name history', es:'Historial de nombres'},
-    intro: {en:'Every name you have ever used — including before-marriage names, aliases, and any other variants.', es:'Cada nombre que hayas usado — incluyendo antes del matrimonio, alias, y otras variantes.'},
-    fields: [
-      {key:'priorNames', label:{en:'List all prior names (one per line)',es:'Lista todos los nombres anteriores (uno por línea)'}, type:'textarea', placeholder:'Maria Lopez (maiden)\nMaria L. Garcia\n…'}
-    ]
-  },
-  {
-    id: 'addresses',
-    title: {en:'5-year address history', es:'Direcciones de 5 años'},
-    intro: {en:'Every physical address in the last 5 years, with dates. No gaps allowed.', es:'Cada dirección física en los últimos 5 años, con fechas. Sin lagunas.'},
-    fields: [
-      {key:'currentAddress', label:{en:'Current address (street, city, state, zip)',es:'Dirección actual (calle, ciudad, estado, código postal)'}, type:'textarea'},
-      {key:'currentSince',   label:{en:'Living here since',es:'Vives aquí desde'}, type:'date'},
-      {key:'priorAddresses', label:{en:'Prior addresses (last 5 years, one per line with dates)',es:'Direcciones anteriores (5 años, una por línea con fechas)'}, type:'textarea', placeholder:'123 Main St, Houston TX 77001 — Jan 2022 to Mar 2024\n…'}
-    ]
-  },
-  {
-    id: 'employment',
-    title: {en:'Employment history', es:'Historial de empleo'},
-    intro: {en:'Last 5 years of employers, schools, or unemployed periods.', es:'Últimos 5 años de empleadores, escuelas, o períodos sin empleo.'},
-    fields: [
-      {key:'currentEmployer', label:{en:'Current employer (or "Unemployed" / "Student")',es:'Empleador actual (o "Desempleado" / "Estudiante")'}, type:'text'},
-      {key:'currentOccupation', label:{en:'Your occupation',es:'Tu ocupación'}, type:'text'},
-      {key:'employmentHistory', label:{en:'Prior employers (last 5 years, one per line)',es:'Empleadores anteriores (5 años, uno por línea)'}, type:'textarea', placeholder:'Acme Co. — Cashier — Jan 2021 to Aug 2023\n…'}
-    ]
-  },
-  {
-    id: 'travel',
-    title: {en:'Travel outside the U.S.', es:'Viajes fuera de EE.UU.'},
-    intro: {en:'Every trip outside the U.S. in the last 5 years (3 years if 3-year rule).', es:'Cada viaje fuera de EE.UU. en los últimos 5 años (3 años si regla de 3).'},
-    fields: [
-      {key:'tripsTotal',     label:{en:'Total days outside U.S. in this period',es:'Total de días fuera en este período'}, type:'text', placeholder:'45'},
-      {key:'longestTrip',    label:{en:'Longest single trip (days)',es:'Viaje individual más largo (días)'}, type:'text', placeholder:'21'},
-      {key:'tripsDetail',    label:{en:'List each trip (date out — date in — country)',es:'Lista cada viaje (fecha salida — fecha entrada — país)'}, type:'textarea', placeholder:'2023-06-15 — 2023-06-22 — Mexico\n…'}
-    ]
-  },
-  {
-    id: 'family',
-    title: {en:'Marital + family history', es:'Estado civil + familia'},
-    intro: {en:'Your spouse and children for the application.', es:'Tu cónyuge e hijos para la aplicación.'},
-    fields: [
-      {key:'maritalStatus',   label:{en:'Marital status',es:'Estado civil'}, type:'radio',
-       options:[
-         {value:'single',label:{en:'Single (never married)',es:'Soltero/a (nunca casado/a)'}},
-         {value:'married',label:{en:'Married',es:'Casado/a'}},
-         {value:'divorced',label:{en:'Divorced',es:'Divorciado/a'}},
-         {value:'widowed',label:{en:'Widowed',es:'Viudo/a'}}
-       ]},
-      {key:'spouseName',      label:{en:"Current spouse's full name (if married)",es:'Nombre completo del cónyuge actual (si casado/a)'}, type:'text'},
-      {key:'spouseCitizen',   label:{en:'Is your current spouse a U.S. citizen?',es:'¿Tu cónyuge es ciudadano de EE.UU.?'}, type:'radio',
-       options:[{value:'yes',label:{en:'Yes',es:'Sí'}},{value:'no',label:{en:'No',es:'No'}},{value:'na',label:{en:'N/A',es:'N/A'}}]},
-      {key:'priorMarriages',  label:{en:'Prior marriages (yours + spouse, one per line)',es:'Matrimonios anteriores (tuyos + cónyuge, uno por línea)'}, type:'textarea'},
-      {key:'children',        label:{en:'All children, ever (one per line: name, DOB, country)',es:'Todos los hijos, siempre (uno por línea: nombre, fecha, país)'}, type:'textarea'}
-    ]
-  },
-  {
-    id: 'background',
-    title: {en:'Background questions (Part 12)', es:'Preguntas de antecedentes (Parte 12)'},
-    intro: {en:'These are the disclosure questions. Honest answers — USCIS has your full background check.', es:'Estas son preguntas de divulgación. Respuestas honestas — USCIS tiene tu verificación completa.'},
-    fields: [
-      {key:'everArrested',   label:{en:'Ever arrested, cited, or detained (ANY reason, ANY country)?',es:'¿Alguna vez arrestado, citado o detenido (CUALQUIER razón, CUALQUIER país)?'}, type:'radio',
-       options:[{value:'yes',label:{en:'Yes',es:'Sí'}},{value:'no',label:{en:'No',es:'No'}}]},
-      {key:'arrestDetails',  label:{en:'If yes — describe each incident (date, charge, outcome)',es:'Si sí — describe cada incidente (fecha, cargo, resultado)'}, type:'textarea'},
-      {key:'owesTaxes',      label:{en:'Do you owe overdue federal, state, or local taxes?',es:'¿Debes impuestos federales, estatales o locales atrasados?'}, type:'radio',
-       options:[{value:'yes',label:{en:'Yes',es:'Sí'}},{value:'no',label:{en:'No',es:'No'}}]},
-      {key:'supportsConst',  label:{en:'Do you support the Constitution and U.S. form of government?',es:'¿Apoyas la Constitución y la forma de gobierno de EE.UU.?'}, type:'radio',
-       options:[{value:'yes',label:{en:'Yes',es:'Sí'}},{value:'no',label:{en:'No',es:'No'}}]},
-      {key:'willingOath',    label:{en:'Are you willing to take the full Oath of Allegiance?',es:'¿Estás dispuesto/a a tomar el Juramento de Lealtad completo?'}, type:'radio',
-       options:[{value:'yes',label:{en:'Yes',es:'Sí'}},{value:'no',label:{en:'No',es:'No'}}]}
-    ]
-  }
-];
-
-var n400FormState = { sectionIdx: 0, justFilled: false };
-
-function getN400FormData(){
-  if(!user.n400Form) user.n400Form = {};
-  return user.n400Form;
-}
-
-function startN400FormHelper(){
-  if(!isPlus()){
-    // Show paywall: Plus-only feature
-    toast(lang==='es' ? 'El asistente del N-400 es Plus' : 'N-400 helper is a Plus feature');
-    go('upgrade');
-    return;
-  }
-  // Pre-fill from user profile on first run
-  var f = getN400FormData();
-  N400_FORM_SECTIONS.forEach(function(sec){
-    sec.fields.forEach(function(field){
-      if(field.prefillFrom && !f[field.key] && user[field.prefillFrom]){
-        f[field.key] = user[field.prefillFrom];
-      }
-    });
-  });
-  // Map marital status from profile
-  if(!f.maritalStatus){
-    if(user.marriedToCitizen) f.maritalStatus = 'married';
-  }
-  if(!f.spouseCitizen && user.marriedToCitizen) f.spouseCitizen = 'yes';
-  saveUser();
-  n400FormState.sectionIdx = 0;
-  go('n400Form');
-  renderN400Form();
-}
-
-function n400FormProgress(){
-  var f = getN400FormData();
-  var filled = 0, total = 0;
-  N400_FORM_SECTIONS.forEach(function(sec){
-    sec.fields.forEach(function(field){
-      total++;
-      if(f[field.key] && String(f[field.key]).trim()) filled++;
-    });
-  });
-  return {filled: filled, total: total, pct: total > 0 ? Math.round(filled/total*100) : 0};
-}
-
-function n400SaveField(key, value){
-  if(!user.n400Form) user.n400Form = {};
-  user.n400Form[key] = value;
-  saveUser();
-}
-
-function n400PrevSection(){
-  if(n400FormState.sectionIdx > 0){
-    n400FormState.sectionIdx--;
-    renderN400Form();
-  }
-}
-
-function n400NextSection(){
-  if(n400FormState.sectionIdx < N400_FORM_SECTIONS.length - 1){
-    n400FormState.sectionIdx++;
-    renderN400Form();
-  } else {
-    n400FormState.sectionIdx = N400_FORM_SECTIONS.length; // summary
-    renderN400Form();
-  }
-}
-
-function exitN400Form(){
-  go('docs');
-}
-
-function renderN400Form(){
-  var body = document.getElementById('n400FormBody');
-  var footer = document.getElementById('n400FormFooter');
-  var counter = document.getElementById('n400FormCounter');
-  var fill = document.getElementById('n400FormProgressFill');
-  if(!body) return;
-
-  var totalSecs = N400_FORM_SECTIONS.length;
-  var idx = n400FormState.sectionIdx;
-  var isSummary = idx >= totalSecs;
-
-  if(counter) counter.textContent = isSummary
-    ? (lang==='es' ? 'Resumen' : 'Summary')
-    : (idx + 1) + ' / ' + totalSecs;
-  if(fill) fill.style.width = (isSummary ? 100 : (idx / totalSecs * 100)) + '%';
-
-  if(isSummary){
-    renderN400FormSummary();
-    return;
-  }
-
-  var sec = N400_FORM_SECTIONS[idx];
-  var f = getN400FormData();
-
-  var fieldsHtml = '';
-  sec.fields.forEach(function(field){
-    var val = f[field.key] || '';
-    var hint = field.hint ? '<div class="n400Hint">'+field.hint[lang]+'</div>' : '';
-    var inputHtml;
-    if(field.type === 'textarea'){
-      inputHtml = '<textarea class="n400Input n400Textarea" id="n400f_'+field.key+'" placeholder="'+(field.placeholder||'')+'" oninput="n400SaveField(\''+field.key+'\', this.value)">'+val+'</textarea>';
-    } else if(field.type === 'radio'){
-      inputHtml = '<div class="n400RadioGroup">';
-      field.options.forEach(function(o){
-        var checked = val === o.value;
-        inputHtml += '<label class="n400RadioOpt'+(checked?' n400RadioSel':'')+'">'
-          + '<input type="radio" name="n400f_'+field.key+'" value="'+o.value+'" '+(checked?'checked':'')+' onchange="n400SaveField(\''+field.key+'\', \''+o.value+'\'); renderN400Form()">'
-          + '<span class="n400RadioBox"></span>'
-          + '<span class="n400RadioLbl">'+o.label[lang]+'</span>'
-          + '</label>';
-      });
-      inputHtml += '</div>';
-    } else {
-      var t = field.type === 'date' ? 'date' : 'text';
-      inputHtml = '<input type="'+t+'" class="n400Input" id="n400f_'+field.key+'" placeholder="'+(field.placeholder||'')+'" value="'+val+'" oninput="n400SaveField(\''+field.key+'\', this.value)">';
-    }
-    fieldsHtml += '<div class="n400Field"><label class="n400Label">'+field.label[lang]+'</label>'+inputHtml+hint+'</div>';
-  });
-
-  var prog = n400FormProgress();
-
-  body.innerHTML = ''
-    + '<div class="n400FormHead">'
-    +   '<div class="n400FormKick">'+(lang==='es'?'SECCIÓN ':'SECTION ')+(idx+1)+'</div>'
-    +   '<div class="n400FormTitle">'+sec.title[lang]+'</div>'
-    +   '<div class="n400FormIntro">'+sec.intro[lang]+'</div>'
-    +   '<div class="n400FormProgress">'+prog.filled+' / '+prog.total+' '+(lang==='es'?'campos llenos':'fields filled')+' · '+prog.pct+'%</div>'
-    + '</div>'
-    + '<div class="n400Fields">'+fieldsHtml+'</div>';
-
-  if(footer){
-    var nextLbl = (idx === totalSecs - 1)
-      ? (lang==='es' ? 'Ver resumen' : 'See summary')
-      : (lang==='es' ? 'Siguiente' : 'Next');
-    footer.innerHTML = (idx > 0
-        ? '<button class="n400FormBackBtn" onclick="n400PrevSection()">'+(lang==='es'?'Atrás':'Back')+'</button>'
-        : '<div style="flex:1"></div>')
-      + '<button class="cta n400FormNextBtn" onclick="n400NextSection()">'+nextLbl+' →</button>';
-  }
-}
-
-function renderN400FormSummary(){
-  var body = document.getElementById('n400FormBody');
-  var footer = document.getElementById('n400FormFooter');
-  if(!body) return;
-  var f = getN400FormData();
-  var prog = n400FormProgress();
-
-  var summaryHtml = '';
-  N400_FORM_SECTIONS.forEach(function(sec, secIdx){
-    var rows = '';
-    sec.fields.forEach(function(field){
-      var val = f[field.key];
-      if(!val) return;
-      var displayVal = val;
-      if(field.type === 'radio' && field.options){
-        var opt = field.options.find(function(o){return o.value === val;});
-        if(opt) displayVal = opt.label[lang];
-      }
-      if(field.type === 'textarea'){
-        displayVal = String(displayVal).replace(/\n/g,'<br>');
-      }
-      rows += '<div class="n400SumRow"><div class="n400SumKey">'+field.label[lang]+'</div><div class="n400SumVal">'+displayVal+'</div></div>';
-    });
-    if(!rows) rows = '<div class="n400SumEmpty">'+(lang==='es'?'(sin completar)':'(not filled in)')+'</div>';
-    summaryHtml += '<div class="n400SumSection">'
-      + '<div class="n400SumHead">'
-      +   '<span class="n400SumKick">'+(lang==='es'?'Sección ':'Section ')+(secIdx+1)+'</span> '
-      +   sec.title[lang]
-      +   ' <button class="n400SumEdit" onclick="n400FormState.sectionIdx='+secIdx+'; renderN400Form();">'+(lang==='es'?'Editar':'Edit')+'</button>'
-      + '</div>'
-      + '<div class="n400SumRows">'+rows+'</div>'
-      + '</div>';
-  });
-
-  body.innerHTML = ''
-    + '<div class="n400FormHead">'
-    +   '<div class="n400FormKick">'+(lang==='es'?'TU RESUMEN N-400':'YOUR N-400 SUMMARY')+'</div>'
-    +   '<div class="n400FormTitle">'+(lang==='es'?'Revisa antes de imprimir':'Review before printing')+'</div>'
-    +   '<div class="n400FormIntro">'+(lang==='es'
-        ? 'Imprime esto y úsalo como referencia mientras llenas el N-400 oficial.'
-        : 'Print this and use it as a reference while filling out the official N-400.')+'</div>'
-    +   '<div class="n400FormProgress">'+(lang==='es'?'Completo: ':'Complete: ')+prog.pct+'% · '+prog.filled+'/'+prog.total+'</div>'
-    + '</div>'
-    + '<div class="n400Summary">'+summaryHtml+'</div>'
-    + '<div class="n400PrintBlock" id="n400PrintBlock" style="display:none;"></div>';
-
-  if(footer){
-    footer.innerHTML = '<button class="n400FormBackBtn" onclick="n400PrevSection()">'+(lang==='es'?'Atrás':'Back')+'</button>'
-      + '<button class="cta n400FormNextBtn" onclick="printN400Summary()">'+iconSVG('doc','#fff',14)+' '+(lang==='es'?'Imprimir / PDF':'Print / Save as PDF')+'</button>';
-  }
-}
-
-function printN400Summary(){
-  var f = getN400FormData();
-  var name = f.fullName || user.name || '—';
-  var date = (new Date()).toISOString().substring(0,10);
-  var body = '<style>'
-    + 'body{font-family:Georgia,serif;color:#000;max-width:8in;margin:.5in auto;padding:0 .25in;}'
-    + 'h1{font-size:24px;margin:0 0 4px;letter-spacing:-.5px;}'
-    + '.sub{color:#666;font-size:12px;margin-bottom:18px;}'
-    + 'h2{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:#444;border-bottom:1px solid #888;padding-bottom:4px;margin:24px 0 10px;}'
-    + '.row{display:flex;gap:14px;padding:6px 0;border-bottom:1px dotted #ccc;page-break-inside:avoid;}'
-    + '.key{font-weight:bold;font-size:12px;color:#333;width:38%;flex:0 0 38%;}'
-    + '.val{font-size:13px;color:#000;flex:1;white-space:pre-wrap;}'
-    + '.note{font-size:11px;color:#777;font-style:italic;margin-top:30px;border-top:1px solid #ccc;padding-top:10px;}'
-    + '@media print{@page{margin:.5in;}}'
-    + '</style>';
-  body += '<h1>N-400 Preparation Summary</h1>';
-  body += '<div class="sub">Prepared by ' + name + ' · ' + date + ' · via Camino</div>';
-
-  N400_FORM_SECTIONS.forEach(function(sec, secIdx){
-    var rows = '';
-    sec.fields.forEach(function(field){
-      var val = f[field.key];
-      if(!val) return;
-      var displayVal = val;
-      if(field.type === 'radio' && field.options){
-        var opt = field.options.find(function(o){return o.value === val;});
-        if(opt) displayVal = opt.label.en;
-      }
-      rows += '<div class="row"><div class="key">'+field.label.en+'</div><div class="val">'+String(displayVal).replace(/</g,'&lt;')+'</div></div>';
-    });
-    if(rows){
-      body += '<h2>Section ' + (secIdx+1) + ' · ' + sec.title.en + '</h2>' + rows;
-    }
-  });
-  body += '<div class="note">This is a personal preparation summary — NOT the official N-400 form. Transfer these answers to the latest version of the N-400 from uscis.gov/n-400 before filing. Generated by Camino, an immigration study app.</div>';
-
-  var w = window.open('', '_blank');
-  if(!w){ toast(lang==='es'?'Permite ventanas emergentes':'Allow pop-ups to print'); return; }
-  w.document.open(); w.document.write(body); w.document.close();
-  setTimeout(function(){ try { w.print(); } catch(e){} }, 300);
-}
 
 // ===== USCIS FORM LINKS =====
 // Maps form names to USCIS.gov form pages. These are public, stable URLs.
@@ -7918,7 +7699,21 @@ var VISA_PATHS = [
     eligibility:{en:['Completed 1+ academic year as F-1','Work in field directly related to your degree','Apply within 60 days of graduation','For STEM extension: bachelor\'s+ in eligible STEM field + E-Verify employer'],
                  es:['Completaste 1+ año académico como F-1','Trabajo en área directamente relacionada','Aplicar dentro de 60 días de graduarte','Para STEM: licenciatura+ en STEM elegible + empleador E-Verify']},
     tips:{en:['Don\'t accumulate more than 90 days unemployed during OPT — you lose status.','Report every job change within 10 days via SEVP Portal.','Apply for STEM extension BEFORE your initial OPT expires.','OPT is your runway to find an H-1B sponsor.'],
-          es:['No acumules más de 90 días de desempleo durante OPT — pierdes estatus.','Reporta cada cambio de trabajo dentro de 10 días por el Portal SEVP.','Solicita extensión STEM ANTES de que venza tu OPT inicial.','OPT es tu pista para encontrar un patrocinador H-1B.']}},
+          es:['No acumules más de 90 días de desempleo durante OPT — pierdes estatus.','Reporta cada cambio de trabajo dentro de 10 días por el Portal SEVP.','Solicita extensión STEM ANTES de que venza tu OPT inicial.','OPT es tu pista para encontrar un patrocinador H-1B.']},
+    howItWorks:{en:[
+        'Pre-completion OPT — work BEFORE you graduate: part-time (≤20 hrs/week) while school is in session, full-time during breaks. Every month used is subtracted from your 12-month total.',
+        'Post-completion OPT — the main one: up to 12 months of full-time work in your field AFTER graduation. Your DSO recommends it in SEVIS; you then file Form I-765 with USCIS.',
+        'Apply in the window: from 90 days before your program end date to 60 days after. USCIS approval + the physical EAD card must arrive before you can start work.',
+        'STEM OPT extension — eligible STEM degree + E-Verify employer = +24 months (36 total). File Form I-983 training plan with your employer, then I-765 before your initial OPT expires.',
+        'Unemployment clock: 90 days max on standard OPT, 150 days total with the STEM extension. Report every employer and address change in the SEVP Portal within 10 days.',
+        'Cap-gap: if your H-1B is selected and filed while on OPT, your status and work authorization auto-extend to October 1 so you don\'t fall out of status.'],
+      es:[
+        'OPT pre-graduación — trabaja ANTES de graduarte: medio tiempo (≤20 hrs/semana) durante clases, tiempo completo en vacaciones. Cada mes usado se resta de tu total de 12 meses.',
+        'OPT post-graduación — la principal: hasta 12 meses de trabajo a tiempo completo en tu área DESPUÉS de graduarte. Tu DSO la recomienda en SEVIS; luego presentas el Formulario I-765 con USCIS.',
+        'Aplica en la ventana: desde 90 días antes de terminar tu programa hasta 60 días después. La aprobación de USCIS + la tarjeta EAD física deben llegar antes de poder trabajar.',
+        'Extensión STEM — título STEM elegible + empleador E-Verify = +24 meses (36 en total). Presenta el plan I-983 con tu empleador, luego el I-765 antes de que venza tu OPT inicial.',
+        'Reloj de desempleo: máximo 90 días en OPT estándar, 150 días con la extensión STEM. Reporta cada empleador y cambio de dirección en el Portal SEVP dentro de 10 días.',
+        'Cap-gap: si tu H-1B es seleccionada y presentada mientras estás en OPT, tu estatus y permiso de trabajo se extienden automáticamente hasta el 1 de octubre.']}},
   {id:'h1b', iconName:'briefcase', color:'#00b4a8', cat:'work', forms:['I-129'],
     title:{en:'H-1B Specialty Occupation', es:'H-1B Ocupación Especializada'},
     summary:{en:'Sponsored work visa for jobs requiring a bachelor\'s degree or higher. 3-year term, renewable to 6 (or longer if green-card process started).',
@@ -7926,7 +7721,19 @@ var VISA_PATHS = [
     eligibility:{en:['Bachelor\'s degree (or equivalent) in a specialty field','Job offer from a U.S. employer','Employer files H-1B petition','Win the annual lottery (March registration, ~25% selection rate)'],
                  es:['Licenciatura (o equivalente) en área especializada','Oferta de trabajo de empleador en EE.UU.','El empleador presenta la petición H-1B','Ganar la lotería anual (registro en marzo, ~25% de selección)']},
     tips:{en:['Cap-exempt employers (universities, nonprofit research) skip the lottery — strategic option.','You can\'t change jobs without your new employer filing a transfer petition.','H-1B is "dual intent" — you can pursue a green card while on it.','Start I-140 employment-based GC ASAP to stay protected past year 6.'],
-          es:['Empleadores exentos del cap (universidades, investigación sin fines de lucro) saltan la lotería — opción estratégica.','No puedes cambiar de trabajo sin que el nuevo empleador presente petición de transferencia.','H-1B tiene "doble intención" — puedes buscar residencia mientras estás en ella.','Empieza I-140 (GC por empleo) cuanto antes para mantenerte protegido después del año 6.']}},
+          es:['Empleadores exentos del cap (universidades, investigación sin fines de lucro) saltan la lotería — opción estratégica.','No puedes cambiar de trabajo sin que el nuevo empleador presente petición de transferencia.','H-1B tiene "doble intención" — puedes buscar residencia mientras estás en ella.','Empieza I-140 (GC por empleo) cuanto antes para mantenerte protegido después del año 6.']},
+    howItWorks:{en:[
+        'Registration (March): your employer creates a USCIS account and electronically registers you during the ~2-week window. Fee is $215 per registration (as of FY2026). One registration per person per employer — duplicates are thrown out.',
+        'The lottery (late March): USCIS runs a random selection. Two pools — 65,000 regular cap, plus 20,000 extra for holders of a U.S. master\'s degree or higher (a second chance in the advanced-degree draw).',
+        'Selected? (April–June): only now does your employer file the full I-129 petition with your credentials, plus a certified Labor Condition Application (LCA) from the Department of Labor. Premium processing (15 days) is optional for an extra fee.',
+        'Approved: H-1B status begins October 1 — the start of the new fiscal year. F-1 students on OPT get "cap-gap" so their work authorization bridges to Oct 1 without a gap.',
+        'Not selected: nothing carries over — you must re-register next March. Meanwhile, keep working via a STEM OPT extension, or pivot to a cap-exempt employer, O-1, L-1, or an EB green-card path.'],
+      es:[
+        'Registro (marzo): tu empleador crea una cuenta USCIS y te registra electrónicamente durante la ventana de ~2 semanas. El costo es $215 por registro (para FY2026). Un registro por persona por empleador — los duplicados se descartan.',
+        'La lotería (fines de marzo): USCIS hace una selección aleatoria. Dos grupos — 65,000 del cap regular, más 20,000 adicionales para quienes tienen maestría+ de EE.UU. (una segunda oportunidad en el sorteo de grado avanzado).',
+        '¿Seleccionado? (abril–junio): solo ahora tu empleador presenta la petición completa I-129 con tus credenciales, más una Solicitud de Condición Laboral (LCA) certificada por el Departamento de Trabajo. El procesamiento premium (15 días) es opcional por un costo extra.',
+        'Aprobado: el estatus H-1B comienza el 1 de octubre — inicio del nuevo año fiscal. Los estudiantes F-1 en OPT reciben "cap-gap" para que su permiso de trabajo llegue hasta el 1 de octubre sin interrupción.',
+        'No seleccionado: nada se guarda — debes registrarte de nuevo en marzo. Mientras tanto, sigue trabajando con una extensión STEM OPT, o cambia a un empleador exento del cap, O-1, L-1, o una vía de residencia EB.']}},
   {id:'l1', iconName:'plane', color:'#8c4dd1', cat:'work', forms:['I-129'],
     title:{en:'L-1 Intracompany Transfer', es:'L-1 Transferencia Intra-empresa'},
     summary:{en:'For employees of multinational companies transferring from a foreign office to a U.S. office. L-1A for managers, L-1B for specialized knowledge.',
@@ -8047,9 +7854,17 @@ function renderVisaPaths(){
                   v.forms.forEach(function(f){ formsHtml += uscisFormButton(f); });
                   formsHtml = '<div class="visaSecLbl">'+(lang==='es'?'Formularios':'Forms')+'</div><div class="visaForms">'+formsHtml+'</div>';
                 }
+                var howHtml = '';
+                if(v.howItWorks && v.howItWorks[lang]){
+                  var steps = '';
+                  v.howItWorks[lang].forEach(function(s){ steps += '<li>'+s+'</li>'; });
+                  howHtml = '<div class="visaSecLbl">'+(lang==='es'?'Cómo funciona':'How it works')+'</div>'
+                    + '<ol class="visaList visaSteps">'+steps+'</ol>';
+                }
                 return '<div class="visaCardDetail">'
                   + '<div class="visaSecLbl">'+(lang==='es'?'Elegibilidad':'Eligibility')+'</div>'
                   + '<ul class="visaList">'+eligList+'</ul>'
+                  + howHtml
                   + '<div class="visaSecLbl">'+(lang==='es'?'Consejos clave':'Key tips')+'</div>'
                   + '<ul class="visaList">'+tipList+'</ul>'
                   + formsHtml
@@ -8298,6 +8113,27 @@ var N400_SECTIONS = [
 ];
 
 var n400State = null;
+
+// Card that opens the educational N-400 walkthrough (replaces the old fill-in helper card).
+function n400WalkthroughCard(){
+  var wp = user.n400Progress || {};
+  var wt = N400_SECTIONS.length;
+  var sub = wp.completed
+    ? (lang==='es' ? 'Guía completada · repásala cuando quieras' : 'Guide complete · revisit anytime')
+    : (wp.lastSection
+        ? (lang==='es' ? 'Continúa · sección '+(Math.min(wp.lastSection+1,wt))+' de '+wt : 'Continue · section '+(Math.min(wp.lastSection+1,wt))+' of '+wt)
+        : (lang==='es' ? wt+' secciones · qué pide USCIS y por qué' : wt+' sections · what USCIS asks and why'));
+  return '<div class="n400HelperCard" onclick="startN400Walkthrough()">'
+    + '<div class="n400HelperHead">'
+    +   '<div class="n400HelperIco">'+iconSVG('doc','#fff',20)+'</div>'
+    +   '<div class="n400HelperMain">'
+    +     '<div class="n400HelperTitle">'+(lang==='es'?'Guía del N-400':'N-400 walkthrough')+'</div>'
+    +     '<div class="n400HelperSub">'+sub+'</div>'
+    +   '</div>'
+    +   '<div class="n400HelperArrow">→</div>'
+    + '</div>'
+    + '</div>';
+}
 
 function startN400Walkthrough(resume){
   var start = 0;
@@ -9173,7 +9009,7 @@ function go(id){
     }
   }
   var tabbar = document.querySelector('.tabbar');
-  if(tabbar) tabbar.classList.toggle('hidden', id === 'onboarding' || id === 'eligibility' || id === 'mockTest' || id === 'n400' || id === 'docDetail' || id === 'editField' || id === 'interview' || id === 'flashcards' || id === 'lesson' || id === 'upgrade' || id === 'n400Form' || id === 'trialOffer' || id === 'eligWiz');
+  if(tabbar) tabbar.classList.toggle('hidden', id === 'onboarding' || id === 'eligibility' || id === 'mockTest' || id === 'n400' || id === 'docDetail' || id === 'editField' || id === 'interview' || id === 'flashcards' || id === 'lesson' || id === 'upgrade' || id === 'trialOffer' || id === 'eligWiz');
   if(id === 'docs') renderDocs(); // legacy direct call, still supported
   if(id === 'me') renderMe();
   if(id === 'help') renderHelp();
@@ -9182,7 +9018,6 @@ function go(id){
   if(id === 'visaPaths') renderVisaPaths();
   if(id === 'upgrade') renderUpgrade();
   if(id === 'trialOffer') renderTrialOffer();
-  if(id === 'n400Form') renderN400Form();
   if(id === 'eligPicker') renderEligPicker();
   if(id === 'visaBulletin') renderVisaBulletin();
   if(id === 'path') renderPath();
@@ -9299,24 +9134,10 @@ function renderPathDocs(container){
   var pathCount = applicableDocuments().length;
 
   var html = '';
-  // Plus-only N-400 helper card (n400 path only)
+  // Educational N-400 walkthrough card (n400 path only)
   var pathKey = userDocPathKey();
   if(pathKey === 'n400'){
-    var prog = n400FormProgress();
-    var helperSub = prog.filled > 0
-      ? (lang==='es' ? 'Continúa donde lo dejaste · '+prog.pct+'% completo' : 'Pick up where you left off · '+prog.pct+'% complete')
-      : (lang==='es' ? '8 secciones · guarda automáticamente · imprime al final' : '8 sections · auto-saves · printable at the end');
-    html += '<div class="n400HelperCard" onclick="startN400FormHelper()">'
-      + '<div class="n400HelperHead">'
-      +   '<div class="n400HelperIco">'+iconSVG('pencil','#fff',20)+'</div>'
-      +   '<div class="n400HelperMain">'
-      +     '<div class="n400HelperTitle">'+(lang==='es'?'Asistente del N-400':'N-400 fill-in helper')+plusBadge('md')+'</div>'
-      +     '<div class="n400HelperSub">'+helperSub+'</div>'
-      +   '</div>'
-      +   '<div class="n400HelperArrow">→</div>'
-      + '</div>'
-      + (prog.filled > 0 ? '<div class="n400HelperProgress"><div class="n400HelperFill" style="width:'+prog.pct+'%"></div></div>' : '')
-      + '</div>';
+    html += n400WalkthroughCard();
   }
 
   html += '<div class="docsFilterRow">'
@@ -11853,27 +11674,8 @@ function renderDocs(){
     + '</button>'
     + '</div>';
 
-  // Plus-only N-400 fill-in helper card (only show for N-400 path users)
-  var helperCard = '';
-  if(pathKey === 'n400'){
-    var prog = n400FormProgress();
-    var helperSub = prog.filled > 0
-      ? (lang==='es' ? 'Continúa donde lo dejaste · '+prog.pct+'% completo' : 'Pick up where you left off · '+prog.pct+'% complete')
-      : (lang==='es' ? '8 secciones · guarda automáticamente · imprime al final' : '8 sections · auto-saves · printable at the end');
-    helperCard = '<div class="n400HelperCard" onclick="startN400FormHelper()">'
-      + '<div class="n400HelperHead">'
-      +   '<div class="n400HelperIco">'+iconSVG('pencil','#fff',20)+'</div>'
-      +   '<div class="n400HelperMain">'
-      +     '<div class="n400HelperTitle">'+(lang==='es'?'Asistente del N-400':'N-400 fill-in helper')+plusBadge('md')+'</div>'
-      +     '<div class="n400HelperSub">'+helperSub+'</div>'
-      +   '</div>'
-      +   '<div class="n400HelperArrow">→</div>'
-      + '</div>'
-      + (prog.filled > 0
-          ? '<div class="n400HelperProgress"><div class="n400HelperFill" style="width:'+prog.pct+'%"></div></div>'
-          : '')
-      + '</div>';
-  }
+  // Educational N-400 walkthrough card (only show for N-400 path users)
+  var helperCard = (pathKey === 'n400') ? n400WalkthroughCard() : '';
 
   var html = helperCard + toggleHtml;
   for(var c=0;c<DOC_CATS.length;c++){
@@ -12196,6 +11998,7 @@ function toast(msg){
     applyStaticTranslations();
     applyHeroName();
     camiBoot();
+    Store.init();
     refreshStreakFreezes();
     maybeFreezeStreak();
     renderAll();
@@ -12208,6 +12011,7 @@ function toast(msg){
     applyStaticTranslations();
     applyHeroName();
     camiBoot();
+    Store.init();
     renderAll();
     renderOnboarding();
     go('onboarding');

@@ -1,0 +1,27 @@
+{
+  "name": "camino",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Camino — naturalization journey coach (iOS app)",
+  "scripts": {
+    "build:web": "node scripts/build-web.js",
+    "build:rc": "esbuild revenuecat-shim.js --bundle --format=iife --outfile=www/revenuecat.js",
+    "build": "npm run build:web && npm run build:rc",
+    "sync": "npm run build && npx cap sync ios",
+    "assets": "npx capacitor-assets generate --ios --iconBackgroundColor #12b981 --splashBackgroundColor #12b981",
+    "open:ios": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/ios": "^6.1.0",
+    "@capacitor/splash-screen": "^6.0.0",
+    "@capacitor/status-bar": "^6.0.0",
+    "@revenuecat/purchases-capacitor": "^9.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.1.0",
+    "esbuild": "^0.23.0"
+  }
+}

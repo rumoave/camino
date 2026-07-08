@@ -1,0 +1,16 @@
+{
+  "appId": "com.rumostrategies.camino",
+  "appName": "Camino",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#12b981"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#12b981",
+      "showSpinner": false
+    }
+  }
+}

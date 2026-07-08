@@ -30,6 +30,13 @@ dist/
 build/
 *.log
 
+# Capacitor / iOS (generated on the Mac)
+www/
+ios/App/Pods/
+ios/App/App/public/
+DerivedData/
+*.xcuserstate
+
 # Unrelated sibling projects that happen to live in this folder
 ercf/
 evac-ai-project-2-/

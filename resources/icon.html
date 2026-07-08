@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+<style>
+  html,body{margin:0;padding:0;}
+  /* iOS masks the corners itself — the icon must be a FULL square, no transparency, no pre-rounded corners. */
+  #icon{
+    width:1024px;height:1024px;position:relative;overflow:hidden;
+    background:linear-gradient(145deg,#3fce74 0%,#12b981 55%,#00b4a8 100%);
+  }
+  #icon svg{position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);width:620px;height:620px;}
+</style>
+</head>
+<body>
+  <div id="icon">
+    <!-- Cami the dove (from the app's hero mascot), centered -->
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="62" rx="24" ry="26" fill="#ffffff" stroke="#1d1d22" stroke-width="3"/>
+      <ellipse cx="34" cy="58" rx="11" ry="20" fill="#00b4a8" stroke="#1d1d22" stroke-width="3" transform="rotate(-18 34 58)"/>
+      <circle cx="56" cy="30" r="20" fill="#ffffff" stroke="#1d1d22" stroke-width="3"/>
+      <ellipse cx="63" cy="25" rx="7" ry="9" fill="#ffffff"/>
+      <circle cx="63" cy="27" r="3" fill="#1d1d22"/>
+      <circle cx="64" cy="26" r="1" fill="#ffffff"/>
+      <polygon points="73,32 84,28 73,38" fill="#ff9b21" stroke="#1d1d22" stroke-width="2" stroke-linejoin="round"/>
+      <line x1="44" y1="86" x2="40" y2="94" stroke="#ff9b21" stroke-width="4" stroke-linecap="round"/>
+      <line x1="56" y1="86" x2="60" y2="94" stroke="#ff9b21" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 38 60 Q 42 55 46 60" stroke="#1d1d22" stroke-width="2" fill="none" stroke-linecap="round" opacity=".5"/>
+    </svg>
+  </div>
+</body>
+</html>
