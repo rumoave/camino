@@ -1128,7 +1128,10 @@ select:focus-visible,
 
 /* ===== PATH VIEW (combined Journey + Docs) ===== */
 .pathHead{
-  padding:18px 18px 0;background:linear-gradient(180deg,#fff8eb 0%,rgba(255,248,235,0) 100%);
+  /* Clear the 54px status-bar overlay (+ notch/Dynamic Island safe area on device).
+     The parent .body uses padding-top:0 for this view, so the header must reserve it. */
+  padding:max(62px, calc(44px + env(safe-area-inset-top, 0px))) 18px 0;
+  background:linear-gradient(180deg,#fff8eb 0%,rgba(255,248,235,0) 100%);
 }
 .pathTitle{
   font-family:'Fraunces',serif;font-weight:700;font-size:24px;
@@ -3562,7 +3565,7 @@ select:focus-visible,
 /* ===== IMPORTANT DATES ===== */
 .datesHead{
   background:linear-gradient(160deg,#5b5bd6,#7b61ff);color:#fff;
-  padding:60px 22px 22px;border-radius:0 0 26px 26px;
+  padding:max(60px, calc(42px + env(safe-area-inset-top, 0px))) 22px 22px;border-radius:0 0 26px 26px;
 }
 .datesKick{font-size:12px;font-weight:800;opacity:.85;text-transform:uppercase;letter-spacing:.5px;}
 .datesTitleBig{font-size:28px;font-weight:850;letter-spacing:-.5px;margin-top:4px;}
@@ -3588,7 +3591,7 @@ select:focus-visible,
 /* ===== DOCUMENTS ===== */
 .docsHead{
   background:linear-gradient(160deg,#5b5bd6,#7b61ff);color:#fff;
-  padding:60px 22px 22px;border-radius:0 0 26px 26px;
+  padding:max(60px, calc(42px + env(safe-area-inset-top, 0px))) 22px 22px;border-radius:0 0 26px 26px;
 }
 .docsKick{font-size:12px;font-weight:800;opacity:.85;text-transform:uppercase;letter-spacing:.5px;}
 .docsTitleBig{font-size:28px;font-weight:850;letter-spacing:-.5px;margin-top:4px;}
