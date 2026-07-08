@@ -1849,10 +1849,14 @@ function todayXP(){
 
 // ===== DOCUMENT VAULT =====
 var DOC_CATS = [
-  {id:'identity', label:{en:'Identity',         es:'Identidad'},          icon:'id',     color:'#8c4dd1'},
-  {id:'records',  label:{en:'Records',          es:'Registros'},          icon:'book',   color:'#1cb0f6'},
-  {id:'family',   label:{en:'Family',           es:'Familia'},            icon:'people', color:'#ec4f93'},
-  {id:'fees',     label:{en:'Fees & forms',     es:'Tarifas y formularios'}, icon:'bill', color:'#58cc02'}
+  {id:'identity',     label:{en:'Identity',           es:'Identidad'},                icon:'id',        color:'#8c4dd1'},
+  {id:'student',      label:{en:'Student status',     es:'Estatus estudiantil'},      icon:'book',      color:'#1cb0f6'},
+  {id:'work',         label:{en:'Work authorization', es:'Autorización de trabajo'},  icon:'briefcase', color:'#00b4a8'},
+  {id:'gc',           label:{en:'Green card',         es:'Residencia'},               icon:'id',        color:'#34c759'},
+  {id:'records',      label:{en:'Records',            es:'Registros'},                icon:'book',      color:'#1cb0f6'},
+  {id:'family',       label:{en:'Family',             es:'Familia'},                  icon:'people',    color:'#ec4f93'},
+  {id:'humanitarian', label:{en:'Protection',         es:'Protección'},               icon:'shield',    color:'#ff9b21'},
+  {id:'fees',         label:{en:'Fees & forms',       es:'Tarifas y formularios'},    icon:'bill',      color:'#58cc02'}
 ];
 
 var DOCUMENTS = [
