@@ -6689,13 +6689,13 @@ var FAQ_ENTRIES = [
   },
   {
     q:{en:'What does Camino Plus include?', es:'¿Qué incluye Camino Plus?'},
-    a:{en:'Unlimited voice interview practice, unlimited mock tests, streak freezes (2/month), and more.',
-       es:'Entrevista por voz ilimitada, exámenes ilimitados, congelamientos de racha (2/mes) y más.'}
+    a:{en:'Unlimited interview practice, unlimited mock tests, streak freezes (2/month), and more.',
+       es:'Práctica de entrevista ilimitada, exámenes ilimitados, congelamientos de racha (2/mes) y más.'}
   },
   {
     q:{en:'How do I prepare for the civics test?', es:'¿Cómo me preparo para el examen de cívica?'},
-    a:{en:'Use the Learn tab to go through all 100 USCIS questions in 4 units. Take daily flashcards. Practice with mock tests. When ready, use the voice interview to simulate the real USCIS officer experience.',
-       es:'Usa Aprender para pasar las 100 preguntas en 4 unidades. Practica con tarjetas diarias. Toma exámenes de práctica. Cuando estés listo, usa la entrevista por voz para simular la real.'}
+    a:{en:'Use the Learn tab to go through all 100 USCIS questions in 4 units. Take daily flashcards. Practice with mock tests. When ready, use the interview simulator to practice the real USCIS officer experience.',
+       es:'Usa Aprender para pasar las 100 preguntas en 4 unidades. Practica con tarjetas diarias. Toma exámenes de práctica. Cuando estés listo, usa el simulador de entrevista para practicar la real.'}
   },
   {
     q:{en:'Why are some questions difficult to pass with voice?', es:'¿Por qué algunas preguntas son difíciles con voz?'},
@@ -6823,8 +6823,8 @@ function renderTrialOffer(){
 
   var features = [
     {iconName:'mic', color:'#1cb0f6',
-     title:{en:'AI interview practice', es:'Práctica de entrevista IA'},
-     sub:{en:'Real voice simulation that scores you', es:'Simulación de voz que te califica'}},
+     title:{en:'Interview practice', es:'Práctica de entrevista'},
+     sub:{en:'Realistic simulation that scores your answers', es:'Simulación realista que califica tus respuestas'}},
     {iconName:'target', color:'#ec4f93',
      title:{en:'Unlimited mock tests', es:'Exámenes ilimitados'},
      sub:{en:'Free plan caps at 3 per day', es:'Gratis: 3 por día'}},
@@ -7032,7 +7032,7 @@ function showPrivacyNote(){
 }
 
 var PLUS_FEATURES = [
-  {iconName:'mic',       color:'#1cb0f6', title:{en:'AI interview practice',    es:'Práctica de entrevista IA'}, sub:{en:'Conversational simulation that scores you', es:'Simulación conversacional con calificación'}},
+  {iconName:'mic',       color:'#1cb0f6', title:{en:'Interview practice',    es:'Práctica de entrevista'}, sub:{en:'Realistic simulation that scores your answers', es:'Simulación realista que califica tus respuestas'}},
   {iconName:'target',    color:'#ec4f93', title:{en:'Unlimited mock tests',     es:'Exámenes ilimitados'},  sub:{en:'Free plan caps at 3 per day', es:'Gratis: 3 por día'}},
   {iconName:'bolt',      color:'#ff4d3a', title:{en:'Streak freeze + unlimited hearts', es:'Congelar racha + corazones ilimitados'}, sub:{en:'Never lose your streak to a busy day', es:'No pierdas tu racha por un día ocupado'}},
 ];
