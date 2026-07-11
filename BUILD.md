@@ -21,7 +21,7 @@ npm run open:ios           # opens ios/App/App.xcworkspace in Xcode
 
 ## In Xcode
 1. Select the **App** target → **Signing & Capabilities** → set your Team (Apple Developer account).
-   The bundle identifier is `com.rumostrategies.camino` (change in `capacitor.config.json` if needed).
+   The bundle identifier is `com.rumoave.camino` (change in `capacitor.config.json` if needed).
 2. Add capabilities as features land:
    - **In-App Purchase** (for Camino Plus / RevenueCat).
    - **Sign in with Apple** (only if/when accounts are added).
