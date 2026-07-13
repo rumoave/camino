@@ -12,7 +12,7 @@ just stages the web files into `www/`, which Capacitor copies into the native iO
 ## One-time setup (on the Mac)
 ```bash
 npm install
-npm run build:web          # stages web files into www/
+npm run build              # stages web files into www/ + bundles revenuecat.js (fails loudly if missing)
 npx cap add ios            # generates the native ios/ project (Mac only — needs CocoaPods)
 npm run assets             # generates all icon + splash sizes from resources/icon.png & splash.png
 npx cap sync ios           # copies web assets + installs native plugins into the ios/ project
@@ -30,7 +30,7 @@ npm run open:ios           # opens ios/App/App.xcworkspace in Xcode
 
 ## Everyday loop after changing web code
 ```bash
-npm run sync    # build:web + cap sync ios  (then re-run in Xcode)
+npm run sync    # full build + cap sync ios  (then re-run in Xcode)
 ```
 
 ## Notes

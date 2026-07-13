@@ -7,12 +7,9 @@ var CAMI_AVAILABLE = false;
 
 var LANGUAGES = [
   {code:'en', native:'English',           flagIcon:'flagUS',    fullyTranslated:true},
-  {code:'es', native:'Español',           flagIcon:'flagWorld', fullyTranslated:true},
-  {code:'zh', native:'中文 (简体)',           flagIcon:'flagCN',    fullyTranslated:false},
-  {code:'vi', native:'Tiếng Việt',          flagIcon:'flagVN',    fullyTranslated:false},
-  {code:'tl', native:'Tagalog',            flagIcon:'flagPH',    fullyTranslated:false},
-  {code:'ht', native:'Kreyòl ayisyen',     flagIcon:'flagHT',    fullyTranslated:false},
-  {code:'ar', native:'العربية',              flagIcon:'flagAR',    fullyTranslated:false, rtl:true}
+  {code:'es', native:'Español',           flagIcon:'flagWorld', fullyTranslated:true}
+  // v1 ships EN/ES only. The zh/vi/tl/ht/ar beta entries rendered "undefined" on
+  // untranslated surfaces (paywall, FAQ, journeys) — restore only with full coverage.
 ];
 
 // Returns an inline SVG string for the given country code's flag.
@@ -515,7 +512,7 @@ var STAGES = [
       var prefix = eligibleNow(u)
         ? (l==='es' ? 'Elegible ahora' : 'Eligible now')
         : (l==='es' ? 'Elegible desde '+fmtDate(earliestFiling(u),'es') : 'Eligible from '+fmtDate(earliestFiling(u),'en'));
-      return prefix + (l==='es' ? ' · $760 · posible exención' : ' · $760 fee · fee waiver may apply');
+      return prefix + (l==='es' ? ' · $760 ($710 en línea) · posible exención' : ' · $760 fee ($710 online) · fee waiver may apply');
     },
     home: {
       headline: {en:'Eligible to apply — file Form N-400', es:'Listo para aplicar — Formulario N-400'},
@@ -1806,7 +1803,11 @@ var EXPLAIN = {
 };
 
 function findLesson(id){ for(var i=0;i<LESSONS.length;i++) if(LESSONS[i].id===id) return LESSONS[i]; return null; }
-function findQ(id){ for(var i=0;i<CIVICS.length;i++) if(CIVICS[i].id===id) return CIVICS[i]; return null; }
+function findQ(id){
+  for(var i=0;i<CIVICS.length;i++) if(CIVICS[i].id===id) return CIVICS[i];
+  for(var j=0;j<CIVICS_2025.length;j++) if(CIVICS_2025[j].id===id) return CIVICS_2025[j];
+  return null;
+}
 function shuffleArr(arr){
   var a = arr.slice();
   for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
@@ -1867,7 +1868,7 @@ var DOCUMENTS = [
            es:'Ya la tienes — llegó por correo cuando te hiciste residente. Haz copias a color claras de AMBOS lados de la versión más reciente de tu tarjeta I-551.'},
     tips:{en:['If lost or stolen, file Form I-90 to replace it.','If expired, it remains valid for naturalization — but USCIS may ask why you didn\'t renew.','Bring the ORIGINAL card to your interview, plus your copy.'],
           es:['Si se perdió o robó, presenta el Formulario I-90 para reemplazo.','Si vencida, aún es válida para naturalización — pero USCIS puede preguntar por qué no la renovaste.','Lleva la tarjeta ORIGINAL a tu entrevista, más tu copia.']},
-    cost:{en:'$540 to replace via I-90', es:'$540 para reemplazo con I-90'},
+    cost:{en:'$465 online ($415 paper) to replace via I-90', es:'$465 en línea ($415 en papel) con I-90'},
     time:{en:'Have it now; ~10–12 months for I-90 replacement', es:'La tienes ahora; ~10–12 meses para reemplazo I-90'}},
 
   {id:'stateId', cat:'identity', paths:['n400','family-ir','employment'],
@@ -1961,13 +1962,13 @@ var DOCUMENTS = [
     time:{en:'2–6 weeks', es:'2–6 semanas'}},
 
   {id:'fee', cat:'fees', uscisForms:['I-912','G-1450'], paths:['n400'],
-    name:{en:'Filing fee ($760) or fee waiver', es:'Tarifa ($760) o exención'},
+    name:{en:'Filing fee ($760 paper, $710 online) or fee waiver', es:'Tarifa ($760 papel, $710 en línea) o exención'},
     sub:{en:'Form I-912 if you qualify for a waiver', es:'Formulario I-912 si calificas para exención'},
     howTo:{en:'Pay by check or money order to "U.S. Department of Homeland Security," or by credit card with Form G-1450. To request a waiver, file Form I-912 with proof of income or means-tested benefits.',
            es:'Paga con cheque o money order a "U.S. Department of Homeland Security," o con tarjeta usando el Formulario G-1450. Para pedir exención, presenta el Formulario I-912 con prueba de ingresos o beneficios.'},
     tips:{en:['Fee waiver: receiving Medicaid, SNAP, SSI, or TANF auto-qualifies you.','Income below 150% of federal poverty also qualifies (~$22,500/year for one person).','Many people qualify and don\'t know it — check before paying.'],
           es:['Exención: recibir Medicaid, SNAP, SSI o TANF te califica automáticamente.','Ingreso por debajo del 150% del nivel federal de pobreza también califica (~$22,500/año para una persona).','Muchas personas califican y no lo saben — verifica antes de pagar.']},
-    cost:{en:'$760 — or $0 with approved I-912', es:'$760 — o $0 con I-912 aprobado'},
+    cost:{en:'$760 paper, $710 online — or $0 with approved I-912', es:'$760 papel, $710 en línea — o $0 con I-912 aprobado'},
     time:{en:'Immediate', es:'Inmediato'}},
 
   {id:'n400', cat:'fees', uscisForms:['N-400'], paths:['n400'],
@@ -2014,11 +2015,11 @@ var DOCUMENTS = [
   {id:'ead', cat:'work', paths:['opt','asylum'], uscisForms:['I-765'],
     name:{en:'EAD (Employment Authorization)', es:'EAD (Autorización de Empleo)'},
     sub:{en:'Your work permit card', es:'Tu permiso de trabajo'},
-    howTo:{en:'File Form I-765 with USCIS. Asylum applicants: free after 150 days. OPT applicants: $410 + your I-20 endorsed for OPT. Once approved, the EAD card arrives by mail.',
-           es:'Presenta el Formulario I-765 con USCIS. Solicitantes de asilo: gratis después de 150 días. Solicitantes OPT: $410 + tu I-20 endosado para OPT. Una vez aprobado, la tarjeta EAD llega por correo.'},
+    howTo:{en:'File Form I-765 with USCIS. Asylum applicants: free after 150 days. OPT applicants: $470 online ($520 paper) + your I-20 endorsed for OPT. Once approved, the EAD card arrives by mail.',
+           es:'Presenta el Formulario I-765 con USCIS. Solicitantes de asilo: gratis después de 150 días. Solicitantes OPT: $470 en línea ($520 en papel) + tu I-20 endosado para OPT. Una vez aprobado, la tarjeta EAD llega por correo.'},
     tips:{en:['You CANNOT work until you have the EAD card in hand.','OPT card lists a specific start date — don\'t start work until then.','If expired or lost, you stop being authorized to work immediately.'],
           es:['NO PUEDES trabajar hasta tener la tarjeta EAD en mano.','La tarjeta OPT lista una fecha de inicio específica — no empieces a trabajar antes.','Si expira o se pierde, dejas de estar autorizado a trabajar inmediatamente.']},
-    cost:{en:'$410 (OPT) or $0 (asylum)', es:'$410 (OPT) o $0 (asilo)'},
+    cost:{en:'$470 online, $520 paper (OPT) or $0 (asylum)', es:'$470 en línea, $520 papel (OPT) o $0 (asilo)'},
     time:{en:'2–6 months', es:'2–6 meses'}},
 
   {id:'i797', cat:'work', paths:['workvisa','family-ir','employment'],
@@ -3949,7 +3950,8 @@ function renderInterview(){
   var typeLbl = (q.type === 'civics') ? (lang==='es'?'Cívica':'Civics') : (lang==='es'?'N-400':'N-400');
 
   var hfActive = !!intvState.handsFree;
-  var hfBtn = '<button class="intvHandsFreeBtn'+(hfActive?' intvHandsFreeOn':'')+'" '
+  if(!IntvVoice.recognizer) hfActive = false;
+  var hfBtn = !IntvVoice.recognizer ? '' : '<button class="intvHandsFreeBtn'+(hfActive?' intvHandsFreeOn':'')+'" '
     + 'onclick="toggleIntvHandsFree()" '
     + 'aria-pressed="'+(hfActive?'true':'false')+'" '
     + 'aria-label="'+(lang==='es'?'Modo manos libres':'Hands-free mode')+'" '
@@ -3987,15 +3989,17 @@ function renderInterview(){
       + (lang==='es' ? 'El oficial te está hablando…' : 'Officer is speaking…')
       + '</div>';
   } else if(intvState.phase === 'ready'){
-    html += '<div class="intvMicArea">'
-      + '<button class="intvMicBtn" onclick="userPressMic()">'
-      +   '<div class="intvMicIco">'+iconSVG('mic','#fff',38)+'</div>'
-      + '</button>'
-      + '<div class="intvMicHint">'+(lang==='es'?'Toca y responde en voz alta':'Tap, then answer out loud')+'</div>'
-      + '</div>';
-    if(!IntvVoice.recognizer){
+    if(IntvVoice.recognizer){
+      html += '<div class="intvMicArea">'
+        + '<button class="intvMicBtn" onclick="userPressMic()">'
+        +   '<div class="intvMicIco">'+iconSVG('mic','#fff',38)+'</div>'
+        + '</button>'
+        + '<div class="intvMicHint">'+(lang==='es'?'Toca y responde en voz alta':'Tap, then answer out loud')+'</div>'
+        + '</div>';
+    } else {
+      // No SpeechRecognition (iOS WKWebView): typed answers ARE the flow — no dead mic button.
       html += '<div class="intvFallback">'
-        + '<div class="intvFallbackLbl">'+(lang==='es'?'O escribe tu respuesta:':'Or type your answer:')+'</div>'
+        + '<div class="intvFallbackLbl">'+(lang==='es'?'Escribe tu respuesta:':'Type your answer:')+'</div>'
         + '<input type="text" id="intvFallbackInput" class="intvFallbackInput" placeholder="'+(lang==='es'?'Tu respuesta…':'Your answer…')+'" />'
         + '<button class="cta" onclick="submitFallbackAnswer()">'+(lang==='es'?'Enviar':'Submit')+'</button>'
         + '</div>';
@@ -4779,7 +4783,7 @@ var CAMI_DEMO_RESPONSES = [
   {match: ['h-1b', 'h1b', 'h 1 b'],
    reply: "**H-1B** is a specialty-occupation work visa. Requirements:\n• **Bachelor's degree or equivalent** in the field\n• U.S. employer sponsor files **Form I-129**\n• Job pays the **prevailing wage** for the role + location\n• Subject to an annual **cap** (85,000 visas) with a **lottery** in March\n\nValid for **3 years**, renewable to **6 years** (or longer with an approved I-140). To stay beyond 6, you need a green card process going."},
   {match: ['opt', 'optional practical training'],
-   reply: "**OPT (Optional Practical Training)** lets F-1 students work in the U.S. after graduation in a field related to their major:\n• **12 months** standard OPT\n• Plus **24 months STEM extension** if your degree is on the DHS STEM list AND your employer is in **E-Verify**\n\nApply with **Form I-765** up to **90 days before** graduation. Filing fee $410. You CANNOT start working until your **EAD card** arrives.\n\nWatch out: **90 days max** unemployment during the 12-month OPT, 150 days during STEM."},
+   reply: "**OPT (Optional Practical Training)** lets F-1 students work in the U.S. after graduation in a field related to their major:\n• **12 months** standard OPT\n• Plus **24 months STEM extension** if your degree is on the DHS STEM list AND your employer is in **E-Verify**\n\nApply with **Form I-765** up to **90 days before** graduation. Filing fee $470 online ($520 paper). You CANNOT start working until your **EAD card** arrives.\n\nWatch out: **90 days max** unemployment during the 12-month OPT, 150 days during STEM."},
   {match: ['stem opt', 'stem extension'],
    reply: "**STEM OPT extension** gives you 24 more months on top of the standard 12-month OPT. Requirements:\n• Your most recent U.S. degree is on the **DHS STEM list** (most CS, engineering, math, science)\n• Your employer is enrolled in **E-Verify**\n• The job directly relates to your STEM degree\n• You complete a **Form I-983** training plan with your employer\n\nYou can use STEM extension once per degree level (so once after BS, once after MS, etc.)."},
   {match: ['asylum', 'i-589', 'i589'],
@@ -4844,6 +4848,7 @@ function camiInDemoMode(){
 }
 
 function camiBoot(){
+  if(!CAMI_AVAILABLE) return;   // v1: Cami disabled — never touch keys/history at boot
   // Restore prior chat if user has persisted history
   if(user.camiChatHistory && Array.isArray(user.camiChatHistory)){
     camiState.messages = user.camiChatHistory.slice(-40); // cap context window
@@ -5554,8 +5559,12 @@ var Store = {
 
   init: async function(){
     if(!this.isNative()){ this.ready = true; return; }        // web: nothing to configure
+    if(/REPLACE_WITH/.test(STORE_CONFIG.revenueCatApiKey)){
+      console.error('STORE_CONFIG.revenueCatApiKey is still the placeholder — purchases will not work.');
+      return;
+    }
     var rc = this._rc();
-    if(!rc){ return; }                                        // plugin missing → isPlus() uses local fallback
+    if(!rc){ console.error('RevenueCat plugin missing from build (revenuecat.js not bundled?)'); return; }
     try {
       await rc.configure({ apiKey: STORE_CONFIG.revenueCatApiKey });
       await this._refresh();
@@ -5642,6 +5651,34 @@ var Store = {
   }
 };
 
+// Open a URL outside the app. In the Capacitor webview, plain window.open /
+// target=_blank loads the URL in the SAME webview with no back button — the app
+// looks hijacked. Route through the Browser plugin (in-app Safari sheet) instead.
+function openExternal(url){
+  try {
+    if(Store.isNative()){
+      var cap = window.Capacitor;
+      var browser = window.CapBrowser || (cap && cap.Plugins && cap.Plugins.Browser);
+      if(browser && browser.open){ browser.open({ url: url }); return; }
+      window.open(url, '_system');   // Cordova-style fallback
+      return;
+    }
+  } catch(e){}
+  window.open(url, '_blank', 'noopener');
+}
+
+// Delegated interceptor: any <a target="_blank" href="http…"> anywhere in the app
+// (form chips, help resources, travel.state.gov links…) goes through openExternal.
+document.addEventListener('click', function(ev){
+  var a = ev.target && ev.target.closest ? ev.target.closest('a[target="_blank"]') : null;
+  if(!a) return;
+  var href = a.getAttribute('href') || '';
+  if(!/^https?:\/\//i.test(href)) return;
+  if(!Store.isNative()) return;      // web: default behavior is already correct
+  ev.preventDefault();
+  openExternal(href);
+}, true);
+
 function isPlus(){
   if(!user) return false;
   if(Store.isNative() && Store.ready) return Store.entitled() === true;  // native: RevenueCat is source of truth
@@ -5680,7 +5717,7 @@ function startFreeTrial(planCode){
   go('home');
   toast(lang==='es' ? '¡Bienvenido a Camino Plus! 7 días gratis.' : 'Welcome to Camino Plus! 7 days free.');
   setTimeout(function(){
-    toast(lang==='es' ? '🎉 Cami, exámenes ilimitados y más, desbloqueados' : '🎉 Cami, unlimited tests + more, unlocked');
+    toast(lang==='es' ? '🎉 Exámenes ilimitados, entrevistas y más, desbloqueados' : '🎉 Unlimited tests, interviews + more, unlocked');
   }, 2000);
   // Cami offers a tour after the celebratory toasts settle
   setTimeout(maybeOfferTutorial, 3500);
@@ -5744,7 +5781,12 @@ function tutorialOfferDecline(){
 }
 
 function cancelPlus(){
-  // Open the structured cancel flow (reason picker, retention messaging)
+  // Real subscriptions are managed by Apple — never "cancel" locally on device.
+  if(Store.isNative()){
+    openExternal('https://apps.apple.com/account/subscriptions');
+    return;
+  }
+  // Web mock: structured cancel flow (reason picker, retention messaging)
   showCancelFlow();
 }
 
@@ -5789,6 +5831,7 @@ function closeCancelFlow(){
 }
 
 function confirmCancelPlus(reasonId){
+  if(Store.isNative()){ closeCancelFlow(); openExternal('https://apps.apple.com/account/subscriptions'); return; }
   // Save the reason for later analytics (just localStorage in prototype)
   if(!user.cancelHistory) user.cancelHistory = [];
   user.cancelHistory.push({reason: reasonId, at: new Date().toISOString()});
@@ -5808,6 +5851,9 @@ function confirmCancelPlus(reasonId){
 // Check on boot and on focus. Show a one-time-per-day reminder banner when the trial
 // ends in 3 days or 1 day. Stored per-day in user.trialReminderShown so we don't spam.
 function checkTrialReminders(){
+  // Native: trial/renewal state comes from RevenueCat (real StoreKit billing).
+  // The local simulation below must never run on device — it would grant Plus for free.
+  if(Store.isNative()) return;
   if(user.plan !== 'trial' || !user.trialEndsAt) return;
   var daysLeft = trialDaysLeft();
   var todayKey = todayISO();
@@ -6023,8 +6069,8 @@ function renderVisaBulletin(){
     if(isCurrent){
       statusHtml = '<div class="vbStatus vbStatusGood">'
         + iconSVG('check','#1c6b35',22)
-        + '<div><div class="vbStatusTitle">'+(lang==='es'?'¡Tu fecha está vigente!':'Your date is current!')+'</div>'
-        + '<div class="vbStatusSub">'+(lang==='es'?'Puedes presentar el I-485 ahora mismo (o continuar el DS-260).':'You can file I-485 now (or continue DS-260).')+'</div></div>'
+        + '<div><div class="vbStatusTitle">'+(lang==='es'?'Tu fecha podría estar vigente':'Your date may be current')+'</div>'
+        + '<div class="vbStatusSub">'+(lang==='es'?'Según nuestras fechas de referencia, podrías presentar el I-485. Verifica el boletín oficial en travel.state.gov antes de actuar.':'Based on our reference dates, you may be able to file I-485. Verify the official bulletin at travel.state.gov before acting.')+'</div></div>'
         + '</div>';
     } else {
       var monthsBehind = Math.round((new Date(cutoff) - pd) / (-30.44 * 24 * 3600 * 1000));
@@ -6276,11 +6322,11 @@ var ELIGIBILITY_WIZARDS = {
     nextSteps: {
       en: ['Get Form I-983 (Training Plan) signed by you + your employer.',
            'Apply with Form I-765 (eligibility category c)(3)(C)) at least 90 days before your standard OPT expires.',
-           'Filing fee: $410.',
+           'Filing fee: $470 online ($520 paper).',
            'Keep timesheets + training plan documentation throughout the 24 months.'],
       es: ['Obtén el Formulario I-983 (Plan de Entrenamiento) firmado por ti + empleador.',
            'Aplica con I-765 (categoría (c)(3)(C)) al menos 90 días antes que expire tu OPT.',
-           'Tarifa: $410.',
+           'Tarifa: $470 en línea ($520 en papel).',
            'Guarda registros de horas + documentación durante 24 meses.']
     }
   },
@@ -6719,23 +6765,18 @@ var FAQ_ENTRIES = [
   },
   {
     q:{en:'Is my data private?', es:'¿Mis datos son privados?'},
-    a:{en:'All your profile, progress, and settings are stored only on your device (browser localStorage). We do not sell or share data with third parties. Cami conversations go to Anthropic via your personal API key — we never see them.',
-       es:'Tu perfil, progreso y configuración se guardan solo en tu dispositivo. No vendemos ni compartimos datos. Las conversaciones con Cami van a Anthropic con tu clave personal — nosotros no las vemos.'}
+    a:{en:'All your profile, progress, and settings are stored only on your device. We do not sell or share data with third parties, and we run no servers that receive your information.',
+       es:'Tu perfil, progreso y configuración se guardan solo en tu dispositivo. No vendemos ni compartimos datos, y no tenemos servidores que reciban tu información.'}
   },
   {
     q:{en:'Can I use Camino in multiple languages?', es:'¿Puedo usar Camino en varios idiomas?'},
-    a:{en:'Yes — English and Spanish are fully supported. Chinese and Vietnamese are in beta. More languages coming with Plus.',
-       es:'Sí — inglés y español son completos. Chino y vietnamita están en beta. Más idiomas vienen con Plus.'}
+    a:{en:'Yes — English and Spanish are fully supported, and you can switch anytime in Me → Language.',
+       es:'Sí — inglés y español son completos, y puedes cambiar cuando quieras en Yo → Idioma.'}
   },
   {
     q:{en:'What is a streak freeze?', es:'¿Qué es un congelamiento de racha?'},
     a:{en:'A Plus benefit: if you miss a day of study, we automatically use a freeze to protect your streak. You get 2 freezes per month, refreshed monthly.',
        es:'Un beneficio Plus: si pierdes un día, usamos un congelamiento para proteger tu racha. Tienes 2 al mes.'}
-  },
-  {
-    q:{en:'Why does Cami need my Anthropic API key?', es:'¿Por qué Cami necesita mi clave de Anthropic?'},
-    a:{en:'In this prototype, Cami uses your personal API key for transparency on cost (~$0.005 per message). For the production version we\'ll handle billing through your Camino Plus subscription.',
-       es:'En este prototipo, Cami usa tu clave personal por transparencia de costo (~$0.005 por mensaje). En la versión final manejaremos la facturación con tu suscripción Plus.'}
   },
   {
     q:{en:'How do I delete all my data?', es:'¿Cómo borro todos mis datos?'},
@@ -6784,6 +6825,7 @@ function renderHelpFAQ(){
     + '<div class="helpFeedbackSub">'+(lang==='es'?'¿Qué podemos hacer mejor?':'What could we do better?')+'</div>'
     + '<textarea class="helpFeedbackInput" id="helpFeedbackText" placeholder="'+(lang==='es'?'Tu mensaje…':'Your message…')+'"></textarea>'
     + '<button class="cta helpFeedbackSend" onclick="sendFeedback()">'+(lang==='es'?'Enviar':'Send')+'</button>'
+    + '<div class="helpFeedbackSub" style="margin-top:10px;">'+(lang==='es'?'O escríbenos directo:':'Or email us directly:')+' <a href="mailto:'+SUPPORT_EMAIL+'">'+SUPPORT_EMAIL+'</a></div>'
     + '</div>';
   body.innerHTML = html;
   populateIcons();
@@ -6794,19 +6836,21 @@ function toggleFAQ(i){
   renderHelpFAQ();
 }
 
+var SUPPORT_EMAIL = 'cruiz@rumostrategies.com';
+
 function sendFeedback(){
   var t = (document.getElementById('helpFeedbackText')||{}).value || '';
   if(!t.trim()){
     toast(lang==='es' ? 'Escribe tu comentario primero' : 'Write your feedback first');
     return;
   }
-  // Prototype: store locally. Production would POST to your backend.
-  if(!user.feedbackHistory) user.feedbackHistory = [];
-  user.feedbackHistory.push({text: t.trim(), at: new Date().toISOString()});
-  saveUser();
+  // Hand off to the user's mail app — this actually reaches us.
+  var subject = encodeURIComponent('Camino feedback');
+  var body = encodeURIComponent(t.trim() + '\n\n—\nCamino v1.0 · ' + (Store.isNative() ? 'iOS' : 'web') + ' · ' + lang);
+  window.location.href = 'mailto:' + SUPPORT_EMAIL + '?subject=' + subject + '&body=' + body;
   var el = document.getElementById('helpFeedbackText');
   if(el) el.value = '';
-  toast(lang==='es' ? '¡Gracias! Lo leemos todo.' : 'Thanks! We read every message.');
+  toast(lang==='es' ? 'Abriendo tu app de correo…' : 'Opening your mail app…');
 }
 
 // ===== TRIAL OFFER (post-onboarding iOS-style paywall) =====
@@ -6823,11 +6867,17 @@ function renderTrialOffer(){
 
   var features = [
     {iconName:'mic', color:'#1cb0f6',
-     title:{en:'Interview practice', es:'Práctica de entrevista'},
-     sub:{en:'Realistic simulation that scores your answers', es:'Simulación realista que califica tus respuestas'}},
+     title:{en:'Unlimited interview practice', es:'Entrevistas ilimitadas'},
+     sub:{en:'Realistic simulation that scores your answers · free plan: 3/day', es:'Simulación realista que califica tus respuestas · gratis: 3/día'}},
     {iconName:'target', color:'#ec4f93',
      title:{en:'Unlimited mock tests', es:'Exámenes ilimitados'},
      sub:{en:'Free plan caps at 3 per day', es:'Gratis: 3 por día'}},
+    {iconName:'flag', color:'#12b981',
+     title:{en:'Unit 3: Symbols & Geography', es:'Unidad 3: Símbolos y Geografía'},
+     sub:{en:'Extra civics unit exclusive to Plus', es:'Unidad extra de cívica exclusiva de Plus'}},
+    {iconName:'bolt', color:'#ff4d3a',
+     title:{en:'Streak freeze + unlimited hearts', es:'Congelar racha + corazones ilimitados'},
+     sub:{en:'Never lose your streak to a busy day', es:'No pierdas tu racha por un día ocupado'}},
   ];
 
   var featuresHtml = '';
@@ -6880,7 +6930,7 @@ function renderTrialOffer(){
     +   '<button class="trialSkip" onclick="skipTrialOffer()">'+(lang==='es'?'Continuar con el plan gratis':'Continue with free plan')+'</button>'
     +   '<div class="trialFineprint">'+autoRenewText+'</div>'
     +   '<div class="trialLegalRow">'
-    +     '<button class="trialLegalLink" onclick="showDisclaimerModal(true)">'+(lang==='es'?'Términos':'Terms')+'</button>'
+    +     '<button class="trialLegalLink" onclick="showTermsModal()">'+(lang==='es'?'Términos':'Terms')+'</button>'
     +     '<span class="trialLegalSep">·</span>'
     +     '<button class="trialLegalLink" onclick="showPrivacyNote()">'+(lang==='es'?'Privacidad':'Privacy')+'</button>'
     +     '<span class="trialLegalSep">·</span>'
@@ -7031,9 +7081,50 @@ function showPrivacyNote(){
   document.body.appendChild(modal);
 }
 
+// Subscription Terms of Use (EULA) — required on the paywall by App Store 3.1.2.
+function showTermsModal(){
+  var existing = document.getElementById('disclaimerModal');
+  if(existing) existing.remove();
+  var modal = document.createElement('div');
+  modal.id = 'disclaimerModal';
+  modal.className = 'disclaimerOverlay';
+  var text = lang==='es'
+    ? [
+        'Camino Plus es una suscripción auto-renovable: **$7.99/mes** o **$49.99/año**, con 7 días de prueba gratis para nuevos suscriptores.',
+        'El pago se carga a tu cuenta de Apple al confirmar la compra. La suscripción se **renueva automáticamente** salvo que la canceles al menos 24 horas antes del fin del periodo.',
+        'Administra o cancela en cualquier momento en Ajustes → [tu nombre] → Suscripciones. Los reembolsos los gestiona Apple en reportaproblem.apple.com.',
+        'Camino es una app educativa. **No es un bufete de abogados y no ofrece asesoría legal.** El contenido puede cambiar; verifica siempre con fuentes oficiales (uscis.gov).',
+        'El uso de la app se rige por el Acuerdo de Licencia estándar de Apple (EULA): <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">apple.com/legal/…/stdeula</a>.',
+        'Preguntas: **cruiz@rumostrategies.com**'
+      ]
+    : [
+        'Camino Plus is an auto-renewable subscription: **$7.99/month** or **$49.99/year**, with a 7-day free trial for new subscribers.',
+        'Payment is charged to your Apple account at purchase confirmation. The subscription **renews automatically** unless cancelled at least 24 hours before the period ends.',
+        'Manage or cancel anytime in Settings → [your name] → Subscriptions. Refunds are handled by Apple at reportaproblem.apple.com.',
+        'Camino is an educational app. **It is not a law firm and does not provide legal advice.** Content may change; always verify with official sources (uscis.gov).',
+        'Use of the app is governed by Apple\'s standard Licensed Application End User License Agreement (EULA): <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">apple.com/legal/…/stdeula</a>.',
+        'Questions: **cruiz@rumostrategies.com**'
+      ];
+  var bullets = text.map(function(b){
+    var html = b.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    return '<li>'+html+'</li>';
+  }).join('');
+  modal.innerHTML = ''
+    + '<div class="disclaimerCard">'
+    + '  <div class="disclaimerHead">'
+    + '    <div class="disclaimerIco">'+iconSVG('scales','#84807a',26)+'</div>'
+    + '    <div class="disclaimerTitle">'+(lang==='es'?'Términos de uso':'Terms of Use')+'</div>'
+    + '  </div>'
+    + '  <ul class="disclaimerBody">'+bullets+'</ul>'
+    + '  <button class="cta disclaimerCta" onclick="closeDisclaimerModal()">'+(lang==='es'?'Cerrar':'Close')+'</button>'
+    + '</div>';
+  document.body.appendChild(modal);
+}
+
 var PLUS_FEATURES = [
-  {iconName:'mic',       color:'#1cb0f6', title:{en:'Interview practice',    es:'Práctica de entrevista'}, sub:{en:'Realistic simulation that scores your answers', es:'Simulación realista que califica tus respuestas'}},
+  {iconName:'mic',       color:'#1cb0f6', title:{en:'Unlimited interview practice', es:'Entrevistas ilimitadas'}, sub:{en:'Realistic simulation that scores your answers · free plan: 3/day', es:'Simulación realista que califica tus respuestas · gratis: 3/día'}},
   {iconName:'target',    color:'#ec4f93', title:{en:'Unlimited mock tests',     es:'Exámenes ilimitados'},  sub:{en:'Free plan caps at 3 per day', es:'Gratis: 3 por día'}},
+  {iconName:'flag',      color:'#12b981', title:{en:'Unit 3: Symbols & Geography', es:'Unidad 3: Símbolos y Geografía'}, sub:{en:'Extra civics unit exclusive to Plus', es:'Unidad extra de cívica exclusiva de Plus'}},
   {iconName:'bolt',      color:'#ff4d3a', title:{en:'Streak freeze + unlimited hearts', es:'Congelar racha + corazones ilimitados'}, sub:{en:'Never lose your streak to a busy day', es:'No pierdas tu racha por un día ocupado'}},
 ];
 
@@ -7153,7 +7244,7 @@ function renderUpgrade(){
     +   (renewText ? '<div class="upgRenewDisclosure">'+renewText+'</div>' : '')
     + '</div>'
     + '<div class="upgLegalRow">'
-    +   '<button class="trialLegalLink" onclick="showDisclaimerModal(true)">'+(lang==='es'?'Términos':'Terms of Service')+'</button>'
+    +   '<button class="trialLegalLink" onclick="showTermsModal()">'+(lang==='es'?'Términos':'Terms of Use')+'</button>'
     +   '<span class="trialLegalSep">·</span>'
     +   '<button class="trialLegalLink" onclick="showPrivacyNote()">'+(lang==='es'?'Privacidad':'Privacy Policy')+'</button>'
     +   '<span class="trialLegalSep">·</span>'
@@ -7161,8 +7252,8 @@ function renderUpgrade(){
     + '</div>'
     + '<div class="upgFooterNote">'
     +   (lang==='es'
-        ? 'Nuestro nivel gratis cubre toda la preparación del examen de cívica. Plus es para quienes quieren acelerar el proceso o necesitan herramientas más profundas.'
-        : 'Our free tier covers all civics test prep. Plus is for those who want to accelerate or need deeper tools.')
+        ? 'El nivel gratis incluye lecciones de cívica, lista de documentos y práctica diaria. Plus quita los límites y añade herramientas más profundas.'
+        : 'The free tier includes civics lessons, your document checklist, and daily practice. Plus removes the limits and adds deeper tools.')
     + '</div>';
   populateIcons();
 }
@@ -7196,7 +7287,7 @@ var PATH_JOURNEYS = {
        eta:null},
       {id:'s-opt-file',  iconName:'doc',      color:'#ff9b21',
        name:{en:'File OPT (Form I-765)',     es:'Presentar OPT (I-765)'},
-       desc:{en:'Up to 90 days before graduation; $410 fee',     es:'Hasta 90 días antes de graduarte; $410'},
+       desc:{en:'Up to 90 days before graduation; $470 online fee',     es:'Hasta 90 días antes de graduarte; $470 en línea'},
        eta:{en:'~3 months processing',       es:'~3 meses procesamiento'}},
       {id:'s-opt-active',iconName:'briefcase',color:'#00b4a8',
        name:{en:'OPT period',                es:'Período OPT'},
@@ -7683,7 +7774,7 @@ function saveUSCISReceipt(){
 function checkUSCISStatus(){
   // USCIS Case Status site — they don't support deep-linking with the receipt prefilled,
   // so we open the landing page in a new tab. User pastes their saved receipt there.
-  window.open('https://egov.uscis.gov/casestatus/landing.do', '_blank', 'noopener');
+  openExternal('https://egov.uscis.gov/casestatus/landing.do');
 }
 
 function copyUSCISReceipt(){
@@ -8625,7 +8716,7 @@ function pathNextAction(){
           ? 'Publica el día 9 cada mes. Tu fecha de prioridad debe ser anterior a la fecha de corte para presentar el I-485.'
           : 'Published the 9th each month. Your priority date must be earlier than the cutoff before you can file I-485.',
         ctaLabel: lang==='es' ? 'Abrir travesia.state.gov' : 'Open travel.state.gov',
-        ctaAction: "window.open('https://travel.state.gov/content/travel/en/legal/visa-law0/visa-bulletin.html','_blank','noopener')"
+        ctaAction: "openExternal('https://travel.state.gov/content/travel/en/legal/visa-law0/visa-bulletin.html')"
       };
     }
     if(pt === 'family-pref' || pt === 'family-lpr'){
@@ -8635,7 +8726,7 @@ function pathNextAction(){
           ? 'Tu categoría familiar tiene cuota anual. El boletín muestra cuándo te toca presentar.'
           : 'Your family category has an annual quota. The bulletin tells you when it\'s your turn to file.',
         ctaLabel: lang==='es' ? 'Abrir Boletín' : 'Open Visa Bulletin',
-        ctaAction: "window.open('https://travel.state.gov/content/travel/en/legal/visa-law0/visa-bulletin.html','_blank','noopener')"
+        ctaAction: "openExternal('https://travel.state.gov/content/travel/en/legal/visa-law0/visa-bulletin.html')"
       };
     }
     if(pt === 'family-ir'){
@@ -8655,7 +8746,7 @@ function pathNextAction(){
           ? 'Una vez que te aprueben asilo, debes esperar 1 año antes de presentar la residencia.'
           : 'After asylum is granted, you must wait 1 year before applying for adjustment of status.',
         ctaLabel: lang==='es' ? 'Ver requisitos del I-485' : 'See I-485 requirements',
-        ctaAction: "window.open('https://www.uscis.gov/i-485','_blank','noopener')"
+        ctaAction: "openExternal('https://www.uscis.gov/i-485')"
       };
     }
     return null;
@@ -9812,7 +9903,7 @@ function renderLessonIntro(){
     + '<div class="introUnit">'+unitName+'</div>'
     + '<div class="introTitle">'+l.title[lang]+'</div>'
     + (introText ? '<div class="introBody">'+introText+'</div>' : '')
-    + '<div class="introMeta">'+l.qIds.length+' '+(lang==='es' ? 'preguntas' : 'questions')+' · ♥ 5 '+(lang==='es' ? 'corazones' : 'hearts')+'</div>'
+    + '<div class="introMeta">'+l.qIds.length+' '+(lang==='es' ? 'preguntas' : 'questions')+' · ♥ '+(isPlus() ? '∞' : '5')+' '+(lang==='es' ? 'corazones' : 'hearts')+'</div>'
     + '<button class="cta introBegin" onclick="beginLessonQuestions()">'+(lang==='es' ? 'Empezar' : 'Begin')+' →</button>'
     + '<button class="failedExit" onclick="exitLesson()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>'
     + '</div>';
@@ -9902,7 +9993,7 @@ function renderQuestion(){
   if(fill) fill.style.width = fillPct + '%';
 
   var heartsN = document.getElementById('heartsN');
-  if(heartsN) heartsN.textContent = lessonState.hearts;
+  if(heartsN) heartsN.textContent = isPlus() ? '∞' : lessonState.hearts;
 
   picked = null;
   var fb = document.getElementById('fb');
@@ -9940,17 +10031,19 @@ function check(){
   } else {
     lessonState.wrongQIds.push(qId);
     lessonState.inARow = 0;
-    lessonState.hearts = Math.max(0, lessonState.hearts - 1);
-    var heartsN = document.getElementById('heartsN');
-    if(heartsN) heartsN.textContent = lessonState.hearts;
-    var heartsBox = document.querySelector('#lesson .hearts');
-    if(heartsBox){
-      heartsBox.classList.remove('heartLost');
-      void heartsBox.offsetWidth;
-      heartsBox.classList.add('heartLost');
-      setTimeout(function(){ if(heartsBox) heartsBox.classList.remove('heartLost'); }, 450);
+    if(!isPlus()){                      // Plus: unlimited hearts (as advertised on the paywall)
+      lessonState.hearts = Math.max(0, lessonState.hearts - 1);
+      var heartsN = document.getElementById('heartsN');
+      if(heartsN) heartsN.textContent = lessonState.hearts;
+      var heartsBox = document.querySelector('#lesson .hearts');
+      if(heartsBox){
+        heartsBox.classList.remove('heartLost');
+        void heartsBox.offsetWidth;
+        heartsBox.classList.add('heartLost');
+        setTimeout(function(){ if(heartsBox) heartsBox.classList.remove('heartLost'); }, 450);
+      }
+      if(lessonState.hearts === 0) lessonState.failed = true;
     }
-    if(lessonState.hearts === 0) lessonState.failed = true;
   }
 
   document.querySelectorAll('.opt').forEach(function(o){
@@ -10074,6 +10167,7 @@ function renderLessonFailed(){
     + '</div>'
     + (lessonTitle ? '<div class="failedLessonName">'+lessonTitle+'</div>' : '')
     + '<button class="cta failedRetry" onclick="restartLesson()">'+(lang==='es' ? '🔁 Intentar de nuevo' : '🔁 Try again')+'</button>'
+    + (!isPlus() ? '<button class="failedExit" onclick="go(\'upgrade\')">'+(lang==='es' ? '♥ Corazones ilimitados con Plus' : '♥ Unlimited hearts with Plus')+'</button>' : '')
     + '<button class="failedExit" onclick="exitLesson()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>'
     + '</div>';
 }
@@ -10989,7 +11083,23 @@ function exportDatesToICS(){
     ics.push('END:VEVENT');
   });
   ics.push('END:VCALENDAR');
-  var blob = new Blob([ics.join('\r\n')], {type: 'text/calendar'});
+  var content = ics.join('\r\n');
+
+  if(Store.isNative()){
+    // WKWebView has no download manager — the blob/download path silently no-ops.
+    // Write to the app cache and hand the file to the iOS share sheet ("Add to Calendar").
+    var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
+    if(fs && share && fs.writeFile){
+      fs.writeFile({ path: 'camino-dates.ics', data: content, directory: (dir && dir.Cache) || 'CACHE', encoding: (enc && enc.UTF8) || 'utf8' })
+        .then(function(res){ return share.share({ title: 'Camino dates', url: res.uri }); })
+        .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es' ? 'No se pudo exportar' : 'Could not export'); });
+    } else {
+      toast(lang==='es' ? 'Exportar no está disponible en esta versión' : 'Export is not available in this version');
+    }
+    return;
+  }
+
+  var blob = new Blob([content], {type: 'text/calendar'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
@@ -11024,8 +11134,12 @@ function isUnitUnlocked(unitId){
   if(unitId === 1) return true;
   // Plus gate: Unit 3 (Symbols & Geography) requires Camino Plus
   if(unitId === 3 && !isPlus()) return false;
-  // Unit N unlocks when all non-chest lessons of unit N-1 are done
-  var prevLessons = LESSONS.filter(function(l){ return l.unit === unitId - 1 && !l.isChest; });
+  // Unit N unlocks when all non-chest lessons of unit N-1 are done.
+  // Free users skip the Plus-gated Unit 3 as a prerequisite — Unit 4 must not
+  // silently dead-end for them; it unlocks off Unit 2 instead.
+  var prevUnit = unitId - 1;
+  if(prevUnit === 3 && !isPlus()) prevUnit = 2;
+  var prevLessons = LESSONS.filter(function(l){ return l.unit === prevUnit && !l.isChest; });
   return prevLessons.every(function(l){ return user.progress.completedLessons.indexOf(l.id) !== -1; });
 }
 
@@ -11398,20 +11512,24 @@ function renderMe(){
   if(user.criminalHistory) html += '<div class="row"><div class="rIco" style="background:rgba(255,159,10,.16);">'+iconSVG('warning','#ff9b21',20)+'</div><div class="rMain"><div class="rTitle" style="color:var(--orange)">'+(lang==='es'?'Marcado para revisión':'Flagged for review')+'</div><div class="rSub">'+(lang==='es'?'Consulta con un abogado de inmigración antes de presentar':'Talk to an immigration lawyer before filing')+'</div></div></div>';
   html += '</div>';
 
-  var notif = user.notifications || {enabled:false, time:'09:00'};
-  var notifEnabled = notif.enabled && (notifSupported() && Notification.permission === 'granted');
-  html += '<div class="sec">'+(lang==='es'?'Recordatorios':'Reminders')+'</div>';
-  html += '<div class="mini">';
-  html += '<div class="row"><div class="rIco" style="background:rgba(255,107,53,.16);">'+iconSVG('bell','#ff6b35',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Recordatorios diarios':'Daily reminders')+'</div><div class="rSub">'+(notifEnabled ? (lang==='es'?'Activado · navegador':'On · browser') : (lang==='es'?'Desactivado':'Off'))+'</div></div>'
-    + (notifEnabled
-        ? '<button class="meBtnGhost" onclick="disableNotifications()">'+(lang==='es'?'Apagar':'Off')+'</button>'
-        : '<button class="meBtnPrimary" onclick="requestNotifications()">'+(lang==='es'?'Activar':'Enable')+'</button>')
-    + '</div>';
-  if(notifEnabled){
-    html += '<div class="row"><div class="rIco" style="background:rgba(94,92,230,.14);">'+iconSVG('clock','#5e5ce6',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Hora preferida':'Preferred time')+'</div><div class="rSub">'+(lang==='es'?'Para la notificación diaria':'For the daily nudge')+'</div></div><input type="time" class="meTimeInput" value="'+(notif.time||'09:00')+'" onchange="setNotifTime(this.value)" /></div>';
-    html += '<div class="row" onclick="sendTestNotification()"><div class="rIco" style="background:rgba(52,199,89,.14);">'+iconSVG('mailbox','#248a3d',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Probar notificación':'Test notification')+'</div><div class="rSub">'+(lang==='es'?'Envía una ahora mismo':'Send one right now')+'</div></div><div class="chev">›</div></div>';
+  // Web Notification API doesn't exist in the iOS webview — don't offer a dead
+  // "Enable" button there. (Native reminders return via local-notifications in v1.1.)
+  if(notifSupported()){
+    var notif = user.notifications || {enabled:false, time:'09:00'};
+    var notifEnabled = notif.enabled && (Notification.permission === 'granted');
+    html += '<div class="sec">'+(lang==='es'?'Recordatorios':'Reminders')+'</div>';
+    html += '<div class="mini">';
+    html += '<div class="row"><div class="rIco" style="background:rgba(255,107,53,.16);">'+iconSVG('bell','#ff6b35',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Recordatorios diarios':'Daily reminders')+'</div><div class="rSub">'+(notifEnabled ? (lang==='es'?'Activado · navegador':'On · browser') : (lang==='es'?'Desactivado':'Off'))+'</div></div>'
+      + (notifEnabled
+          ? '<button class="meBtnGhost" onclick="disableNotifications()">'+(lang==='es'?'Apagar':'Off')+'</button>'
+          : '<button class="meBtnPrimary" onclick="requestNotifications()">'+(lang==='es'?'Activar':'Enable')+'</button>')
+      + '</div>';
+    if(notifEnabled){
+      html += '<div class="row"><div class="rIco" style="background:rgba(94,92,230,.14);">'+iconSVG('clock','#5e5ce6',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Hora preferida':'Preferred time')+'</div><div class="rSub">'+(lang==='es'?'Para la notificación diaria':'For the daily nudge')+'</div></div><input type="time" class="meTimeInput" value="'+(notif.time||'09:00')+'" onchange="setNotifTime(this.value)" /></div>';
+      html += '<div class="row" onclick="sendTestNotification()"><div class="rIco" style="background:rgba(52,199,89,.14);">'+iconSVG('mailbox','#248a3d',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Probar notificación':'Test notification')+'</div><div class="rSub">'+(lang==='es'?'Envía una ahora mismo':'Send one right now')+'</div></div><div class="chev">›</div></div>';
+    }
+    html += '</div>';
   }
-  html += '</div>';
 
   html += '<div class="sec">'+(lang==='es'?'Tu progreso':'Your progress')+'</div>';
   html += '<div class="mini">';
@@ -11990,11 +12108,13 @@ function toast(msg){
     user.voiceInterviewsTodayCount = stored.voiceInterviewsTodayCount || 0;
     user.voiceInterviewsTodayDate = stored.voiceInterviewsTodayDate || null;
     user.micPermission = stored.micPermission || null;
-    user.n400Form = stored.n400Form || null;
+    // v1 cleanup migration: the removed N-400 filler's drafts (names, criminal-history
+    // answers) and Cami's key/chat history are sensitive — stop persisting them.
+    user.n400Form = null;
     user.immigrationGoal = stored.immigrationGoal || null;
     user.pathCurrentStage = stored.pathCurrentStage || null;
-    user.anthropicApiKey = stored.anthropicApiKey || null;
-    user.camiChatHistory = stored.camiChatHistory || [];
+    user.anthropicApiKey = CAMI_AVAILABLE ? (stored.anthropicApiKey || null) : null;
+    user.camiChatHistory = CAMI_AVAILABLE ? (stored.camiChatHistory || []) : [];
     user.camiMessagesTodayCount = stored.camiMessagesTodayCount || 0;
     user.camiMessagesTodayDate = stored.camiMessagesTodayDate || null;
     user.disclaimerAcceptedVersion = stored.disclaimerAcceptedVersion || null;
@@ -12012,7 +12132,7 @@ function toast(msg){
     user.vbCategory = stored.vbCategory || null;
     user.vbCountry = stored.vbCountry || null;
     user.vbPriorityDate = stored.vbPriorityDate || null;
-    if(stored.lang === 'es' || stored.lang === 'en' || stored.lang === 'zh' || stored.lang === 'vi') lang = stored.lang;
+    lang = (stored.lang === 'es') ? 'es' : 'en';   // v1: EN/ES only (zh/vi users fall back to EN)
     if(stored.preferredLang) user.preferredLang = stored.preferredLang;
     syncLangButtons();
     renderHeroLang();
@@ -12038,4 +12158,12 @@ function toast(msg){
     renderOnboarding();
     go('onboarding');
   }
+
+  // Re-check subscription/trial state when the app returns to the foreground:
+  // native refreshes the RevenueCat entitlement; web re-runs the mock trial clock.
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState !== 'visible' || !user) return;
+    if(Store.isNative() && Store.ready){ Store._refresh(); }
+    else { checkTrialReminders(); }
+  });
 })();
