@@ -5542,7 +5542,7 @@ var PLUS_PRICING = {
 //   Since this app has no bundler, expose it once as window.Purchases via a 5-line esbuild
 //   shim during the iOS build (see BUILD.md). Store falls back to Capacitor.Plugins.Purchases.
 var STORE_CONFIG = {
-  revenueCatApiKey: 'appl_REPLACE_WITH_REVENUECAT_IOS_KEY',
+  revenueCatApiKey: 'appl_PHQDmcdUsrzZbaBhdYSLunAiDmd',
   entitlementId: 'plus',
   products: { annual: 'camino_plus_annual', monthly: 'camino_plus_monthly' }
 };
