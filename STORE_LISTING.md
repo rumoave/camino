@@ -72,9 +72,11 @@ Your data stays on your device. We don't sell or share your personal information
 **4+** — no objectionable content. (When filling the questionnaire, answer "None" to all content descriptors.)
 
 ## URLs you must provide
-- **Support URL:** (required) — a page with a contact email / help
-- **Privacy Policy URL:** (required) — host the in-app privacy text ("data stays on device; RevenueCat for purchases; no sale/sharing")
-- **Marketing URL:** (optional)
+- **Support URL:** https://rumoave.github.io/camino/support.html
+- **Privacy Policy URL:** https://rumoave.github.io/camino/privacy.html
+- **Marketing URL:** (optional — leave blank)
+
+*(Both hosted on GitHub Pages from the `gh-pages` branch of this repo. Edit the HTML there and push to update.)*
 
 ## App Privacy ("nutrition label") answers
 v1 has no accounts and no analytics — data is on-device. The only external SDK is **RevenueCat** (subscriptions). Declare:

@@ -1,6 +1,9 @@
 # Privacy Policy — Camino
 
-_Last updated: [DATE]_
+_Last updated: July 13, 2026_
+
+> Hosted version (the URL App Store Connect points to):
+> https://rumoave.github.io/camino/privacy.html — served from the `gh-pages` branch.
 
 Camino ("we," "us") is an educational study and preparation app for the U.S.
 immigration journey. This policy explains what data the app handles. We designed
