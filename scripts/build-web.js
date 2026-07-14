@@ -11,7 +11,8 @@ const { execSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const OUT = path.join(ROOT, 'www');
-const FILES = ['index.html', 'app.js', 'styles.css', 'manifest.json'];
+const FILES = ['index.html', 'app.js', 'styles.css', 'manifest.json',
+               'pdflib.js', 'n400-official.pdf'];   // N-400 organizer: vendored pdf-lib + official form (edition 01/20/25)
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });

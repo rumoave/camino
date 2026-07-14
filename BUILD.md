@@ -33,6 +33,17 @@ npm run open:ios           # opens ios/App/App.xcworkspace in Xcode
 npm run sync    # full build + cap sync ios  (then re-run in Xcode)
 ```
 
+## N-400 PDF asset (organizer's "generate official draft")
+- `n400-official.pdf` is the official USCIS N-400 (public domain), **edition 01/20/25**,
+  with the XFA layer stripped (pikepdf) so the AcroForm fields fill everywhere.
+- `pdflib.js` is the vendored pdf-lib UMD build (MIT) that fills it on-device.
+- **When USCIS ships a new edition:** re-download from uscis.gov/n-400, strip XFA
+  (`pikepdf`: delete `Root.AcroForm.XFA`, set `NeedAppearances`), and RE-VERIFY the
+  field mapping in `n400FH_buildPdf()` visually — field names/checkbox indices are
+  XFA-generated and scrambled (e.g. marital idx: divorced=0, single=1, widowed=2,
+  married=3, annulled=4, separated=5). Judgment fields (Part 1 basis, Part 9
+  questions, eye/hair) are intentionally never filled.
+
 ## Notes
 - `www/` and the generated `ios/` are gitignored (rebuilt from source).
 - `config.local.js` (dev Anthropic key) and `sw.js` (service worker) are intentionally

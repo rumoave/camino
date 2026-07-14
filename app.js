@@ -8602,9 +8602,12 @@ var N400_SCHEMA = [
     title:{en:'Information about you', es:'Información sobre ti'},
     intro:{en:'Your identity exactly as USCIS has it on file.', es:'Tu identidad exactamente como USCIS la tiene registrada.'},
     questions:[
-      {id:'p_legalName', type:'text', required:true,
-       label:{en:'Current legal name (as on your green card)', es:'Nombre legal actual (como en tu green card)'},
-       help:{en:'Family name, given name, middle name.', es:'Apellidos, nombre, segundo nombre.'}},
+      {id:'p_familyName', type:'text', required:true,
+       label:{en:'Family name / last name (as on your green card)', es:'Apellido(s) (como en tu green card)'}},
+      {id:'p_givenName', type:'text', required:true,
+       label:{en:'Given name / first name', es:'Nombre'}},
+      {id:'p_middleName', type:'text', required:false,
+       label:{en:'Middle name', es:'Segundo nombre'}},
       {id:'p_otherNames', type:'text', required:false,
        label:{en:'Other names you have used', es:'Otros nombres que has usado'},
        help:{en:'Maiden name, nicknames used on documents, aliases. Leave blank if none.', es:'Nombre de soltera, apodos usados en documentos, alias. Deja en blanco si no aplica.'}},
@@ -8645,8 +8648,10 @@ var N400_SCHEMA = [
        help:{en:'Every address, even short stays.', es:'Cada dirección, incluso estancias cortas.'},
        addLabel:{en:'+ Add address', es:'+ Agregar dirección'},
        fields:[
-         {id:'street', type:'text', label:{en:'Street address', es:'Dirección'}},
-         {id:'cityState', type:'text', label:{en:'City, state / country', es:'Ciudad, estado / país'}},
+         {id:'street', type:'text', label:{en:'Street number and name', es:'Número y calle'}},
+         {id:'city', type:'text', label:{en:'City or town', es:'Ciudad'}},
+         {id:'state', type:'text', label:{en:'State (2 letters, e.g. FL)', es:'Estado (2 letras, ej. FL)'}},
+         {id:'zip', type:'text', label:{en:'ZIP code', es:'Código postal'}},
          {id:'from', type:'date', label:{en:'From', es:'Desde'}},
          {id:'to', type:'date', label:{en:'To (blank = current)', es:'Hasta (vacío = actual)'}}
        ]},
@@ -8702,9 +8707,11 @@ var N400_SCHEMA = [
        ]},
       {id:'m_times', type:'text', required:false,
        label:{en:'How many times have you been married (including now)?', es:'¿Cuántas veces te has casado (incluyendo ahora)?'}},
-      {id:'m_spouseName', type:'text', required:false,
-       label:{en:'Current spouse\'s legal name', es:'Nombre legal de tu cónyuge actual'},
+      {id:'m_spouseFamily', type:'text', required:false,
+       label:{en:'Current spouse\'s family name / last name', es:'Apellido(s) de tu cónyuge actual'},
        help:{en:'Skip if not married.', es:'Omite si no estás casado(a).'}},
+      {id:'m_spouseGiven', type:'text', required:false,
+       label:{en:'Current spouse\'s given name / first name', es:'Nombre de tu cónyuge actual'}},
       {id:'m_spouseCitizen', type:'yesno', required:false,
        label:{en:'Is your current spouse a U.S. citizen?', es:'¿Tu cónyuge actual es ciudadano(a) de EE. UU.?'}},
       {id:'m_marriageDate', type:'date', required:false,
@@ -8717,8 +8724,8 @@ var N400_SCHEMA = [
     intro:{en:'All of your children — any age, living anywhere, including stepchildren and adopted children.', es:'Todos tus hijos — de cualquier edad, vivan donde vivan, incluyendo hijastros e hijos adoptados.'},
     questions:[
       {id:'c_count', type:'text', required:true,
-       label:{en:'How many children do you have?', es:'¿Cuántos hijos tienes?'},
-       help:{en:'Enter 0 if none.', es:'Escribe 0 si no tienes.'}},
+       label:{en:'Total number of children under 18 years of age', es:'Número total de hijos menores de 18 años'},
+       help:{en:'The current form (edition 01/20/25) asks for children under 18. Enter 0 if none.', es:'El formulario actual (edición 01/20/25) pregunta por hijos menores de 18. Escribe 0 si no tienes.'}},
       {id:'c_children', type:'group', required:false,
        label:{en:'Children', es:'Hijos'},
        addLabel:{en:'+ Add child', es:'+ Agregar hijo(a)'},
@@ -9135,10 +9142,11 @@ function n400FH_renderSummary(){
   });
   html += '</div>';
 
-  html += '<button class="cta" style="margin-top:16px;" onclick="n400FH_print()">'+(lang==='es'?'Imprimir / guardar como PDF':'Print / save as PDF')+'</button>';
+  html += '<button class="cta" style="margin-top:16px;" onclick="n400FH_pdfEntry()">'+(lang==='es'?'Generar borrador del N-400 oficial (PDF)':'Generate official N-400 draft (PDF)')+'</button>';
+  html += '<div class="n400ExportRow"><button class="n400ExportBtn" onclick="n400FH_print()">'+(lang==='es'?'Imprimir resumen':'Print summary')+'</button></div>';
   html += '<div class="n400Hint" style="margin-top:10px;text-align:center;">'+(lang==='es'
-      ? 'Este resumen es para tu uso personal. Camino no presenta nada ante USCIS.'
-      : 'This summary is for your personal use. Camino does not file anything with USCIS.')+'</div>';
+      ? 'El PDF contiene solo tus respuestas, generado en tu dispositivo. Revísalo, complétalo, fírmalo y preséntalo tú mismo. Camino no presenta nada ante USCIS.'
+      : 'The PDF contains only your answers, generated on your device. Review it, complete it, sign it, and file it yourself. Camino does not file anything with USCIS.')+'</div>';
 
   body.innerHTML = html;
   var footer = document.getElementById('n400FormFooter');
@@ -9274,6 +9282,231 @@ function renderHomeN400FormRow(){
   var t = el.querySelector('.rTitle'), sub = el.querySelector('.rSub');
   if(t) t.textContent = lang==='es' ? 'Continúa tu N-400' : 'Resume your N-400';
   if(sub) sub.textContent = (lang==='es' ? 'Organizador · ' : 'Organizer · ') + n400FH_overallPct() + '% ' + (lang==='es'?'completo':'complete');
+}
+
+// ---- Official PDF generation ----
+// Places ONLY the user's verbatim answers into visually-verified fields of the
+// official N-400 (edition 01/20/25, bundled). Judgment questions (Part 1 basis,
+// Part 9 additional questions) and any checkbox whose index order is scrambled
+// in the XFA-generated AcroForm are ALWAYS left blank for the user to complete
+// by hand. Never suggests an answer. Generated locally — never leaves the device.
+var N400_PDF_EDITION = '01/20/25';
+
+function n400FH_usDate(iso){
+  if(!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso || '';
+  var p = iso.split('-'); return p[1]+'/'+p[2]+'/'+p[0];
+}
+
+function n400FH_loadPdfLib(){
+  return new Promise(function(resolve, reject){
+    if(window.PDFLib) return resolve(window.PDFLib);
+    var s = document.createElement('script');
+    s.src = 'pdflib.js';
+    s.onload = function(){ window.PDFLib ? resolve(window.PDFLib) : reject(new Error('PDFLib missing')); };
+    s.onerror = function(){ reject(new Error('pdflib.js failed to load')); };
+    document.head.appendChild(s);
+  });
+}
+
+async function n400FH_buildPdf(){
+  var PDFLib = await n400FH_loadPdfLib();
+  var res = await fetch('n400-official.pdf');
+  if(!res.ok) throw new Error('asset missing');
+  var doc = await PDFLib.PDFDocument.load(await res.arrayBuffer());
+  var form = doc.getForm();
+  var a = n400FH_state().answers;
+  var F = 'form1[0].';
+
+  function text(name, val){
+    if(val == null || String(val).trim() === '') return;
+    try { form.getTextField(F + name).setText(String(val)); } catch(e){}
+  }
+  function checkBox(name){
+    try { form.getCheckBox(F + name).check(); } catch(e){}
+  }
+  function dropdown(name, val){
+    if(!val) return;
+    var dd; try { dd = form.getDropdown(F + name); } catch(e){ return; }
+    try { dd.select(val); return; } catch(e){}
+    try { dd.select(' ' + val); } catch(e){}
+  }
+
+  // A-Number on every page header
+  var aNum = (a.p_aNumber || '').replace(/[^0-9]/g, '');
+  if(aNum){
+    form.getFields().forEach(function(f){
+      if(f.getName().indexOf('Line1_AlienNumber') !== -1){
+        try { f.setText(aNum); } catch(e){}
+      }
+    });
+  }
+
+  // Part 2 — identity
+  text('#subform[0].P2_Line1_FamilyName[0]', a.p_familyName);
+  text('#subform[12].P2_Line1_FamilyName[1]', a.p_familyName);
+  text('#subform[0].P2_Line1_GivenName[0]', a.p_givenName);
+  text('#subform[12].P2_Line1_GivenName[1]', a.p_givenName);
+  text('#subform[0].P2_Line1_MiddleName[0]', a.p_middleName);
+  text('#subform[12].P2_Line1_MiddleName[1]', a.p_middleName);
+  text('#subform[1].P2_Line8_DateOfBirth[0]', n400FH_usDate(a.p_dob));
+  text('#subform[1].P2_Line9_DateBecamePermanentResident[0]', n400FH_usDate(a.basis_gcDate));
+  text('#subform[1].P2_Line10_CountryOfBirth[0]', a.p_birthCountry);
+  text('#subform[1].P2_Line11_CountryOfNationality[0]', a.p_citCountry);
+  text('#subform[1].Line12b_SSN[0]', (a.p_ssn || '').replace(/[^0-9]/g, ''));
+  // Name change — verified: [0]=No, [1]=Yes
+  if(a.p_nameChange === 'yes') checkBox('#subform[1].P2_Line34_NameChange[1]');
+  if(a.p_nameChange === 'no')  checkBox('#subform[1].P2_Line34_NameChange[0]');
+
+  // Part 3 — biographic (height/weight only; eye/hair checkbox order is scrambled)
+  var hm = /([2-8])\D+(\d{1,2})/.exec(a.b_height || '');
+  if(hm && +hm[2] <= 11){
+    dropdown('#subform[2].P7_Line3_HeightFeet[0]', hm[1]);
+    dropdown('#subform[2].P7_Line3_HeightInches[0]', hm[2]);
+  }
+  var w = (a.b_weight || '').replace(/[^0-9]/g, '');
+  if(w && w.length <= 3){
+    w = ('000' + w).slice(-3);
+    text('#subform[2].P7_Line4_Pounds1[0]', w[0]);
+    text('#subform[2].P7_Line4_Pounds2[0]', w[1]);
+    text('#subform[2].P7_Line4_Pounds3[0]', w[2]);
+  }
+
+  // Part 4 — addresses: row 0 = current, rows 1-3 = prior table
+  var addrs = Array.isArray(a.r_addresses) ? a.r_addresses : [];
+  if(addrs[0]){
+    text('#subform[2].P4_Line1_StreetName[0]', addrs[0].street);
+    text('#subform[2].P4_Line1_City[0]', addrs[0].city);
+    dropdown('#subform[2].P4_Line1_State[0]', (addrs[0].state || '').toUpperCase());
+    text('#subform[2].P4_Line1_ZipCode[0]', addrs[0].zip);
+    text('#subform[2].P4_Line1_DatesofResidence[1]', n400FH_usDate(addrs[0].from));
+    // "To" for the current address is pre-printed PRESENT on the form
+  }
+  for(var i = 1; i <= 3 && addrs[i]; i++){
+    text('#subform[2].P4_Line3_PhysicalAddress' + i + '[0]', addrs[i].street);
+    text('#subform[2].P4_Line3_CityTown' + i + '[0]', addrs[i].city);
+    text('#subform[2].P4_Line3_State' + i + '[0]', (addrs[i].state || '').toUpperCase());
+    text('#subform[2].P4_Line3_ZipCode' + i + '[0]', addrs[i].zip);
+    text('#subform[2].P4_Line3_From' + i + '[0]', n400FH_usDate(addrs[i].from));
+    // "To" column: row 1's field is (mis)named From1[1] in the official file — verified visually
+    if(i === 1) text('#subform[2].P4_Line3_From1[1]', n400FH_usDate(addrs[i].to));
+    else        text('#subform[2].P4_Line3_To' + i + '[0]', n400FH_usDate(addrs[i].to));
+  }
+
+  // Part 5 — marital. Checkbox indices verified: divorced=0, single=1, widowed=2,
+  // married=3, annulled=4, separated=5
+  var MAR_IDX = { divorced:0, single:1, widowed:2, married:3, annulled:4, separated:5 };
+  if(a.m_status in MAR_IDX) checkBox('#subform[3].P10_Line1_MaritalStatus[' + MAR_IDX[a.m_status] + ']');
+  text('#subform[3].Part9Line3_TimesMarried[0]', a.m_times);
+  text('#subform[3].P10_Line4a_FamilyName[0]', a.m_spouseFamily);
+  text('#subform[3].P10_Line4a_GivenName[0]', a.m_spouseGiven);
+  text('#subform[3].P10_Line4e_DateEnterMarriage[0]', n400FH_usDate(a.m_marriageDate));
+
+  // Part 6 — children (grid fields carry misleading P7_Employer* names — verified visually)
+  text('#subform[4].P11_Line1_TotalChildren[0]', a.c_count);
+  text('#subform[10].P11_Line1_TotalChildren[1]', a.c_count);
+  var kids = Array.isArray(a.c_children) ? a.c_children : [];
+  for(var k = 0; k < 3 && kids[k]; k++){
+    var n = k + 1;
+    text('#subform[4].P7_EmployerName' + n + '[0]', kids[k].name);
+    text('#subform[4].P7_From' + n + '[0]', n400FH_usDate(kids[k].dob));
+    text('#subform[4].P7_OccupationFieldStudy' + n + '[0]', kids[k].residence);
+  }
+
+  // Part 7 — employment (Name column is P5_EmployerName*; From is the [1] instance)
+  var jobs = Array.isArray(a.r_employers) ? a.r_employers : [];
+  for(var j = 0; j < 3 && jobs[j]; j++){
+    var m = j + 1;
+    text('#subform[4].P5_EmployerName' + m + '[0]', jobs[j].employer);
+    text('#subform[4].P7_OccupationFieldStudy' + m + '[2]', jobs[j].occupation);
+    text('#subform[4].P7_From' + m + '[1]', n400FH_usDate(jobs[j].from));
+    if(m >= 2) text('#subform[4].P7_To' + m + '[0]', n400FH_usDate(jobs[j].to));
+    // row 1 "To" is pre-printed PRESENT on the form
+  }
+
+  // Part 8 — trips
+  var trips = Array.isArray(a.t_trips) ? a.t_trips : [];
+  for(var t = 0; t < 6 && trips[t]; t++){
+    var r = t + 1;
+    text('#subform[5].P8_Line1_DateLeft' + r + '[0]', n400FH_usDate(trips[t].left));
+    text('#subform[5].P8_Line1_DateReturn' + r + '[0]', n400FH_usDate(trips[t].back));
+    if(r === 1) text('#subform[5].P9_Line1_Countries1[0]', trips[t].where);
+    else        text('#subform[5].P8_Line1_Countries' + r + '[0]', trips[t].where);
+  }
+
+  // Part 1 basis, ethnicity/race, eye/hair, spouse-citizen, and ALL Part 9
+  // additional questions are intentionally left blank (judgment fields or
+  // scrambled checkbox indices) — the user completes them by hand.
+
+  return doc.save();
+}
+
+function n400FH_pdfEntry(){
+  if(!isPlus()){
+    toast(lang==='es' ? 'El organizador N-400 es parte de Plus' : 'The N-400 organizer is part of Plus');
+    go('upgrade');
+    return;
+  }
+  // Confirm modal with the guardrail summary before generating
+  var existing = document.getElementById('disclaimerModal');
+  if(existing) existing.remove();
+  var modal = document.createElement('div');
+  modal.id = 'disclaimerModal';
+  modal.className = 'disclaimerOverlay';
+  var pts = lang==='es'
+    ? ['El PDF se genera <strong>en tu dispositivo</strong> y nunca sale de él.',
+       'Contiene <strong>solo tus respuestas, tal como las escribiste</strong> — nada se sugiere ni se completa por ti.',
+       'Las preguntas de criterio (Parte 1, preguntas adicionales, color de ojos/cabello) quedan <strong>en blanco</strong> para que las completes a mano.',
+       '<strong>Revisa cada página</strong> contra el formulario oficial (edición '+N400_PDF_EDITION+'), complétalo, fírmalo y preséntalo tú mismo.']
+    : ['The PDF is generated <strong>on your device</strong> and never leaves it.',
+       'It contains <strong>only your answers, exactly as you typed them</strong> — nothing is suggested or completed for you.',
+       'Judgment questions (Part 1 basis, additional questions, eye/hair color) are left <strong>blank</strong> for you to complete by hand.',
+       '<strong>Review every page</strong> against the official form (edition '+N400_PDF_EDITION+'), complete it, sign it, and file it yourself.'];
+  modal.innerHTML = ''
+    + '<div class="disclaimerCard">'
+    + '  <div class="disclaimerHead">'
+    + '    <div class="disclaimerIco">'+iconSVG('doc','#00b4a8',26)+'</div>'
+    + '    <div class="disclaimerTitle">'+(lang==='es'?'Generar tu borrador N-400':'Generate your N-400 draft')+'</div>'
+    + '  </div>'
+    + '  <ul class="disclaimerBody">'+pts.map(function(p){return '<li>'+p+'</li>';}).join('')+'</ul>'
+    + '  <button class="cta disclaimerCta" onclick="closeDisclaimerModal(); n400FH_generatePDF();">'+(lang==='es'?'Generar PDF':'Generate PDF')+'</button>'
+    + '  <button class="camiSetupCancel" style="margin-top:8px;" onclick="closeDisclaimerModal()">'+(lang==='es'?'Cancelar':'Cancel')+'</button>'
+    + '</div>';
+  document.body.appendChild(modal);
+}
+
+async function n400FH_generatePDF(){
+  toast(lang==='es' ? 'Generando tu PDF…' : 'Generating your PDF…');
+  var bytes;
+  try {
+    bytes = await n400FH_buildPdf();
+  } catch(e){
+    toast(lang==='es' ? 'No se pudo generar el PDF' : 'Could not generate the PDF');
+    return;
+  }
+  if(Store.isNative()){
+    var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory;
+    if(fs && share && fs.writeFile){
+      // base64-encode in chunks (large file)
+      var bin = '';
+      for(var i = 0; i < bytes.length; i += 0x8000){
+        bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      }
+      var b64 = btoa(bin);
+      fs.writeFile({ path: 'camino-n400-draft.pdf', data: b64, directory: (dir && dir.Cache) || 'CACHE' })
+        .then(function(res){ return share.share({ title: 'N-400 draft (review, complete & sign)', url: res.uri }); })
+        .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es'?'No se pudo compartir':'Could not share'); });
+    } else {
+      toast(lang==='es' ? 'Compartir no disponible' : 'Sharing unavailable');
+    }
+    return;
+  }
+  var blob = new Blob([bytes], {type:'application/pdf'});
+  var url = URL.createObjectURL(blob);
+  var el = document.createElement('a');
+  el.href = url; el.download = 'camino-n400-draft.pdf';
+  document.body.appendChild(el); el.click();
+  setTimeout(function(){ document.body.removeChild(el); URL.revokeObjectURL(url); }, 100);
+  toast(lang==='es' ? 'PDF descargado · revísalo página por página' : 'PDF downloaded · review it page by page');
 }
 
 // ===== ELIGIBILITY WIZARD =====
@@ -12255,6 +12488,16 @@ function renderMe(){
       html += '<div class="row"><div class="rIco" style="background:rgba(94,92,230,.14);">'+iconSVG('clock','#5e5ce6',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Hora preferida':'Preferred time')+'</div><div class="rSub">'+(lang==='es'?'Para la notificación diaria':'For the daily nudge')+'</div></div><input type="time" class="meTimeInput" value="'+(notif.time||'09:00')+'" onchange="setNotifTime(this.value)" /></div>';
       html += '<div class="row" onclick="sendTestNotification()"><div class="rIco" style="background:rgba(52,199,89,.14);">'+iconSVG('mailbox','#248a3d',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Probar notificación':'Test notification')+'</div><div class="rSub">'+(lang==='es'?'Envía una ahora mismo':'Send one right now')+'</div></div><div class="chev">›</div></div>';
     }
+    html += '</div>';
+  }
+
+  // N-400 organizer + PDF, findable on the profile (regenerated on demand from
+  // saved answers — the file itself is never stored)
+  if(user.n400 && Object.keys(user.n400.answers||{}).length > 0){
+    html += '<div class="sec">'+(lang==='es'?'Tu N-400':'Your N-400')+'</div>';
+    html += '<div class="mini">';
+    html += '<div class="row" onclick="startN400FormHelper()"><div class="rIco" style="background:rgba(0,180,168,.14);">'+iconSVG('folder','#0f6b62',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Organizador N-400':'N-400 organizer')+'</div><div class="rSub">'+n400FH_overallPct()+'% '+(lang==='es'?'completo':'complete')+'</div></div><div class="chev">›</div></div>';
+    html += '<div class="row" onclick="n400FH_pdfEntry()"><div class="rIco" style="background:rgba(94,92,230,.14);">'+iconSVG('doc','#5e5ce6',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tu borrador N-400 (PDF)':'Your N-400 draft (PDF)')+'</div><div class="rSub">'+(lang==='es'?'Generado en tu dispositivo · solo tus respuestas':'Generated on your device · your answers only')+'</div></div><div class="chev">›</div></div>';
     html += '</div>';
   }
 
