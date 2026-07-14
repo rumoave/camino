@@ -8645,7 +8645,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'residence', icon:'🏠', partRef:'Parts 4–5',
+    id:'residence', icon:'🏠', partRef:'Parts 4 & 7',
     title:{en:'Residence & employment', es:'Residencia y empleo'},
     intro:{en:'Where you have lived and worked for the last 5 years, most recent first, with no gaps.', es:'Dónde has vivido y trabajado los últimos 5 años, de lo más reciente a lo más antiguo, sin huecos.'},
     questions:[
@@ -8674,7 +8674,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'trips', icon:'✈️', partRef:'Part 5',
+    id:'trips', icon:'✈️', partRef:'Part 8',
     title:{en:'Time outside the U.S.', es:'Tiempo fuera de EE. UU.'},
     intro:{en:'Trips outside the United States during your eligibility period.', es:'Viajes fuera de Estados Unidos durante tu periodo de elegibilidad.'},
     questions:[
@@ -8697,7 +8697,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'marital', icon:'💍', partRef:'Part 6',
+    id:'marital', icon:'💍', partRef:'Part 5',
     title:{en:'Marital history', es:'Historial matrimonial'},
     intro:{en:'Your current and past marriages.', es:'Tus matrimonios actuales y pasados.'},
     questions:[
@@ -8725,7 +8725,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'children', icon:'👶', partRef:'Part 7',
+    id:'children', icon:'👶', partRef:'Part 6',
     title:{en:'Children', es:'Hijos'},
     intro:{en:'All of your children — any age, living anywhere, including stepchildren and adopted children.', es:'Todos tus hijos — de cualquier edad, vivan donde vivan, incluyendo hijastros e hijos adoptados.'},
     questions:[
@@ -8780,19 +8780,41 @@ function n400FH_state(){
   return user.n400;
 }
 
+function n400FH_flush(){
+  if(!n400FH_saveTimer) return;
+  clearTimeout(n400FH_saveTimer);
+  n400FH_saveTimer = null;
+  n400FH_persist();
+}
+function n400FH_persist(){
+  var st = n400FH_state();
+  st.lastSavedAt = new Date().toISOString();
+  saveUser();
+  // Surface storage failures once — the UI says "auto-saved" and must not lie
+  try {
+    var back = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if(!back.n400 || back.n400.lastSavedAt !== st.lastSavedAt){
+      if(!n400FH_persist._warned){
+        n400FH_persist._warned = true;
+        toast(lang==='es' ? '⚠ No se pudo guardar — espacio lleno. Exporta un respaldo.' : '⚠ Could not save — storage full. Export a backup.');
+      }
+    }
+  } catch(e){}
+}
 function n400FH_save(){
   clearTimeout(n400FH_saveTimer);
-  n400FH_saveTimer = setTimeout(function(){
-    var st = n400FH_state();
-    st.lastSavedAt = new Date().toISOString();
-    n400FH_recomputeFlags();
-    n400FH_recomputeStatus();
-    saveUser();
-  }, 400);
+  n400FH_saveTimer = setTimeout(function(){ n400FH_saveTimer = null; n400FH_persist(); }, 400);
 }
+// Don't lose the last keystroke on app kill / tab close
+window.addEventListener('pagehide', n400FH_flush);
+document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'hidden') n400FH_flush(); });
 
 function n400FH_set(qid, value){
   n400FH_state().answers[qid] = value;
+  // aggregates (flag count, section pills) must be correct the moment any
+  // screen renders — recompute synchronously, debounce only the disk write
+  n400FH_recomputeFlags();
+  n400FH_recomputeStatus();
   n400FH_save();
 }
 
@@ -8804,12 +8826,14 @@ function n400FH_addRow(qid){
   var st = n400FH_state();
   if(!Array.isArray(st.answers[qid])) st.answers[qid] = [];
   st.answers[qid].push({});
+  n400FH_recomputeStatus();
   n400FH_save();
   n400FH_renderSection();
 }
 function n400FH_removeRow(qid, idx){
   var rows = n400FH_groupRows(qid);
   rows.splice(idx, 1);
+  n400FH_recomputeStatus();
   n400FH_save();
   n400FH_renderSection();
 }
@@ -8817,6 +8841,7 @@ function n400FH_setRowField(qid, idx, fid, value){
   var rows = n400FH_groupRows(qid);
   if(!rows[idx]) rows[idx] = {};
   rows[idx][fid] = value;
+  n400FH_recomputeStatus();
   n400FH_save();
 }
 
@@ -8835,7 +8860,12 @@ function n400FH_recomputeFlags(){
 // ---- progress ----
 function n400FH_answered(q){
   var a = n400FH_state().answers[q.id];
-  if(q.type === 'group') return Array.isArray(a) && a.length > 0;
+  if(q.type === 'group'){
+    // an empty added row doesn't count — at least one field must have content
+    return Array.isArray(a) && a.some(function(row){
+      return row && Object.keys(row).some(function(k){ return row[k] && String(row[k]).trim() !== ''; });
+    });
+  }
   return a !== undefined && a !== null && String(a).trim() !== '';
 }
 function n400FH_sectionProgress(sec){
@@ -8878,7 +8908,7 @@ function startN400FormHelper(){
   }
   n400FormUI.mode = 'overview';
   if(st.lastSection != null && !n400FH_isComplete()){
-    n400FormUI.mode = 'overview';   // land on overview; resume chip highlights lastSection
+    n400FormUI.mode = 'overview';   // land on overview; the per-section pills show progress
   }
   go('n400Form');
 }
@@ -8988,6 +9018,10 @@ function n400FH_renderOverview(){
   if(footer) footer.innerHTML = '';
 }
 
+function n400FH_scrollTop(){
+  var sc = document.querySelector('#n400Form .body');
+  if(sc) sc.scrollTop = 0;
+}
 function n400FH_openSection(i){
   n400FormUI.mode = 'section';
   n400FormUI.section = i;
@@ -8995,14 +9029,17 @@ function n400FH_openSection(i){
   st.lastSection = i;
   saveUser();
   n400FH_renderSection();
+  n400FH_scrollTop();
 }
 function n400FH_openSummary(){
   n400FormUI.mode = 'summary';
   n400FH_renderSummary();
+  n400FH_scrollTop();
 }
 function n400FH_backToOverview(){
   n400FormUI.mode = 'overview';
   n400FH_renderOverview();
+  n400FH_scrollTop();
 }
 
 function n400FH_inputHtml(q, val){
@@ -9028,12 +9065,27 @@ function n400FH_inputHtml(q, val){
   return '<input type="text" class="n400Input" value="'+v+'" oninput="n400FH_set(\''+q.id+'\', this.value)" />';
 }
 
+// Official-form capacity per repeatable group (edition 01/20/25). Extra rows
+// stay in the summary but can't be placed on the PDF — the form says to use
+// Part 14 (Additional Information) for overflow.
+var N400_GROUP_META = {
+  r_addresses: { cap: 4, current: true },   // 1 current + 3 prior-table rows
+  r_employers: { cap: 3, current: true },
+  t_trips:     { cap: 6 },
+  c_children:  { cap: 3 }
+};
+
 function n400FH_groupHtml(q){
   var rows = n400FH_groupRows(q.id);
+  var meta = N400_GROUP_META[q.id] || {};
   var html = '';
   rows.forEach(function(row, idx){
+    var isCurrent = meta.current && (!row.to || !String(row.to).trim()) &&
+      rows.slice(0, idx).every(function(r){ return r.to && String(r.to).trim(); });
     html += '<div class="n400GroupRow">'
-      + '<div class="n400GroupRowHead"><span>'+(idx+1)+'</span>'
+      + '<div class="n400GroupRowHead"><span>'+(idx+1)
+      + (isCurrent ? ' <span class="n400SecPill n400SecPillDone">'+(lang==='es'?'Actual':'Current')+'</span>' : '')
+      + '</span>'
       + '<button class="n400GroupRemove" onclick="n400FH_removeRow(\''+q.id+'\','+idx+')">'+(lang==='es'?'Quitar':'Remove')+'</button></div>';
     q.fields.forEach(function(f){
       var fv = esc(row[f.id] == null ? '' : row[f.id]);
@@ -9045,6 +9097,14 @@ function n400FH_groupHtml(q){
     html += '</div>';
   });
   html += '<button class="n400AddRow" onclick="n400FH_addRow(\''+q.id+'\')">'+q.addLabel[lang]+'</button>';
+  if(meta.cap){
+    var over = rows.length > meta.cap;
+    html += '<div class="n400Hint'+(over?'" style="color:#a05000;':'')+'">'
+      + (lang==='es'
+        ? 'El formulario oficial tiene espacio para '+meta.cap+'. '+(meta.current?'Deja "Hasta" vacío en tu '+(q.id==='r_employers'?'empleo actual':'dirección actual')+'. ':'')+(over?'Las filas extra van a mano en la Parte 14.':'Filas extra van a mano en la Parte 14.')
+        : 'The official form has room for '+meta.cap+'. '+(meta.current?'Leave "To" blank on your current one. ':'')+(over?'Your extra rows go in Part 14 by hand.':'Extra rows go in Part 14 by hand.'))
+      + '</div>';
+  }
   return html;
 }
 
@@ -9068,8 +9128,10 @@ function n400FH_renderSection(){
   html += '<div class="n400Fields">';
   sec.questions.forEach(function(q){
     var val = st.answers[q.id];
+    // the trips list stops being "optional" the moment the user says they traveled
+    var effectiveRequired = q.required || (q.id === 't_trips' && st.answers.t_any === 'yes');
     html += '<div class="n400Field">'
-      + '<div class="n400Label">'+q.label[lang]+(q.required?'':' <span style="color:var(--muted);font-weight:600;">('+(lang==='es'?'opcional':'optional')+')</span>')+'</div>'
+      + '<div class="n400Label">'+q.label[lang]+(effectiveRequired?'':' <span style="color:var(--muted);font-weight:600;">('+(lang==='es'?'opcional':'optional')+')</span>')+'</div>'
       + (q.type === 'group' ? n400FH_groupHtml(q) : n400FH_inputHtml(q, val))
       + (q.help ? '<div class="n400Hint">'+q.help[lang]+'</div>' : '');
     if(q.flagId && val === q.flagOn){
@@ -9096,6 +9158,7 @@ function n400FH_valueLabel(q, val){
     return o ? o.label[lang] : esc(val);
   }
   if(q.type === 'yesno') return val === 'yes' ? (lang==='es'?'Sí':'Yes') : 'No';
+  if(q.type === 'date') return esc(n400FH_usDate(val));   // show mm/dd/yyyy — what the official form wants
   return esc(val);
 }
 
@@ -9132,7 +9195,9 @@ function n400FH_renderSummary(){
         rows.forEach(function(row, ri){
           var parts = q.fields.map(function(f){
             var v = row[f.id];
-            return (v && String(v).trim()) ? esc(v) : null;
+            if(!v || !String(v).trim()) return null;
+            if(f.type === 'date') return esc(f.label[lang].split(' (')[0] + ': ' + n400FH_usDate(v));
+            return esc(v);
           }).filter(Boolean).join(' · ');
           if(parts) rowsHtml += '<div class="n400SumRow"><div class="n400SumKey">'+q.label[lang]+' '+(ri+1)+'</div><div class="n400SumVal">'+parts+'</div></div>';
         });
@@ -9166,22 +9231,30 @@ function n400FH_renderSummary(){
 // ---- print + export/import ----
 function n400FH_summaryText(){
   var st = n400FH_state();
-  var lines = ['CAMINO — N-400 ANSWER SUMMARY (personal use only)',
-               'Generated: ' + new Date().toISOString().slice(0,10),
-               'Transfer to the official USCIS Form N-400 yourself. Item numbers vary by edition.',
-               ''];
-  if(st.flags.length) lines.push('FLAGGED ANSWERS: '+st.flags.join(', ')+' — consider consulting an immigration attorney.', '');
+  var lines = [
+    lang==='es' ? 'CAMINO — RESUMEN DE RESPUESTAS N-400 (solo uso personal)' : 'CAMINO — N-400 ANSWER SUMMARY (personal use only)',
+    (lang==='es' ? 'Generado: ' : 'Generated: ') + new Date().toISOString().slice(0,10),
+    lang==='es' ? 'Transfiere al Formulario N-400 oficial de USCIS tú mismo (edición '+N400_PDF_EDITION+').' : 'Transfer to the official USCIS Form N-400 yourself (edition '+N400_PDF_EDITION+').',
+    ''];
+  if(st.flags.length) lines.push((lang==='es' ? 'RESPUESTAS MARCADAS: ' : 'FLAGGED ANSWERS: ')+st.flags.join(', ')+(lang==='es' ? ' — considera consultar a un abogado de inmigración.' : ' — consider consulting an immigration attorney.'), '');
   N400_SCHEMA.forEach(function(sec){
-    lines.push('=== N-400 '+sec.partRef+' — '+sec.title.en+' ===');
+    lines.push('=== N-400 '+sec.partRef+' — '+sec.title[lang]+' ===');
     sec.questions.forEach(function(q){
       if(q.type === 'group'){
         n400FH_groupRows(q.id).forEach(function(row, ri){
-          var parts = q.fields.map(function(f){ return row[f.id] ? (f.label.en+': '+row[f.id]) : null; }).filter(Boolean).join(' | ');
-          if(parts) lines.push('  '+q.label.en+' #'+(ri+1)+': '+parts);
+          var parts = q.fields.map(function(f){
+            if(!row[f.id]) return null;
+            var v = f.type === 'date' ? n400FH_usDate(row[f.id]) : row[f.id];
+            return f.label[lang] + ': ' + v;
+          }).filter(Boolean).join(' | ');
+          if(parts) lines.push('  '+q.label[lang]+' #'+(ri+1)+': '+parts);
         });
       } else {
         var v = st.answers[q.id];
-        if(v != null && String(v).trim() !== '') lines.push('  '+q.label.en+': '+v);
+        if(v != null && String(v).trim() !== ''){
+          var shown = (typeof q.type === 'string' && q.type === 'date') ? n400FH_usDate(v) : v;
+          lines.push('  '+q.label[lang]+': '+shown);
+        }
       }
     });
     lines.push('');
@@ -9232,15 +9305,29 @@ function n400FH_importJSON(input){
   var file = input.files && input.files[0];
   if(!file) return;
   var reader = new FileReader();
+  reader.onerror = function(){ toast(lang==='es'?'No se pudo leer el archivo':'Could not read the file'); };
   reader.onload = function(){
     try {
       var data = JSON.parse(reader.result);
-      var n = data && data.n400;
-      if(!n || typeof n.answers !== 'object') throw new Error('bad shape');
-      user.n400 = { answers: n.answers || {}, sectionStatus: n.sectionStatus || {},
-                    lastSection: (typeof n.lastSection === 'number' ? n.lastSection : null),
-                    lastSavedAt: n.lastSavedAt || null, flags: Array.isArray(n.flags) ? n.flags : [],
-                    disclaimerSeen: true };
+      if(!data || data.caminoN400Backup !== 1) throw new Error('not a camino backup');
+      var n = data.n400;
+      if(!n || typeof n.answers !== 'object' || Array.isArray(n.answers)) throw new Error('bad shape');
+      // only string / string-array-of-plain-row answers survive import (drops objects that
+      // would render as "[object Object]" on the summary/PDF)
+      var clean = {};
+      Object.keys(n.answers).forEach(function(k){
+        var v = n.answers[k];
+        if(typeof v === 'string') clean[k] = v;
+        else if(Array.isArray(v)) clean[k] = v.filter(function(r){ return r && typeof r === 'object'; })
+          .map(function(r){
+            var row = {};
+            Object.keys(r).forEach(function(f){ if(typeof r[f] === 'string') row[f] = r[f]; });
+            return row;
+          });
+      });
+      var ls = (typeof n.lastSection === 'number' && n.lastSection >= 0 && n.lastSection < N400_SCHEMA.length) ? n.lastSection : null;
+      user.n400 = { answers: clean, sectionStatus: {}, lastSection: ls,
+                    lastSavedAt: n.lastSavedAt || null, flags: [], disclaimerSeen: true };
       n400FH_recomputeFlags();
       n400FH_recomputeStatus();
       saveUser();
@@ -9324,6 +9411,7 @@ async function n400FH_buildPdf(){
   var form = doc.getForm();
   var a = n400FH_state().answers;
   var F = 'form1[0].';
+  var skipped = [];   // answers that couldn't be placed — reported to the user afterward
 
   function text(name, val){
     if(val == null || String(val).trim() === '') return;
@@ -9370,35 +9458,51 @@ async function n400FH_buildPdf(){
   if(hm && +hm[2] <= 11){
     dropdown('#subform[2].P7_Line3_HeightFeet[0]', hm[1]);
     dropdown('#subform[2].P7_Line3_HeightInches[0]', hm[2]);
+  } else if(a.b_height && String(a.b_height).trim()){
+    skipped.push((lang==='es'?'Estatura (usa pies\'pulgadas, ej. 5\'7)':'Height (use feet\'inches, e.g. 5\'7)'));
   }
   var w = (a.b_weight || '').replace(/[^0-9]/g, '');
-  if(w && w.length <= 3){
+  if(w && w.length <= 3 && (a.b_weight || '').indexOf('kg') === -1){
     w = ('000' + w).slice(-3);
     text('#subform[2].P7_Line4_Pounds1[0]', w[0]);
     text('#subform[2].P7_Line4_Pounds2[0]', w[1]);
     text('#subform[2].P7_Line4_Pounds3[0]', w[2]);
+  } else if(a.b_weight && String(a.b_weight).trim()){
+    skipped.push((lang==='es'?'Peso (usa libras, solo números)':'Weight (use pounds, numbers only)'));
   }
 
-  // Part 4 — addresses: row 0 = current, rows 1-3 = prior table
-  var addrs = Array.isArray(a.r_addresses) ? a.r_addresses : [];
-  if(addrs[0]){
-    text('#subform[2].P4_Line1_StreetName[0]', addrs[0].street);
-    text('#subform[2].P4_Line1_City[0]', addrs[0].city);
-    dropdown('#subform[2].P4_Line1_State[0]', (addrs[0].state || '').toUpperCase());
-    text('#subform[2].P4_Line1_ZipCode[0]', addrs[0].zip);
-    text('#subform[2].P4_Line1_DatesofResidence[1]', n400FH_usDate(addrs[0].from));
+  // Part 4 — addresses. The form's "current physical address" block has a
+  // pre-printed PRESENT "To" — so the CURRENT address is the first row whose
+  // "To" is blank (not blindly row 0; users may enter oldest-first). All other
+  // rows go to the prior-address table. Rows beyond capacity are counted so
+  // the user is told to add them in Part 14 by hand.
+  var addrs = (Array.isArray(a.r_addresses) ? a.r_addresses : []).filter(function(r){ return r && (r.street || r.city); });
+  var curAddrIdx = -1;
+  for(var ai = 0; ai < addrs.length; ai++){
+    if(!addrs[ai].to || !String(addrs[ai].to).trim()){ curAddrIdx = ai; break; }
+  }
+  if(curAddrIdx !== -1){
+    var cur = addrs[curAddrIdx];
+    text('#subform[2].P4_Line1_StreetName[0]', cur.street);
+    text('#subform[2].P4_Line1_City[0]', cur.city);
+    dropdown('#subform[2].P4_Line1_State[0]', (cur.state || '').toUpperCase());
+    text('#subform[2].P4_Line1_ZipCode[0]', cur.zip);
+    text('#subform[2].P4_Line1_DatesofResidence[1]', n400FH_usDate(cur.from));
     // "To" for the current address is pre-printed PRESENT on the form
   }
-  for(var i = 1; i <= 3 && addrs[i]; i++){
-    text('#subform[2].P4_Line3_PhysicalAddress' + i + '[0]', addrs[i].street);
-    text('#subform[2].P4_Line3_CityTown' + i + '[0]', addrs[i].city);
-    text('#subform[2].P4_Line3_State' + i + '[0]', (addrs[i].state || '').toUpperCase());
-    text('#subform[2].P4_Line3_ZipCode' + i + '[0]', addrs[i].zip);
-    text('#subform[2].P4_Line3_From' + i + '[0]', n400FH_usDate(addrs[i].from));
+  var priorAddrs = addrs.filter(function(r, idx){ return idx !== curAddrIdx; });
+  for(var i = 1; i <= 3 && priorAddrs[i-1]; i++){
+    var pa = priorAddrs[i-1];
+    text('#subform[2].P4_Line3_PhysicalAddress' + i + '[0]', pa.street);
+    text('#subform[2].P4_Line3_CityTown' + i + '[0]', pa.city);
+    text('#subform[2].P4_Line3_State' + i + '[0]', (pa.state || '').toUpperCase());
+    text('#subform[2].P4_Line3_ZipCode' + i + '[0]', pa.zip);
+    text('#subform[2].P4_Line3_From' + i + '[0]', n400FH_usDate(pa.from));
     // "To" column: row 1's field is (mis)named From1[1] in the official file — verified visually
-    if(i === 1) text('#subform[2].P4_Line3_From1[1]', n400FH_usDate(addrs[i].to));
-    else        text('#subform[2].P4_Line3_To' + i + '[0]', n400FH_usDate(addrs[i].to));
+    if(i === 1) text('#subform[2].P4_Line3_From1[1]', n400FH_usDate(pa.to));
+    else        text('#subform[2].P4_Line3_To' + i + '[0]', n400FH_usDate(pa.to));
   }
+  if(priorAddrs.length > 3) skipped.push((lang==='es'?'Direcciones extra: ':'Extra addresses: ') + (priorAddrs.length - 3));
 
   // Part 5 — marital. Checkbox indices verified: divorced=0, single=1, widowed=2,
   // married=3, annulled=4, separated=5
@@ -9419,10 +9523,22 @@ async function n400FH_buildPdf(){
     text('#subform[4].P7_From' + n + '[0]', n400FH_usDate(kids[k].dob));
     text('#subform[4].P7_OccupationFieldStudy' + n + '[0]', kids[k].residence);
   }
+  if(kids.length > 3) skipped.push((lang==='es'?'Hijos extra: ':'Extra children: ') + (kids.length - 3));
 
-  // Part 7 — employment (Name column is P5_EmployerName*; From is the [1] instance)
-  var jobs = Array.isArray(a.r_employers) ? a.r_employers : [];
-  for(var j = 0; j < 3 && jobs[j]; j++){
+  // Part 7 — employment (Name column is P5_EmployerName*; From is the [1] instance).
+  // Row 1's "To" is pre-printed PRESENT, so the CURRENT job (first row with a
+  // blank "To") goes in row 1; rows with end dates fill rows 2-3.
+  var jobsAll = (Array.isArray(a.r_employers) ? a.r_employers : []).filter(function(r){ return r && (r.employer || r.occupation); });
+  var curJobIdx = -1;
+  for(var ji = 0; ji < jobsAll.length; ji++){
+    if(!jobsAll[ji].to || !String(jobsAll[ji].to).trim()){ curJobIdx = ji; break; }
+  }
+  var jobs = [];
+  if(curJobIdx !== -1) jobs.push(jobsAll[curJobIdx]);
+  jobsAll.forEach(function(r, idx){ if(idx !== curJobIdx) jobs.push(r); });
+  if(curJobIdx === -1) jobs.unshift(null);   // no current job → leave row 1 blank (its To is PRESENT)
+  for(var j = 0; j < 3 && j < jobs.length; j++){
+    if(!jobs[j]) continue;
     var m = j + 1;
     text('#subform[4].P5_EmployerName' + m + '[0]', jobs[j].employer);
     text('#subform[4].P7_OccupationFieldStudy' + m + '[2]', jobs[j].occupation);
@@ -9440,12 +9556,15 @@ async function n400FH_buildPdf(){
     if(r === 1) text('#subform[5].P9_Line1_Countries1[0]', trips[t].where);
     else        text('#subform[5].P8_Line1_Countries' + r + '[0]', trips[t].where);
   }
+  if(jobs.length > 3) skipped.push((lang==='es'?'Empleos extra: ':'Extra employers: ') + (jobs.length - 3));
+  if(trips.length > 6) skipped.push((lang==='es'?'Viajes extra: ':'Extra trips: ') + (trips.length - 6));
 
   // Part 1 basis, ethnicity/race, eye/hair, spouse-citizen, and ALL Part 9
   // additional questions are intentionally left blank (judgment fields or
   // scrambled checkbox indices) — the user completes them by hand.
 
-  return doc.save();
+  var bytes = await doc.save();
+  return { bytes: bytes, skipped: skipped };
 }
 
 function n400FH_pdfEntry(){
@@ -9469,6 +9588,18 @@ function n400FH_pdfEntry(){
        'It contains <strong>only your answers, exactly as you typed them</strong> — nothing is suggested or completed for you.',
        'Judgment questions (Part 1 basis, additional questions, eye/hair color) are left <strong>blank</strong> for you to complete by hand.',
        '<strong>Review every page</strong> against the official form (edition '+N400_PDF_EDITION+'), complete it, sign it, and file it yourself.'];
+  // Warn up front if any repeatable group exceeds the official form's capacity
+  var aAll = n400FH_state().answers;
+  var overflow = [];
+  Object.keys(N400_GROUP_META).forEach(function(qid){
+    var rows = Array.isArray(aAll[qid]) ? aAll[qid] : [];
+    if(rows.length > N400_GROUP_META[qid].cap) overflow.push(qid);
+  });
+  if(overflow.length){
+    pts.push(lang==='es'
+      ? '<strong>Tienes más filas de las que caben</strong> en el formulario — las extras deberás añadirlas a mano en la <strong>Parte 14</strong>.'
+      : '<strong>You have more rows than fit</strong> on the form — the extras must be added by hand in <strong>Part 14</strong>.');
+  }
   modal.innerHTML = ''
     + '<div class="disclaimerCard">'
     + '  <div class="disclaimerHead">'
@@ -9482,14 +9613,27 @@ function n400FH_pdfEntry(){
   document.body.appendChild(modal);
 }
 
+var n400FH_generating = false;
 async function n400FH_generatePDF(){
+  if(n400FH_generating) return;
+  n400FH_generating = true;
   toast(lang==='es' ? 'Generando tu PDF…' : 'Generating your PDF…');
-  var bytes;
+  var bytes, result;
   try {
-    bytes = await n400FH_buildPdf();
+    result = await n400FH_buildPdf();
+    bytes = result.bytes;
   } catch(e){
+    n400FH_generating = false;
     toast(lang==='es' ? 'No se pudo generar el PDF' : 'Could not generate the PDF');
     return;
+  }
+  n400FH_generating = false;
+  if(result.skipped && result.skipped.length){
+    setTimeout(function(){
+      toast((lang==='es'
+        ? 'No cupo en el PDF — añádelo a mano (Parte 14): '
+        : 'Didn\'t fit on the PDF — add by hand (Part 14): ') + result.skipped.join(' · '));
+    }, 2500);
   }
   if(Store.isNative()){
     var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory;

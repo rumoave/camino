@@ -2823,10 +2823,17 @@ select:focus-visible,
 
 /* N-400 Form view */
 #n400Form{background:#fafaf7;}
+/* Opaque band from the very top so scrolled content never bleeds through the
+   status bar (the scroller spans the full view height) */
+#n400Form .status{background:#fafaf7;z-index:34;}
 .n400FormTop{
   position:absolute;top:54px;left:0;right:0;height:50px;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 18px;z-index:34;background:#fafaf7;
+}
+.n400FormTop:before{
+  content:"";position:absolute;left:0;right:0;bottom:100%;height:54px;
+  background:#fafaf7;
 }
 .n400FormClose{
   background:#fff;border:1.5px solid var(--hair);border-radius:50%;
