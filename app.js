@@ -6875,6 +6875,9 @@ function renderTrialOffer(){
     {iconName:'flag', color:'#12b981',
      title:{en:'Unit 3: Symbols & Geography', es:'Unidad 3: Símbolos y Geografía'},
      sub:{en:'Extra civics unit exclusive to Plus', es:'Unidad extra de cívica exclusiva de Plus'}},
+    {iconName:'folder', color:'#5e5ce6',
+     title:{en:'N-400 organizer', es:'Organizador N-400'},
+     sub:{en:'Gather your answers for the official form, on your device', es:'Reúne tus respuestas para el formulario oficial, en tu dispositivo'}},
     {iconName:'bolt', color:'#ff4d3a',
      title:{en:'Streak freeze + unlimited hearts', es:'Congelar racha + corazones ilimitados'},
      sub:{en:'Never lose your streak to a busy day', es:'No pierdas tu racha por un día ocupado'}},
@@ -7125,6 +7128,7 @@ var PLUS_FEATURES = [
   {iconName:'mic',       color:'#1cb0f6', title:{en:'Unlimited interview practice', es:'Entrevistas ilimitadas'}, sub:{en:'Realistic simulation that scores your answers · free plan: 3/day', es:'Simulación realista que califica tus respuestas · gratis: 3/día'}},
   {iconName:'target',    color:'#ec4f93', title:{en:'Unlimited mock tests',     es:'Exámenes ilimitados'},  sub:{en:'Free plan caps at 3 per day', es:'Gratis: 3 por día'}},
   {iconName:'flag',      color:'#12b981', title:{en:'Unit 3: Symbols & Geography', es:'Unidad 3: Símbolos y Geografía'}, sub:{en:'Extra civics unit exclusive to Plus', es:'Unidad extra de cívica exclusiva de Plus'}},
+  {iconName:'folder',    color:'#5e5ce6', title:{en:'N-400 organizer', es:'Organizador N-400'}, sub:{en:'Gather your answers for the official form, on your device', es:'Reúne tus respuestas para el formulario oficial, en tu dispositivo'}},
   {iconName:'bolt',      color:'#ff4d3a', title:{en:'Streak freeze + unlimited hearts', es:'Congelar racha + corazones ilimitados'}, sub:{en:'Never lose your streak to a busy day', es:'No pierdas tu racha por un día ocupado'}},
 ];
 
@@ -8552,6 +8556,726 @@ function renderHomeN400Row(){
   }
 }
 
+// ===== N-400 FORM HELPER (stateful, local-only organizer) =====
+// A guided intake for the user's OWN answers. Legal guardrails, enforced by design:
+//  - never suggests, recommends, or prefills a substantive answer
+//  - helpText explains what USCIS asks; it never advises what to answer
+//  - no eligibility/approval language anywhere
+//  - nothing is filed; output is a summary the user transfers to the official
+//    form themselves. All data stays in localStorage (user.n400). No network.
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+var N400_FLAG_NOTE = {
+  en: 'Worth reviewing with a licensed immigration attorney or BIA-accredited representative before you file. It does not necessarily disqualify you — but get advice for your specific situation.',
+  es: 'Vale la pena revisarlo con un abogado de inmigración o un representante acreditado por la BIA antes de presentar. No necesariamente te descalifica — pero busca asesoría para tu situación.'
+};
+
+var N400_SCHEMA = [
+  {
+    id:'basis', icon:'🧭', partRef:'Part 1',
+    title:{en:'Eligibility basis', es:'Base de elegibilidad'},
+    intro:{en:'The first question on the N-400: under which rule you are applying. Camino does not determine which applies to you — check the official instructions or ask a professional if unsure.',
+           es:'La primera pregunta del N-400: bajo qué regla presentas. Camino no determina cuál aplica a ti — consulta las instrucciones oficiales o a un profesional si tienes duda.'},
+    questions:[
+      {id:'basis_type', type:'select', required:true,
+       label:{en:'Basis for applying', es:'Base para aplicar'},
+       help:{en:'The N-400 asks you to pick one. The most common are 5 years as a permanent resident, or 3 years if married to (and living with) a U.S. citizen.',
+             es:'El N-400 pide elegir una. Las más comunes: 5 años como residente permanente, o 3 años si estás casado(a) y viviendo con un ciudadano.'},
+       options:[
+         {v:'5yr',      label:{en:'5 years as a permanent resident', es:'5 años como residente permanente'}},
+         {v:'3yr',      label:{en:'3 years, married to a U.S. citizen', es:'3 años, casado(a) con ciudadano(a)'}},
+         {v:'military', label:{en:'U.S. military service', es:'Servicio militar de EE. UU.'}},
+         {v:'other',    label:{en:'Other basis', es:'Otra base'}}
+       ]},
+      {id:'basis_gcDate', type:'date', required:true,
+       label:{en:'Date you became a permanent resident', es:'Fecha en que fuiste residente permanente'},
+       help:{en:'Printed on your green card as "Resident Since."', es:'Aparece en tu green card como "Resident Since."'}}
+    ]
+  },
+  {
+    id:'personal', icon:'🪪', partRef:'Part 2',
+    title:{en:'Information about you', es:'Información sobre ti'},
+    intro:{en:'Your identity exactly as USCIS has it on file.', es:'Tu identidad exactamente como USCIS la tiene registrada.'},
+    questions:[
+      {id:'p_legalName', type:'text', required:true,
+       label:{en:'Current legal name (as on your green card)', es:'Nombre legal actual (como en tu green card)'},
+       help:{en:'Family name, given name, middle name.', es:'Apellidos, nombre, segundo nombre.'}},
+      {id:'p_otherNames', type:'text', required:false,
+       label:{en:'Other names you have used', es:'Otros nombres que has usado'},
+       help:{en:'Maiden name, nicknames used on documents, aliases. Leave blank if none.', es:'Nombre de soltera, apodos usados en documentos, alias. Deja en blanco si no aplica.'}},
+      {id:'p_nameChange', type:'yesno', required:false,
+       label:{en:'Do you want to legally change your name when you naturalize?', es:'¿Quieres cambiar legalmente tu nombre al naturalizarte?'},
+       help:{en:'The N-400 lets you request a name change that takes effect at your oath ceremony.', es:'El N-400 permite pedir un cambio de nombre que toma efecto en tu ceremonia de juramento.'}},
+      {id:'p_dob', type:'date', required:true, label:{en:'Date of birth', es:'Fecha de nacimiento'}},
+      {id:'p_birthCountry', type:'text', required:true, label:{en:'Country of birth', es:'País de nacimiento'}},
+      {id:'p_citCountry', type:'text', required:true, label:{en:'Country of citizenship or nationality', es:'País de ciudadanía o nacionalidad'}},
+      {id:'p_aNumber', type:'text', required:true,
+       label:{en:'A-Number', es:'Número A'},
+       help:{en:'On your green card; starts with "A".', es:'En tu green card; empieza con "A".'}},
+      {id:'p_ssn', type:'text', required:false,
+       label:{en:'Social Security number', es:'Número de Seguro Social'},
+       help:{en:'Optional to save here — you can add it directly on the official form if you prefer.', es:'Opcional guardarlo aquí — puedes ponerlo directamente en el formulario oficial si prefieres.'}}
+    ]
+  },
+  {
+    id:'bio', icon:'🧬', partRef:'Part 3',
+    title:{en:'Biographic information', es:'Información biográfica'},
+    intro:{en:'Physical description used for your records and background checks.', es:'Descripción física usada para tus registros y verificación de antecedentes.'},
+    questions:[
+      {id:'b_height', type:'text', required:false, label:{en:'Height', es:'Estatura'}, help:{en:'Feet and inches (e.g., 5\'7").', es:'Pies y pulgadas (ej. 5\'7").'}},
+      {id:'b_weight', type:'text', required:false, label:{en:'Weight (lbs)', es:'Peso (libras)'}},
+      {id:'b_eyes', type:'select', required:false, label:{en:'Eye color', es:'Color de ojos'},
+       options:[{v:'brown',label:{en:'Brown',es:'Café'}},{v:'black',label:{en:'Black',es:'Negro'}},{v:'blue',label:{en:'Blue',es:'Azul'}},{v:'green',label:{en:'Green',es:'Verde'}},{v:'hazel',label:{en:'Hazel',es:'Avellana'}},{v:'gray',label:{en:'Gray',es:'Gris'}},{v:'other',label:{en:'Other',es:'Otro'}}]},
+      {id:'b_hair', type:'select', required:false, label:{en:'Hair color', es:'Color de cabello'},
+       options:[{v:'black',label:{en:'Black',es:'Negro'}},{v:'brown',label:{en:'Brown',es:'Café'}},{v:'blond',label:{en:'Blond',es:'Rubio'}},{v:'gray',label:{en:'Gray',es:'Gris'}},{v:'white',label:{en:'White',es:'Blanco'}},{v:'red',label:{en:'Red',es:'Rojo'}},{v:'bald',label:{en:'Bald / none',es:'Calvo / sin cabello'}},{v:'other',label:{en:'Other',es:'Otro'}}]}
+    ]
+  },
+  {
+    id:'residence', icon:'🏠', partRef:'Parts 4–5',
+    title:{en:'Residence & employment', es:'Residencia y empleo'},
+    intro:{en:'Where you have lived and worked for the last 5 years, most recent first, with no gaps.', es:'Dónde has vivido y trabajado los últimos 5 años, de lo más reciente a lo más antiguo, sin huecos.'},
+    questions:[
+      {id:'r_addresses', type:'group', required:true,
+       label:{en:'Addresses (last 5 years)', es:'Direcciones (últimos 5 años)'},
+       help:{en:'Every address, even short stays.', es:'Cada dirección, incluso estancias cortas.'},
+       addLabel:{en:'+ Add address', es:'+ Agregar dirección'},
+       fields:[
+         {id:'street', type:'text', label:{en:'Street address', es:'Dirección'}},
+         {id:'cityState', type:'text', label:{en:'City, state / country', es:'Ciudad, estado / país'}},
+         {id:'from', type:'date', label:{en:'From', es:'Desde'}},
+         {id:'to', type:'date', label:{en:'To (blank = current)', es:'Hasta (vacío = actual)'}}
+       ]},
+      {id:'r_employers', type:'group', required:true,
+       label:{en:'Employment / school (last 5 years)', es:'Empleo / escuela (últimos 5 años)'},
+       help:{en:'Include periods of unemployment, self-employment, and school.', es:'Incluye periodos de desempleo, trabajo propio y escuela.'},
+       addLabel:{en:'+ Add entry', es:'+ Agregar entrada'},
+       fields:[
+         {id:'employer', type:'text', label:{en:'Employer / school (or "unemployed")', es:'Empleador / escuela (o "desempleado")'}},
+         {id:'occupation', type:'text', label:{en:'Occupation', es:'Ocupación'}},
+         {id:'from', type:'date', label:{en:'From', es:'Desde'}},
+         {id:'to', type:'date', label:{en:'To (blank = current)', es:'Hasta (vacío = actual)'}}
+       ]}
+    ]
+  },
+  {
+    id:'trips', icon:'✈️', partRef:'Part 5',
+    title:{en:'Time outside the U.S.', es:'Tiempo fuera de EE. UU.'},
+    intro:{en:'Trips outside the United States during your eligibility period.', es:'Viajes fuera de Estados Unidos durante tu periodo de elegibilidad.'},
+    questions:[
+      {id:'t_any', type:'yesno', required:true,
+       label:{en:'Any trips outside the U.S. in the last 5 years?', es:'¿Algún viaje fuera de EE. UU. en los últimos 5 años?'}},
+      {id:'t_trips', type:'group', required:false,
+       label:{en:'Trips (24 hours or longer)', es:'Viajes (de 24 horas o más)'},
+       help:{en:'USCIS asks for every trip of 24 hours or more.', es:'USCIS pregunta por cada viaje de 24 horas o más.'},
+       addLabel:{en:'+ Add trip', es:'+ Agregar viaje'},
+       fields:[
+         {id:'left', type:'date', label:{en:'Date you left', es:'Fecha de salida'}},
+         {id:'back', type:'date', label:{en:'Date you returned', es:'Fecha de regreso'}},
+         {id:'where', type:'text', label:{en:'Countries visited', es:'Países visitados'}}
+       ]},
+      {id:'t_long', type:'yesno', required:true, flagOn:'yes', flagId:'long-absence',
+       label:{en:'Did any single trip last 6 months (180 days) or longer?', es:'¿Algún viaje individual duró 6 meses (180 días) o más?'},
+       help:{en:'USCIS looks closely at long absences when reviewing continuous residence.', es:'USCIS examina de cerca las ausencias largas al revisar la residencia continua.'}},
+      {id:'t_over30', type:'yesno', required:true, flagOn:'yes', flagId:'cumulative-absence',
+       label:{en:'Do all your trips combined total more than 30 months?', es:'¿Todos tus viajes combinados suman más de 30 meses?'}}
+    ]
+  },
+  {
+    id:'marital', icon:'💍', partRef:'Part 6',
+    title:{en:'Marital history', es:'Historial matrimonial'},
+    intro:{en:'Your current and past marriages.', es:'Tus matrimonios actuales y pasados.'},
+    questions:[
+      {id:'m_status', type:'select', required:true,
+       label:{en:'Current marital status', es:'Estado civil actual'},
+       options:[
+         {v:'single',label:{en:'Single, never married',es:'Soltero(a), nunca casado(a)'}},
+         {v:'married',label:{en:'Married',es:'Casado(a)'}},
+         {v:'divorced',label:{en:'Divorced',es:'Divorciado(a)'}},
+         {v:'widowed',label:{en:'Widowed',es:'Viudo(a)'}},
+         {v:'separated',label:{en:'Legally separated',es:'Separado(a) legalmente'}},
+         {v:'annulled',label:{en:'Marriage annulled',es:'Matrimonio anulado'}}
+       ]},
+      {id:'m_times', type:'text', required:false,
+       label:{en:'How many times have you been married (including now)?', es:'¿Cuántas veces te has casado (incluyendo ahora)?'}},
+      {id:'m_spouseName', type:'text', required:false,
+       label:{en:'Current spouse\'s legal name', es:'Nombre legal de tu cónyuge actual'},
+       help:{en:'Skip if not married.', es:'Omite si no estás casado(a).'}},
+      {id:'m_spouseCitizen', type:'yesno', required:false,
+       label:{en:'Is your current spouse a U.S. citizen?', es:'¿Tu cónyuge actual es ciudadano(a) de EE. UU.?'}},
+      {id:'m_marriageDate', type:'date', required:false,
+       label:{en:'Date of current marriage', es:'Fecha del matrimonio actual'}}
+    ]
+  },
+  {
+    id:'children', icon:'👶', partRef:'Part 7',
+    title:{en:'Children', es:'Hijos'},
+    intro:{en:'All of your children — any age, living anywhere, including stepchildren and adopted children.', es:'Todos tus hijos — de cualquier edad, vivan donde vivan, incluyendo hijastros e hijos adoptados.'},
+    questions:[
+      {id:'c_count', type:'text', required:true,
+       label:{en:'How many children do you have?', es:'¿Cuántos hijos tienes?'},
+       help:{en:'Enter 0 if none.', es:'Escribe 0 si no tienes.'}},
+      {id:'c_children', type:'group', required:false,
+       label:{en:'Children', es:'Hijos'},
+       addLabel:{en:'+ Add child', es:'+ Agregar hijo(a)'},
+       fields:[
+         {id:'name', type:'text', label:{en:'Full name', es:'Nombre completo'}},
+         {id:'dob', type:'date', label:{en:'Date of birth', es:'Fecha de nacimiento'}},
+         {id:'residence', type:'text', label:{en:'Country of residence', es:'País de residencia'}}
+       ]}
+    ]
+  },
+  {
+    id:'additional', icon:'⚖️', partRef:'Part 9',
+    title:{en:'Additional questions', es:'Preguntas adicionales'},
+    intro:{en:'USCIS asks these of every applicant. Answer honestly — a truthful "yes" with context is handled far better than an omission discovered later.', es:'USCIS le pregunta esto a cada solicitante. Responde con honestidad — un "sí" veraz con contexto se maneja mucho mejor que una omisión descubierta después.'},
+    questions:[
+      {id:'a_arrest', type:'yesno', required:true, flagOn:'yes', flagId:'arrest-history',
+       label:{en:'Have you EVER been arrested, cited, detained, or charged by any law enforcement officer, anywhere in the world?', es:'¿ALGUNA VEZ has sido arrestado, citado, detenido o acusado por cualquier autoridad, en cualquier país?'},
+       help:{en:'Includes incidents that were dismissed, expunged, or happened long ago.', es:'Incluye incidentes desestimados, eliminados del registro o muy antiguos.'}},
+      {id:'a_removal', type:'yesno', required:true, flagOn:'yes', flagId:'removal-proceedings',
+       label:{en:'Have you ever been in removal, exclusion, or deportation proceedings?', es:'¿Alguna vez has estado en procedimientos de remoción, exclusión o deportación?'}},
+      {id:'a_denied', type:'yesno', required:true, flagOn:'yes', flagId:'prior-denial',
+       label:{en:'Has any immigration application of yours ever been denied, or have you withdrawn one?', es:'¿Alguna solicitud de inmigración tuya ha sido negada, o has retirado alguna?'}},
+      {id:'a_misrep', type:'yesno', required:true, flagOn:'yes', flagId:'misrepresentation',
+       label:{en:'Have you ever given false or misleading information to a U.S. government official, or ever claimed to be a U.S. citizen?', es:'¿Alguna vez diste información falsa o engañosa a un oficial del gobierno de EE. UU., o afirmaste ser ciudadano estadounidense?'}},
+      {id:'a_selective', type:'select', required:true, flagOn:'no', flagId:'selective-service',
+       label:{en:'If you are a man who lived in the U.S. between ages 18–26: did you register with Selective Service?', es:'Si eres hombre y viviste en EE. UU. entre los 18 y 26 años: ¿te registraste en el Servicio Selectivo?'},
+       options:[
+         {v:'yes',label:{en:'Yes, registered',es:'Sí, registrado'}},
+         {v:'no',label:{en:'No, did not register',es:'No me registré'}},
+         {v:'na',label:{en:'Does not apply to me',es:'No aplica en mi caso'}}
+       ]},
+      {id:'a_taxes', type:'yesno', required:true, flagOn:'yes', flagId:'tax-issue',
+       label:{en:'Since becoming a permanent resident, have you ever failed to file a required federal, state, or local tax return?', es:'Desde que eres residente permanente, ¿alguna vez dejaste de presentar una declaración de impuestos requerida?'}}
+    ]
+  }
+];
+
+// ---- state ----
+var n400FormUI = { mode:'overview', section:0 };   // transient UI state (not persisted)
+var n400FH_saveTimer = null;
+
+function n400FH_state(){
+  if(!user.n400){
+    user.n400 = { answers:{}, sectionStatus:{}, lastSection:null, lastSavedAt:null, flags:[], disclaimerSeen:false };
+  }
+  return user.n400;
+}
+
+function n400FH_save(){
+  clearTimeout(n400FH_saveTimer);
+  n400FH_saveTimer = setTimeout(function(){
+    var st = n400FH_state();
+    st.lastSavedAt = new Date().toISOString();
+    n400FH_recomputeFlags();
+    n400FH_recomputeStatus();
+    saveUser();
+  }, 400);
+}
+
+function n400FH_set(qid, value){
+  n400FH_state().answers[qid] = value;
+  n400FH_save();
+}
+
+function n400FH_groupRows(qid){
+  var a = n400FH_state().answers[qid];
+  return Array.isArray(a) ? a : [];
+}
+function n400FH_addRow(qid){
+  var st = n400FH_state();
+  if(!Array.isArray(st.answers[qid])) st.answers[qid] = [];
+  st.answers[qid].push({});
+  n400FH_save();
+  n400FH_renderSection();
+}
+function n400FH_removeRow(qid, idx){
+  var rows = n400FH_groupRows(qid);
+  rows.splice(idx, 1);
+  n400FH_save();
+  n400FH_renderSection();
+}
+function n400FH_setRowField(qid, idx, fid, value){
+  var rows = n400FH_groupRows(qid);
+  if(!rows[idx]) rows[idx] = {};
+  rows[idx][fid] = value;
+  n400FH_save();
+}
+
+// ---- flags ----
+function n400FH_recomputeFlags(){
+  var st = n400FH_state();
+  var flags = [];
+  N400_SCHEMA.forEach(function(sec){
+    sec.questions.forEach(function(q){
+      if(q.flagId && st.answers[q.id] === q.flagOn) flags.push(q.flagId);
+    });
+  });
+  st.flags = flags;
+}
+
+// ---- progress ----
+function n400FH_answered(q){
+  var a = n400FH_state().answers[q.id];
+  if(q.type === 'group') return Array.isArray(a) && a.length > 0;
+  return a !== undefined && a !== null && String(a).trim() !== '';
+}
+function n400FH_sectionProgress(sec){
+  var req = sec.questions.filter(function(q){ return q.required; });
+  var done = req.filter(n400FH_answered).length;
+  var any = sec.questions.some(n400FH_answered);
+  return { done: done, total: req.length, any: any,
+           complete: req.length > 0 && done === req.length };
+}
+function n400FH_recomputeStatus(){
+  var st = n400FH_state();
+  N400_SCHEMA.forEach(function(sec){
+    var p = n400FH_sectionProgress(sec);
+    st.sectionStatus[sec.id] = p.complete ? 'complete' : (p.any ? 'inProgress' : 'notStarted');
+  });
+}
+function n400FH_overallPct(){
+  var done = 0, total = 0;
+  N400_SCHEMA.forEach(function(sec){
+    var p = n400FH_sectionProgress(sec);
+    done += p.done; total += p.total;
+  });
+  return total ? Math.round(done / total * 100) : 0;
+}
+function n400FH_isComplete(){
+  return N400_SCHEMA.every(function(sec){ return n400FH_sectionProgress(sec).complete; });
+}
+
+// ---- entry / gating / disclaimer ----
+function startN400FormHelper(){
+  if(!isPlus()){
+    toast(lang==='es' ? 'El organizador N-400 es parte de Plus' : 'The N-400 organizer is part of Plus');
+    go('upgrade');
+    return;
+  }
+  var st = n400FH_state();
+  if(!st.disclaimerSeen){
+    n400FH_showDisclaimer();
+    return;
+  }
+  n400FormUI.mode = 'overview';
+  if(st.lastSection != null && !n400FH_isComplete()){
+    n400FormUI.mode = 'overview';   // land on overview; resume chip highlights lastSection
+  }
+  go('n400Form');
+}
+
+function n400FH_showDisclaimer(){
+  var existing = document.getElementById('disclaimerModal');
+  if(existing) existing.remove();
+  var modal = document.createElement('div');
+  modal.id = 'disclaimerModal';
+  modal.className = 'disclaimerOverlay';
+  var pts = lang==='es'
+    ? ['Camino <strong>no es un bufete de abogados</strong> y no ofrece asesoría legal. Este es un organizador de autoayuda.',
+       'Solo guarda <strong>tus propias respuestas</strong>, en tu dispositivo. Nunca te sugiere qué responder.',
+       'No presenta nada ante USCIS. Al final obtienes un resumen para que <strong>tú mismo</strong> completes, firmes y presentes el formulario oficial.',
+       'Camino no está afiliado a USCIS ni a ninguna agencia del gobierno.']
+    : ['Camino is <strong>not a law firm</strong> and does not provide legal advice. This is a self-help organizer.',
+       'It only stores <strong>your own answers</strong>, on your device. It never suggests what to answer.',
+       'It does not file anything with USCIS. At the end you get a summary so <strong>you</strong> complete, sign, and submit the official form yourself.',
+       'Camino is not affiliated with USCIS or any government agency.'];
+  modal.innerHTML = ''
+    + '<div class="disclaimerCard">'
+    + '  <div class="disclaimerHead">'
+    + '    <div class="disclaimerIco">'+iconSVG('scales','#84807a',26)+'</div>'
+    + '    <div class="disclaimerTitle">'+(lang==='es'?'Antes de empezar':'Before you start')+'</div>'
+    + '  </div>'
+    + '  <ul class="disclaimerBody">'+pts.map(function(p){return '<li>'+p+'</li>';}).join('')+'</ul>'
+    + '  <button class="cta disclaimerCta" onclick="n400FH_acceptDisclaimer()">'+(lang==='es'?'Entendido':'I understand')+'</button>'
+    + '</div>';
+  document.body.appendChild(modal);
+}
+function n400FH_acceptDisclaimer(){
+  n400FH_state().disclaimerSeen = true;
+  saveUser();
+  closeDisclaimerModal();
+  n400FormUI.mode = 'overview';
+  go('n400Form');
+}
+
+function exitN400Form(){
+  go('path');
+}
+
+// ---- renderers ----
+function renderN400FormView(){
+  var body = document.getElementById('n400FormBody');
+  if(!body) return;
+  if(n400FormUI.mode === 'section') return n400FH_renderSection();
+  if(n400FormUI.mode === 'summary') return n400FH_renderSummary();
+  n400FH_renderOverview();
+}
+
+function n400FH_renderOverview(){
+  var body = document.getElementById('n400FormBody');
+  var st = n400FH_state();
+  var pct = n400FH_overallPct();
+  var fill = document.getElementById('n400FormProgressFill');
+  if(fill) fill.style.width = pct + '%';
+  var counter = document.getElementById('n400FormCounter');
+  if(counter) counter.textContent = pct + '%';
+
+  var html = '<div class="n400FormHead">'
+    + '<div class="n400FormKick">'+(lang==='es'?'ORGANIZADOR N-400':'N-400 ORGANIZER')+'</div>'
+    + '<div class="n400FormTitle">'+(lang==='es'?'Tus respuestas, organizadas':'Your answers, organized')+'</div>'
+    + '<div class="n400FormIntro">'+(lang==='es'
+        ? 'Reúne tus datos sección por sección. Todo queda solo en tu dispositivo. Al final, transfiere tus respuestas al formulario oficial de USCIS tú mismo.'
+        : 'Gather your information section by section. Everything stays on your device only. At the end, transfer your answers to the official USCIS form yourself.')+'</div>'
+    + '<div class="n400FormProgress">'+pct+'% · '+(lang==='es'?'guardado automático':'auto-saved')+'</div>'
+    + '</div>';
+
+  html += '<div class="mini">';
+  N400_SCHEMA.forEach(function(sec, i){
+    var p = n400FH_sectionProgress(sec);
+    var status = st.sectionStatus[sec.id] || 'notStarted';
+    var pill = status === 'complete'
+      ? '<span class="n400SecPill n400SecPillDone">✓ '+(lang==='es'?'Lista':'Done')+'</span>'
+      : (status === 'inProgress'
+        ? '<span class="n400SecPill n400SecPillProg">'+p.done+'/'+p.total+'</span>'
+        : '<span class="n400SecPill">'+(lang==='es'?'Empezar':'Start')+'</span>');
+    html += '<div class="row" onclick="n400FH_openSection('+i+')">'
+      + '<div class="rIco" style="background:rgba(0,180,168,.12);font-size:17px;">'+sec.icon+'</div>'
+      + '<div class="rMain"><div class="rTitle">'+sec.title[lang]+'</div>'
+      + '<div class="rSub">N-400 '+sec.partRef+'</div></div>'
+      + pill
+      + '<div class="chev">›</div></div>';
+  });
+  html += '</div>';
+
+  if(st.flags.length){
+    html += '<div class="n400FlagNote" style="margin-top:14px;">'
+      + '<strong>'+(lang==='es'?'Tienes '+st.flags.length+' respuesta(s) marcada(s).':'You have '+st.flags.length+' flagged answer(s).')+'</strong> '
+      + N400_FLAG_NOTE[lang] + '</div>';
+  }
+
+  html += '<button class="cta" style="margin-top:16px;" onclick="n400FH_openSummary()">'+(lang==='es'?'Ver resumen para el formulario oficial':'View summary for the official form')+'</button>';
+  html += '<div class="n400ExportRow">'
+    + '<button class="n400ExportBtn" onclick="n400FH_exportJSON()">'+(lang==='es'?'Exportar respaldo (JSON)':'Export backup (JSON)')+'</button>'
+    + '<button class="n400ExportBtn" onclick="document.getElementById(\'n400ImportFile\').click()">'+(lang==='es'?'Importar respaldo':'Import backup')+'</button>'
+    + '</div>';
+  html += '<div class="n400Hint" style="margin-top:12px;text-align:center;">'+(lang==='es'
+      ? 'Camino no es un bufete de abogados, no da asesoría legal y no presenta nada ante USCIS.'
+      : 'Camino is not a law firm, does not give legal advice, and does not file anything with USCIS.')+'</div>';
+
+  body.innerHTML = html;
+  var footer = document.getElementById('n400FormFooter');
+  if(footer) footer.innerHTML = '';
+}
+
+function n400FH_openSection(i){
+  n400FormUI.mode = 'section';
+  n400FormUI.section = i;
+  var st = n400FH_state();
+  st.lastSection = i;
+  saveUser();
+  n400FH_renderSection();
+}
+function n400FH_openSummary(){
+  n400FormUI.mode = 'summary';
+  n400FH_renderSummary();
+}
+function n400FH_backToOverview(){
+  n400FormUI.mode = 'overview';
+  n400FH_renderOverview();
+}
+
+function n400FH_inputHtml(q, val){
+  var v = esc(val == null ? '' : val);
+  if(q.type === 'date'){
+    return '<input type="date" class="n400Input" value="'+v+'" onchange="n400FH_set(\''+q.id+'\', this.value)" />';
+  }
+  if(q.type === 'select'){
+    var opts = '<option value="">'+(lang==='es'?'— Elegir —':'— Choose —')+'</option>';
+    (q.options||[]).forEach(function(o){
+      opts += '<option value="'+o.v+'"'+(val===o.v?' selected':'')+'>'+o.label[lang]+'</option>';
+    });
+    return '<select class="n400Input" onchange="n400FH_set(\''+q.id+'\', this.value); n400FH_renderSection();">'+opts+'</select>';
+  }
+  if(q.type === 'yesno'){
+    var yes = val==='yes', no = val==='no';
+    return '<div class="n400RadioGroup">'
+      + '<label class="n400RadioOpt'+(yes?' n400RadioSel':'')+'" onclick="n400FH_set(\''+q.id+'\',\'yes\'); n400FH_renderSection();"><span class="n400RadioBox"></span><span class="n400RadioLbl">'+(lang==='es'?'Sí':'Yes')+'</span></label>'
+      + '<label class="n400RadioOpt'+(no?' n400RadioSel':'')+'" onclick="n400FH_set(\''+q.id+'\',\'no\'); n400FH_renderSection();"><span class="n400RadioBox"></span><span class="n400RadioLbl">No</span></label>'
+      + '</div>';
+  }
+  // text
+  return '<input type="text" class="n400Input" value="'+v+'" oninput="n400FH_set(\''+q.id+'\', this.value)" />';
+}
+
+function n400FH_groupHtml(q){
+  var rows = n400FH_groupRows(q.id);
+  var html = '';
+  rows.forEach(function(row, idx){
+    html += '<div class="n400GroupRow">'
+      + '<div class="n400GroupRowHead"><span>'+(idx+1)+'</span>'
+      + '<button class="n400GroupRemove" onclick="n400FH_removeRow(\''+q.id+'\','+idx+')">'+(lang==='es'?'Quitar':'Remove')+'</button></div>';
+    q.fields.forEach(function(f){
+      var fv = esc(row[f.id] == null ? '' : row[f.id]);
+      var input = f.type === 'date'
+        ? '<input type="date" class="n400Input" value="'+fv+'" onchange="n400FH_setRowField(\''+q.id+'\','+idx+',\''+f.id+'\', this.value)" />'
+        : '<input type="text" class="n400Input" value="'+fv+'" oninput="n400FH_setRowField(\''+q.id+'\','+idx+',\''+f.id+'\', this.value)" />';
+      html += '<div class="n400Field" style="margin-top:8px;"><div class="n400Label" style="font-size:12px;">'+f.label[lang]+'</div>'+input+'</div>';
+    });
+    html += '</div>';
+  });
+  html += '<button class="n400AddRow" onclick="n400FH_addRow(\''+q.id+'\')">'+q.addLabel[lang]+'</button>';
+  return html;
+}
+
+function n400FH_renderSection(){
+  var body = document.getElementById('n400FormBody');
+  if(!body) return;
+  var sec = N400_SCHEMA[n400FormUI.section];
+  var st = n400FH_state();
+  var p = n400FH_sectionProgress(sec);
+  var fill = document.getElementById('n400FormProgressFill');
+  if(fill) fill.style.width = n400FH_overallPct() + '%';
+  var counter = document.getElementById('n400FormCounter');
+  if(counter) counter.textContent = (n400FormUI.section+1) + ' / ' + N400_SCHEMA.length;
+
+  var html = '<div class="n400FormHead">'
+    + '<div class="n400FormKick">'+sec.icon+' N-400 '+sec.partRef+'</div>'
+    + '<div class="n400FormTitle">'+sec.title[lang]+'</div>'
+    + '<div class="n400FormIntro">'+sec.intro[lang]+'</div>'
+    + '</div>';
+
+  html += '<div class="n400Fields">';
+  sec.questions.forEach(function(q){
+    var val = st.answers[q.id];
+    html += '<div class="n400Field">'
+      + '<div class="n400Label">'+q.label[lang]+(q.required?'':' <span style="color:var(--muted);font-weight:600;">('+(lang==='es'?'opcional':'optional')+')</span>')+'</div>'
+      + (q.type === 'group' ? n400FH_groupHtml(q) : n400FH_inputHtml(q, val))
+      + (q.help ? '<div class="n400Hint">'+q.help[lang]+'</div>' : '');
+    if(q.flagId && val === q.flagOn){
+      html += '<div class="n400FlagNote">⚖️ '+N400_FLAG_NOTE[lang]+'</div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  body.innerHTML = html;
+
+  var footer = document.getElementById('n400FormFooter');
+  var isLast = n400FormUI.section === N400_SCHEMA.length - 1;
+  if(footer){
+    footer.innerHTML = '<button class="n400FormBackBtn" onclick="n400FH_backToOverview()">'+(lang==='es'?'Secciones':'Sections')+'</button>'
+      + '<button class="cta n400FormNextBtn" onclick="'+(isLast?'n400FH_openSummary()':'n400FH_openSection('+(n400FormUI.section+1)+')')+'">'
+      + (isLast ? (lang==='es'?'Ver resumen':'View summary') : (lang==='es'?'Siguiente sección':'Next section')) + '</button>';
+  }
+}
+
+function n400FH_valueLabel(q, val){
+  if(val == null || String(val).trim() === '') return null;
+  if(q.type === 'select'){
+    var o = (q.options||[]).filter(function(x){ return x.v === val; })[0];
+    return o ? o.label[lang] : esc(val);
+  }
+  if(q.type === 'yesno') return val === 'yes' ? (lang==='es'?'Sí':'Yes') : 'No';
+  return esc(val);
+}
+
+function n400FH_renderSummary(){
+  var body = document.getElementById('n400FormBody');
+  if(!body) return;
+  var st = n400FH_state();
+  var counter = document.getElementById('n400FormCounter');
+  if(counter) counter.textContent = (lang==='es'?'Resumen':'Summary');
+
+  var html = '<div class="n400FormHead">'
+    + '<div class="n400FormKick">'+(lang==='es'?'RESUMEN':'SUMMARY')+'</div>'
+    + '<div class="n400FormTitle">'+(lang==='es'?'Para el formulario oficial':'For the official form')+'</div>'
+    + '<div class="n400FormIntro">'+(lang==='es'
+        ? 'Transfiere estas respuestas al Formulario N-400 oficial de USCIS tú mismo, revísalas, y fírmalo. Los números de sección pueden variar según la edición del formulario — sigue el formulario oficial.'
+        : 'Transfer these answers to the official USCIS Form N-400 yourself, review them, and sign it. Item numbers vary by form edition — follow the official form.')+'</div>'
+    + '</div>';
+
+  if(st.flags.length){
+    html += '<div class="n400FlagNote" style="margin-bottom:14px;">'
+      + '<strong>'+(lang==='es'?st.flags.length+' respuesta(s) marcada(s):':st.flags.length+' flagged answer(s):')+'</strong> '
+      + N400_FLAG_NOTE[lang] + '</div>';
+  }
+
+  html += '<div class="n400Summary">';
+  N400_SCHEMA.forEach(function(sec, i){
+    html += '<div class="n400SumSection">'
+      + '<div class="n400SumHead"><span class="n400SumKick">'+sec.partRef+'</span>'+sec.title[lang]
+      + '<button class="n400SumEdit" onclick="n400FH_openSection('+i+')">'+(lang==='es'?'Editar':'Edit')+'</button></div>';
+    var rowsHtml = '';
+    sec.questions.forEach(function(q){
+      if(q.type === 'group'){
+        var rows = n400FH_groupRows(q.id);
+        rows.forEach(function(row, ri){
+          var parts = q.fields.map(function(f){
+            var v = row[f.id];
+            return (v && String(v).trim()) ? esc(v) : null;
+          }).filter(Boolean).join(' · ');
+          if(parts) rowsHtml += '<div class="n400SumRow"><div class="n400SumKey">'+q.label[lang]+' '+(ri+1)+'</div><div class="n400SumVal">'+parts+'</div></div>';
+        });
+      } else {
+        var vl = n400FH_valueLabel(q, st.answers[q.id]);
+        if(vl != null){
+          var flagged = q.flagId && st.answers[q.id] === q.flagOn;
+          rowsHtml += '<div class="n400SumRow"><div class="n400SumKey">'+q.label[lang]+'</div><div class="n400SumVal">'+vl+(flagged?' ⚖️':'')+'</div></div>';
+        }
+      }
+    });
+    html += rowsHtml ? '<div class="n400SumRows">'+rowsHtml+'</div>'
+                     : '<div class="n400SumEmpty">'+(lang==='es'?'Sin respuestas todavía':'No answers yet')+'</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  html += '<button class="cta" style="margin-top:16px;" onclick="n400FH_print()">'+(lang==='es'?'Imprimir / guardar como PDF':'Print / save as PDF')+'</button>';
+  html += '<div class="n400Hint" style="margin-top:10px;text-align:center;">'+(lang==='es'
+      ? 'Este resumen es para tu uso personal. Camino no presenta nada ante USCIS.'
+      : 'This summary is for your personal use. Camino does not file anything with USCIS.')+'</div>';
+
+  body.innerHTML = html;
+  var footer = document.getElementById('n400FormFooter');
+  if(footer){
+    footer.innerHTML = '<button class="n400FormBackBtn" onclick="n400FH_backToOverview()">'+(lang==='es'?'Secciones':'Sections')+'</button>';
+  }
+}
+
+// ---- print + export/import ----
+function n400FH_summaryText(){
+  var st = n400FH_state();
+  var lines = ['CAMINO — N-400 ANSWER SUMMARY (personal use only)',
+               'Generated: ' + new Date().toISOString().slice(0,10),
+               'Transfer to the official USCIS Form N-400 yourself. Item numbers vary by edition.',
+               ''];
+  if(st.flags.length) lines.push('FLAGGED ANSWERS: '+st.flags.join(', ')+' — consider consulting an immigration attorney.', '');
+  N400_SCHEMA.forEach(function(sec){
+    lines.push('=== N-400 '+sec.partRef+' — '+sec.title.en+' ===');
+    sec.questions.forEach(function(q){
+      if(q.type === 'group'){
+        n400FH_groupRows(q.id).forEach(function(row, ri){
+          var parts = q.fields.map(function(f){ return row[f.id] ? (f.label.en+': '+row[f.id]) : null; }).filter(Boolean).join(' | ');
+          if(parts) lines.push('  '+q.label.en+' #'+(ri+1)+': '+parts);
+        });
+      } else {
+        var v = st.answers[q.id];
+        if(v != null && String(v).trim() !== '') lines.push('  '+q.label.en+': '+v);
+      }
+    });
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+
+function n400FH_print(){
+  if(Store.isNative()){
+    // WKWebView has no reliable window.print — share the summary as a text file.
+    var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
+    if(fs && share && fs.writeFile){
+      fs.writeFile({ path: 'camino-n400-summary.txt', data: n400FH_summaryText(), directory: (dir && dir.Cache) || 'CACHE', encoding: (enc && enc.UTF8) || 'utf8' })
+        .then(function(res){ return share.share({ title: 'N-400 summary', url: res.uri }); })
+        .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es'?'No se pudo compartir':'Could not share'); });
+    } else {
+      toast(lang==='es'?'Compartir no disponible':'Sharing unavailable');
+    }
+    return;
+  }
+  window.print();
+}
+
+function n400FH_exportJSON(){
+  var st = n400FH_state();
+  var data = JSON.stringify({ caminoN400Backup: 1, exportedAt: new Date().toISOString(), n400: st }, null, 2);
+  if(Store.isNative()){
+    var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
+    if(fs && share && fs.writeFile){
+      fs.writeFile({ path: 'camino-n400-backup.json', data: data, directory: (dir && dir.Cache) || 'CACHE', encoding: (enc && enc.UTF8) || 'utf8' })
+        .then(function(res){ return share.share({ title: 'Camino N-400 backup', url: res.uri }); })
+        .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es'?'No se pudo exportar':'Could not export'); });
+      return;
+    }
+    toast(lang==='es'?'Exportar no disponible':'Export unavailable');
+    return;
+  }
+  var blob = new Blob([data], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'camino-n400-backup.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  toast(lang==='es'?'Respaldo descargado':'Backup downloaded');
+}
+
+function n400FH_importJSON(input){
+  var file = input.files && input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(){
+    try {
+      var data = JSON.parse(reader.result);
+      var n = data && data.n400;
+      if(!n || typeof n.answers !== 'object') throw new Error('bad shape');
+      user.n400 = { answers: n.answers || {}, sectionStatus: n.sectionStatus || {},
+                    lastSection: (typeof n.lastSection === 'number' ? n.lastSection : null),
+                    lastSavedAt: n.lastSavedAt || null, flags: Array.isArray(n.flags) ? n.flags : [],
+                    disclaimerSeen: true };
+      n400FH_recomputeFlags();
+      n400FH_recomputeStatus();
+      saveUser();
+      toast(lang==='es'?'Respaldo importado':'Backup imported');
+      n400FH_backToOverview();
+    } catch(e){
+      toast(lang==='es'?'Archivo de respaldo no válido':'Not a valid backup file');
+    }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+// ---- entry cards ----
+function n400FormHelperCard(){
+  var locked = !isPlus();
+  var st = user.n400;
+  var sub;
+  if(locked){
+    sub = lang==='es' ? 'Organiza tus respuestas · Plus' : 'Organize your answers · Plus';
+  } else if(st && !n400FH_isComplete() && Object.keys(st.answers||{}).length){
+    sub = (lang==='es' ? 'Continuar · ' : 'Resume · ') + n400FH_overallPct() + '%';
+  } else if(st && n400FH_isComplete()){
+    sub = lang==='es' ? '✓ Completo · ver resumen' : '✓ Complete · view summary';
+  } else {
+    sub = lang==='es' ? 'Reúne tus respuestas para el formulario oficial' : 'Gather your answers for the official form';
+  }
+  return '<div class="n400HelperCard n400HelperCardOrganizer" onclick="startN400FormHelper()">'
+    + '<div class="n400HelperHead">'
+    +   '<div class="n400HelperIco">'+iconSVG('folder','#fff',20)+'</div>'
+    +   '<div class="n400HelperMain">'
+    +     '<div class="n400HelperTitle">'+(lang==='es'?'Organizador N-400':'N-400 organizer')+(locked?' 🔒':'')+'</div>'
+    +     '<div class="n400HelperSub">'+sub+'</div>'
+    +   '</div>'
+    +   '<div class="n400HelperArrow">→</div>'
+    + '</div>'
+    + '</div>';
+}
+
+function renderHomeN400FormRow(){
+  var el = document.getElementById('homeN400FormRow');
+  if(!el) return;
+  var st = user.n400;
+  var show = isOnGCPath() && st && Object.keys(st.answers||{}).length > 0 && !n400FH_isComplete();
+  el.style.display = show ? '' : 'none';
+  if(!show) return;
+  var t = el.querySelector('.rTitle'), sub = el.querySelector('.rSub');
+  if(t) t.textContent = lang==='es' ? 'Continúa tu N-400' : 'Resume your N-400';
+  if(sub) sub.textContent = (lang==='es' ? 'Organizador · ' : 'Organizer · ') + n400FH_overallPct() + '% ' + (lang==='es'?'completo':'complete');
+}
+
 // ===== ELIGIBILITY WIZARD =====
 var ELIG_STEPS = ['continuous','physical','state','crime','result'];
 
@@ -8968,6 +9692,7 @@ function renderAll(){
   renderHomeDocsRow();
   renderHomeDatesRow();
   renderHomeN400Row();
+  renderHomeN400FormRow();
   renderHomeVisaRow();
   renderUndoBanner();
 }
@@ -9122,7 +9847,8 @@ function go(id){
     }
   }
   var tabbar = document.querySelector('.tabbar');
-  if(tabbar) tabbar.classList.toggle('hidden', id === 'onboarding' || id === 'eligibility' || id === 'mockTest' || id === 'n400' || id === 'docDetail' || id === 'editField' || id === 'interview' || id === 'flashcards' || id === 'lesson' || id === 'upgrade' || id === 'trialOffer' || id === 'eligWiz');
+  if(tabbar) tabbar.classList.toggle('hidden', id === 'onboarding' || id === 'eligibility' || id === 'mockTest' || id === 'n400' || id === 'n400Form' || id === 'docDetail' || id === 'editField' || id === 'interview' || id === 'flashcards' || id === 'lesson' || id === 'upgrade' || id === 'trialOffer' || id === 'eligWiz');
+  if(id === 'n400Form') renderN400FormView();
   if(id === 'docs') renderDocs(); // legacy direct call, still supported
   if(id === 'me') renderMe();
   if(id === 'help') renderHelp();
@@ -9251,6 +9977,7 @@ function renderPathDocs(container){
   var pathKey = userDocPathKey();
   if(pathKey === 'n400'){
     html += n400WalkthroughCard();
+    html += n400FormHelperCard();
   }
 
   html += '<div class="docsFilterRow">'
@@ -11815,7 +12542,7 @@ function renderDocs(){
     + '</div>';
 
   // Educational N-400 walkthrough card (only show for N-400 path users)
-  var helperCard = (pathKey === 'n400') ? n400WalkthroughCard() : '';
+  var helperCard = (pathKey === 'n400') ? (n400WalkthroughCard() + n400FormHelperCard()) : '';
 
   var html = helperCard + toggleHtml;
   for(var c=0;c<DOC_CATS.length;c++){
@@ -12111,6 +12838,7 @@ function toast(msg){
     // v1 cleanup migration: the removed N-400 filler's drafts (names, criminal-history
     // answers) and Cami's key/chat history are sensitive — stop persisting them.
     user.n400Form = null;
+    user.n400 = stored.n400 || null;   // N-400 organizer state (answers stay local-only)
     user.immigrationGoal = stored.immigrationGoal || null;
     user.pathCurrentStage = stored.pathCurrentStage || null;
     user.anthropicApiKey = CAMI_AVAILABLE ? (stored.anthropicApiKey || null) : null;
