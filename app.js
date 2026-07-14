@@ -4290,28 +4290,28 @@ function renderHomeInterviewCard(){
 // Full text accessible from Me tab. Designed to protect against unauthorized-practice
 // of-law / reliance-damage claims.
 
-var DISCLAIMER_VERSION = 'v2-2026-07';
+var DISCLAIMER_VERSION = 'v3-2026-07';
 
 var LEGAL_DISCLAIMER = {
   short: {
-    en: 'Camino is an educational tool, not a law firm. Nothing here is legal advice for your case.',
-    es: 'Camino es una herramienta educativa, no un bufete. Nada aquí es asesoría legal para tu caso.'
+    en: 'Camino is a self-help educational tool, not a law firm. Nothing here is legal advice for your case.',
+    es: 'Camino es una herramienta educativa de autoayuda, no un bufete. Nada aquí es asesoría legal para tu caso.'
   },
   title: {en: 'Important — read before using', es: 'Importante — léelo antes de usar'},
   full: {
     en: [
-      'Camino is an educational and study tool. It is **not a law firm** and does **not provide legal advice**.',
-      'The information, timelines, document checklists, and study materials in this app are general background — not a determination about your individual case.',
-      'Immigration law is complex and fact-specific. The outcome of any petition or application depends on details only a licensed attorney can review with you.',
-      'Before making a decision that affects your legal status, immigration record, or eligibility — please consult a licensed U.S. immigration attorney or an accredited representative (BIA-recognized organization).',
-      'Camino, its authors, and its affiliates accept no liability for actions you take based on what you read here.'
+      'Camino is **self-help software** that provides general information and study tools. It is **not a law firm**, is **not a substitute for the advice of an attorney**, and does **not provide legal advice, opinions, or recommendations**.',
+      'Using Camino does **not create an attorney-client relationship**, and nothing you enter is protected by attorney-client privilege.',
+      'Camino **cannot tell you whether you qualify** for any immigration benefit and does not review your information for legal sufficiency. Its document tools only record **your own answers, at your direction**, and place them **verbatim** on forms for your personal review — you complete, sign, and file everything yourself.',
+      'Immigration law changes often and outcomes are fact-specific. **No outcome is guaranteed**, and content may not reflect the most recent changes — always verify with uscis.gov. Before any decision affecting your legal status, consult a **licensed U.S. immigration attorney or a BIA-accredited representative**.',
+      'Camino is not affiliated with USCIS or any government agency. To the fullest extent permitted by law, Camino, its authors, and affiliates **disclaim all liability** for actions taken in reliance on this app.'
     ],
     es: [
-      'Camino es una herramienta educativa y de estudio. **No es un bufete** y **no da asesoría legal**.',
-      'La información, plazos, listas de documentos y materiales de estudio son contexto general — no una determinación sobre tu caso individual.',
-      'La ley de inmigración es compleja y depende de los hechos. El resultado de cualquier petición depende de detalles que solo un abogado licenciado puede revisar contigo.',
-      'Antes de tomar una decisión que afecte tu estatus legal, expediente migratorio o elegibilidad — consulta a un abogado licenciado de inmigración de EE.UU. o un representante acreditado (organización reconocida por BIA).',
-      'Camino, sus autores y afiliados no aceptan responsabilidad por acciones que tomes basándote en lo que leas aquí.'
+      'Camino es **software de autoayuda** que ofrece información general y herramientas de estudio. **No es un bufete**, **no sustituye la asesoría de un abogado**, y **no da asesoría, opiniones ni recomendaciones legales**.',
+      'Usar Camino **no crea una relación abogado-cliente**, y nada de lo que ingreses está protegido por el privilegio abogado-cliente.',
+      'Camino **no puede decirte si calificas** para ningún beneficio migratorio y no revisa tu información para suficiencia legal. Sus herramientas de documentos solo registran **tus propias respuestas, bajo tu dirección**, y las colocan **textualmente** en formularios para tu revisión personal — tú completas, firmas y presentas todo.',
+      'La ley de inmigración cambia con frecuencia y los resultados dependen de los hechos. **Ningún resultado está garantizado**, y el contenido puede no reflejar los cambios más recientes — verifica siempre en uscis.gov. Antes de cualquier decisión que afecte tu estatus legal, consulta a un **abogado licenciado de inmigración o un representante acreditado por la BIA**.',
+      'Camino no está afiliado a USCIS ni a ninguna agencia del gobierno. En la máxima medida permitida por la ley, Camino, sus autores y afiliados **no aceptan responsabilidad** por acciones tomadas con base en esta app.'
     ]
   },
   accept: {en: 'I understand — continue', es: 'Entiendo — continuar'},
@@ -6253,7 +6253,7 @@ var ELIGIBILITY_WIZARDS = {
       if(flags.length === 0){
         return {verdict: 'likely', reasons: [{en: 'You appear to meet the basic eligibility for a marriage-based green card.', es: 'Pareces cumplir con los criterios básicos para residencia por matrimonio.'}], flags: []};
       }
-      return {verdict: 'unsure', reasons: [{en: 'Generally eligible, but flagged items below need attention.', es: 'Generalmente elegible, pero los puntos abajo necesitan atención.'}], flags: flags};
+      return {verdict: 'unsure', reasons: [{en: 'Your answers match the basic requirements, but the flagged items below need attention.', es: 'Generalmente elegible, pero los puntos abajo necesitan atención.'}], flags: flags};
     },
     nextSteps: {
       en: ['File Form I-130 (your citizen spouse files this for you) and Form I-485 (adjustment) concurrently if you\'re in the U.S.',
@@ -6369,7 +6369,7 @@ var ELIGIBILITY_WIZARDS = {
       if(a.crimes === 'yes') flags.push({en: 'Criminal record needs lawyer review — even winning the lottery doesn\'t guarantee a visa.', es: 'Récord penal necesita revisión legal — ganar la lotería no garantiza visa.'});
       if(a.medical === 'yes') flags.push({en: 'Some medical conditions trigger consular review. Be prepared with documentation.', es: 'Algunas condiciones médicas activan revisión consular.'});
       if(flags.length === 0){
-        return {verdict: 'likely', reasons: [{en: 'You appear eligible to enter the DV lottery. The lottery itself is a random selection of about 1% of applicants.', es: 'Pareces elegible para entrar. La lotería selecciona aleatoriamente ~1% de solicitantes.'}], flags: []};
+        return {verdict: 'likely', reasons: [{en: 'Based on your answers, you meet the DV entry requirements. The lottery itself is a random selection of about 1% of applicants.', es: 'Según tus respuestas, cumples los requisitos de entrada. La lotería selecciona aleatoriamente ~1% de solicitantes.'}], flags: []};
       }
       return {verdict: 'unsure', reasons: [{en: 'You can enter the lottery, but the flagged items may affect visa approval if selected.', es: 'Puedes entrar, pero los puntos marcados pueden afectar la aprobación si te seleccionan.'}], flags: flags};
     },
@@ -6426,9 +6426,9 @@ var ELIGIBILITY_WIZARDS = {
       if(a.wage === 'no') flags.push({en: 'The employer must commit to prevailing wage — if they won\'t, this won\'t fly with DOL.', es: 'Empleador debe pagar salario prevaleciente — si no, no pasará DOL.'});
       if(a['cap-exempt'] === 'no') flags.push({en: 'You\'re subject to the H-1B lottery (~25-30% selection rate). Plan accordingly.', es: 'Estás sujeto a la lotería (~25-30% selección). Planifica.'});
       if(flags.length === 0){
-        return {verdict: 'likely', reasons: [{en: 'You appear eligible AND cap-exempt (university/research) — your employer can file an H-1B for you anytime, no lottery.', es: 'Pareces elegible Y exento del límite — tu empleador puede presentar en cualquier momento.'}], flags: []};
+        return {verdict: 'likely', reasons: [{en: 'Based on your answers, you meet the basic H-1B requirements AND appear cap-exempt (university/research) — an employer could file anytime, no lottery.', es: 'Pareces elegible Y exento del límite — tu empleador puede presentar en cualquier momento.'}], flags: []};
       }
-      return {verdict: 'unsure', reasons: [{en: 'You appear eligible — the flagged items below are about how to navigate the process.', es: 'Pareces elegible — los puntos marcados son cómo navegar el proceso.'}], flags: flags};
+      return {verdict: 'unsure', reasons: [{en: 'Based on your answers, the basic requirements match — the flagged items below are about navigating the process.', es: 'Pareces elegible — los puntos marcados son cómo navegar el proceso.'}], flags: flags};
     },
     nextSteps: {
       en: ['Employer files LCA (Labor Condition Application) with DOL.',
@@ -6621,19 +6621,21 @@ function renderEligWizardResult(){
   var footer = document.getElementById('eligWizFooter');
   if(!body || !r) return;
 
+  // Wording note: these are requirement CHECKPOINTS based on the user's own
+  // answers — never an eligibility determination (that's legal judgment).
   var verdictClass, verdictTxt, verdictSub;
   if(r.verdict === 'likely'){
     verdictClass = 'eligVerdictGood';
-    verdictTxt = lang==='es' ? '✓ Probablemente elegible' : '✓ Likely eligible';
-    verdictSub = lang==='es' ? 'Cumples con los criterios básicos.' : 'You meet the basic criteria.';
+    verdictTxt = lang==='es' ? '✓ Tus respuestas coinciden con los requisitos básicos' : '✓ Your answers match the basic requirements';
+    verdictSub = lang==='es' ? 'Según lo que respondiste. No es una determinación legal.' : 'Based on what you answered. Not a legal determination.';
   } else if(r.verdict === 'unsure'){
     verdictClass = 'eligVerdictMid';
-    verdictTxt = lang==='es' ? '△ Posiblemente elegible' : '△ Possibly eligible';
-    verdictSub = lang==='es' ? 'Algunos factores necesitan atención.' : 'Some factors need attention.';
+    verdictTxt = lang==='es' ? '△ Algunos puntos necesitan revisión' : '△ Some items need review';
+    verdictSub = lang==='es' ? 'Según tus respuestas, hay factores que un profesional debería revisar.' : 'Based on your answers, some factors are worth reviewing with a professional.';
   } else {
     verdictClass = 'eligVerdictBad';
-    verdictTxt = lang==='es' ? '✗ No elegible' : '✗ Not eligible';
-    verdictSub = lang==='es' ? 'Una regla te excluye.' : 'A rule excludes you.';
+    verdictTxt = lang==='es' ? '✗ Un requisito básico no coincide' : '✗ A basic requirement doesn\'t match';
+    verdictSub = lang==='es' ? 'Según tus respuestas. Un abogado puede confirmar si hay excepciones.' : 'Based on your answers. An attorney can confirm whether exceptions apply.';
   }
 
   var reasonsHtml = (r.reasons || []).map(function(reason){
@@ -7096,16 +7098,20 @@ function showTermsModal(){
         'Camino Plus es una suscripción auto-renovable: **$7.99/mes** o **$49.99/año**, con 7 días de prueba gratis para nuevos suscriptores.',
         'El pago se carga a tu cuenta de Apple al confirmar la compra. La suscripción se **renueva automáticamente** salvo que la canceles al menos 24 horas antes del fin del periodo.',
         'Administra o cancela en cualquier momento en Ajustes → [tu nombre] → Suscripciones. Los reembolsos los gestiona Apple en reportaproblem.apple.com.',
-        'Camino es una app educativa. **No es un bufete de abogados y no ofrece asesoría legal.** El contenido puede cambiar; verifica siempre con fuentes oficiales (uscis.gov).',
-        'El uso de la app se rige por el Acuerdo de Licencia estándar de Apple (EULA): <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">apple.com/legal/…/stdeula</a>.',
+        'Camino es **software de autoayuda educativo**. No es un bufete, **no da asesoría legal**, no determina elegibilidad, y usarlo **no crea una relación abogado-cliente**. Sus herramientas de documentos solo registran tus propias respuestas, textualmente, bajo tu dirección.',
+        'La app se ofrece **"tal cual", sin garantías** de ningún tipo — incluida la exactitud del contenido o cualquier resultado migratorio. El contenido puede cambiar; verifica siempre con fuentes oficiales (uscis.gov).',
+        'En la máxima medida permitida por la ley, la responsabilidad total de Camino se **limita al monto que pagaste** por la suscripción en los últimos 12 meses.',
+        'El uso de la app se rige por el Acuerdo de Licencia estándar de Apple (EULA): <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">apple.com/legal/…/stdeula</a>. Términos completos: <a href="https://rumoave.github.io/camino/terms.html" target="_blank" rel="noopener">rumoave.github.io/camino/terms</a>',
         'Preguntas: **cruiz@rumostrategies.com**'
       ]
     : [
         'Camino Plus is an auto-renewable subscription: **$7.99/month** or **$49.99/year**, with a 7-day free trial for new subscribers.',
         'Payment is charged to your Apple account at purchase confirmation. The subscription **renews automatically** unless cancelled at least 24 hours before the period ends.',
         'Manage or cancel anytime in Settings → [your name] → Subscriptions. Refunds are handled by Apple at reportaproblem.apple.com.',
-        'Camino is an educational app. **It is not a law firm and does not provide legal advice.** Content may change; always verify with official sources (uscis.gov).',
-        'Use of the app is governed by Apple\'s standard Licensed Application End User License Agreement (EULA): <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">apple.com/legal/…/stdeula</a>.',
+        'Camino is **educational self-help software**. It is not a law firm, **does not provide legal advice**, does not determine eligibility, and using it **does not create an attorney-client relationship**. Its document tools only record your own answers, verbatim, at your direction.',
+        'The app is provided **"as is," without warranties** of any kind — including the accuracy of content or any immigration outcome. Content may change; always verify with official sources (uscis.gov).',
+        'To the fullest extent permitted by law, Camino\'s total liability is **limited to the amount you paid** for the subscription in the past 12 months.',
+        'Use of the app is governed by Apple\'s standard Licensed Application End User License Agreement (EULA): <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">apple.com/legal/…/stdeula</a>. Full terms: <a href="https://rumoave.github.io/camino/terms.html" target="_blank" rel="noopener">rumoave.github.io/camino/terms</a>',
         'Questions: **cruiz@rumostrategies.com**'
       ];
   var bullets = text.map(function(b){
@@ -8884,13 +8890,15 @@ function n400FH_showDisclaimer(){
   modal.id = 'disclaimerModal';
   modal.className = 'disclaimerOverlay';
   var pts = lang==='es'
-    ? ['Camino <strong>no es un bufete de abogados</strong> y no ofrece asesoría legal. Este es un organizador de autoayuda.',
-       'Solo guarda <strong>tus propias respuestas</strong>, en tu dispositivo. Nunca te sugiere qué responder.',
-       'No presenta nada ante USCIS. Al final obtienes un resumen para que <strong>tú mismo</strong> completes, firmes y presentes el formulario oficial.',
+    ? ['Camino <strong>no es un bufete de abogados</strong> y no ofrece asesoría legal. Este es un organizador de autoayuda que actúa <strong>solo bajo tu dirección</strong>.',
+       'Usarlo <strong>no crea una relación abogado-cliente</strong>, y tus respuestas no están protegidas por el privilegio abogado-cliente.',
+       'Solo guarda <strong>tus propias respuestas, textualmente</strong>, en tu dispositivo. Nunca te sugiere qué responder ni revisa tus respuestas para suficiencia legal.',
+       'No presenta nada ante USCIS. Al final obtienes un borrador para que <strong>tú mismo</strong> revises, completes, firmes y presentes el formulario oficial.',
        'Camino no está afiliado a USCIS ni a ninguna agencia del gobierno.']
-    : ['Camino is <strong>not a law firm</strong> and does not provide legal advice. This is a self-help organizer.',
-       'It only stores <strong>your own answers</strong>, on your device. It never suggests what to answer.',
-       'It does not file anything with USCIS. At the end you get a summary so <strong>you</strong> complete, sign, and submit the official form yourself.',
+    : ['Camino is <strong>not a law firm</strong> and does not provide legal advice. This is a self-help organizer that acts <strong>only at your direction</strong>.',
+       'Using it <strong>does not create an attorney-client relationship</strong>, and your answers are not protected by attorney-client privilege.',
+       'It only stores <strong>your own answers, verbatim</strong>, on your device. It never suggests what to answer and does not review your answers for legal sufficiency.',
+       'It does not file anything with USCIS. At the end you get a draft so <strong>you</strong> review, complete, sign, and submit the official form yourself.',
        'Camino is not affiliated with USCIS or any government agency.'];
   modal.innerHTML = ''
     + '<div class="disclaimerCard">'
