@@ -48,13 +48,14 @@ PRACTICE THE INTERVIEW
 GET ORGANIZED
 • A document checklist tailored to your path
 • An educational N-400 walkthrough — section by section, what USCIS asks and why
+• N-400 organizer (Plus): gather your answers section by section and generate a draft of the official form on your device — nothing ever leaves your phone
 • Important dates and milestones in one place
 
 BILINGUAL
 Every screen works in English and Spanish, with more languages on the way.
 
 CAMINO PLUS
-Start with a 7-day free trial. Plus unlocks unlimited interview practice, unlimited mock tests, streak freezes, and more. Subscriptions renew automatically; manage or cancel anytime in your App Store settings.
+Start with a 7-day free trial. Plus unlocks unlimited interview practice, unlimited mock tests, the N-400 organizer, an extra civics unit, streak freezes, and more. Subscriptions renew automatically; manage or cancel anytime in your App Store settings.
 
 IMPORTANT
 Camino is an educational study and preparation app. It is not a law firm and does not provide legal advice. Immigration outcomes depend on your specific situation — for advice about your case, consult a licensed immigration attorney or a BIA-accredited representative. Camino is not affiliated with USCIS or any government agency.
