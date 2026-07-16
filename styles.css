@@ -2983,6 +2983,7 @@ select:focus-visible,
   border-radius:12px;padding:11px 13px;font-size:12.5px;line-height:1.5;
   color:#6b5400;font-weight:650;
 }
+.n400KickIco svg, .n400FlagIco svg{vertical-align:-2px;}
 .n400GroupRow{
   background:#fff;border:1.5px solid var(--hair);border-radius:13px;
   padding:12px 14px;margin-bottom:10px;

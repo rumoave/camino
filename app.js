@@ -41,7 +41,7 @@ function getGreeting(){
   var hour = new Date().getHours();
   var period = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
   var g = GREETINGS[lang] || GREETINGS.en;
-  return g[period] + ' 👋';
+  return g[period];
 }
 
 function updateGreeting(){
@@ -8583,7 +8583,7 @@ var N400_FLAG_NOTE = {
 
 var N400_SCHEMA = [
   {
-    id:'basis', icon:'🧭', partRef:'Part 1',
+    id:'basis', iconName:'stamp', color:'#5e5ce6', partRef:'Part 1',
     title:{en:'Eligibility basis', es:'Base de elegibilidad'},
     intro:{en:'The first question on the N-400: under which rule you are applying. Camino does not determine which applies to you — check the official instructions or ask a professional if unsure.',
            es:'La primera pregunta del N-400: bajo qué regla presentas. Camino no determina cuál aplica a ti — consulta las instrucciones oficiales o a un profesional si tienes duda.'},
@@ -8604,7 +8604,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'personal', icon:'🪪', partRef:'Part 2',
+    id:'personal', iconName:'id', color:'#1cb0f6', partRef:'Part 2',
     title:{en:'Information about you', es:'Información sobre ti'},
     intro:{en:'Your identity exactly as USCIS has it on file.', es:'Tu identidad exactamente como USCIS la tiene registrada.'},
     questions:[
@@ -8632,7 +8632,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'bio', icon:'🧬', partRef:'Part 3',
+    id:'bio', iconName:'person', color:'#ec4f93', partRef:'Part 3',
     title:{en:'Biographic information', es:'Información biográfica'},
     intro:{en:'Physical description used for your records and background checks.', es:'Descripción física usada para tus registros y verificación de antecedentes.'},
     questions:[
@@ -8645,7 +8645,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'residence', icon:'🏠', partRef:'Parts 4 & 7',
+    id:'residence', iconName:'home', color:'#ff9b21', partRef:'Parts 4 & 7',
     title:{en:'Residence & employment', es:'Residencia y empleo'},
     intro:{en:'Where you have lived and worked for the last 5 years, most recent first, with no gaps.', es:'Dónde has vivido y trabajado los últimos 5 años, de lo más reciente a lo más antiguo, sin huecos.'},
     questions:[
@@ -8674,7 +8674,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'trips', icon:'✈️', partRef:'Part 8',
+    id:'trips', iconName:'plane', color:'#00b4a8', partRef:'Part 8',
     title:{en:'Time outside the U.S.', es:'Tiempo fuera de EE. UU.'},
     intro:{en:'Trips outside the United States during your eligibility period.', es:'Viajes fuera de Estados Unidos durante tu periodo de elegibilidad.'},
     questions:[
@@ -8697,7 +8697,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'marital', icon:'💍', partRef:'Part 5',
+    id:'marital', iconName:'ring', color:'#ffc83d', partRef:'Part 5',
     title:{en:'Marital history', es:'Historial matrimonial'},
     intro:{en:'Your current and past marriages.', es:'Tus matrimonios actuales y pasados.'},
     questions:[
@@ -8725,7 +8725,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'children', icon:'👶', partRef:'Part 6',
+    id:'children', iconName:'people', color:'#12b981', partRef:'Part 6',
     title:{en:'Children', es:'Hijos'},
     intro:{en:'All of your children — any age, living anywhere, including stepchildren and adopted children.', es:'Todos tus hijos — de cualquier edad, vivan donde vivan, incluyendo hijastros e hijos adoptados.'},
     questions:[
@@ -8743,7 +8743,7 @@ var N400_SCHEMA = [
     ]
   },
   {
-    id:'additional', icon:'⚖️', partRef:'Part 9',
+    id:'additional', iconName:'scales', color:'#84807a', partRef:'Part 9',
     title:{en:'Additional questions', es:'Preguntas adicionales'},
     intro:{en:'USCIS asks these of every applicant. Answer honestly — a truthful "yes" with context is handled far better than an omission discovered later.', es:'USCIS le pregunta esto a cada solicitante. Responde con honestidad — un "sí" veraz con contexto se maneja mucho mejor que una omisión descubierta después.'},
     questions:[
@@ -8990,7 +8990,7 @@ function n400FH_renderOverview(){
         ? '<span class="n400SecPill n400SecPillProg">'+p.done+'/'+p.total+'</span>'
         : '<span class="n400SecPill">'+(lang==='es'?'Empezar':'Start')+'</span>');
     html += '<div class="row" onclick="n400FH_openSection('+i+')">'
-      + '<div class="rIco" style="background:rgba(0,180,168,.12);font-size:17px;">'+sec.icon+'</div>'
+      + '<div class="rIco" style="background:'+sec.color+'1f;">'+iconSVG(sec.iconName, sec.color, 20)+'</div>'
       + '<div class="rMain"><div class="rTitle">'+sec.title[lang]+'</div>'
       + '<div class="rSub">N-400 '+sec.partRef+'</div></div>'
       + pill
@@ -9120,7 +9120,7 @@ function n400FH_renderSection(){
   if(counter) counter.textContent = (n400FormUI.section+1) + ' / ' + N400_SCHEMA.length;
 
   var html = '<div class="n400FormHead">'
-    + '<div class="n400FormKick">'+sec.icon+' N-400 '+sec.partRef+'</div>'
+    + '<div class="n400FormKick"><span class="n400KickIco">'+iconSVG(sec.iconName, sec.color, 14)+'</span> N-400 '+sec.partRef+'</div>'
     + '<div class="n400FormTitle">'+sec.title[lang]+'</div>'
     + '<div class="n400FormIntro">'+sec.intro[lang]+'</div>'
     + '</div>';
@@ -9135,7 +9135,7 @@ function n400FH_renderSection(){
       + (q.type === 'group' ? n400FH_groupHtml(q) : n400FH_inputHtml(q, val))
       + (q.help ? '<div class="n400Hint">'+q.help[lang]+'</div>' : '');
     if(q.flagId && val === q.flagOn){
-      html += '<div class="n400FlagNote">⚖️ '+N400_FLAG_NOTE[lang]+'</div>';
+      html += '<div class="n400FlagNote"><span class="n400FlagIco">'+iconSVG('scales','#6b5400',14)+'</span> '+N400_FLAG_NOTE[lang]+'</div>';
     }
     html += '</div>';
   });
@@ -9205,7 +9205,7 @@ function n400FH_renderSummary(){
         var vl = n400FH_valueLabel(q, st.answers[q.id]);
         if(vl != null){
           var flagged = q.flagId && st.answers[q.id] === q.flagOn;
-          rowsHtml += '<div class="n400SumRow"><div class="n400SumKey">'+q.label[lang]+'</div><div class="n400SumVal">'+vl+(flagged?' ⚖️':'')+'</div></div>';
+          rowsHtml += '<div class="n400SumRow"><div class="n400SumKey">'+q.label[lang]+'</div><div class="n400SumVal">'+vl+(flagged?' <span class="n400FlagIco">'+iconSVG('scales','#a05000',12)+'</span>':'')+'</div></div>';
         }
       }
     });
@@ -12351,7 +12351,7 @@ function renderLearnPath(){
   var head = document.getElementById('learnMastered');
   if(head) head.textContent = '📘 ' + user.progress.mastered + (lang==='es' ? ' / '+totalQs+' dominadas' : ' / '+totalQs+' mastered');
   var streakHead = document.getElementById('learnStreak');
-  if(streakHead) streakHead.textContent = '🔥 ' + user.progress.streak;
+  if(streakHead) streakHead.innerHTML = '<span class="n400KickIco">'+iconSVG('flame','#ff4d3a',14)+'</span> ' + user.progress.streak;
   var xpHead = document.getElementById('learnXp');
   if(xpHead) xpHead.textContent = '⚡ ' + user.progress.xp + ' XP';
 
