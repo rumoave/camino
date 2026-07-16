@@ -94,11 +94,11 @@ body{
   padding:18px 30px 0;font-size:15px;font-weight:600;color:var(--ink);
   pointer-events:none;
 }
-/* Hide the simulated iOS time/battery — desktop preview is now app-native, no fake chrome */
-.status > * { display: none; }
+/* Hide the simulated iOS time/battery — the REAL device status bar (or nothing,
+   on web) sits here. The .status div stays as an invisible 54px spacer only.
+   Note: keep these hide rules at higher specificity than any .status child rule. */
+.status > *, .status .ico, .status svg { display: none !important; }
 .status.light{color:#fff;}
-.status .ico{display:flex;gap:6px;align-items:center;}
-.status svg{display:block;}
 
 /* scroll body */
 .body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:54px;padding-bottom:calc(96px + env(safe-area-inset-bottom, 0px));}
