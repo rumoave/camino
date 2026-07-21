@@ -10233,6 +10233,7 @@ function go(id){
   }
   var tabbar = document.querySelector('.tabbar');
   if(tabbar) tabbar.classList.toggle('hidden', id === 'onboarding' || id === 'eligibility' || id === 'mockTest' || id === 'n400' || id === 'n400Form' || id === 'docDetail' || id === 'editField' || id === 'interview' || id === 'flashcards' || id === 'lesson' || id === 'upgrade' || id === 'trialOffer' || id === 'eligWiz');
+  if(id === 'home') renderAll();  // streak/XP/ready chips + cards must reflect activity from other views
   if(id === 'n400Form') renderN400FormView();
   if(id === 'docs') renderDocs(); // legacy direct call, still supported
   if(id === 'me') renderMe();
