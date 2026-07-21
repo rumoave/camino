@@ -8,7 +8,7 @@
     "build:rc": "esbuild revenuecat-shim.js --bundle --format=iife --outfile=www/revenuecat.js",
     "build": "npm run build:web && npm run build:rc",
     "sync": "npm run build && npx cap sync ios",
-    "assets": "npx capacitor-assets generate --ios --iconBackgroundColor #12b981 --splashBackgroundColor #12b981",
+    "assets": "npx capacitor-assets generate --ios --iconBackgroundColor '#12b981' --splashBackgroundColor '#12b981'",
     "open:ios": "npx cap open ios"
   },
   "dependencies": {
