@@ -2099,22 +2099,41 @@ function applicableDocuments(opts){
   });
 }
 
-function docsReady(){
-  var apps = applicableDocuments();
-  var ready = 0;
-  for(var i=0;i<apps.length;i++) if(user.documents && user.documents[apps[i].id]) ready++;
-  return {ready: ready, total: apps.length};
+// Document status: 'needed' (default) | 'progress' (working on it) | 'ready'.
+// Stored in user.documents[id]: true = ready (legacy value kept), 'progress' = in progress.
+function docStatusOf(id){
+  var v = user.documents && user.documents[id];
+  if(v === 'progress') return 'progress';
+  return v ? 'ready' : 'needed';
 }
 
-function toggleDocument(id){
+function docsReady(){
+  var apps = applicableDocuments();
+  var ready = 0, inProgress = 0;
+  for(var i=0;i<apps.length;i++){
+    var s = docStatusOf(apps[i].id);
+    if(s === 'ready') ready++;
+    else if(s === 'progress') inProgress++;
+  }
+  return {ready: ready, inProgress: inProgress, total: apps.length};
+}
+
+function setDocStatus(id, status){
   if(!user.documents) user.documents = {};
-  user.documents[id] = !user.documents[id];
+  if(status === 'needed') delete user.documents[id];
+  else if(status === 'progress') user.documents[id] = 'progress';
+  else user.documents[id] = true;
   saveUser();
   // Re-render the entire home surface so "Your situation" + stats + next-action
   // pick up the new doc-readiness state immediately.
   try { renderAll(); } catch(e){ console.error(e); }
   renderDocs();
   if(docDetailId === id) renderDocDetail();
+}
+
+function toggleDocument(id){
+  // List-row checkbox: quick toggle. In-progress docs complete to ready.
+  setDocStatus(id, docStatusOf(id) === 'ready' ? 'needed' : 'ready');
 }
 
 var docDetailId = null;
@@ -2135,7 +2154,7 @@ function renderDocDetail(){
   var doc = null;
   for(var i=0;i<DOCUMENTS.length;i++) if(DOCUMENTS[i].id === docDetailId){ doc = DOCUMENTS[i]; break; }
   if(!doc) return;
-  var got = !!(user.documents && user.documents[doc.id]);
+  var st = docStatusOf(doc.id);
   var cat = null;
   for(var c=0;c<DOC_CATS.length;c++) if(DOC_CATS[c].id === doc.cat){ cat = DOC_CATS[c]; break; }
 
@@ -2145,9 +2164,11 @@ function renderDocDetail(){
   var body = document.getElementById('docDetailBody');
   if(!body) return;
 
-  var statusBadge = got
+  var statusBadge = st === 'ready'
     ? '<div class="docDetailStatus docDetailStatusYes">✓ '+(lang==='es'?'Listo':'Ready')+'</div>'
-    : '<div class="docDetailStatus docDetailStatusNo">'+(lang==='es'?'Por conseguir':'Still needed')+'</div>';
+    : (st === 'progress'
+      ? '<div class="docDetailStatus docDetailStatusProg">'+iconSVG('clock','#8a6d00',13)+' '+(lang==='es'?'En progreso':'In progress')+'</div>'
+      : '<div class="docDetailStatus docDetailStatusNo">'+(lang==='es'?'Por conseguir':'Still needed')+'</div>');
 
   var optTag = doc.optional ? '<span class="docOpt">'+(lang==='es'?'opcional':'optional')+'</span>' : '';
 
@@ -2190,13 +2211,14 @@ function renderDocDetail(){
     + '</div>'
     + askCamiBtn;
 
-  var btn = document.getElementById('docDetailToggle');
-  if(btn){
-    btn.textContent = got
-      ? (lang==='es' ? 'Marcar como pendiente' : 'Mark as still needed')
-      : (lang==='es' ? 'Marcar como listo ✓' : 'Mark as ready ✓');
-    btn.className = 'cta docDetailToggle' + (got ? ' docDetailToggleUndo' : '');
-    btn.onclick = function(){ toggleDocument(doc.id); };
+  var footer = document.querySelector('#docDetail .docDetailFooter');
+  if(footer){
+    var readyBtn = '<button class="cta docDetailToggle" onclick="setDocStatus(\''+doc.id+'\',\'ready\')">'+(lang==='es'?'Marcar como listo ✓':'Mark as ready ✓')+'</button>';
+    var progBtn  = '<button class="cta docDetailToggle docDetailProgBtn" onclick="setDocStatus(\''+doc.id+'\',\'progress\')">'+(lang==='es'?'En progreso':'In progress')+'</button>';
+    var undoBtn  = '<button class="cta docDetailToggle docDetailToggleUndo" onclick="setDocStatus(\''+doc.id+'\',\'needed\')">'+(lang==='es'?'Marcar como pendiente':'Mark as still needed')+'</button>';
+    if(st === 'needed')        footer.innerHTML = progBtn + readyBtn;
+    else if(st === 'progress') footer.innerHTML = undoBtn + readyBtn;
+    else                       footer.innerHTML = undoBtn;
   }
 }
 
@@ -10384,12 +10406,14 @@ function renderPathDocs(container){
     html += '<div class="mini">';
     for(var i=0;i<catDocs.length;i++){
       var d = catDocs[i];
-      var got = !!(user.documents && user.documents[d.id]);
+      var st = docStatusOf(d.id);
+      var got = st === 'ready', prog = st === 'progress';
       var optTag = d.optional ? '<span class="docOpt">'+(lang==='es'?'opcional':'optional')+'</span>' : '';
-      var checkContent = got ? iconSVG('check', '#fff', 16) : '';
-      html += '<div class="row docRow'+(got?' docDone':'')+'">'
+      var progTag = prog ? '<span class="docProgTag">'+(lang==='es'?'en progreso':'in progress')+'</span>' : '';
+      var checkContent = got ? iconSVG('check', '#fff', 16) : (prog ? iconSVG('clock', '#fff', 14) : '');
+      html += '<div class="row docRow'+(got?' docDone':'')+(prog?' docProg':'')+'">'
         + '<div class="docCheck" onclick="event.stopPropagation(); toggleDocument(\''+d.id+'\')">'+checkContent+'</div>'
-        + '<div class="rMain" onclick="openDocDetail(\''+d.id+'\')"><div class="rTitle">'+d.name[lang]+' '+optTag+'</div><div class="rSub">'+d.sub[lang]+'</div></div>'
+        + '<div class="rMain" onclick="openDocDetail(\''+d.id+'\')"><div class="rTitle">'+d.name[lang]+' '+optTag+progTag+'</div><div class="rSub">'+d.sub[lang]+'</div></div>'
         + '<div class="chev" onclick="openDocDetail(\''+d.id+'\')"></div>'
         + '</div>';
     }
@@ -12882,7 +12906,12 @@ function renderHomeDocsRow(){
   var t = el.querySelector('.rTitle');
   var sub = el.querySelector('.rSub');
   if(t){ t.removeAttribute('data-en'); t.removeAttribute('data-es'); t.textContent = lang==='es' ? 'Reúne tus documentos' : 'Gather your documents'; }
-  if(sub){ sub.removeAttribute('data-en'); sub.removeAttribute('data-es'); sub.textContent = lang==='es' ? (s.ready + ' de ' + s.total + ' listos para el N-400') : (s.ready + ' of ' + s.total + ' ready for the N-400'); }
+  if(sub){
+    sub.removeAttribute('data-en'); sub.removeAttribute('data-es');
+    var txt = lang==='es' ? (s.ready + ' de ' + s.total + ' listos para el N-400') : (s.ready + ' of ' + s.total + ' ready for the N-400');
+    if(s.inProgress > 0) txt += lang==='es' ? ' · ' + s.inProgress + ' en progreso' : ' · ' + s.inProgress + ' in progress';
+    sub.textContent = txt;
+  }
 }
 
 var docsViewState = { showAll: false };
@@ -12950,12 +12979,14 @@ function renderDocs(){
     html += '<div class="mini">';
     for(var i=0;i<catDocs.length;i++){
       var d = catDocs[i];
-      var got = !!(user.documents && user.documents[d.id]);
+      var st = docStatusOf(d.id);
+      var got = st === 'ready', prog = st === 'progress';
       var optTag = d.optional ? '<span class="docOpt">'+(lang==='es'?'opcional':'optional')+'</span>' : '';
-      var checkContent = got ? iconSVG('check', '#fff', 16) : '';
-      html += '<div class="row docRow'+(got?' docDone':'')+'">'
+      var progTag = prog ? '<span class="docProgTag">'+(lang==='es'?'en progreso':'in progress')+'</span>' : '';
+      var checkContent = got ? iconSVG('check', '#fff', 16) : (prog ? iconSVG('clock', '#fff', 14) : '');
+      html += '<div class="row docRow'+(got?' docDone':'')+(prog?' docProg':'')+'">'
         + '<div class="docCheck" onclick="event.stopPropagation(); toggleDocument(\''+d.id+'\')">'+checkContent+'</div>'
-        + '<div class="rMain" onclick="openDocDetail(\''+d.id+'\')"><div class="rTitle">'+d.name[lang]+' '+optTag+'</div><div class="rSub">'+d.sub[lang]+'</div></div>'
+        + '<div class="rMain" onclick="openDocDetail(\''+d.id+'\')"><div class="rTitle">'+d.name[lang]+' '+optTag+progTag+'</div><div class="rSub">'+d.sub[lang]+'</div></div>'
         + '<div class="chev" onclick="openDocDetail(\''+d.id+'\')"></div>'
         + '</div>';
     }
