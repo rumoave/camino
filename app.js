@@ -13316,9 +13316,16 @@ function toast(msg){
 
   // Re-check subscription/trial state when the app returns to the foreground:
   // native refreshes the RevenueCat entitlement; web re-runs the mock trial clock.
+  // Also: if the calendar day changed while backgrounded, re-render so daily
+  // surfaces (flashcards, streak, daily goal) roll over without a relaunch.
+  var lastSeenDay = todayISO();
   document.addEventListener('visibilitychange', function(){
     if(document.visibilityState !== 'visible' || !user) return;
     if(Store.isNative() && Store.ready){ Store._refresh(); }
     else { checkTrialReminders(); }
+    if(lastSeenDay !== todayISO()){
+      lastSeenDay = todayISO();
+      try { renderAll(); } catch(e){}
+    }
   });
 })();
