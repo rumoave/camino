@@ -3769,6 +3769,34 @@ select:focus-visible,
   text-align:center;
 }
 .onbStepSub{font-size:14.5px;color:var(--ink2);line-height:1.5;padding:10px 24px 0;font-weight:600;text-align:center;}
+.onbTaglineEs{font-size:13px;color:var(--ink2);opacity:.75;line-height:1.4;padding:4px 24px 0;font-weight:600;text-align:center;font-style:italic;}
+
+/* "What is Camino" onboarding screen — static feature rows (same look as
+   onbBigCard, minus the button affordances) */
+.onbAboutRows{display:flex;flex-direction:column;gap:12px;padding:22px 20px 0;}
+.onbAboutRow{
+  display:flex;align-items:center;gap:14px;width:100%;background:#fff;
+  border:2.5px solid var(--hair);border-radius:18px;padding:16px;text-align:left;
+  color:var(--ink);
+}
+
+/* Tappable privacy reassurance chip (onboarding) — opens the privacy modal */
+.privacyChip{
+  display:flex;align-items:center;gap:8px;width:calc(100% - 40px);
+  margin:16px 20px 0;padding:9px 12px;
+  background:rgba(0,180,168,.08);
+  border:1px solid rgba(0,180,168,.35);border-radius:12px;
+  font-family:'Nunito', inherit;font-size:11.5px;color:#00756e;font-weight:700;
+  line-height:1.4;text-align:left;cursor:pointer;
+}
+.privacyChip:active{opacity:.7;}
+.privacyChipMain{flex:1;min-width:0;display:block;}
+.privacyChipEs{display:block;opacity:.75;font-style:italic;margin-top:2px;}
+.privacyChipLink{flex:0 0 auto;font-weight:900;letter-spacing:.3px;text-decoration:underline;}
+.privacyChipStrong{
+  background:rgba(0,180,168,.12);
+  font-size:12.5px;padding:12px 14px;
+}
 
 .onbCards{display:flex;flex-direction:column;gap:12px;padding:22px 20px 0;}
 .onbBigCard{

@@ -29,7 +29,9 @@ naturalization,n-400,uscis,green card,visa,h1b,opt,interview,flashcards,study,bi
 
 ## Description (max 4000)
 ```
-Camino is your friendly guide to U.S. citizenship and the immigration journey — civics test prep, your legal path, interview practice, and document organization, all in one app. In English and Spanish.
+Camino is your friendly companion through the U.S. immigration journey — civics test prep, your legal path, interview practice, and document organization, all in one app. In English and Spanish.
+
+Private by design: no account, no sign-up, and your personal information stays on your device — we have no servers that receive it.
 
 DAILY CIVICS PREP
 • Study the 2025 USCIS civics questions in bite-size lessons
@@ -96,7 +98,7 @@ v1 has no accounts and no analytics — data is on-device. The only external SDK
 ---
 
 ## Suggested screenshot captions (optional overlays)
-1. **1-home** — "Your daily path to citizenship"
+1. **1-home** — "By your side, every step of the journey"
 2. **2-path** — "Every step, mapped — with the exact forms"
 3. **3-lesson** — "Learn the 2025 civics test, one question at a time"
 4. **4-interview** — "Practice the real USCIS interview"

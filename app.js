@@ -4619,6 +4619,37 @@ function disclaimerFooterHTML(opts){
     + '</div>';
 }
 
+// Small tappable privacy reassurance shown at the moments users disclose
+// sensitive info (onboarding first screen + green card / marriage / travel /
+// criminal-history steps). Opens the full privacy modal. The claim is literal:
+// the app has no backend and stores everything in localStorage only.
+// variant: 'onb' (default, one line in current lang) | 'firstrun' (bilingual,
+// pre-language-pick) | 'criminal' (full sentence — the scariest question).
+function privacyChipHTML(variant){
+  var inner;
+  if(variant === 'firstrun'){
+    inner = '<span class="privacyChipMain">Everything stays on your phone — no account, no servers.'
+      + '<span class="privacyChipEs">Todo queda en tu teléfono — sin cuenta, sin servidores.</span></span>';
+  } else if(variant === 'criminal'){
+    inner = '<span class="privacyChipMain">'+(lang==='es'
+      ? 'Esta respuesta nunca sale de tu teléfono. Camino no tiene servidores ni cuentas — nadie más que tú puede verla.'
+      : 'This answer never leaves your phone. Camino has no servers and no account — nobody but you can see it.')+'</span>';
+  } else if(variant === 'about'){
+    inner = '<span class="privacyChipMain"><strong>'+(lang==='es'?'Privado por diseño.':'Private by design.')+'</strong> '+(lang==='es'
+      ? 'Todo lo que ingresas queda en tu teléfono — sin cuenta, sin servidores, sin compartir nada.'
+      : 'Everything you enter stays on your phone — no account, no servers, nothing shared.')+'</span>';
+  } else {
+    inner = '<span class="privacyChipMain">'+(lang==='es'
+      ? 'Se guarda solo en tu dispositivo — nunca se sube.'
+      : 'Stays on your device — never uploaded.')+'</span>';
+  }
+  return '<button type="button" class="privacyChip'+((variant==='criminal'||variant==='about')?' privacyChipStrong':'')+'" onclick="showPrivacyNote()">'
+    + iconSVG('shield','#00b4a8',14)
+    + inner
+    + '<span class="privacyChipLink">'+(lang==='es'?'Más':'More')+' →</span>'
+    + '</button>';
+}
+
 // ===== CAMI AI COACH =====
 // Claude-powered chat covering both civics + immigration topics.
 // User provides their own Anthropic API key (saved locally) — for production this
@@ -7232,6 +7263,7 @@ function showPrivacyNote(){
         'Tus datos nunca salen de tu dispositivo — no tenemos servidores que los reciban.',
         'No vendemos ni compartimos datos personales con terceros.',
         'No usamos analíticas de terceros que rastreen tu actividad.',
+        'Camino es una app **independiente** — no está afiliada a USCIS ni a ninguna agencia del gobierno, y no es un bufete de abogados.',
         'Para más información o para borrar todos tus datos, ve a Yo → Borrar todos los datos.'
       ]
     : [
@@ -7239,6 +7271,7 @@ function showPrivacyNote(){
         'Your data never leaves your device — we have no servers that receive it.',
         'We do not sell or share personal data with third parties.',
         'We do not use third-party analytics that track your activity.',
+        'Camino is an **independent** app — not affiliated with USCIS or any government agency, and not a law firm.',
         'For more info or to delete all your data, go to Me → Clear all data.'
       ];
   var bullets = text.map(function(b){
@@ -10586,7 +10619,7 @@ function renderCamiTop(){
 }
 
 // ===== ONBOARDING WIZARD =====
-var ONB_STEPS = ['lang','name','country','phase','goal','petition','stage','gcDate','married','marriageDate','monthsOutside','criminal','time','summary'];
+var ONB_STEPS = ['lang','about','name','country','phase','goal','petition','stage','gcDate','married','marriageDate','monthsOutside','criminal','time','summary'];
 
 // Immigration goal — where the user wants to end up. Drives next-action emphasis on home.
 var IMMIGRATION_GOALS = {
@@ -10803,6 +10836,16 @@ function onbLangPick(l){
   setTimeout(onbContinue, 240);
 }
 
+// Non-interactive feature row for the "What is Camino" onboarding screen.
+function onbAboutRowHtml(icon, title, sub){
+  return '<div class="onbAboutRow">'
+    + '<div class="onbCardIcon">'+icon+'</div>'
+    + '<div class="onbCardMain">'
+    +   '<div class="onbCardTitle">'+title+'</div>'
+    +   (sub ? '<div class="onbCardSub">'+sub+'</div>' : '')
+    + '</div></div>';
+}
+
 function onbCardHtml(icon, title, sub, sel, onclick){
   return '<button type="button" class="onbBigCard'+(sel?' onbSel':'')+'" onclick="'+onclick+'">'
     + '<div class="onbCardIcon">'+icon+'</div>'
@@ -10827,15 +10870,41 @@ function renderOnboarding(){
   var footerHtml = '';
 
   if(k === 'lang'){
+    // Companion framing, not a citizenship promise — no app can guarantee an
+    // outcome, and over-claiming erodes the trust everything else depends on.
+    // Bilingual because this screen renders before a language is chosen.
     html = '<div class="onbCamiTop">'+camiSVG('wave')+'</div>'
       + '<div class="onbStepTitle">Camino</div>'
-      + '<div class="onbStepSub">Your path to U.S. citizenship and beyond.</div>'
+      + '<div class="onbStepSub">By your side, every step of your immigration journey.</div>'
+      + '<div class="onbTaglineEs">De la mano contigo en tu proceso migratorio.</div>'
       + '<div class="onbCards">';
     LANGUAGES.forEach(function(L){
       var betaTag = L.fullyTranslated ? '' : (L.code==='zh' ? '部分翻译 · beta' : (L.code==='vi' ? 'Dịch một phần · beta' : 'partial · beta'));
       html += onbCardHtml(iconSVG(L.flagIcon, '#1d1d22', 28), L.native, betaTag, lang===L.code, "onbLangPick('"+L.code+"')");
     });
-    html += '</div>';
+    html += '</div>'
+      + privacyChipHTML('firstrun');
+  }
+  else if(k === 'about'){
+    // "What is Camino" — establishes what the app does and, per beta feedback,
+    // answers the trust question BEFORE any personal questions are asked.
+    // Renders after the language pick so it reads in the user's language.
+    html = '<div class="onbCamiTop">'+camiSVG('happy')+'</div>'
+      + '<div class="onbStepTitle">'+(lang==='es'?'¿Qué es Camino?':'What is Camino?')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'Un acompañante para todo tu proceso — no un abogado, no el gobierno.':'A companion for your whole journey — not a lawyer, not the government.')+'</div>'
+      + '<div class="onbAboutRows">'
+      + onbAboutRowHtml(ico('book','#1cb0f6'),
+          lang==='es'?'Aprende el examen de cívica':'Learn the civics test',
+          lang==='es'?'Lecciones diarias, tarjetas y exámenes de práctica':'Daily bite-size lessons, flashcards, and mock tests')
+      + onbAboutRowHtml(ico('globe','#8c4dd1'),
+          lang==='es'?'Conoce tu camino':'Know your path',
+          lang==='es'?'Cada etapa mapeada, con los formularios oficiales de USCIS':'Every stage mapped, with the official USCIS forms')
+      + onbAboutRowHtml(ico('question','#ff9b21'),
+          lang==='es'?'Practica la entrevista':'Practice the interview',
+          lang==='es'?'Un oficial realista pregunta — respondes por voz o texto':'A realistic officer asks — you answer by voice or text')
+      + '</div>'
+      + privacyChipHTML('about');
+    footerHtml = '<button class="cta" onclick="onbContinue()">'+(lang==='es'?'Empezar':'Get started')+' →</button>';
   }
   else if(k === 'name'){
     var phN = lang==='es' ? 'Escribe tu nombre' : 'Type your name';
@@ -10902,7 +10971,8 @@ function renderOnboarding(){
   else if(k === 'gcDate'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Cuándo te hiciste residente?':'When did you become a permanent resident?')+'</div>'
       + '<div class="onbStepSub">'+(lang==='es'?'Una fecha aproximada está bien — la usamos para tus 5 años.':'A rough date is fine — we use it for your 5-year math.')+'</div>'
-      + '<div class="onbBig"><input class="onbDateBig" type="date" id="onbDateInput" value="'+onbState.gcDate+'" /></div>';
+      + '<div class="onbBig"><input class="onbDateBig" type="date" id="onbDateInput" value="'+onbState.gcDate+'" /></div>'
+      + privacyChipHTML();
     footerHtml = '<button class="cta" onclick="onbContinue()">'+(lang==='es'?'Continuar':'Continue')+' →</button>';
   }
   else if(k === 'married'){
@@ -10916,7 +10986,8 @@ function renderOnboarding(){
   else if(k === 'marriageDate'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Cuándo te casaste?':'When did you get married?')+'</div>'
       + '<div class="onbStepSub">'+(lang==='es'?'Para la regla de 3 años, deben estar casados los 3 años completos antes de presentar el N-400.':'For the 3-year rule, you must be married for all 3 years before filing N-400.')+'</div>'
-      + '<div class="onbBig"><input class="onbDateBig" type="date" id="onbMarriageDateInput" value="'+(onbState.marriageDate || '2020-01-01')+'" /></div>';
+      + '<div class="onbBig"><input class="onbDateBig" type="date" id="onbMarriageDateInput" value="'+(onbState.marriageDate || '2020-01-01')+'" /></div>'
+      + privacyChipHTML();
     footerHtml = '<button class="cta" onclick="onbContinue()">'+(lang==='es'?'Continuar':'Continue')+' →</button>';
   }
   else if(k === 'monthsOutside'){
@@ -10927,7 +10998,8 @@ function renderOnboarding(){
       + onbCardHtml(ico('clock','#ff9b21'), (lang==='es'?'Entre 6 y 18 meses':'6 to 18 months'),       (lang==='es'?'Cerca del límite — verifica tu pasaporte':'Close to the limit — check your passport'), onbState.monthsOutside==='6-18',   "onbPick('monthsOutside','6-18')")
       + onbCardHtml(ico('warning','#ff4d3a'), (lang==='es'?'Más de 18 meses':'More than 18 months'),     (lang==='es'?'Posible problema de presencia física':'Possible physical presence issue'),               onbState.monthsOutside==='gt18',   "onbPick('monthsOutside','gt18')")
       + onbCardHtml(ico('question','#84807a'), (lang==='es'?'No estoy seguro':'Not sure'),                (lang==='es'?'Lo revisaremos en la evaluación':"We'll check during eligibility"),                       onbState.monthsOutside==='unsure', "onbPick('monthsOutside','unsure')")
-      + '</div>';
+      + '</div>'
+      + privacyChipHTML();
   }
   else if(k === 'criminal'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Algún arresto, cargo o condena alguna vez?':'Any arrest, charge, or conviction — ever?')+'</div>'
@@ -10935,7 +11007,8 @@ function renderOnboarding(){
       + '<div class="onbCards">'
       + onbCardHtml(ico('check','#00b4a8'), (lang==='es'?'No, nunca':'No, never'),               '',                                                                              onbState.criminalHistory===false, "onbPick('criminalHistory',false)")
       + onbCardHtml(ico('warning','#ff4d3a'), (lang==='es'?'Sí, en algún momento':'Yes, at some point'), (lang==='es'?'Te conectaremos con ayuda legal':"We'll flag this for legal help"), onbState.criminalHistory===true,  "onbPick('criminalHistory',true)")
-      + '</div>';
+      + '</div>'
+      + privacyChipHTML('criminal');
   }
   else if(k === 'time'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Cuánto tiempo al día?':'How much time per day?')+'</div>'
