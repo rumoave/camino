@@ -41,6 +41,23 @@ self.addEventListener('activate', function(event){
 self.addEventListener('fetch', function(event){
   var req = event.request;
   if(req.method !== 'GET') return;
+  // Voice clips are hash-named and immutable — cache-first, never refetch.
+  // (manifest.json stays network-first below so new generations roll out.)
+  if(req.url.indexOf('/audio/tts/') !== -1 && req.url.indexOf('manifest.json') === -1){
+    event.respondWith(
+      caches.match(req).then(function(cached){
+        if(cached) return cached;
+        return fetch(req).then(function(res){
+          if(res && res.status === 200){
+            var clone = res.clone();
+            caches.open(CACHE_NAME).then(function(cache){ cache.put(req, clone); });
+          }
+          return res;
+        });
+      })
+    );
+    return;
+  }
   event.respondWith(
     fetch(req).then(function(res){
       if(res && res.status === 200 && res.type === 'basic'){
