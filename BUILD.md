@@ -19,6 +19,16 @@ npx cap sync ios           # copies web assets + installs native plugins into th
 npm run open:ios           # opens ios/App/App.xcworkspace in Xcode
 ```
 
+## One-time after `cap add ios`: microphone permission string
+Capacitor's generated Info.plist has NO mic usage description, and iOS blocks
+microphone access without one (the interview mic meter + audio recording need it).
+From the repo root on the Mac:
+```bash
+/usr/libexec/PlistBuddy -c "Add :NSMicrophoneUsageDescription string Camino uses the microphone so you can practice answering interview questions out loud." ios/App/App/Info.plist
+```
+Note: remote Macs (MacinCloud) have no mic device, so the simulator will always
+show "mic blocked" there — that's environmental. Test voice input on a real iPhone.
+
 ## In Xcode
 1. Select the **App** target → **Signing & Capabilities** → set your Team (Apple Developer account).
    The bundle identifier is `com.rumoave.camino` (change in `capacitor.config.json` if needed).
