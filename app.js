@@ -359,6 +359,7 @@ var user = {
   marriageDate: null,
   monthsOutside: 'lt6',
   criminalHistory: false,
+  soundEffects: true,        // feedback chimes (right/wrong/complete) — Me tab toggle
   testVersion: '2025',       // '2008' (legacy 100q test) or '2025' (current 128q, 12-of-20 to pass)
   plan: 'free',              // 'free' | 'trial' | 'plus' | 'expired'
   trialStartedAt: null,      // ISO date string
@@ -2263,6 +2264,7 @@ function exitFlashcards(){
 
 function flipFlashcard(){
   if(!flashState) return;
+  sfxFlip();
   flashState.flipped = true;
   renderFlashcard();
 }
@@ -2295,6 +2297,7 @@ function rateFlashcard(rating){
 }
 
 function finishFlashcards(){
+  sfxComplete();
   if(!flashState) return;
   var ratings = flashState.ratings;
   var easy = ratings.filter(function(r){return r.rating==='easy';}).length;
@@ -2509,6 +2512,7 @@ function ttsSupported(){ return 'speechSynthesis' in window && 'SpeechSynthesisU
 var ttsWarmedUp = false;
 function warmupTTS(){
   unlockVoiceClipPlayer(); // has its own one-shot guard
+  sfxUnlock();             // resume the SFX AudioContext (iOS gesture rule)
   if(ttsWarmedUp || !ttsSupported()) return;
   try {
     var u = new SpeechSynthesisUtterance(' ');
@@ -2521,6 +2525,69 @@ function warmupTTS(){
 if(typeof document !== 'undefined'){
   document.addEventListener('click', warmupTTS, {once: false, capture: true});
   document.addEventListener('touchstart', warmupTTS, {once: false, capture: true});
+}
+
+// ===== SOUND EFFECTS (Web Audio, synthesized) =====
+// Short feedback chimes for right/wrong answers, session completion, and card
+// flips. Synthesized at play time — no audio assets, works offline, ~zero cost.
+// Muted via the "Sound effects" toggle in the Me tab (user.soundEffects).
+var Sfx = { ctx: null };
+
+function sfxEnabled(){ return !user || user.soundEffects !== false; }
+
+function sfxCtx(){
+  if(Sfx.ctx) return Sfx.ctx;
+  try {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return null;
+    Sfx.ctx = new AC();
+  } catch(e){ return null; }
+  return Sfx.ctx;
+}
+
+// iOS suspends AudioContext until a user gesture — resumed from warmupTTS,
+// which already runs on the first tap anywhere.
+function sfxUnlock(){
+  var c = sfxCtx();
+  if(c && c.state === 'suspended') try { c.resume(); } catch(e){}
+}
+
+// One enveloped oscillator note. t0 = start offset (s), dur = length (s).
+function sfxTone(c, freq, t0, dur, type, peak){
+  var o = c.createOscillator(), g = c.createGain();
+  o.type = type || 'sine';
+  o.frequency.value = freq;
+  var t = c.currentTime + t0;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(peak || 0.15, t + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0005, t + dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(t);
+  o.stop(t + dur + 0.05);
+}
+
+function sfxPlay(notes){
+  if(!sfxEnabled()) return;
+  var c = sfxCtx();
+  if(!c) return;
+  if(c.state === 'suspended') try { c.resume(); } catch(e){}
+  try { for(var i=0;i<notes.length;i++) sfxTone.apply(null, [c].concat(notes[i])); } catch(e){}
+}
+
+// [freq, t0, dur, type, peak]
+function sfxCorrect(){ sfxPlay([[784, 0, 0.12, 'sine', 0.14], [1046.5, 0.09, 0.25, 'sine', 0.14]]); }              // G5→C6, bright ding
+function sfxClose(){   sfxPlay([[523.25, 0, 0.10, 'sine', 0.11], [587.33, 0.10, 0.20, 'sine', 0.11]]); }           // C5→D5, neutral "hm-hm"
+function sfxWrong(){   sfxPlay([[196, 0, 0.16, 'triangle', 0.13], [155.56, 0.13, 0.30, 'triangle', 0.13]]); }      // G3→Eb3, soft womp
+function sfxComplete(){ sfxPlay([[523.25, 0, 0.12, 'sine', 0.13], [659.25, 0.09, 0.12, 'sine', 0.13], [784, 0.18, 0.12, 'sine', 0.13], [1046.5, 0.27, 0.4, 'sine', 0.14]]); } // C-E-G-C fanfare
+function sfxFail(){    sfxPlay([[220, 0, 0.18, 'triangle', 0.12], [174.61, 0.15, 0.18, 'triangle', 0.12], [146.83, 0.30, 0.35, 'triangle', 0.12]]); } // A3-F3-D3 descent
+function sfxFlip(){    sfxPlay([[1200, 0, 0.04, 'sine', 0.05]]); }                                                  // tiny tick
+
+function toggleSoundEffects(){
+  var wasOn = sfxEnabled();
+  user.soundEffects = !wasOn;
+  saveUser();
+  renderMe();
+  if(!wasOn) sfxCorrect(); // audible confirmation when switching ON
 }
 
 // ===== PRE-GENERATED VOICE CLIPS (ElevenLabs) =====
@@ -3952,6 +4019,9 @@ function processIntvAnswer(){
     intvState.currentStreak = 0;
     intvState.justIncrementedStreak = false;
   }
+  if(result.verdict === 'correct') sfxCorrect();
+  else if(result.verdict === 'close') sfxClose();
+  else sfxWrong();
   intvState.phase = 'verdict';
   renderInterview();
   // Officer responds
@@ -4074,6 +4144,7 @@ function finishInterview(){
     passed: passed, takenAt: todayISO()
   });
   saveUser();
+  if(passed) sfxComplete(); else sfxFail();
   intvState.phase = 'done';
   renderInterview();
 }
@@ -11383,6 +11454,7 @@ function check(){
   if(q && q.options) for(var i=0;i<q.options.length;i++) if(q.options[i].correct){ correctOpt = q.options[i]; break; }
 
   var ok = picked.getAttribute('data-correct') === '1';
+  if(ok) sfxCorrect(); else sfxWrong();
   if(ok){
     lessonState.correct++;
     lessonState.correctQIds.push(qId);
@@ -11485,6 +11557,7 @@ function check(){
 
 function failLesson(){
   if(!lessonState) return;
+  sfxFail();
   var p = user.progress;
   if(!p.missedQs) p.missedQs = [];
   lessonState.wrongQIds.forEach(function(qid){
@@ -11533,6 +11606,7 @@ function renderLessonFailed(){
 
 function completeLesson(){
   if(!lessonState) return;
+  sfxComplete();
   var p = user.progress;
   if(!p.missedQs) p.missedQs = [];
 
@@ -12976,6 +13050,8 @@ function renderMe(){
 
   html += '<div class="sec">'+(lang==='es'?'Cuenta':'Account')+'</div>';
   html += '<div class="mini">';
+  var sfxOn = sfxEnabled();
+  html += '<div class="row" onclick="toggleSoundEffects()"><div class="rIco" style="background:rgba(0,180,168,.14);">'+iconSVG('bell','#00b4a8',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Efectos de sonido':'Sound effects')+'</div><div class="rSub">'+(sfxOn?(lang==='es'?'Activados — toca para silenciar':'On — tap to mute'):(lang==='es'?'Silenciados — toca para activar':'Muted — tap to turn on'))+'</div></div><div class="chev">'+(sfxOn?'✓':'·')+'</div></div>';
   html += '<div class="row" onclick="startTutorial()"><div class="rIco" style="background:rgba(255,200,61,.18);">'+iconSVG('star','#ffc83d',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Repasar el tutorial':'Replay the tutorial')+'</div><div class="rSub">'+(lang==='es'?'Recorrido guiado por Cami':"Cami's guided walkthrough")+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="go(\'help\')"><div class="rIco" style="background:rgba(28,176,246,.14);">'+iconSVG('question','#1cb0f6',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Ayuda y preguntas':'Help & FAQ')+'</div><div class="rSub">'+(lang==='es'?'Respuestas comunes + comentarios':'Common answers + feedback')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="showDisclaimerModal(true)"><div class="rIco" style="background:rgba(132,128,122,.16);">'+iconSVG('scales','#84807a',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Términos y descargo legal':'Terms & legal disclaimer')+'</div><div class="rSub">'+(lang==='es'?'Lo que esta app es y no es':'What this app is and isn\'t')+'</div></div><div class="chev">›</div></div>';
@@ -13484,6 +13560,7 @@ function toast(msg){
     user.voiceInterviewsTodayCount = stored.voiceInterviewsTodayCount || 0;
     user.voiceInterviewsTodayDate = stored.voiceInterviewsTodayDate || null;
     user.micPermission = stored.micPermission || null;
+    user.soundEffects = stored.soundEffects !== false;   // default ON
     // v1 cleanup migration: the removed N-400 filler's drafts (names, criminal-history
     // answers) and Cami's key/chat history are sensitive — stop persisting them.
     user.n400Form = null;
