@@ -7461,15 +7461,17 @@ function renderUpgrade(){
     + '<div class="upgPriceGrid upgPriceGrid2">'
     +   '<div class="upgPriceCard'+(upgradeSelected==='monthly'?' upgPriceSel':'')+'" onclick="selectUpgradePlan(\'monthly\')">'
     +     '<div class="upgPriceLbl">'+(lang==='es'?'Mensual':'Monthly')+'</div>'
-    +     '<div class="upgPriceNum">$'+PLUS_PRICING.monthly.price.toFixed(2)+'</div>'
+    +     '<div class="upgPriceNum">'+Store.priceString('monthly')+'</div>'
     +     '<div class="upgPricePer">/ '+PLUS_PRICING.monthly.period[lang]+'</div>'
     +   '</div>'
     +   '<div class="upgPriceCard upgPricePopular'+(upgradeSelected==='annual'?' upgPriceSel':'')+'" onclick="selectUpgradePlan(\'annual\')">'
     +     '<div class="upgPriceTag">'+(lang==='es'?'AHORRA 48%':'SAVE 48%')+'</div>'
     +     '<div class="upgPriceLbl">'+(lang==='es'?'Anual':'Annual')+'</div>'
-    +     '<div class="upgPriceNum">$'+PLUS_PRICING.annual.price.toFixed(2)+'</div>'
+    +     '<div class="upgPriceNum">'+Store.priceString('annual')+'</div>'
     +     '<div class="upgPricePer">/ '+PLUS_PRICING.annual.period[lang]+'</div>'
-    +     '<div class="upgPriceEquiv">~$'+PLUS_PRICING.annual.monthlyEquiv.toFixed(2)+'/'+(lang==='es'?'mes':'mo')+'</div>'
+    // The "~$/mo" equivalent is derived from the USD list price; only show it when we
+    // are NOT displaying a localized StoreKit price (App Store 3.1.2: prices must match).
+    +     (Store.isNative() && Store._offerings ? '' : '<div class="upgPriceEquiv">~$'+PLUS_PRICING.annual.monthlyEquiv.toFixed(2)+'/'+(lang==='es'?'mes':'mo')+'</div>')
     +   '</div>'
     + '</div>';
 
