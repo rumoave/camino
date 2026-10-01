@@ -52,8 +52,10 @@ representative for their specific case.
 **4. How to set up and access the main features**
 No login or credentials are needed. Nothing needs to be downloaded or imported.
 
-- Launch the app → short onboarding (choose language, choose your path, choose a
-  daily goal). Any answers work.
+- Launch the app → short onboarding (choose language, country, where you are on
+  your path, your goal, education level, field, job-offer status, and a daily
+  goal). Any answers work. The final screen lists visa paths the profile may
+  qualify for (for example TN or O-1); this is educational guidance only.
 - **Today** tab: streak, "civics readiness," and today's lesson. Tap the lesson
   card to play a civics lesson.
 - **Journey** tab: the stage map for the selected path; tap any stage for the

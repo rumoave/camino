@@ -16,7 +16,7 @@ var LANGUAGES = [
 function flagSVG(countryCode, size){
   size = size || 24;
   var map = {
-    'Mexico':'flagMX', 'India':'flagIN', 'China':'flagCN',
+    'Mexico':'flagMX', 'India':'flagIN', 'China':'flagCN', 'Canada':'flagCA',
     'Philippines':'flagPH', 'Vietnam':'flagVN', 'USA':'flagUS', 'United States':'flagUS',
     'Other':'flagWorld'
   };
@@ -359,6 +359,10 @@ var user = {
   marriageDate: null,
   monthsOutside: 'lt6',
   criminalHistory: false,
+  education: null,           // 'hs' | 'bachelors' | 'masters' | 'doctorate'
+  field: null,               // 'stem' | 'health' | 'business' | 'arts' | 'academia' | 'other'
+  jobOffer: null,            // 'yes' | 'looking' | 'self'
+  achievements: [],          // O1_CRITERIA ids the user says apply to them
   soundEffects: true,        // feedback chimes (right/wrong/complete) — Me tab toggle
   testVersion: '2025',       // '2008' (legacy 100q test) or '2025' (current 128q, 12-of-20 to pass)
   plan: 'free',              // 'free' | 'trial' | 'plus' | 'expired'
@@ -8223,6 +8227,28 @@ var VISA_PATHS = [
                  es:['Reconocimiento sostenido nacional o internacional','Evidencia en múltiples categorías (premios, publicaciones, prensa, contribuciones, jurado, salario alto)','Patrocinador empleador o agente en EE.UU.']},
     tips:{en:['No lottery, no annual cap.','Document everything: press, awards, citations, recommendation letters from experts.','Often a backup when H-1B lottery doesn\'t hit.'],
           es:['Sin lotería, sin tope anual.','Documenta todo: prensa, premios, citas, cartas de recomendación de expertos.','Frecuentemente un respaldo cuando no ganas la lotería H-1B.']}},
+  {id:'tn', iconName:'map', color:'#5e8eff', cat:'work', forms:['I-129'],
+    title:{en:'TN (USMCA Professionals)', es:'TN (Profesionales del T-MEC)'},
+    summary:{en:'For Canadian and Mexican citizens with a job offer in one of 60+ listed professions — engineers, accountants, scientists, nurses, computer systems analysts, college teachers and more. 3-year periods, renewable indefinitely, no lottery.',
+             es:'Para ciudadanos canadienses y mexicanos con oferta de trabajo en una de 60+ profesiones listadas — ingenieros, contadores, científicos, enfermeros, analistas de sistemas, profesores universitarios y más. Períodos de 3 años, renovable indefinidamente, sin lotería.'},
+    eligibility:{en:['Citizen of Canada or Mexico (permanent residents of those countries do not qualify)','Pre-arranged full- or part-time job with a U.S. employer in a USMCA-listed profession','The credential that profession requires — usually a bachelor\'s degree; a few accept a license or experience','Temporary intent — TN is not a dual-intent visa, so plan any green card step carefully'],
+                 es:['Ciudadano/a de Canadá o México (residentes permanentes de esos países no califican)','Trabajo acordado con un empleador en EE.UU. en una profesión listada en el T-MEC','La credencial que exige esa profesión — usualmente licenciatura; algunas aceptan licencia o experiencia','Intención temporal — la TN no es de doble intención; planifica con cuidado cualquier paso hacia la residencia']},
+    tips:{en:['No lottery, no annual cap — Canadians are often approved the same day at the border.','Your job title AND duties must match a listed profession; "consultant" or "manager" alone usually fails.','A new employer or a different profession needs a new TN.','Want a green card later? Many move to H-1B (dual intent) or have the employer start PERM/I-140 — talk to a lawyer before filing while on TN.','Spouse and children under 21 get TD status: they can study but not work.'],
+          es:['Sin lotería ni tope anual — a los canadienses suelen aprobarlos el mismo día en la frontera.','Tu título Y funciones deben coincidir con una profesión listada; "consultor" o "gerente" solos suelen fallar.','Un nuevo empleador o una profesión distinta requiere una nueva TN.','¿Residencia después? Muchos pasan a H-1B (doble intención) o el empleador inicia PERM/I-140 — consulta a un abogado antes de presentar estando en TN.','Cónyuge e hijos menores de 21 obtienen estatus TD: pueden estudiar pero no trabajar.']},
+    howItWorks:{en:[
+        'Match your job to the USMCA profession list (Appendix 2 to Annex 16-A). The title, duties and your credential all have to line up with one listed profession.',
+        'Get a support letter from the employer: job title, duties, length of stay (up to 3 years), salary, and your qualifications. Bring your degree, transcripts and, for foreign degrees, a credential evaluation.',
+        'Canadians: apply in person at a U.S. port of entry or airport preclearance — no visa, no USCIS petition. Pay the TN application and I-94 fees (about $56 total) and you can start work on approval.',
+        'Mexicans: complete the DS-160, pay the visa fee ($185), and interview at a U.S. consulate. Enter with the TN visa plus your employer letter.',
+        'Already in the U.S. in another status (F-1, OPT, H-1B…)? Your employer can instead file Form I-129 with USCIS to change your status to TN without leaving.',
+        'Extend in 3-year increments — a fresh letter at the border, or an I-129 extension — as long as the job stays temporary in nature. There is no maximum number of renewals.'],
+      es:[
+        'Empareja tu trabajo con la lista de profesiones del T-MEC (Apéndice 2 del Anexo 16-A). Título, funciones y credencial deben coincidir con una profesión listada.',
+        'Consigue una carta del empleador: puesto, funciones, duración (hasta 3 años), salario y tus calificaciones. Lleva tu título, historial académico y, si es extranjero, una evaluación de credenciales.',
+        'Canadienses: solicitan en persona en un puerto de entrada o preinspección aeroportuaria — sin visa ni petición a USCIS. Pagan las tarifas de TN e I-94 (unos $56 en total) y pueden trabajar al ser aprobados.',
+        'Mexicanos: completan el DS-160, pagan la tarifa de visa ($185) y tienen entrevista en un consulado de EE.UU. Entran con la visa TN y la carta del empleador.',
+        '¿Ya estás en EE.UU. con otro estatus (F-1, OPT, H-1B…)? Tu empleador puede presentar el Formulario I-129 ante USCIS para cambiar tu estatus a TN sin salir del país.',
+        'Extiende en períodos de 3 años — carta nueva en la frontera o extensión por I-129 — mientras el trabajo siga siendo temporal. No hay límite de renovaciones.']}},
   {id:'eb1', iconName:'trophy', color:'#ffc83d', cat:'gc', forms:['I-140','I-485'],
     title:{en:'EB-1 Priority Workers (Green Card)', es:'EB-1 Trabajadores Prioritarios (Residencia)'},
     summary:{en:'Fastest employment-based green card. Three subcategories: EB-1A (extraordinary ability), EB-1B (outstanding professor/researcher), EB-1C (multinational manager).',
@@ -8299,11 +8325,30 @@ function renderVisaPaths(){
   var list = document.getElementById('visaList');
   if(!list) return;
   var html = '';
+  // Personalised shortlist first (from education / field / job offer / evidence).
+  var sugg = suggestVisaPaths(user);
+  if(sugg.length){
+    html += '<div class="visaCatHead">'+(lang==='es'?'Recomendadas para ti':'Recommended for you')+'</div>';
+    sugg.forEach(function(sg){ var v = findVisaPath(sg.id); if(v) html += visaCardHtml(v, sg); });
+    html += '<div class="visaSuggNote">'+(lang==='es'
+      ? 'Según tus respuestas en Yo → Tu camino. Es una guía educativa, no asesoría legal — confirma con un abogado de inmigración o representante acreditado por el DOJ.'
+      : 'Based on your answers under Me → Your path. Educational guidance, not legal advice — confirm with an immigration attorney or DOJ-accredited representative.')+'</div>';
+  }
   VISA_CATEGORIES.forEach(function(cat){
     var inCat = VISA_PATHS.filter(function(v){return v.cat === cat.id;});
     if(!inCat.length) return;
     html += '<div class="visaCatHead">'+cat.label[lang]+'</div>';
-    inCat.forEach(function(v){
+    inCat.forEach(function(v){ html += visaCardHtml(v, null); });
+  });
+  list.innerHTML = html;
+  populateIcons();
+}
+
+// One expandable visa card. `sg` (optional) is a suggestion entry — adds the
+// "why this fits you" line under the summary.
+function visaCardHtml(v, sg){
+  var html = '';
+  (function(){
       var expanded = openVisaPath === v.id;
       var eligList = '';
       var tipList = '';
@@ -8311,12 +8356,16 @@ function renderVisaPaths(){
         v.eligibility[lang].forEach(function(e){ eligList += '<li>'+e+'</li>'; });
         v.tips[lang].forEach(function(t){ tipList += '<li>'+t+'</li>'; });
       }
+      var whyHtml = sg
+        ? '<div class="visaWhy"><span class="visaWhyBadge'+(sg.strength==='strong'?'':' possible')+'">'+(sg.strength==='strong' ? (lang==='es'?'Buen encaje':'Strong fit') : (lang==='es'?'Posible':'Possible'))+'</span><span>'+sg.why[lang]+'</span></div>'
+        : '';
       html += '<div class="visaCard'+(expanded?' visaOpen':'')+'" onclick="toggleVisaPath(\''+v.id+'\')">'
         + '<div class="visaCardTop">'
         +   '<div class="visaIco" style="background:'+v.color+'1a">'+iconSVG(v.iconName, v.color, 22)+'</div>'
         +   '<div class="visaCardMain">'
         +     '<div class="visaCardTitle">'+v.title[lang]+'</div>'
         +     '<div class="visaCardSummary">'+v.summary[lang]+'</div>'
+        +     whyHtml
         +   '</div>'
         +   '<div class="visaCardChev"></div>'
         + '</div>'
@@ -8345,10 +8394,8 @@ function renderVisaPaths(){
               })()
             : '')
         + '</div>';
-    });
-  });
-  list.innerHTML = html;
-  populateIcons();
+  })();
+  return html;
 }
 
 function toggleVisaPath(id){
@@ -8394,7 +8441,7 @@ function renderHomeVisaRow(){
     var doneCount = user.eligWizardResults ? Object.keys(user.eligWizardResults).length : 0;
     if(eligT) eligT.textContent = lang==='es' ? 'Verificar elegibilidad' : 'Check your eligibility';
     if(eligS) eligS.textContent = doneCount > 0
-      ? (lang==='es' ? doneCount+' '+(doneCount===1?'completada':'completadas')+' · '+(5-doneCount)+' más' : doneCount+' done · '+(5-doneCount)+' more')
+      ? (lang==='es' ? doneCount+' '+(doneCount===1?'completada':'completadas')+' · '+(Object.keys(ELIGIBILITY_WIZARDS).length-doneCount)+' más' : doneCount+' done · '+(Object.keys(ELIGIBILITY_WIZARDS).length-doneCount)+' more')
       : (lang==='es' ? 'Asilo · matrimonio · STEM · DV · H-1B' : 'Asylum · marriage · STEM · DV · H-1B');
   }
   // Visa Bulletin row (pre-GC employment / family-pref only)
@@ -8465,10 +8512,11 @@ function renderHomeVisaRow(){
         addIco.style.background = 'rgba(28,176,246,.16)';
         addIco.innerHTML = iconSVG('globe', '#1cb0f6', 22);
       }
-      if(at) at.textContent = lang==='es' ? 'Ver vías adicionales' : 'See additional paths';
-      if(as) as.textContent = lang==='es'
+      var suggLine = suggestedPathsLine();
+      if(at) at.textContent = suggLine ? (lang==='es' ? 'Vías que podrías calificar' : 'Paths you may qualify for') : (lang==='es' ? 'Ver vías adicionales' : 'See additional paths');
+      if(as) as.textContent = suggLine || (lang==='es'
         ? 'Estudiante · trabajo · familia · asilo · DV'
-        : 'Student · work · family · asylum · DV';
+        : 'Student · work · family · asylum · DV');
     }
   } else {
     // No personalized path from onboarding — hide the "Your path" row entirely so
@@ -8484,10 +8532,11 @@ function renderHomeVisaRow(){
         addIco2.style.background = 'rgba(0,180,168,.14)';
         addIco2.innerHTML = iconSVG('map', '#00b4a8', 22);
       }
-      if(at2) at2.textContent = lang==='es' ? 'Explora las vías de inmigración' : 'Explore immigration paths';
-      if(as2) as2.textContent = lang==='es'
+      var suggLine2 = suggestedPathsLine();
+      if(at2) at2.textContent = suggLine2 ? (lang==='es' ? 'Vías que podrías calificar' : 'Paths you may qualify for') : (lang==='es' ? 'Explora las vías de inmigración' : 'Explore immigration paths');
+      if(as2) as2.textContent = suggLine2 || (lang==='es'
         ? 'Encuentra la que te aplica'
-        : 'Find the one that fits';
+        : 'Find the one that fits');
     }
   }
 }
@@ -10765,7 +10814,7 @@ function renderCamiTop(){
 }
 
 // ===== ONBOARDING WIZARD =====
-var ONB_STEPS = ['lang','about','name','country','phase','goal','petition','stage','gcDate','married','marriageDate','monthsOutside','criminal','time','summary'];
+var ONB_STEPS = ['lang','about','name','country','phase','goal','education','field','jobOffer','achievements','petition','stage','gcDate','married','marriageDate','monthsOutside','criminal','time','summary'];
 
 // Immigration goal — where the user wants to end up. Drives next-action emphasis on home.
 var IMMIGRATION_GOALS = {
@@ -10807,8 +10856,101 @@ var IMMIGRATION_GOALS = {
 };
 
 function countryLabel(c, l){
-  var map = {Mexico:{en:'Mexico',es:'México'}, India:{en:'India',es:'India'}, China:{en:'China',es:'China'}, Philippines:{en:'Philippines',es:'Filipinas'}, Other:{en:'Another country',es:'Otro país'}};
+  var map = {Mexico:{en:'Mexico',es:'México'}, India:{en:'India',es:'India'}, China:{en:'China',es:'China'}, Philippines:{en:'Philippines',es:'Filipinas'}, Canada:{en:'Canada',es:'Canadá'}, Other:{en:'Another country',es:'Otro país'}};
   return (map[c] && map[c][l]) || c;
+}
+
+// ===== PROFILE: education / field / job offer / O-1 evidence =====================
+// These four answers are what let Camino point at paths most people never hear
+// about (TN, O-1, EB-2 NIW). Everything stays on-device like the rest of the profile.
+var EDUCATION_LEVELS = {
+  hs:        {iconName:'smile',  iconColor:'#84807a', label:{en:'High school or some college', es:'Secundaria o algo de universidad'}, sub:{en:'No degree yet',                       es:'Sin título aún'}},
+  bachelors: {iconName:'book',   iconColor:'#1cb0f6', label:{en:"Bachelor's degree",            es:'Licenciatura'},                      sub:{en:'4-year university degree',           es:'Título universitario de 4 años'}},
+  masters:   {iconName:'star',   iconColor:'#ff9b21', label:{en:"Master's degree",              es:'Maestría'},                          sub:{en:'Or equivalent professional degree',  es:'O título profesional equivalente'}},
+  doctorate: {iconName:'trophy', iconColor:'#ffc83d', label:{en:'Doctorate (PhD, MD, JD…)',     es:'Doctorado (PhD, MD, JD…)'},          sub:{en:'Opens self-petition options',        es:'Abre opciones de auto-petición'}}
+};
+var WORK_FIELDS = {
+  stem:     {iconName:'bolt',      iconColor:'#00b4a8', label:{en:'Tech, engineering & science', es:'Tecnología, ingeniería y ciencia'}},
+  health:   {iconName:'shield',    iconColor:'#ec4f93', label:{en:'Healthcare',                  es:'Salud'}},
+  business: {iconName:'briefcase', iconColor:'#5e8eff', label:{en:'Business, finance & law',     es:'Negocios, finanzas y derecho'}},
+  arts:     {iconName:'star',      iconColor:'#ff4d3a', label:{en:'Arts, media, sports',         es:'Artes, medios, deportes'}},
+  academia: {iconName:'book',      iconColor:'#8c4dd1', label:{en:'Academia & research',         es:'Academia e investigación'}},
+  other:    {iconName:'globe',     iconColor:'#84807a', label:{en:'Trades, service or other',    es:'Oficios, servicios u otro'}}
+};
+var JOB_OFFER_OPTIONS = {
+  yes:     {iconName:'briefcase', iconColor:'#00b4a8', label:{en:'Yes, from a U.S. employer',  es:'Sí, de un empleador en EE.UU.'}, sub:{en:'Or I already work for one',         es:'O ya trabajo para uno'}},
+  looking: {iconName:'target',    iconColor:'#ff9b21', label:{en:'Not yet — still looking',    es:'Aún no — sigo buscando'},         sub:{en:"We'll show paths that don't need one yet", es:'Te mostraremos vías que no la requieren aún'}},
+  self:    {iconName:'bolt',      iconColor:'#8c4dd1', label:{en:"I'd rather work for myself", es:'Prefiero trabajar por mi cuenta'}, sub:{en:'Founder, freelancer, artist, researcher', es:'Fundador/a, freelance, artista, investigador/a'}}
+};
+// The eight O-1A / EB-1A evidence categories, in plain English. Three are needed.
+var O1_CRITERIA = [
+  {id:'awards',        iconName:'trophy',    iconColor:'#ffc83d', label:{en:'Won a national or international award', es:'Gané un premio nacional o internacional'},            sub:{en:'Prizes, grants, competitions in your field', es:'Premios, becas, concursos en tu campo'}},
+  {id:'press',         iconName:'mic',       iconColor:'#ec4f93', label:{en:'Press has written about my work',       es:'La prensa ha escrito sobre mi trabajo'},              sub:{en:'Major media, trade publications',         es:'Medios importantes, publicaciones del sector'}},
+  {id:'publications',  iconName:'doc',       iconColor:'#1cb0f6', label:{en:'Published research or articles',        es:'Publiqué investigación o artículos'},                 sub:{en:'Journals, books, widely cited papers',    es:'Revistas, libros, artículos citados'}},
+  {id:'judging',       iconName:'check',     iconColor:'#00b4a8', label:{en:"Judged others' work",                   es:'Fui jurado del trabajo de otros'},                    sub:{en:'Peer review, juries, competition panels', es:'Revisión por pares, jurados, paneles'}},
+  {id:'critical-role', iconName:'briefcase', iconColor:'#5e8eff', label:{en:'Lead or critical role at a known org',  es:'Rol clave en una organización reconocida'},           sub:{en:'Distinguished company, lab, team, or production', es:'Empresa, laboratorio, equipo o producción distinguida'}},
+  {id:'high-salary',   iconName:'star',      iconColor:'#ff9b21', label:{en:'Paid well above others in my field',    es:'Gano mucho más que otros en mi campo'},               sub:{en:'Top of the salary range for your role',   es:'Tope del rango salarial de tu puesto'}},
+  {id:'membership',    iconName:'people',    iconColor:'#8c4dd1', label:{en:'Member of a selective association',     es:'Miembro de una asociación selectiva'},                sub:{en:'Admission judged by experts on achievement', es:'Admisión evaluada por expertos según logros'}},
+  {id:'contributions', iconName:'bolt',      iconColor:'#ff4d3a', label:{en:'Original contributions of major significance', es:'Contribuciones originales de gran importancia'}, sub:{en:'Patents, methods, work others build on',  es:'Patentes, métodos, trabajo que otros usan'}}
+];
+function educationLabel(v, l){ return (EDUCATION_LEVELS[v] && EDUCATION_LEVELS[v].label[l]) || '—'; }
+function fieldLabel(v, l){ return (WORK_FIELDS[v] && WORK_FIELDS[v].label[l]) || '—'; }
+function jobOfferLabel(v, l){ return (JOB_OFFER_OPTIONS[v] && JOB_OFFER_OPTIONS[v].label[l]) || '—'; }
+function hasDegree(edu){ return edu === 'bachelors' || edu === 'masters' || edu === 'doctorate'; }
+function hasAdvancedDegree(edu){ return edu === 'masters' || edu === 'doctorate'; }
+
+// Rank the VISA_PATHS entries this profile may qualify for. Pure function of a
+// profile-shaped object (user, or the onboarding state mapped to user keys) so the
+// onboarding summary, the Home row and the Paths screen all agree.
+// Returns [{id, strength:'strong'|'possible', why:{en,es}}], strongest first, max 3.
+// This is an educational pointer from self-reported answers — never a legal verdict.
+function suggestVisaPaths(p){
+  if(!p || p.phase === 'hasGC') return [];
+  var out = [];
+  var edu = p.education, fld = p.field, job = p.jobOffer;
+  var ach = Array.isArray(p.achievements) ? p.achievements.length : 0;
+  var usmca = (p.countryOfBirth === 'Canada' || p.countryOfBirth === 'Mexico');
+  function add(id, strength, en, es){ out.push({id:id, strength:strength, why:{en:en, es:es}}); }
+
+  if(usmca && hasDegree(edu)){
+    add('tn', job === 'yes' ? 'strong' : 'possible',
+      (p.countryOfBirth==='Canada'?'Canadian':'Mexican')+' citizen with a university degree — TN covers 60+ USMCA professions, no lottery'+(job==='yes'?'':' (needs a job offer in a listed profession)'),
+      'Ciudadano/a '+(p.countryOfBirth==='Canada'?'canadiense':'mexicano/a')+' con título universitario — la TN cubre 60+ profesiones del T-MEC, sin lotería'+(job==='yes'?'':' (requiere oferta en una profesión listada)'));
+  }
+  if(ach >= 2){
+    add('o1', ach >= 3 ? 'strong' : 'possible',
+      'You checked '+ach+' of the 8 O-1 evidence categories'+(ach>=3?' — 3 is the threshold':' — one more reaches the 3 needed')+'. No lottery, no cap.',
+      'Marcaste '+ach+' de las 8 categorías de evidencia O-1'+(ach>=3?' — 3 es el umbral':' — una más alcanza las 3 necesarias')+'. Sin lotería, sin tope.');
+  }
+  if(hasAdvancedDegree(edu) || (edu === 'bachelors' && ach >= 2)){
+    var niwStrong = (edu === 'doctorate') || (edu === 'masters' && (fld === 'stem' || fld === 'health' || fld === 'academia'));
+    add('eb2', niwStrong ? 'strong' : 'possible',
+      'Advanced degree → EB-2 National Interest Waiver: self-petition for a green card, no employer or PERM needed'+(job==='self'?' — fits working for yourself':''),
+      'Posgrado → EB-2 con exención por interés nacional (NIW): auto-petición de residencia, sin empleador ni PERM'+(job==='self'?' — encaja con trabajar por tu cuenta':''));
+  }
+  if(ach >= 4){
+    add('eb1', 'possible',
+      'With '+ach+' evidence categories, EB-1A (extraordinary ability green card) may be in reach — same criteria as O-1, higher bar, self-petition',
+      'Con '+ach+' categorías de evidencia, la EB-1A (residencia por habilidad extraordinaria) podría estar a tu alcance — mismos criterios que O-1, listón más alto');
+  }
+  if(hasDegree(edu) && job === 'yes' && p.phase !== 'workvisa'){
+    add('h1b', 'possible',
+      'Degree + U.S. job offer = the classic H-1B route (lottery each March; cap-exempt employers skip it)',
+      'Título + oferta en EE.UU. = la ruta clásica H-1B (lotería cada marzo; empleadores exentos la evitan)');
+  }
+  if((p.phase === 'student' || p.phase === 'opt') && fld === 'stem'){
+    add('opt', 'possible',
+      'STEM degree → OPT can stretch to 36 months with the STEM extension — more lottery attempts',
+      'Título STEM → la OPT puede extenderse a 36 meses con la extensión STEM — más intentos de lotería');
+  }
+  out.sort(function(a, b){ return (a.strength==='strong'?0:1) - (b.strength==='strong'?0:1); });
+  return out.slice(0, 3);
+}
+function suggestedPathsLine(){
+  var sugg = suggestVisaPaths(user);
+  if(!sugg.length) return null;
+  var names = sugg.map(function(sg){ var v = findVisaPath(sg.id); return v ? v.title[lang].split(' ')[0] : null; }).filter(Boolean);
+  return (lang==='es' ? 'Podrías calificar: ' : 'You may qualify: ') + names.join(' · ');
 }
 function petitionLabel(p, l){
   var map = {
@@ -10898,6 +11040,10 @@ var onbState = {
   marriageDate: '2020-01-01',
   monthsOutside: null,
   criminalHistory: null,
+  education: null,
+  field: null,
+  jobOffer: null,
+  achievements: [],
   dailyMinutes: 5
 };
 
@@ -10905,6 +11051,12 @@ function onbKey(){ return ONB_STEPS[onbState.step]; }
 
 function onbShouldSkip(key){
   if(key === 'petition') return onbState.phase !== 'preGC';
+  // Profile questions that unlock TN / O-1 / NIW suggestions — pointless once
+  // someone already holds a green card, and job-offer / evidence questions don't
+  // apply to a pending petition or an asylum case.
+  if(key === 'education' || key === 'field') return onbState.phase === 'hasGC';
+  if(key === 'jobOffer') return onbState.phase === 'hasGC' || onbState.phase === 'preGC' || onbState.phase === 'asylum';
+  if(key === 'achievements') return onbState.phase === 'hasGC' || onbState.phase === 'asylum';
   if((key === 'gcDate' || key === 'married' || key === 'monthsOutside') && onbState.phase !== 'hasGC') return true;
   if(key === 'marriageDate') return !(onbState.phase === 'hasGC' && onbState.married === true);
   // Stage step: only relevant for GC tracks (preGC + hasGC)
@@ -10970,6 +11122,27 @@ function onbPick(key, value){
   onbState[key] = value;
   renderOnboarding();
   setTimeout(onbContinue, 240);
+}
+
+// Multi-select for the O-1 evidence step: tapping does NOT auto-advance.
+function onbToggleAchievement(id){
+  var a = onbState.achievements || [];
+  if(id === 'none'){ a = []; }
+  else {
+    var i = a.indexOf(id);
+    if(i === -1) a.push(id); else a.splice(i, 1);
+  }
+  onbState.achievements = a;
+  renderOnboarding();
+}
+
+function achievementCardsHtml(selected, onclickFor){
+  var html = '';
+  O1_CRITERIA.forEach(function(c){
+    html += onbCardHtml(ico(c.iconName, c.iconColor), c.label[lang], c.sub[lang], selected.indexOf(c.id) !== -1, onclickFor(c.id));
+  });
+  html += onbCardHtml(ico('smile','#84807a'), (lang==='es'?'Ninguna de estas (todavía)':'None of these (yet)'), (lang==='es'?'Totalmente normal — la mayoría empieza aquí':'Totally normal — most people start here'), selected.length === 0, onclickFor('none'));
+  return html;
 }
 
 function onbLangPick(l){
@@ -11063,10 +11236,11 @@ function renderOnboarding(){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿De qué país vienes?':'What country are you from?')+'</div>'
       + '<div class="onbStepSub">'+(lang==='es'?'Algunos países tienen esperas más largas en el Boletín de Visas.':'Some countries have longer waits in the Visa Bulletin.')+'</div>'
       + '<div class="onbCards">'
-      + onbCardHtml(flagSVG('Mexico', 28),     'Mexico','',          onbState.country==='Mexico',      "onbPick('country','Mexico')")
+      + onbCardHtml(flagSVG('Mexico', 28),     (lang==='es'?'México':'Mexico'), (lang==='es'?'Elegible para la visa TN (T-MEC)':'Eligible for the TN visa (USMCA)'), onbState.country==='Mexico',      "onbPick('country','Mexico')")
+      + onbCardHtml(flagSVG('Canada', 28),     (lang==='es'?'Canadá':'Canada'), (lang==='es'?'Elegible para la visa TN (T-MEC)':'Eligible for the TN visa (USMCA)'), onbState.country==='Canada',      "onbPick('country','Canada')")
       + onbCardHtml(flagSVG('India', 28),      'India','',           onbState.country==='India',       "onbPick('country','India')")
       + onbCardHtml(flagSVG('China', 28),      'China','',           onbState.country==='China',       "onbPick('country','China')")
-      + onbCardHtml(flagSVG('Philippines', 28),'Philippines','',     onbState.country==='Philippines', "onbPick('country','Philippines')")
+      + onbCardHtml(flagSVG('Philippines', 28),(lang==='es'?'Filipinas':'Philippines'),'',     onbState.country==='Philippines', "onbPick('country','Philippines')")
       + onbCardHtml(flagSVG('Other', 28),      (lang==='es'?'Otro país':'Another country'), (lang==='es'?'Sin retraso significativo':'No significant backlog'), onbState.country==='Other', "onbPick('country','Other')")
       + '</div>';
   }
@@ -11089,6 +11263,46 @@ function renderOnboarding(){
       html += onbCardHtml(ico(g.iconName, g.iconColor), g.label[lang], g.sub[lang], onbState.goal===gid, "onbPick('goal','"+gid+"')");
     }
     html += '</div>';
+  }
+  else if(k === 'education'){
+    html = '<div class="onbStepTitle">'+(lang==='es'?'¿Cuál es tu nivel de estudios?':"What's your highest education?")+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'Varias visas dependen del título — y un posgrado abre vías de auto-petición.':'Several visas hinge on a degree — and a graduate degree opens self-petition paths.')+'</div>'
+      + '<div class="onbCards">';
+    for(var eid in EDUCATION_LEVELS){
+      var e = EDUCATION_LEVELS[eid];
+      html += onbCardHtml(ico(e.iconName, e.iconColor), e.label[lang], e.sub[lang], onbState.education===eid, "onbPick('education','"+eid+"')");
+    }
+    html += '</div>';
+  }
+  else if(k === 'field'){
+    html = '<div class="onbStepTitle">'+(lang==='es'?'¿En qué campo trabajas o estudias?':'What field do you work or study in?')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'Algunas vías (STEM OPT, NIW, O-1) favorecen ciertos campos.':'Some paths (STEM OPT, NIW, O-1) favor certain fields.')+'</div>'
+      + '<div class="onbCards">';
+    for(var fid in WORK_FIELDS){
+      var f = WORK_FIELDS[fid];
+      html += onbCardHtml(ico(f.iconName, f.iconColor), f.label[lang], '', onbState.field===fid, "onbPick('field','"+fid+"')");
+    }
+    html += '</div>';
+  }
+  else if(k === 'jobOffer'){
+    html = '<div class="onbStepTitle">'+(lang==='es'?'¿Tienes una oferta de trabajo en EE.UU.?':'Do you have a U.S. job offer?')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'H-1B y TN necesitan un empleador. O-1 y NIW tienen otras opciones.':'H-1B and TN need an employer. O-1 and NIW have other options.')+'</div>'
+      + '<div class="onbCards">';
+    for(var jid in JOB_OFFER_OPTIONS){
+      var j = JOB_OFFER_OPTIONS[jid];
+      html += onbCardHtml(ico(j.iconName, j.iconColor), j.label[lang], j.sub[lang], onbState.jobOffer===jid, "onbPick('jobOffer','"+jid+"')");
+    }
+    html += '</div>';
+  }
+  else if(k === 'achievements'){
+    var selA = onbState.achievements || [];
+    html = '<div class="onbStepTitle">'+(lang==='es'?'¿Alguno de estos te describe?':'Do any of these describe you?')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'Elige todos los que apliquen. Tres de estos son la base de la visa O-1 — sin lotería.':'Pick all that apply. Three of these are the basis of the O-1 visa — no lottery.')+'</div>'
+      + '<div class="onbCards">'
+      + achievementCardsHtml(selA, function(id){ return "onbToggleAchievement('"+id+"')"; })
+      + '</div>'
+      + privacyChipHTML();
+    footerHtml = '<button class="cta" onclick="onbContinue()">'+(selA.length ? (lang==='es'?'Continuar':'Continue')+' ('+selA.length+')' : (lang==='es'?'Continuar':'Continue'))+' →</button>';
   }
   else if(k === 'petition'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Cómo te están patrocinando?':'How are you being sponsored?')+'</div>'
@@ -11178,6 +11392,11 @@ function renderOnboarding(){
     if(onbState.phase === 'preGC' && onbState.petition){
       rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Vía':'Path')+'</div><div class="onbSummaryV">'+petitionLabel(onbState.petition, lang)+'</div></div>';
     }
+    if(onbState.phase !== 'hasGC'){
+      if(onbState.education) rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Estudios':'Education')+'</div><div class="onbSummaryV">'+educationLabel(onbState.education, lang)+'</div></div>';
+      if(onbState.field) rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Campo':'Field')+'</div><div class="onbSummaryV">'+fieldLabel(onbState.field, lang)+'</div></div>';
+      if(onbState.jobOffer) rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Oferta':'Job offer')+'</div><div class="onbSummaryV">'+jobOfferLabel(onbState.jobOffer, lang)+'</div></div>';
+    }
     if(onbState.phase === 'hasGC'){
       rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Residencia':'Green card')+'</div><div class="onbSummaryV">'+fmtDate(onbState.gcDate, lang)+'</div></div>';
       rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Regla':'Rule')+'</div><div class="onbSummaryV">'+(onbState.married ? (lang==='es'?'3 años (cónyuge)':'3 years (spouse)') : (lang==='es'?'5 años':'5 years'))+'</div></div>';
@@ -11212,6 +11431,31 @@ function renderOnboarding(){
       if(oath) oathRow = '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Juramento':'Oath est.')+'</div><div class="onbSummaryV">'+fmtMonthRange(oath.endLow, oath.endHigh, lang)+'</div></div>';
     }
 
+    // Paths this profile may qualify for (TN / O-1 / NIW / …) — the payoff for
+    // answering the education, field, job-offer and evidence questions.
+    var suggHtml = '';
+    var sugg = suggestVisaPaths({
+      phase: onbState.phase, countryOfBirth: onbState.country, education: onbState.education,
+      field: onbState.field, jobOffer: onbState.jobOffer, achievements: onbState.achievements || []
+    });
+    if(sugg.length){
+      var suggRows = '';
+      sugg.forEach(function(sg){
+        var v = findVisaPath(sg.id); if(!v) return;
+        suggRows += '<div class="onbSuggRow">'
+          + '<div class="onbSuggIco" style="background:'+v.color+'1f">'+iconSVG(v.iconName, v.color, 20)+'</div>'
+          + '<div class="onbSuggMain">'
+          +   '<div class="onbSuggTitle">'+v.title[lang]+' <span class="visaWhyBadge'+(sg.strength==='strong'?'':' possible')+'">'+(sg.strength==='strong' ? (lang==='es'?'Buen encaje':'Strong fit') : (lang==='es'?'Posible':'Possible'))+'</span></div>'
+          +   '<div class="onbSuggWhy">'+sg.why[lang]+'</div>'
+          + '</div></div>';
+      });
+      suggHtml = '<div class="onbSuggCard">'
+        + '<div class="onbSuggKick">'+(lang==='es'?'Vías que podrías calificar':'Paths you may qualify for')+'</div>'
+        + suggRows
+        + '<div class="onbSuggNote">'+(lang==='es'?'Estimación educativa a partir de tus respuestas — no es asesoría legal. Las guías completas están en Vías.':'An educational estimate from your answers — not legal advice. Full guides live under Paths.')+'</div>'
+        + '</div>';
+    }
+
     html = '<div class="onbCamiTop">'+camiSVG('celebrate')+'</div>'
       + '<div class="onbStepTitle">'
       + (lang==='es' ? ('¡Listo, '+name+'!') : ("You're set, "+name+'!'))
@@ -11219,6 +11463,7 @@ function renderOnboarding(){
       + '<div class="onbStepSub">'+(lang==='es'?'Así se ve tu camino:':"Here's what your path looks like:")+'</div>'
       + '<div class="onbSummary">'
       +   '<div class="onbSummaryCard">'+rows+timeRow+oathRow+'</div>'
+      +   suggHtml
       +   '<div class="onbSummaryNext">'
       +     '<div class="onbSummaryNextKick">'+(lang==='es'?'Tu próximo paso':'Your next step')+'</div>'
       +     '<div class="onbSummaryNextTitle">'+nextLine+'</div>'
@@ -11256,6 +11501,10 @@ function finishOnboarding(){
   user.marriageDate = (onbState.married && onbState.marriageDate) ? onbState.marriageDate : null;
   user.monthsOutside = onbState.monthsOutside || 'lt6';
   user.criminalHistory = onbState.criminalHistory === true;
+  user.education = onbState.education || null;
+  user.field = onbState.field || null;
+  user.jobOffer = onbState.jobOffer || null;
+  user.achievements = (onbState.achievements || []).slice();
   user.onboarded = true;
   // Fully initialize progress — every field that any render function reads.
   user.progress = {
@@ -11823,6 +12072,11 @@ function iconSVG(name, color, size){
       + '<rect x="2"  y="6" width="6.67" height="12" fill="#006847"/>'
       + '<rect x="15.33" y="6" width="6.67" height="12" fill="#ce1126"/>'
       + '<circle cx="12" cy="12" r="2" fill="none" stroke="#006847" stroke-width=".8"/>',
+    flagCA: ''
+      + '<rect x="2" y="6" width="20" height="12" rx="1.5" fill="#fff" stroke="'+ink+'" stroke-width="1.2"/>'
+      + '<rect x="2"  y="6" width="5" height="12" fill="#d52b1e"/>'
+      + '<rect x="17" y="6" width="5" height="12" fill="#d52b1e"/>'
+      + '<polygon points="12,8.2 12.9,10.2 14.6,9.6 13.8,11.4 15.2,12.4 13.2,12.8 13.3,14.6 12,13.5 10.7,14.6 10.8,12.8 8.8,12.4 10.2,11.4 9.4,9.6 11.1,10.2" fill="#d52b1e"/>',
     flagIN: ''
       + '<rect x="2" y="6" width="20" height="12" rx="1.5" fill="#fff" stroke="'+ink+'" stroke-width="1.2"/>'
       + '<rect x="2" y="6"  width="20" height="4" fill="#ff9933"/>'
@@ -12815,8 +13069,25 @@ var ME_FIELDS = {
   marriageDate:     {label:{en:'Marriage date',        es:'Fecha de matrimonio'},     type:'date'},
   monthsOutside:    {label:{en:'Time outside the U.S.',es:'Tiempo fuera de EE.UU.'},  type:'monthsOutside'},
   criminalHistory:  {label:{en:'Criminal history',     es:'Antecedentes penales'},    type:'yesno'},
-  dailyMinutes:     {label:{en:'Daily commitment',     es:'Compromiso diario'},       type:'dailyMinutes'}
+  dailyMinutes:     {label:{en:'Daily commitment',     es:'Compromiso diario'},       type:'dailyMinutes'},
+  education:        {label:{en:'Highest education',    es:'Nivel de estudios'},       type:'education'},
+  field:            {label:{en:'Field',                es:'Campo'},                   type:'field'},
+  jobOffer:         {label:{en:'U.S. job offer',       es:'Oferta de trabajo en EE.UU.'}, type:'jobOffer'},
+  achievements:     {label:{en:'O-1 / EB-1 evidence',  es:'Evidencia O-1 / EB-1'},    type:'achievements'}
 };
+
+// Multi-select editor for the O-1 evidence list (saved with the footer button).
+function editToggleAchievement(id){
+  if(!editFieldState) return;
+  var a = Array.isArray(editFieldState.value) ? editFieldState.value.slice() : [];
+  if(id === 'none'){ a = []; }
+  else {
+    var i = a.indexOf(id);
+    if(i === -1) a.push(id); else a.splice(i, 1);
+  }
+  editFieldState.value = a;
+  renderEditField();
+}
 
 var editFieldState = null;
 
@@ -12843,6 +13114,8 @@ function saveEditField(){
   } else if(ME_FIELDS[key].type === 'date'){
     var d = document.getElementById('editFieldDate');
     if(d) v = d.value;
+  } else if(ME_FIELDS[key].type === 'achievements'){
+    v = Array.isArray(v) ? v.slice() : [];
   }
   user[key] = v;
   if(key === 'marriedToCitizen' && !v){ user.marriageDate = null; }
@@ -12893,9 +13166,28 @@ function renderEditField(){
       html += onbCardHtml(String(i+1), s.name[lang], sub, current === s.id, "pickEditValue('"+s.id+"')");
     });
     html += '</div>';
+  } else if(field.type === 'education'){
+    html = '<div class="onbCards">';
+    for(var eid in EDUCATION_LEVELS){ var ev = EDUCATION_LEVELS[eid]; html += onbCardHtml(ico(ev.iconName, ev.iconColor), ev.label[lang], ev.sub[lang], current===eid, "pickEditValue('"+eid+"')"); }
+    html += '</div>';
+  } else if(field.type === 'field'){
+    html = '<div class="onbCards">';
+    for(var fid in WORK_FIELDS){ var fv = WORK_FIELDS[fid]; html += onbCardHtml(ico(fv.iconName, fv.iconColor), fv.label[lang], '', current===fid, "pickEditValue('"+fid+"')"); }
+    html += '</div>';
+  } else if(field.type === 'jobOffer'){
+    html = '<div class="onbCards">';
+    for(var jid in JOB_OFFER_OPTIONS){ var jv = JOB_OFFER_OPTIONS[jid]; html += onbCardHtml(ico(jv.iconName, jv.iconColor), jv.label[lang], jv.sub[lang], current===jid, "pickEditValue('"+jid+"')"); }
+    html += '</div>';
+  } else if(field.type === 'achievements'){
+    var curA = Array.isArray(current) ? current : [];
+    html = '<div class="onbCards">'
+      + achievementCardsHtml(curA, function(id){ return "editToggleAchievement('"+id+"')"; })
+      + '</div>';
+    showFooter = true;
   } else if(field.type === 'country'){
     html = '<div class="onbCards">'
-      + onbCardHtml(flagSVG('Mexico', 28),     'Mexico','',          current==='Mexico',      "pickEditValue('Mexico')")
+      + onbCardHtml(flagSVG('Mexico', 28),     (lang==='es'?'México':'Mexico'),'', current==='Mexico',      "pickEditValue('Mexico')")
+      + onbCardHtml(flagSVG('Canada', 28),     (lang==='es'?'Canadá':'Canada'),'', current==='Canada',      "pickEditValue('Canada')")
       + onbCardHtml(flagSVG('India', 28),      'India','',           current==='India',       "pickEditValue('India')")
       + onbCardHtml(flagSVG('China', 28),      'China','',           current==='China',       "pickEditValue('China')")
       + onbCardHtml(flagSVG('Philippines', 28),'Philippines','',     current==='Philippines', "pickEditValue('Philippines')")
@@ -13011,6 +13303,13 @@ function renderMe(){
   html += '<div class="row" onclick="openEditField(\'name\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Nombre':'Name')+'</div><div class="rSub">'+(user.name||'—')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'currentStageId\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Etapa actual':'Current stage')+'</div><div class="rSub">'+(curStage ? curStage.name[lang] : '—')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'countryOfBirth\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'País de nacimiento':'Country of birth')+'</div><div class="rSub">'+countryLabel(user.countryOfBirth, lang)+'</div></div><div class="chev">›</div></div>';
+  if(user.phase !== 'hasGC'){
+    var achN = (user.achievements || []).length;
+    html += '<div class="row" onclick="openEditField(\'education\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Estudios':'Education')+'</div><div class="rSub">'+educationLabel(user.education, lang)+'</div></div><div class="chev">›</div></div>';
+    html += '<div class="row" onclick="openEditField(\'field\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Campo':'Field')+'</div><div class="rSub">'+fieldLabel(user.field, lang)+'</div></div><div class="chev">›</div></div>';
+    html += '<div class="row" onclick="openEditField(\'jobOffer\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Oferta de trabajo en EE.UU.':'U.S. job offer')+'</div><div class="rSub">'+jobOfferLabel(user.jobOffer, lang)+'</div></div><div class="chev">›</div></div>';
+    html += '<div class="row" onclick="openEditField(\'achievements\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Evidencia O-1 / EB-1':'O-1 / EB-1 evidence')+'</div><div class="rSub">'+(achN ? achN+' '+(lang==='es'?'de 8 categorías':'of 8 categories') : (lang==='es'?'Ninguna marcada':'None checked'))+'</div></div><div class="chev">›</div></div>';
+  }
   html += '<div class="row" onclick="openEditField(\'petitionType\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Vía de patrocinio':'Sponsorship path')+'</div><div class="rSub">'+(user.petitionType ? petitionLabel(user.petitionType, lang) : '—')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'greenCardDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Fecha de residencia':'Green card date')+'</div><div class="rSub">'+(user.greenCardDate ? fmtDate(user.greenCardDate, lang) : '—')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'marriedToCitizen\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Casado/a con ciudadano':'Married to citizen')+'</div><div class="rSub">'+(user.marriedToCitizen ? (lang==='es'?'Sí · regla de 3 años':'Yes · 3-year rule') : (lang==='es'?'No · regla de 5 años':'No · 5-year rule'))+'</div></div><div class="chev">›</div></div>';
@@ -13261,7 +13560,9 @@ function confirmRestartOnboarding(){
     petition:user.petitionType||null,
     stageId:user.currentStageId||null, gcDate:user.greenCardDate||'2020-03-03', married:!!user.marriedToCitizen,
     marriageDate:user.marriageDate||'2020-01-01', monthsOutside:user.monthsOutside||null,
-    criminalHistory:user.criminalHistory===true ? true : null, dailyMinutes:user.dailyMinutes||5
+    criminalHistory:user.criminalHistory===true ? true : null, dailyMinutes:user.dailyMinutes||5,
+    education:user.education||null, field:user.field||null, jobOffer:user.jobOffer||null,
+    achievements:(user.achievements||[]).slice()
   };
   renderOnboarding();
   go('onboarding');
@@ -13643,6 +13944,10 @@ function toast(msg){
     user.n400Form = null;
     user.n400 = stored.n400 || null;   // N-400 organizer state (answers stay local-only)
     user.immigrationGoal = stored.immigrationGoal || null;
+    user.education = stored.education || null;
+    user.field = stored.field || null;
+    user.jobOffer = stored.jobOffer || null;
+    user.achievements = Array.isArray(stored.achievements) ? stored.achievements : [];
     user.pathCurrentStage = stored.pathCurrentStage || null;
     user.anthropicApiKey = CAMI_AVAILABLE ? (stored.anthropicApiKey || null) : null;
     user.camiChatHistory = CAMI_AVAILABLE ? (stored.camiChatHistory || []) : [];

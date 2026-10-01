@@ -4000,3 +4000,21 @@ select:focus-visible,
     transition-duration: .01ms !important;
   }
 }
+
+/* ===== Personalised path suggestions (onboarding summary + Paths screen) ===== */
+.onbSuggCard{background:#fff;border-radius:18px;padding:14px 18px 10px;margin-top:12px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid var(--hair);}
+.onbSuggKick{font-size:11px;font-weight:850;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.onbSuggRow{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid var(--hair);}
+.onbSuggRow:first-of-type{border-top:0;}
+.onbSuggIco{flex:none;width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;}
+.onbSuggIco svg{display:block;}
+.onbSuggMain{flex:1;min-width:0;}
+.onbSuggTitle{font-size:14.5px;font-weight:750;color:var(--ink);letter-spacing:-.1px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.onbSuggWhy{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.4;font-weight:500;}
+.onbSuggNote{font-size:11.5px;color:var(--muted);line-height:1.4;padding:10px 0 4px;border-top:1px solid var(--hair);}
+.visaWhy{display:flex;align-items:flex-start;gap:7px;margin-top:8px;font-size:12.5px;line-height:1.4;color:var(--ink);font-weight:600;}
+.visaWhyBadge{flex:none;font-size:10px;font-weight:850;letter-spacing:.4px;text-transform:uppercase;padding:3px 8px;border-radius:999px;
+  background:var(--greenSoft);color:var(--tealDark);line-height:1.2;}
+.visaWhyBadge.possible{background:var(--marigoldSoft);color:var(--marigoldDark);}
+.visaSuggNote{font-size:12px;color:var(--muted);line-height:1.45;padding:2px 6px 16px;}

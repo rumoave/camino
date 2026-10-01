@@ -40,7 +40,8 @@ DAILY CIVICS PREP
 
 KNOW YOUR PATH
 • A stage-by-stage map from where you are today to the oath
-• Guides for the paths that matter: N-400 naturalization, the H-1B lottery, pre- and post-completion OPT, family and employment green cards, asylum, the Diversity Visa, and more
+• Guides for the paths that matter: N-400 naturalization, the H-1B lottery, TN for Canadians and Mexicans, O-1 extraordinary ability, pre- and post-completion OPT, family and employment green cards, asylum, the Diversity Visa, and more
+• Tell Camino your education, field, and job situation and it points out paths you may qualify for — like TN, O-1, or an EB-2 self-petition — that most people never hear about
 • Plain-English "how it works" for each step, with the exact USCIS forms
 
 PRACTICE THE INTERVIEW
