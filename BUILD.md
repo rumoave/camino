@@ -76,6 +76,27 @@ mock (so the browser preview works); the native build uses RevenueCat/StoreKit. 
    real device (StoreKit sandbox account). Verify: trial unlocks Plus, `isPlus()` reflects it,
    Restore works, and the localized price shows on the paywall.
 
+### "The App Store sheet shows the full price, not the free trial"
+The app never decides the trial — StoreKit does, at the moment Apple's own purchase sheet
+appears. The app only *asks* StoreKit (`Store.trialAvailable`) whether a trial will apply and
+adjusts its copy; if that check says no, the paywall says "Subscribe" instead of "Start free
+trial". Two causes cover almost every case:
+
+1. **The introductory offer is not attached to the product in App Store Connect.**
+   Monetization → Subscriptions → *group* → each product → **Introductory Offers** → "+":
+   type **Free**, duration **1 week**, all territories, no end date. It must exist on BOTH
+   `camino_plus_annual` and `camino_plus_monthly`. The subscription itself must be at least
+   "Ready to Submit". RevenueCat needs nothing extra — StoreKit applies the offer automatically.
+2. **The Apple ID testing has already used its intro offer.** Apple grants one intro offer per
+   subscription group per Apple ID. In sandbox / TestFlight that is consumed on the first test
+   purchase. Reset it: App Store Connect → Users and Access → **Sandbox** → Testers → the
+   tester → **Clear Purchase History** (or create a fresh sandbox tester). Then on the iPhone,
+   Settings → App Store → Sandbox Account → sign in with that tester.
+
+Diagnose in one glance: on the paywall, if the CTA says **"Start 7-day free trial"** the app
+has confirmed eligibility and the Apple sheet will show "7 days free, then …". If it says
+**"Subscribe to Plus"**, StoreKit reported no offer / not eligible / unknown — fix (1) or (2).
+
 ## Decide before submission
 - **Voice interview claim:** iOS `WKWebView` has no Web Speech API, so the simulator falls back to
   typed answers. Either soften the paywall "real voice simulation" copy, or add a native speech

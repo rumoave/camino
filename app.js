@@ -5821,7 +5821,7 @@ var STORE_CONFIG = {
 };
 
 var Store = {
-  ready: false, _offerings: null, _entitled: false,
+  ready: false, _offerings: null, _entitled: false, _introElig: null,
 
   isNative: function(){
     return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
@@ -5853,6 +5853,46 @@ var Store = {
     var rc = this._rc(); if(!rc) return;
     try { var o = await rc.getOfferings(); this._offerings = (o && o.current) || null; } catch(e){}
     try { var c = await rc.getCustomerInfo(); this._applyCustomerInfo(c && c.customerInfo ? c.customerInfo : c); } catch(e){}
+    // Ask StoreKit whether THIS Apple ID still qualifies for the intro offer.
+    // Apple grants one intro offer per subscription group per Apple ID, so a
+    // returning (or previously-tested) account is charged full price even though
+    // the product carries a 7-day trial. The paywall must not promise a trial then.
+    try {
+      if(rc.checkTrialOrIntroductoryPriceEligibility){
+        this._introElig = await rc.checkTrialOrIntroductoryPriceEligibility({
+          productIdentifiers: [STORE_CONFIG.products.annual, STORE_CONFIG.products.monthly]
+        });
+      }
+    } catch(e){ this._introElig = null; }
+  },
+
+  // True only when the App Store will actually start a FREE trial for this plan:
+  // the product carries a $0 intro offer AND StoreKit reports this Apple ID as
+  // eligible. UNKNOWN / INELIGIBLE / no offer -> false (RevenueCat's guidance is
+  // to show the non-intro price rather than a trial that won't apply).
+  // Web preview: always true (local mock trial).
+  trialAvailable: function(planCode){
+    if(!this.isNative()) return true;
+    var pkg = this._packageFor(planCode);
+    var ip = pkg && pkg.product ? pkg.product.introPrice : null;
+    if(!ip || ip.price !== 0) return false;
+    var e = this._introElig ? this._introElig[STORE_CONFIG.products[planCode]] : null;
+    return !!e && e.status === 2;   // INTRO_ELIGIBILITY_STATUS_ELIGIBLE
+  },
+
+  // Length of the free trial in days, read from the StoreKit intro offer
+  // (falls back to the 7 configured in App Store Connect).
+  trialDays: function(planCode){
+    var pkg = this.isNative() ? this._packageFor(planCode) : null;
+    var ip = pkg && pkg.product ? pkg.product.introPrice : null;
+    if(!ip) return 7;
+    var n = (ip.periodNumberOfUnits || 1) * (ip.cycles || 1);
+    var u = String(ip.periodUnit || '').toUpperCase();
+    if(u === 'DAY') return n;
+    if(u === 'WEEK') return n * 7;
+    if(u === 'MONTH') return n * 30;
+    if(u === 'YEAR') return n * 365;
+    return 7;
   },
 
   _applyCustomerInfo: function(ci){
@@ -7065,8 +7105,8 @@ var FAQ_ENTRIES = [
   },
   {
     q:{en:'How much does Camino Plus cost?', es:'¿Cuánto cuesta Camino Plus?'},
-    a:{en:'$7.99/month or $49.99/year (saves ~48% vs. monthly). Try free for 7 days, cancel anytime.',
-       es:'$7.99/mes o $49.99/año (~48% de descuento vs. mensual). Prueba gratis 7 días, cancela cuando quieras.'}
+    a:{en:'$7.99/month or $49.99/year (saves ~48% vs. monthly) in the U.S.; your App Store shows the price in your currency. New subscribers get a 7-day free trial. Cancel anytime.',
+       es:'$7.99/mes o $49.99/año (~48% de descuento vs. mensual) en EE. UU.; tu App Store muestra el precio en tu moneda. Los nuevos suscriptores tienen 7 días de prueba gratis. Cancela cuando quieras.'}
   }
 ];
 
@@ -7139,6 +7179,8 @@ function renderTrialOffer(){
   var pricing = PLUS_PRICING[trialOfferSelectedPlan];
   var afterTrialPrice = Store.priceString(trialOfferSelectedPlan);
   var afterTrialPeriod = pricing.period[lang];
+  var hasTrial = Store.trialAvailable(trialOfferSelectedPlan);
+  var trialDays = Store.trialDays(trialOfferSelectedPlan);
 
   var features = [
     {iconName:'mic', color:'#1cb0f6',
@@ -7187,9 +7229,16 @@ function renderTrialOffer(){
     + '</div>';
 
   // App Store-required disclosure text
-  var autoRenewText = lang==='es'
-    ? 'Después de tu prueba gratis de 7 días, tu suscripción se renueva automáticamente a ' + afterTrialPrice + '/' + afterTrialPeriod + ' a menos que la canceles al menos 24 horas antes del final del período de prueba. Puedes administrar y cancelar tu suscripción en los Ajustes de tu cuenta de App Store en cualquier momento.'
-    : 'After your 7-day free trial, your subscription auto-renews at ' + afterTrialPrice + '/' + afterTrialPeriod + ' unless canceled at least 24 hours before the end of the trial period. You can manage and cancel your subscription at any time in your App Store account settings.';
+  var autoRenewText;
+  if(hasTrial){
+    autoRenewText = lang==='es'
+      ? 'Después de tu prueba gratis de ' + trialDays + ' días, tu suscripción se renueva automáticamente a ' + afterTrialPrice + '/' + afterTrialPeriod + ' a menos que la canceles al menos 24 horas antes del final del período de prueba. Puedes administrar y cancelar tu suscripción en los Ajustes de tu cuenta de App Store en cualquier momento.'
+      : 'After your ' + trialDays + '-day free trial, your subscription auto-renews at ' + afterTrialPrice + '/' + afterTrialPeriod + ' unless canceled at least 24 hours before the end of the trial period. You can manage and cancel your subscription at any time in your App Store account settings.';
+  } else {
+    autoRenewText = lang==='es'
+      ? 'Camino Plus cuesta ' + afterTrialPrice + '/' + afterTrialPeriod + ', cobrado a tu cuenta de App Store al confirmar. Se renueva automáticamente a menos que la canceles al menos 24 horas antes del final del período actual. Puedes administrar y cancelar tu suscripción en los Ajustes de tu cuenta de App Store en cualquier momento.'
+      : 'Camino Plus is ' + afterTrialPrice + '/' + afterTrialPeriod + ', charged to your App Store account at confirmation. It auto-renews unless canceled at least 24 hours before the end of the current period. You can manage and cancel your subscription at any time in your App Store account settings.';
+  }
 
   body.innerHTML = ''
     + '<div class="trialHero">'
@@ -7197,14 +7246,16 @@ function renderTrialOffer(){
     +   '<div class="trialBrandRow"><span class="trialBrand">Camino</span><span class="trialPlusTag">PLUS</span></div>'
     +   '<div class="trialHeadline">'+(lang==='es'?('Bienvenido/a, '+name):('Welcome, '+name))+'</div>'
     +   '<div class="trialTagline">'+(lang==='es'?'Tu camino de inmigración, completo.':'Your immigration journey, in one app.')+'</div>'
-    +   '<div class="trialSubhead">'+(lang==='es'
-          ? 'Empieza tu prueba gratis de 7 días · cancela cuando quieras'
-          : 'Start your 7-day free trial · cancel anytime')+'</div>'
+    +   '<div class="trialSubhead">'+(hasTrial
+          ? (lang==='es' ? 'Empieza tu prueba gratis de '+trialDays+' días · cancela cuando quieras' : 'Start your '+trialDays+'-day free trial · cancel anytime')
+          : (lang==='es' ? 'Suscríbete · cancela cuando quieras' : 'Subscribe · cancel anytime'))+'</div>'
     + '</div>'
     + '<div class="trialPad">'
     +   '<div class="trialFeatures">'+featuresHtml+'</div>'
     +   pricingHtml
-    +   '<button class="cta trialCta" onclick="openPurchaseSheet()">'+(lang==='es'?'Empezar prueba gratis':'Start free trial')+'</button>'
+    +   '<button class="cta trialCta" onclick="openPurchaseSheet()">'+(hasTrial
+          ? (lang==='es'?'Empezar prueba gratis':'Start free trial')
+          : (lang==='es'?'Suscribirme a Plus':'Subscribe to Plus'))+'</button>'
     +   '<button class="trialSkip" onclick="skipTrialOffer()">'+(lang==='es'?'Continuar con el plan gratis':'Continue with free plan')+'</button>'
     +   '<div class="trialFineprint">'+autoRenewText+'</div>'
     +   '<div class="trialLegalRow">'
@@ -7239,6 +7290,8 @@ function openPurchaseSheet(){
   var pricing = PLUS_PRICING[trialOfferSelectedPlan];
   var afterTrialPrice = Store.priceString(trialOfferSelectedPlan);
   var afterTrialPeriod = pricing.period[lang];
+  var hasTrial = Store.trialAvailable(trialOfferSelectedPlan);
+  var trialDays = Store.trialDays(trialOfferSelectedPlan);
   var planName = (lang==='es'
     ? (trialOfferSelectedPlan==='annual'?'Anual':'Mensual')
     : (trialOfferSelectedPlan==='annual'?'Annual':'Monthly'));
@@ -7253,17 +7306,23 @@ function openPurchaseSheet(){
     +   '<div class="purchaseSheetLbl">'+(lang==='es'?'Plan':'Plan')+'</div>'
     +   '<div class="purchaseSheetVal">Camino Plus · '+planName+'</div>'
     + '</div>'
+    + (hasTrial
+        ? '<div class="purchaseSheetRow">'
+        +   '<div class="purchaseSheetLbl">'+(lang==='es'?'Prueba gratis':'Free trial')+'</div>'
+        +   '<div class="purchaseSheetVal trialBadge">'+trialDays+' '+(lang==='es'?'días':'days')+'</div>'
+        + '</div>'
+        : '')
     + '<div class="purchaseSheetRow">'
-    +   '<div class="purchaseSheetLbl">'+(lang==='es'?'Prueba gratis':'Free trial')+'</div>'
-    +   '<div class="purchaseSheetVal trialBadge">7 '+(lang==='es'?'días':'days')+'</div>'
-    + '</div>'
-    + '<div class="purchaseSheetRow">'
-    +   '<div class="purchaseSheetLbl">'+(lang==='es'?'Luego':'Then')+'</div>'
+    +   '<div class="purchaseSheetLbl">'+(hasTrial ? (lang==='es'?'Luego':'Then') : (lang==='es'?'Precio':'Price'))+'</div>'
     +   '<div class="purchaseSheetVal">'+afterTrialPrice+' / '+afterTrialPeriod+'</div>'
     + '</div>'
-    + '<div class="purchaseSheetNote">'+(lang==='es'
-        ? 'Hoy no se te cobra. Te recordaremos 2 días antes del final de tu prueba.'
-        : 'You won\'t be charged today. We\'ll remind you 2 days before your trial ends.')+'</div>'
+    + '<div class="purchaseSheetNote">'+(hasTrial
+        ? (lang==='es'
+            ? 'Hoy no se te cobra. Te recordaremos 2 días antes del final de tu prueba.'
+            : 'You won\'t be charged today. We\'ll remind you 2 days before your trial ends.')
+        : (lang==='es'
+            ? 'Se cobra hoy a tu cuenta de App Store. Cancela cuando quieras en Ajustes.'
+            : 'Charged today to your App Store account. Cancel anytime in Settings.'))+'</div>'
     + '<button class="cta purchaseSheetCta" onclick="confirmTrialPurchase()">'+(lang==='es'?'Confirmar — Toca para suscribirte':'Confirm — Tap to Subscribe')+'</button>'
     + '<button class="purchaseSheetCancel" onclick="closePurchaseSheet()">'+(lang==='es'?'Cancelar':'Cancel')+'</button>';
 
@@ -7294,7 +7353,9 @@ function confirmTrialPurchase(){
     user.planSelected = trialOfferSelectedPlan; saveUser();
     setTimeout(function(){
       renderAll(); go('home');
-      toast(lang==='es' ? '¡Bienvenido a Camino Plus! 7 días gratis.' : 'Welcome to Camino Plus! 7 days free.');
+      toast(user.plan === 'trial'
+        ? (lang==='es' ? '¡Bienvenido a Camino Plus! Tu prueba gratis empezó.' : 'Welcome to Camino Plus! Your free trial has started.')
+        : (lang==='es' ? '¡Bienvenido a Camino Plus!' : 'Welcome to Camino Plus!'));
       setTimeout(maybeOfferTutorial, 1500);
     }, 800);
   });
@@ -7490,12 +7551,18 @@ function renderUpgrade(){
       + '</div>';
   }
 
+  var upgHasTrial = Store.trialAvailable(upgradeSelected);
+  var upgTrialDays = Store.trialDays(upgradeSelected);
   var ctaHtml;
   if(lockedYou){
     ctaHtml = '<button class="cta upgCtaBig" onclick="upgradeOpenPurchaseSheet()">'
-      + (lang==='es' ? 'Empezar 7 días gratis' : 'Start 7-day free trial')
+      + (upgHasTrial
+          ? (lang==='es' ? 'Empezar '+upgTrialDays+' días gratis' : 'Start '+upgTrialDays+'-day free trial')
+          : (lang==='es' ? 'Suscribirme a Plus' : 'Subscribe to Plus'))
       + '</button>'
-      + '<div class="upgTermsLine">'+(lang==='es'?'Cancela cuando quieras antes del final del periodo.':'Cancel anytime before the trial ends.')+'</div>';
+      + '<div class="upgTermsLine">'+(upgHasTrial
+          ? (lang==='es'?'Cancela cuando quieras antes del final del periodo.':'Cancel anytime before the trial ends.')
+          : (lang==='es'?'Cancela cuando quieras en los Ajustes de App Store.':'Cancel anytime in App Store settings.'))+'</div>';
   } else {
     ctaHtml = '<button class="cta upgCtaBig" disabled style="opacity:.6;background:var(--muted);box-shadow:0 5px 0 #6e6862;">'
       + (lang==='es' ? '✓ Ya estás en Plus' : '✓ You\'re on Plus')
@@ -7505,11 +7572,17 @@ function renderUpgrade(){
 
   // App Store-required auto-renew disclosure (shown when offering a paid CTA)
   var selPricing = PLUS_PRICING[upgradeSelected];
-  var renewText = lockedYou
-    ? (lang==='es'
-        ? 'Después de la prueba gratis de 7 días, $' + selPricing.price.toFixed(2) + '/' + selPricing.period[lang] + '. Renovación automática a menos que canceles al menos 24 horas antes del final del período. Administra en los Ajustes de tu cuenta de App Store.'
-        : 'After the 7-day free trial, $' + selPricing.price.toFixed(2) + '/' + selPricing.period[lang] + '. Auto-renews unless canceled at least 24 hours before the end of the period. Manage in your App Store account settings.')
-    : '';
+  var selPrice = Store.priceString(upgradeSelected) + '/' + selPricing.period[lang];
+  var renewText = '';
+  if(lockedYou && upgHasTrial){
+    renewText = lang==='es'
+      ? 'Después de la prueba gratis de ' + upgTrialDays + ' días, ' + selPrice + '. Renovación automática a menos que canceles al menos 24 horas antes del final del período. Administra en los Ajustes de tu cuenta de App Store.'
+      : 'After the ' + upgTrialDays + '-day free trial, ' + selPrice + '. Auto-renews unless canceled at least 24 hours before the end of the period. Manage in your App Store account settings.';
+  } else if(lockedYou){
+    renewText = lang==='es'
+      ? selPrice + ', cobrado al confirmar. Renovación automática a menos que canceles al menos 24 horas antes del final del período. Administra en los Ajustes de tu cuenta de App Store.'
+      : selPrice + ', charged at confirmation. Auto-renews unless canceled at least 24 hours before the end of the period. Manage in your App Store account settings.';
+  }
 
   body.innerHTML = ''
     + '<div class="upgHero">'
@@ -12925,7 +12998,9 @@ function renderMe(){
       + '<div class="mePlusOfferIco">'+iconSVG('star','#ffc83d',24)+'</div>'
       + '<div class="mePlusBannerLeft">'
       +   '<div class="mePlusLabel">CAMINO <span class="mePlusGoldTag">PLUS</span></div>'
-      +   '<div class="mePlusStatusTxt">'+(lang==='es'?'7 días gratis · estudia más rápido':'7 days free · study smarter')+'</div>'
+      +   '<div class="mePlusStatusTxt">'+(Store.trialAvailable('annual')
+            ? (lang==='es'?Store.trialDays('annual')+' días gratis · estudia más rápido':Store.trialDays('annual')+' days free · study smarter')
+            : (lang==='es'?'Desbloquea todo · estudia más rápido':'Unlock everything · study smarter'))+'</div>'
       + '</div>'
       + '<div class="mePlusArrow">→</div>'
       + '</div>';
