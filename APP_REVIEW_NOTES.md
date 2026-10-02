@@ -53,9 +53,11 @@ representative for their specific case.
 No login or credentials are needed. Nothing needs to be downloaded or imported.
 
 - Launch the app → short onboarding (choose language, country, where you are on
-  your path, your goal, education level, field, job-offer status, and a daily
-  goal). Any answers work. The final screen lists visa paths the profile may
-  qualify for (for example TN or O-1); this is educational guidance only.
+  your path, your goal, family ties in the U.S., education level, field,
+  job-offer status, optional special situations, and a daily goal). Any answers
+  work. The final screen lists immigration paths the profile may qualify for
+  (for example a family petition, TN, O-1, E-2, or TPS); this is educational
+  guidance only and is labeled as such.
 - **Today** tab: streak, "civics readiness," and today's lesson. Tap the lesson
   card to play a civics lesson.
 - **Journey** tab: the stage map for the selected path; tap any stage for the

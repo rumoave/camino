@@ -361,8 +361,10 @@ var user = {
   criminalHistory: false,
   education: null,           // 'hs' | 'bachelors' | 'masters' | 'doctorate'
   field: null,               // 'stem' | 'health' | 'business' | 'arts' | 'academia' | 'other'
-  jobOffer: null,            // 'yes' | 'looking' | 'self'
+  jobOffer: null,            // JOB_OFFER_OPTIONS key
   achievements: [],          // O1_CRITERIA ids the user says apply to them
+  familyTies: null,          // FAMILY_TIES key
+  situations: [],            // SITUATIONS ids (military, tps, daca, victim, minor, religious)
   soundEffects: true,        // feedback chimes (right/wrong/complete) — Me tab toggle
   testVersion: '2025',       // '2008' (legacy 100q test) or '2025' (current 128q, 12-of-20 to pass)
   plan: 'free',              // 'free' | 'trial' | 'plus' | 'expired'
@@ -8219,6 +8221,46 @@ var VISA_PATHS = [
                  es:['1 año de empleo continuo con la empresa extranjera en los últimos 3 años','Vienes a un puesto gerencial, ejecutivo o de conocimiento especializado','La oficina extranjera debe seguir operando']},
     tips:{en:['No annual lottery — file anytime.','L-1A is the fast lane to EB-1C green card.','Spouses (L-2) can work in the U.S. with EAD.'],
           es:['No hay lotería anual — presenta en cualquier momento.','L-1A es la vía rápida a residencia EB-1C.','Cónyuges (L-2) pueden trabajar con EAD.']}},
+  {id:'e2', iconName:'bolt', color:'#d4a000', cat:'work', forms:['DS-160','I-129'],
+    title:{en:'E-2 Treaty Investor', es:'E-2 Inversionista por Tratado'},
+    summary:{en:'For citizens of about 80 treaty countries who invest a substantial amount in a U.S. business they own or run. 2-year stays, unlimited renewals. India, China, Brazil and Vietnam are not treaty countries.',
+             es:'Para ciudadanos de unos 80 países con tratado que invierten una suma sustancial en un negocio en EE.UU. que poseen o dirigen. Estancias de 2 años, renovaciones ilimitadas. India, China, Brasil y Vietnam no tienen tratado.'},
+    eligibility:{en:['Citizen of an E-2 treaty country (Canada, Mexico, Philippines, most of Europe, Japan, South Korea, Pakistan, Argentina…)','A real, operating business you own at least 50% of or control','A substantial, at-risk investment — no legal minimum; many approvals are $100,000+','The business must do more than support you: it should create jobs (not "marginal")'],
+                 es:['Ciudadano/a de un país con tratado E-2 (Canadá, México, Filipinas, casi toda Europa, Japón, Corea del Sur, Pakistán, Argentina…)','Un negocio real y operativo del que posees al menos 50% o controlas','Inversión sustancial y en riesgo — sin mínimo legal; muchas aprobaciones superan $100,000','El negocio debe ser más que tu sustento: debe crear empleos (no "marginal")']},
+    tips:{en:['No cap, no lottery; many consulates issue 5-year visas.','Spouses get automatic work authorization (E-2S).','Not dual intent — pursue a green card carefully; EB-5, EB-1C or NIW are common bridges.','Children lose E-2 status at 21 — plan their status early.'],
+          es:['Sin tope ni lotería; muchos consulados emiten visas de 5 años.','Los cónyuges obtienen permiso de trabajo automático (E-2S).','No es de doble intención — busca la residencia con cuidado; EB-5, EB-1C o NIW son puentes comunes.','Los hijos pierden el E-2 a los 21 — planifica su estatus con tiempo.']},
+    howItWorks:{en:['Form the business, open accounts, sign leases and contracts, and spend or irrevocably commit the funds — the investment must be at risk before you apply.','Build the business plan: 5-year projections, hiring plan, and a clean source-of-funds trail.','Abroad: DS-160 plus DS-156E and a consular interview (visa fee $315). In the U.S.: your company files Form I-129 to change your status.','Each entry grants 2 years; extend indefinitely while the business stays active and non-marginal.'],
+                es:['Constituye el negocio, abre cuentas, firma contratos y gasta o comprometa los fondos de forma irrevocable — la inversión debe estar en riesgo antes de solicitar.','Prepara el plan de negocio: proyecciones a 5 años, plan de contratación y rastro limpio del origen de los fondos.','Desde el exterior: DS-160 más DS-156E y entrevista consular (tarifa $315). En EE.UU.: tu empresa presenta el Formulario I-129 para cambiar tu estatus.','Cada entrada otorga 2 años; extiende indefinidamente mientras el negocio siga activo y no marginal.']}},
+  {id:'e3h1b1', iconName:'globe', color:'#1cb0f6', cat:'work', forms:['DS-160','I-129'],
+    title:{en:'E-3 & H-1B1 (Australia, Chile, Singapore)', es:'E-3 y H-1B1 (Australia, Chile, Singapur)'},
+    summary:{en:'Treaty work visas for degree-level jobs — like H-1B without the lottery. E-3 for Australians (10,500/yr), H-1B1 for Chileans (1,400) and Singaporeans (5,400). The caps are rarely reached.',
+             es:'Visas de trabajo por tratado para empleos con título — como la H-1B sin lotería. E-3 para australianos (10,500/año), H-1B1 para chilenos (1,400) y singapurenses (5,400). Los cupos rara vez se agotan.'},
+    eligibility:{en:['Citizen of Australia (E-3) or Chile / Singapore (H-1B1)','Bachelor\'s degree or higher in the field','A specialty-occupation job offer from a U.S. employer','A Labor Condition Application certified by the Department of Labor'],
+                 es:['Ciudadano/a de Australia (E-3) o Chile / Singapur (H-1B1)','Licenciatura o superior en el campo','Oferta de empleo de ocupación especializada de un empleador en EE.UU.','Una LCA (Labor Condition Application) certificada por el Departamento de Trabajo']},
+    tips:{en:['Apply directly at a consulate — no USCIS petition needed from abroad.','E-3 spouses can work; H-1B1 spouses cannot.','H-1B1 is not dual intent and renews in 1-year steps; E-3 renews in 2-year steps.','Switching to H-1B later is common once a green card is in motion.'],
+          es:['Solicita directamente en un consulado — no hace falta petición a USCIS desde el exterior.','Los cónyuges E-3 pueden trabajar; los H-1B1 no.','La H-1B1 no es de doble intención y se renueva cada año; la E-3 cada 2 años.','Pasar a H-1B más adelante es común cuando la residencia está en marcha.']},
+    howItWorks:{en:['Employer files the LCA (Form ETA-9035) with the Department of Labor — about a week.','DS-160, visa fee, and a consular interview with the LCA, job letter and degree.','Enter and start work; extend indefinitely while employed in the role.','Already in the U.S.? The employer can file Form I-129 to change your status instead.'],
+                es:['El empleador presenta la LCA (Formulario ETA-9035) ante el Departamento de Trabajo — alrededor de una semana.','DS-160, tarifa de visa y entrevista consular con la LCA, carta de trabajo y título.','Entra y empieza a trabajar; extiende indefinidamente mientras sigas en el puesto.','¿Ya estás en EE.UU.? El empleador puede presentar el Formulario I-129 para cambiar tu estatus.']}},
+  {id:'r1', iconName:'home', color:'#8c4dd1', cat:'work', forms:['I-129','I-360'],
+    title:{en:'R-1 Religious Worker', es:'R-1 Trabajador Religioso'},
+    summary:{en:'For ministers and people in religious vocations or occupations working at least part-time for a U.S. nonprofit religious organization. Up to 5 years, with an EB-4 green card path.',
+             es:'Para ministros y personas en vocaciones u ocupaciones religiosas que trabajan al menos medio tiempo para una organización religiosa sin fines de lucro en EE.UU. Hasta 5 años, con vía a residencia EB-4.'},
+    eligibility:{en:['Member of the same denomination for the past 2 years','Work as a minister or in a religious vocation/occupation (not purely administrative)','At least 20 hours per week for a bona fide 501(c)(3) religious organization','The organization files the petition for you'],
+                 es:['Miembro de la misma denominación durante los últimos 2 años','Trabajo como ministro o en vocación/ocupación religiosa (no puramente administrativa)','Al menos 20 horas semanales para una organización religiosa 501(c)(3) legítima','La organización presenta la petición por ti']},
+    tips:{en:['USCIS often inspects the religious site before approving.','The EB-4 green card line has been heavily backlogged since 2023 — start early.','The non-minister EB-4 program needs periodic congressional renewal — check that it is active.'],
+          es:['USCIS suele inspeccionar el lugar de culto antes de aprobar.','La fila de residencia EB-4 está muy retrasada desde 2023 — empieza temprano.','El programa EB-4 para no ministros requiere renovación periódica del Congreso — verifica que esté activo.']},
+    howItWorks:{en:['The organization files Form I-129 with the R-1 supplement and employer attestation.','Initial stay of up to 30 months, extendable to 5 years total.','After 2 years of qualifying work the organization can file Form I-360 for an EB-4 green card; adjust status when a visa number is available.'],
+                es:['La organización presenta el Formulario I-129 con el suplemento R-1 y la declaración del empleador.','Estancia inicial de hasta 30 meses, extensible a 5 años en total.','Tras 2 años de trabajo calificado la organización puede presentar el Formulario I-360 para residencia EB-4; ajustas estatus cuando haya número de visa.']}},
+  {id:'iep', iconName:'bolt', color:'#ff4d3a', cat:'work', forms:['I-941'],
+    title:{en:'International Entrepreneur Parole', es:'Permiso para Emprendedores Internacionales'},
+    summary:{en:'Up to 5 years in the U.S. to grow a startup you co-founded, if qualified U.S. investors or government grants have backed it. It is parole, not a visa, and its availability has shifted between administrations.',
+             es:'Hasta 5 años en EE.UU. para hacer crecer una startup que cofundaste, si inversionistas calificados de EE.UU. o subvenciones gubernamentales la respaldaron. Es un permiso (parole), no una visa, y su disponibilidad ha cambiado entre gobiernos.'},
+    eligibility:{en:['Startup formed in the U.S. within the last 5 years','You own at least 10% and play a central, active role','About $265,000 from qualified U.S. investors, or about $106,000 in federal, state or local grants (thresholds adjust for inflation)','Up to 3 founders per startup'],
+                 es:['Startup constituida en EE.UU. en los últimos 5 años','Posees al menos 10% y tienes un rol central y activo','Unos $265,000 de inversionistas calificados de EE.UU., o unos $106,000 en subvenciones federales, estatales o locales (los umbrales se ajustan por inflación)','Hasta 3 fundadores por startup']},
+    tips:{en:['Confirm on uscis.gov that the program is open before planning around it.','Spouses can apply for work authorization; children cannot work.','Does not lead to a green card by itself — pair it with O-1, EB-1A or EB-2 NIW.','Partial funding can be supplemented with other compelling evidence of growth potential.'],
+          es:['Confirma en uscis.gov que el programa esté abierto antes de planificar en torno a él.','Los cónyuges pueden pedir permiso de trabajo; los hijos no pueden trabajar.','No lleva a la residencia por sí solo — combínalo con O-1, EB-1A o EB-2 NIW.','Financiamiento parcial puede complementarse con otra evidencia sólida de potencial de crecimiento.']},
+    howItWorks:{en:['File Form I-941 with evidence of the entity, your role and the funding.','If approved: initial parole of up to 30 months (enter from abroad, or leave and re-enter if you are in the U.S.).','Re-parole for up to 30 more months with proof of growth — roughly $530,000 in revenue or funding, or 5 jobs created.','Maximum 5 years total.'],
+                es:['Presenta el Formulario I-941 con evidencia de la empresa, tu rol y el financiamiento.','Si se aprueba: permiso inicial de hasta 30 meses (entras desde el exterior, o sales y reingresas si estás en EE.UU.).','Renovación de hasta 30 meses más con prueba de crecimiento — unos $530,000 en ingresos o financiamiento, o 5 empleos creados.','Máximo 5 años en total.']}},
   {id:'o1', iconName:'star', color:'#ff4d3a', cat:'work', forms:['I-129'],
     title:{en:'O-1 Extraordinary Ability', es:'O-1 Habilidad Extraordinaria'},
     summary:{en:'For people at the top of their field — sciences, arts, education, business, athletics. Initial 3-year period, indefinite renewals possible.',
@@ -8273,6 +8315,16 @@ var VISA_PATHS = [
                  es:['Licenciatura O 2+ años de capacitación/experiencia','Oferta de trabajo permanente a tiempo completo','Empleador completa certificación PERM']},
     tips:{en:['Longer waits than EB-2 — sometimes much longer for India/China.','"Other Workers" subcategory has its own annual cap of 10,000.','If you qualify for EB-2 NIW, that\'s usually faster.'],
           es:['Esperas más largas que EB-2 — a veces mucho más para India/China.','La subcategoría "Otros trabajadores" tiene su propio tope anual de 10,000.','Si calificas para NIW EB-2, suele ser más rápido.']}},
+  {id:'eb5', iconName:'trophy', color:'#008a7e', cat:'gc', forms:['I-526E','I-485','I-829'],
+    title:{en:'EB-5 Immigrant Investor', es:'EB-5 Inversionista Inmigrante'},
+    summary:{en:'A green card through investment — $800,000 in a rural or high-unemployment area (or $1,050,000 elsewhere) that creates 10 full-time U.S. jobs. Self-petition: no employer, no lottery.',
+             es:'Residencia por inversión — $800,000 en una zona rural o de alto desempleo (o $1,050,000 en otras) que cree 10 empleos de tiempo completo. Auto-petición: sin empleador ni lotería.'},
+    eligibility:{en:['Invest $800,000 (targeted employment area or infrastructure project) or $1,050,000','Lawful source of funds, fully documented','Creates or preserves 10 full-time jobs for U.S. workers','Direct investment in your own business, or through a USCIS-designated regional center'],
+                 es:['Invertir $800,000 (zona de empleo focalizada o proyecto de infraestructura) o $1,050,000','Origen legal de los fondos, totalmente documentado','Crea o preserva 10 empleos de tiempo completo para trabajadores de EE.UU.','Inversión directa en tu propio negocio, o a través de un centro regional designado por USCIS']},
+    tips:{en:['Rural set-aside visas have been "current" even for India and China — far faster than the EB-2/EB-3 lines.','Inside the U.S. you can file I-485 together with I-526E (concurrent filing) and get a work permit while you wait.','Due diligence on regional centers is everything — losses are real.','The filing fee alone is over $11,000, before legal fees.'],
+          es:['Las visas reservadas rurales han estado "vigentes" incluso para India y China — mucho más rápido que las filas EB-2/EB-3.','Dentro de EE.UU. puedes presentar el I-485 junto con el I-526E (presentación concurrente) y obtener permiso de trabajo mientras esperas.','La debida diligencia sobre centros regionales lo es todo — las pérdidas son reales.','Solo la tarifa de presentación supera los $11,000, sin contar abogados.']},
+    howItWorks:{en:['Choose a direct or regional-center project and document the source and path of every dollar.','File Form I-526E (regional center) or I-526 (direct).','When approved and a visa is available: I-485 inside the U.S. or consular processing abroad → a conditional 2-year green card.','In the 90 days before it expires, file Form I-829 to prove the jobs were created and remove the conditions.'],
+                es:['Elige un proyecto directo o de centro regional y documenta el origen y la ruta de cada dólar.','Presenta el Formulario I-526E (centro regional) o I-526 (directo).','Al aprobarse y con visa disponible: I-485 dentro de EE.UU. o proceso consular afuera → residencia condicional de 2 años.','En los 90 días antes de que venza, presenta el Formulario I-829 para probar los empleos creados y quitar las condiciones.']}},
   {id:'family-spouse', iconName:'ring', color:'#ff4d3a', cat:'family', forms:['I-130','I-485','I-751'],
     title:{en:'Marriage to U.S. Citizen (IR-1/CR-1)', es:'Matrimonio con Ciudadano (IR-1/CR-1)'},
     summary:{en:'Immediate-relative category — no annual cap, no waiting in line. The fastest family-based path to a green card.',
@@ -8289,6 +8341,26 @@ var VISA_PATHS = [
                  es:['Tu hijo/a es ciudadano de EE.UU.','Tiene al menos 21 años','Presenta petición I-130 por ti','Padrastros y padres adoptivos califican (con condiciones)']},
     tips:{en:['No quota, so processing is mostly USCIS timelines (~12-18 months).','You can adjust status in the U.S. if you entered legally.','Consular processing if you\'re abroad.'],
           es:['Sin cuota, el procesamiento es mayormente tiempos de USCIS (~12-18 meses).','Puedes ajustar estatus en EE.UU. si entraste legalmente.','Procesamiento consular si estás fuera.']}},
+  {id:'k1', iconName:'ring', color:'#ec4f93', cat:'family', forms:['I-129F','DS-160','I-485'],
+    title:{en:'K-1 Fiancé(e) Visa', es:'Visa K-1 de Prometido/a'},
+    summary:{en:'For the fiancé(e) of a U.S. citizen living abroad: enter, marry within 90 days, then apply for the green card from inside the U.S.',
+             es:'Para el/la prometido/a de un ciudadano de EE.UU. que vive en el exterior: entra, cásate en 90 días y luego solicita la residencia desde dentro de EE.UU.'},
+    eligibility:{en:['Your partner is a U.S. citizen — green card holders cannot sponsor a K-1','Both of you are legally free to marry','You met in person within the last 2 years (hardship or cultural waivers exist)','Intent to marry within 90 days of arrival'],
+                 es:['Tu pareja es ciudadana de EE.UU. — los residentes no pueden patrocinar una K-1','Ambos libres legalmente para casarse','Se conocieron en persona en los últimos 2 años (hay exenciones por dificultad o cultura)','Intención de casarse dentro de los 90 días de la llegada']},
+    tips:{en:['Compare with marrying first and doing a CR-1/IR-1 — you arrive as a resident and it is often cheaper overall.','Unmarried children under 21 come on K-2.','Do not enter on a tourist visa planning to marry and stay — misrepresentation risk.','The 90-day clock is strict.'],
+          es:['Compara con casarse primero y hacer CR-1/IR-1 — llegas como residente y suele ser más barato en total.','Hijos solteros menores de 21 vienen con K-2.','No entres con visa de turista planeando casarte y quedarte — riesgo de tergiversación.','El plazo de 90 días es estricto.']},
+    howItWorks:{en:['Your fiancé(e) files Form I-129F with USCIS ($675).','Approval goes to the National Visa Center and then the consulate: DS-160, medical exam, interview (visa fee $265).','Enter the U.S. and marry within 90 days.','File Form I-485 (with I-765 for work and I-131 for travel) for the green card — conditional at first if married under 2 years.'],
+                es:['Tu prometido/a presenta el Formulario I-129F ante USCIS ($675).','La aprobación pasa al Centro Nacional de Visas y luego al consulado: DS-160, examen médico, entrevista (tarifa $265).','Entras a EE.UU. y te casas dentro de 90 días.','Presentas el Formulario I-485 (con I-765 para trabajar e I-131 para viajar) para la residencia — condicional al inicio si llevan menos de 2 años casados.']}},
+  {id:'family-pref', iconName:'people', color:'#5e8eff', cat:'family', forms:['I-130','DS-260','I-485'],
+    title:{en:'Family Preference Lines (F1–F4)', es:'Categorías Familiares de Preferencia (F1–F4)'},
+    summary:{en:'Green cards for relatives who are not "immediate relatives": adult children and siblings of citizens, and spouses and children of green card holders. Capped each year — expect a Visa Bulletin wait.',
+             es:'Residencia para familiares que no son "inmediatos": hijos adultos y hermanos de ciudadanos, y cónyuges e hijos de residentes. Con tope anual — espera según el Boletín de Visas.'},
+    eligibility:{en:['F1: unmarried sons and daughters (21+) of U.S. citizens','F2A: spouses and unmarried children (under 21) of green card holders','F2B: unmarried sons and daughters (21+) of green card holders','F3: married sons and daughters of citizens · F4: siblings of citizens (the citizen must be 21+)'],
+                 es:['F1: hijos solteros (21+) de ciudadanos','F2A: cónyuges e hijos solteros (menores de 21) de residentes','F2B: hijos solteros (21+) de residentes','F3: hijos casados de ciudadanos · F4: hermanos de ciudadanos (el ciudadano debe tener 21+)']},
+    tips:{en:['Your place in line is the I-130 filing date (priority date) — file early even if the wait is long.','F2A moves fastest; F4 can take 15+ years (20+ for Mexico and the Philippines).','Marrying while in F1 or F2B moves you to another line or ends F2B eligibility.','The Child Status Protection Act can keep a child "under 21" — ask a lawyer before anyone ages out.'],
+          es:['Tu lugar en la fila es la fecha de presentación del I-130 (fecha de prioridad) — presenta temprano aunque la espera sea larga.','F2A avanza más rápido; F4 puede tomar 15+ años (20+ para México y Filipinas).','Casarte estando en F1 o F2B te cambia de fila o termina la elegibilidad F2B.','La Ley de Protección del Estatus del Menor puede mantener a un hijo "menor de 21" — consulta antes de que alguien cumpla la edad.']},
+    howItWorks:{en:['Your relative files Form I-130 for you ($675 on paper, $625 online).','Wait for your priority date to become current in the monthly Visa Bulletin — Camino\'s tracker follows it.','Abroad: DS-260 and a consular interview. In the U.S. with lawful status: Form I-485 once your date is current.','Green card — no conditional period for spouses of residents.'],
+                es:['Tu familiar presenta el Formulario I-130 por ti ($675 en papel, $625 en línea).','Esperas a que tu fecha de prioridad esté vigente en el Boletín de Visas mensual — el rastreador de Camino lo sigue.','Afuera: DS-260 y entrevista consular. En EE.UU. con estatus legal: Formulario I-485 cuando tu fecha esté vigente.','Residencia — sin período condicional para cónyuges de residentes.']}},
   {id:'asylum', iconName:'shield', color:'#ff9b21', cat:'humanitarian', forms:['I-589','I-765','I-485'],
     title:{en:'Asylum', es:'Asilo'},
     summary:{en:'Protection for people fleeing persecution based on race, religion, nationality, political opinion, or social group membership. Must apply within 1 year of arrival.',
@@ -8304,7 +8376,67 @@ var VISA_PATHS = [
     eligibility:{en:['Born in an eligible country (Mexico, China, India, Philippines, and several others NOT eligible most years)','High school diploma OR 2 years of work in qualifying occupation','Selected in the random draw'],
                  es:['Nacido en país elegible (México, China, India, Filipinas y varios otros NO elegibles la mayoría de años)','Diploma de secundaria O 2 años de trabajo en ocupación calificada','Seleccionado en sorteo aleatorio']},
     tips:{en:['Free to enter — never pay a "DV agent."','Register at dvprogram.state.gov in October each year.','If selected, you get one shot: must complete adjustment or consular processing by Sept 30 of the FY.','Spouses and children under 21 can be derivative beneficiaries.'],
-          es:['Entrada gratis — nunca pagues a un "agente DV."','Regístrate en dvprogram.state.gov en octubre cada año.','Si te seleccionan, tienes una oportunidad: debes completar antes del 30 de septiembre del año fiscal.','Cónyuges e hijos menores de 21 pueden ser beneficiarios derivados.']}}
+          es:['Entrada gratis — nunca pagues a un "agente DV."','Regístrate en dvprogram.state.gov en octubre cada año.','Si te seleccionan, tienes una oportunidad: debes completar antes del 30 de septiembre del año fiscal.','Cónyuges e hijos menores de 21 pueden ser beneficiarios derivados.']}},
+  {id:'military', iconName:'flag', color:'#ffc83d', cat:'special', forms:['N-400','N-426'],
+    title:{en:'Citizenship through Military Service', es:'Ciudadanía por Servicio Militar'},
+    summary:{en:'Honorable service in the U.S. armed forces opens a faster naturalization route — and during designated periods of hostilities (in effect since 2001) you can naturalize without a green card. Close family of service members may qualify for parole in place.',
+             es:'El servicio honorable en las fuerzas armadas de EE.UU. abre una vía más rápida a la naturalización — y durante períodos designados de hostilidades (vigentes desde 2001) puedes naturalizarte sin residencia. Familiares cercanos de militares pueden calificar para permiso de permanencia.'},
+    eligibility:{en:['Peacetime (INA 328): green card holder with 1 year of honorable service, filing while serving or within 6 months of discharge','Hostilities (INA 329): any honorable service since Sept. 11, 2001, enlisted in the U.S. — no green card or residence period needed','Good moral character and the civics and English tests still apply','Family: spouses, parents and children of service members or veterans who entered without inspection can request parole in place'],
+                 es:['Tiempo de paz (INA 328): residente con 1 año de servicio honorable, presentando mientras sirve o dentro de 6 meses de la baja','Hostilidades (INA 329): cualquier servicio honorable desde el 11 de septiembre de 2001, enlistado en EE.UU. — sin residencia ni período de residencia requerido','Buen carácter moral y los exámenes de cívica e inglés siguen aplicando','Familia: cónyuges, padres e hijos de militares o veteranos que entraron sin inspección pueden pedir permiso de permanencia (parole in place)']},
+    tips:{en:['No N-400 fee for military applicants; USCIS has a dedicated military helpline (877-247-4645).','Get Form N-426 certified by your unit before filing.','Citizenship can be revoked if you separate under other-than-honorable conditions before 5 years of service.','Parole in place is discretionary — your base legal office or a lawyer can help.'],
+          es:['Sin tarifa del N-400 para militares; USCIS tiene una línea dedicada (877-247-4645).','Consigue que tu unidad certifique el Formulario N-426 antes de presentar.','La ciudadanía puede revocarse si te separas en condiciones no honorables antes de 5 años de servicio.','El permiso de permanencia es discrecional — la oficina legal de tu base o un abogado pueden ayudar.']},
+    howItWorks:{en:['Confirm which section you qualify under (328 or 329).','Complete Form N-426 (Request for Certification of Military or Naval Service) and have it signed.','File Form N-400 (fee waived) with the N-426 and your documents.','Interview and oath — often expedited; overseas interviews can be arranged.'],
+                es:['Confirma bajo qué sección calificas (328 o 329).','Completa el Formulario N-426 (certificación de servicio militar) y haz que lo firmen.','Presenta el Formulario N-400 (sin tarifa) con el N-426 y tus documentos.','Entrevista y juramento — a menudo acelerados; se pueden organizar entrevistas en el exterior.']}},
+  {id:'tps', iconName:'shield', color:'#00b4a8', cat:'special', forms:['I-821','I-765'],
+    title:{en:'Temporary Protected Status (TPS)', es:'Estatus de Protección Temporal (TPS)'},
+    summary:{en:'Protection from removal plus a work permit for nationals of countries DHS designates because of war or disaster. It is temporary and designations change — several were ended in 2025 and challenged in court.',
+             es:'Protección contra la deportación más permiso de trabajo para nacionales de países que DHS designa por guerra o desastre. Es temporal y las designaciones cambian — varias terminaron en 2025 y fueron impugnadas en tribunales.'},
+    eligibility:{en:['National of a currently designated country (or a stateless person who last lived there)','Continuous residence and physical presence since the dates in the designation','Not barred by certain criminal convictions or persecution grounds','File during the registration window — late filing is possible only in limited cases'],
+                 es:['Nacional de un país actualmente designado (o apátrida que vivió allí por última vez)','Residencia continua y presencia física desde las fechas de la designación','Sin ciertas condenas penales ni causales de persecución que lo impidan','Presentar durante el período de registro — la presentación tardía solo es posible en casos limitados']},
+    tips:{en:['TPS is not a green card and does not lead to one by itself — pair it with a family or employment petition.','If you entered without inspection, ask a lawyer about TPS travel authorization (Form I-131) before trying to adjust status.','Re-register every time your country is extended, even if your card still looks valid.','Read the Federal Register notice for your country — dates and deadlines are specific.'],
+          es:['El TPS no es residencia y no lleva a ella por sí solo — combínalo con una petición familiar o laboral.','Si entraste sin inspección, consulta a un abogado sobre la autorización de viaje TPS (Formulario I-131) antes de intentar ajustar estatus.','Vuelve a registrarte cada vez que extiendan tu país, aunque tu tarjeta parezca vigente.','Lee el aviso del Registro Federal de tu país — fechas y plazos son específicos.']},
+    howItWorks:{en:['File Form I-821 ($50) and, for a work permit, Form I-765 during the registration period.','Biometrics appointment; USCIS decides.','Re-register during each extension period to keep TPS and the work permit.'],
+                es:['Presenta el Formulario I-821 ($50) y, para permiso de trabajo, el Formulario I-765 durante el período de registro.','Cita de biométricos; USCIS decide.','Vuelve a registrarte en cada período de extensión para mantener el TPS y el permiso de trabajo.']}},
+  {id:'daca', iconName:'id', color:'#1cb0f6', cat:'special', forms:['I-821D','I-765'],
+    title:{en:'DACA (Deferred Action for Childhood Arrivals)', es:'DACA (Acción Diferida para Llegados en la Infancia)'},
+    summary:{en:'Two-year renewable protection from removal and a work permit for people who arrived as children before 2007. Renewals continue; new initial requests have not been processed since 2021 under court orders, and the program is still being litigated.',
+             es:'Protección renovable de 2 años contra la deportación y permiso de trabajo para quienes llegaron de niños antes de 2007. Las renovaciones continúan; las solicitudes iniciales no se procesan desde 2021 por órdenes judiciales, y el programa sigue en litigio.'},
+    eligibility:{en:['Arrived before age 16 and lived in the U.S. continuously since June 15, 2007','Under 31 on June 15, 2012','In school, graduated, GED, or honorably discharged','No felony, significant misdemeanor, or three or more misdemeanors'],
+                 es:['Llegó antes de los 16 y ha vivido en EE.UU. continuamente desde el 15 de junio de 2007','Menor de 31 el 15 de junio de 2012','Estudiando, graduado, GED o baja honorable','Sin delito grave, delito menor significativo ni tres o más delitos menores']},
+    tips:{en:['DACA is not a status and does not lead to a green card on its own — but it can be combined with a family petition.','Marrying a U.S. citizen leads to a green card only if you were "inspected and admitted or paroled"; a return on advance parole can satisfy that — get legal advice before traveling.','Renew 120–150 days before expiration.','Keep every expired card and approval notice — they document continuous presence.'],
+          es:['DACA no es un estatus y no lleva a la residencia por sí solo — pero puede combinarse con una petición familiar.','Casarte con ciudadano lleva a la residencia solo si fuiste "inspeccionado y admitido o con parole"; regresar con permiso adelantado puede cumplirlo — busca asesoría legal antes de viajar.','Renueva 120–150 días antes del vencimiento.','Guarda cada tarjeta vencida y aviso de aprobación — documentan tu presencia continua.']},
+    howItWorks:{en:['Renewal: Form I-821D with I-765 and I-765WS.','Biometrics if requested; decisions usually take a few months.','Build a permanent path in parallel: family petition plus adjustment, employment-based with INA 245(i) or a lawful entry, or U visa/VAWA if they apply.'],
+                es:['Renovación: Formulario I-821D con I-765 e I-765WS.','Biométricos si los piden; la decisión suele tardar unos meses.','Construye una vía permanente en paralelo: petición familiar más ajuste, vía laboral con INA 245(i) o una entrada legal, o visa U/VAWA si aplican.']}},
+  {id:'uvisa', iconName:'shield', color:'#ec4f93', cat:'special', forms:['I-918','I-914','I-360'],
+    title:{en:'U Visa, T Visa & VAWA (survivors)', es:'Visa U, Visa T y VAWA (sobrevivientes)'},
+    summary:{en:'Protection and a path to a green card for survivors of serious crimes (U visa), human trafficking (T visa), and abuse by a U.S.-citizen or resident spouse, parent or child (VAWA self-petition). All are confidential and have no filing fee.',
+             es:'Protección y vía a la residencia para sobrevivientes de delitos graves (visa U), trata de personas (visa T) y abuso por parte de cónyuge, padre o hijo ciudadano o residente (auto-petición VAWA). Todas son confidenciales y sin tarifa.'},
+    eligibility:{en:['U visa: victim of a qualifying crime in the U.S., substantial harm, and helpful to police or prosecutors (they sign Form I-918B)','T visa: victim of sex or labor trafficking, present in the U.S. because of it','VAWA: abused spouse, child or parent of a U.S. citizen or green card holder — the abuser is never told','Any gender qualifies'],
+                 es:['Visa U: víctima de un delito calificado en EE.UU., daño sustancial y colaboración con policía o fiscales (firman el Formulario I-918B)','Visa T: víctima de trata sexual o laboral, presente en EE.UU. a causa de ello','VAWA: cónyuge, hijo o padre abusado por un ciudadano o residente — al abusador nunca se le informa','Cualquier género califica']},
+    tips:{en:['No fee for any of these, and fee waivers for related forms.','U visas are capped at 10,000 a year — the wait is long, but a "bona fide determination" can bring a work permit and protection in the meantime.','Unlawful entry and some immigration violations can be waived.','Local legal aid and domestic-violence organizations know these cases well — you do not need a private lawyer.'],
+          es:['Sin tarifa para ninguna, y exenciones para formularios relacionados.','Las visas U tienen tope de 10,000 al año — la espera es larga, pero una "determinación de buena fe" puede dar permiso de trabajo y protección mientras tanto.','La entrada ilegal y algunas violaciones migratorias pueden exonerarse.','Las organizaciones de ayuda legal y contra la violencia doméstica conocen bien estos casos — no necesitas abogado privado.']},
+    howItWorks:{en:['U: get Form I-918B signed by law enforcement, then file Form I-918. T: file Form I-914. VAWA: file Form I-360 with evidence of the relationship and the abuse.','While pending: a work permit after a bona fide determination (U), or with Form I-765 (T; VAWA once approved).','Green card: U and T after 3 years in status (Form I-485); VAWA self-petitioners adjust as immediate relatives if the abuser is a citizen, or through the F2 line if a resident.'],
+                es:['U: consigue el Formulario I-918B firmado por la autoridad, luego presenta el I-918. T: presenta el Formulario I-914. VAWA: presenta el Formulario I-360 con evidencia de la relación y el abuso.','Mientras está pendiente: permiso de trabajo tras una determinación de buena fe (U), o con el Formulario I-765 (T; VAWA al aprobarse).','Residencia: U y T tras 3 años en estatus (Formulario I-485); los auto-peticionarios VAWA ajustan como familiares inmediatos si el abusador es ciudadano, o por la fila F2 si es residente.']}},
+  {id:'sijs', iconName:'people', color:'#ff9b21', cat:'special', forms:['I-360','I-485'],
+    title:{en:'Special Immigrant Juvenile Status (SIJS)', es:'Estatus Especial de Inmigrante Juvenil (SIJS)'},
+    summary:{en:'A green card path for young people under 21 whom a state court has found cannot reunify with a parent because of abuse, neglect or abandonment. Filing before 21 locks in eligibility.',
+             es:'Vía a la residencia para jóvenes menores de 21 a quienes un tribunal estatal determinó que no pueden reunificarse con un padre por abuso, negligencia o abandono. Presentar antes de los 21 asegura la elegibilidad.'},
+    eligibility:{en:['Under 21 and unmarried when Form I-360 is filed','A state juvenile, family or probate court order with the required findings','Reunification with one or both parents not viable due to abuse, neglect, abandonment or similar','Not in your best interest to return to your home country'],
+                 es:['Menor de 21 y soltero al presentar el Formulario I-360','Una orden de un tribunal estatal de menores, familia o sucesiones con las determinaciones requeridas','Reunificación con uno o ambos padres no viable por abuso, negligencia, abandono o similar','No es en tu mejor interés regresar a tu país']},
+    tips:{en:['The court order comes first — a guardianship, custody or dependency case in state court, not immigration court.','EB-4 visas are backlogged; approved SIJS applicants receive deferred action and a work permit while they wait.','You can never petition for your parents later through this route.','Free help: legal aid, law school clinics, Kids in Need of Defense (KIND).'],
+          es:['Primero la orden judicial — un caso de tutela, custodia o dependencia en tribunal estatal, no de inmigración.','Las visas EB-4 están retrasadas; los aprobados reciben acción diferida y permiso de trabajo mientras esperan.','Nunca podrás pedir a tus padres por esta vía.','Ayuda gratuita: asistencia legal, clínicas de facultades de derecho, Kids in Need of Defense (KIND).']},
+    howItWorks:{en:['Obtain the state court order (guardianship, custody or dependency case).','File Form I-360 with USCIS (no fee) before turning 21 — USCIS must decide within 180 days.','Deferred action and a work permit while the EB-4 visa number is pending.','File Form I-485 when your date becomes current.'],
+                es:['Obtén la orden del tribunal estatal (tutela, custodia o dependencia).','Presenta el Formulario I-360 ante USCIS (sin tarifa) antes de cumplir 21 — USCIS debe decidir en 180 días.','Acción diferida y permiso de trabajo mientras el número de visa EB-4 esté pendiente.','Presenta el Formulario I-485 cuando tu fecha esté vigente.']}},
+  {id:'cuban', iconName:'flag', color:'#5e8eff', cat:'special', forms:['I-485'],
+    title:{en:'Cuban Adjustment Act', es:'Ley de Ajuste Cubano'},
+    summary:{en:'Cuban natives and citizens who were inspected and admitted or paroled into the U.S. can apply for a green card after one year of physical presence — no petition, no visa number, no sponsor.',
+             es:'Nacidos o ciudadanos de Cuba inspeccionados y admitidos o con parole en EE.UU. pueden solicitar la residencia tras un año de presencia física — sin petición, sin número de visa, sin patrocinador.'},
+    eligibility:{en:['Native or citizen of Cuba','Inspected and admitted, or paroled, into the U.S. — how you entered matters; those who entered without inspection need legal advice','Physically present for at least 1 year','Admissible (criminal and other bars apply); your spouse and children of any nationality can adjust with you if they live with you'],
+                 es:['Nacido o ciudadano de Cuba','Inspeccionado y admitido, o con parole, en EE.UU. — cómo entraste importa; quienes entraron sin inspección necesitan asesoría legal','Presencia física de al menos 1 año','Admisible (aplican causales penales y otras); tu cónyuge e hijos de cualquier nacionalidad pueden ajustar contigo si viven contigo']},
+    tips:{en:['Keep your I-94, parole document and every piece of proof of the year of presence.','Parole programs such as CHNV ended in 2025 and the situation of people whose parole was terminated is being litigated — get advice before filing.','A denied asylum case does not stop a Cuban Adjustment filing.','Your residence date can be rolled back up to 30 months ("rollback") — ask a lawyer how it affects your citizenship timeline.'],
+          es:['Guarda tu I-94, documento de parole y toda prueba del año de presencia.','Los programas de parole como CHNV terminaron en 2025 y la situación de quienes perdieron el parole está en litigio — busca asesoría antes de presentar.','Un caso de asilo denegado no impide una solicitud de Ajuste Cubano.','Tu fecha de residencia puede retrotraerse hasta 30 meses ("rollback") — pregunta a un abogado cómo afecta tu plazo para la ciudadanía.']},
+    howItWorks:{en:['Gather proof of Cuban nationality, of your admission or parole, and of a year of presence.','File Form I-485 ($1,440) with I-765 and I-131 if you want a work permit and travel document while it is pending.','Biometrics, possibly an interview, then the green card — no conditional period.'],
+                es:['Reúne prueba de nacionalidad cubana, de tu admisión o parole, y de un año de presencia.','Presenta el Formulario I-485 ($1,440) con I-765 e I-131 si quieres permiso de trabajo y documento de viaje mientras está pendiente.','Biométricos, posiblemente entrevista, y luego la residencia — sin período condicional.']}}
 ];
 
 var VISA_CATEGORIES = [
@@ -8312,7 +8444,8 @@ var VISA_CATEGORIES = [
   {id:'work',    label:{en:'Work Visas',          es:'Visas de Trabajo'}},
   {id:'gc',      label:{en:'Green Card (Employment)', es:'Residencia (Empleo)'}},
   {id:'family',  label:{en:'Family-Based',        es:'Por Familia'}},
-  {id:'humanitarian', label:{en:'Humanitarian',   es:'Humanitaria'}}
+  {id:'humanitarian', label:{en:'Humanitarian',   es:'Humanitaria'}},
+  {id:'special', label:{en:'Special Situations',  es:'Situaciones Especiales'}}
 ];
 
 var openVisaPath = null;
@@ -10814,7 +10947,7 @@ function renderCamiTop(){
 }
 
 // ===== ONBOARDING WIZARD =====
-var ONB_STEPS = ['lang','about','name','country','phase','goal','education','field','jobOffer','achievements','petition','stage','gcDate','married','marriageDate','monthsOutside','criminal','time','summary'];
+var ONB_STEPS = ['lang','about','name','country','phase','goal','familyTies','education','field','jobOffer','achievements','situations','petition','stage','gcDate','married','marriageDate','monthsOutside','criminal','time','summary'];
 
 // Immigration goal — where the user wants to end up. Drives next-action emphasis on home.
 var IMMIGRATION_GOALS = {
@@ -10855,9 +10988,48 @@ var IMMIGRATION_GOALS = {
   }
 };
 
+// Countries offered in the picker (English name is the stored value). The six
+// most common origins get flag cards; everything else is in the dropdown.
+var COUNTRY_LIST = [
+  {en:'Afghanistan',es:'Afganistán'},{en:'Albania',es:'Albania'},{en:'Argentina',es:'Argentina'},{en:'Armenia',es:'Armenia'},
+  {en:'Australia',es:'Australia'},{en:'Bangladesh',es:'Bangladés'},{en:'Belgium',es:'Bélgica'},{en:'Bolivia',es:'Bolivia'},
+  {en:'Brazil',es:'Brasil'},{en:'Burma (Myanmar)',es:'Birmania (Myanmar)'},{en:'Cambodia',es:'Camboya'},{en:'Cameroon',es:'Camerún'},
+  {en:'Canada',es:'Canadá'},{en:'Chile',es:'Chile'},{en:'China',es:'China'},{en:'Colombia',es:'Colombia'},
+  {en:'Costa Rica',es:'Costa Rica'},{en:'Cuba',es:'Cuba'},{en:'Dominican Republic',es:'República Dominicana'},{en:'Ecuador',es:'Ecuador'},
+  {en:'Egypt',es:'Egipto'},{en:'El Salvador',es:'El Salvador'},{en:'Eritrea',es:'Eritrea'},{en:'Ethiopia',es:'Etiopía'},
+  {en:'France',es:'Francia'},{en:'Germany',es:'Alemania'},{en:'Ghana',es:'Ghana'},{en:'Guatemala',es:'Guatemala'},
+  {en:'Haiti',es:'Haití'},{en:'Honduras',es:'Honduras'},{en:'Hong Kong',es:'Hong Kong'},{en:'India',es:'India'},
+  {en:'Indonesia',es:'Indonesia'},{en:'Iran',es:'Irán'},{en:'Iraq',es:'Irak'},{en:'Ireland',es:'Irlanda'},
+  {en:'Israel',es:'Israel'},{en:'Italy',es:'Italia'},{en:'Jamaica',es:'Jamaica'},{en:'Japan',es:'Japón'},
+  {en:'Jordan',es:'Jordania'},{en:'Kenya',es:'Kenia'},{en:'Lebanon',es:'Líbano'},{en:'Mexico',es:'México'},
+  {en:'Morocco',es:'Marruecos'},{en:'Nepal',es:'Nepal'},{en:'Netherlands',es:'Países Bajos'},{en:'Nicaragua',es:'Nicaragua'},
+  {en:'Nigeria',es:'Nigeria'},{en:'Pakistan',es:'Pakistán'},{en:'Panama',es:'Panamá'},{en:'Peru',es:'Perú'},
+  {en:'Philippines',es:'Filipinas'},{en:'Poland',es:'Polonia'},{en:'Portugal',es:'Portugal'},{en:'Romania',es:'Rumania'},
+  {en:'Russia',es:'Rusia'},{en:'Saudi Arabia',es:'Arabia Saudita'},{en:'Senegal',es:'Senegal'},{en:'Singapore',es:'Singapur'},
+  {en:'Somalia',es:'Somalia'},{en:'South Africa',es:'Sudáfrica'},{en:'South Korea',es:'Corea del Sur'},{en:'Spain',es:'España'},
+  {en:'Sri Lanka',es:'Sri Lanka'},{en:'Sudan',es:'Sudán'},{en:'Syria',es:'Siria'},{en:'Taiwan',es:'Taiwán'},
+  {en:'Thailand',es:'Tailandia'},{en:'Trinidad and Tobago',es:'Trinidad y Tobago'},{en:'Turkey',es:'Turquía'},{en:'Uganda',es:'Uganda'},
+  {en:'Ukraine',es:'Ucrania'},{en:'United Kingdom',es:'Reino Unido'},{en:'Venezuela',es:'Venezuela'},{en:'Vietnam',es:'Vietnam'},
+  {en:'Yemen',es:'Yemen'}
+];
+// Countries whose nationals can use the E-2 treaty investor visa (State Dept.
+// treaty list; Bolivia and Ecuador treaties were terminated, so they are NOT here).
+var E2_TREATY_COUNTRIES = ['Albania','Argentina','Armenia','Australia','Bangladesh','Belgium','Cameroon','Canada','Chile','Colombia',
+  'Costa Rica','Egypt','Ethiopia','France','Germany','Honduras','Iran','Ireland','Israel','Italy','Jamaica','Japan','Jordan','Mexico',
+  'Morocco','Netherlands','Pakistan','Panama','Philippines','Poland','Portugal','Romania','Senegal','Singapore','South Korea','Spain',
+  'Sri Lanka','Taiwan','Thailand','Trinidad and Tobago','Turkey','Ukraine','United Kingdom'];
 function countryLabel(c, l){
-  var map = {Mexico:{en:'Mexico',es:'México'}, India:{en:'India',es:'India'}, China:{en:'China',es:'China'}, Philippines:{en:'Philippines',es:'Filipinas'}, Canada:{en:'Canada',es:'Canadá'}, Other:{en:'Another country',es:'Otro país'}};
-  return (map[c] && map[c][l]) || c;
+  if(c === 'Other' || !c) return l==='es' ? 'Otro país' : 'Another country';
+  for(var i=0;i<COUNTRY_LIST.length;i++) if(COUNTRY_LIST[i].en === c) return COUNTRY_LIST[i][l] || c;
+  return c;
+}
+// <select> of every country, used by onboarding and the Me-screen editor.
+function countrySelectHtml(current, onchangeJs){
+  var html = '<div class="onbSelectWrap"><select class="onbSelect" onchange="'+onchangeJs+'">'
+    + '<option value=""'+(current && current!=='Other' ? '' : ' selected')+' disabled>'+(lang==='es'?'Busca tu país en la lista…':'Find your country in the list…')+'</option>';
+  var sorted = COUNTRY_LIST.slice().sort(function(a,b){ return a[lang].localeCompare(b[lang]); });
+  sorted.forEach(function(c){ html += '<option value="'+c.en+'"'+(current===c.en?' selected':'')+'>'+c[lang]+'</option>'; });
+  return html + '</select></div>';
 }
 
 // ===== PROFILE: education / field / job offer / O-1 evidence =====================
@@ -10878,10 +11050,36 @@ var WORK_FIELDS = {
   other:    {iconName:'globe',     iconColor:'#84807a', label:{en:'Trades, service or other',    es:'Oficios, servicios u otro'}}
 };
 var JOB_OFFER_OPTIONS = {
-  yes:     {iconName:'briefcase', iconColor:'#00b4a8', label:{en:'Yes, from a U.S. employer',  es:'Sí, de un empleador en EE.UU.'}, sub:{en:'Or I already work for one',         es:'O ya trabajo para uno'}},
-  looking: {iconName:'target',    iconColor:'#ff9b21', label:{en:'Not yet — still looking',    es:'Aún no — sigo buscando'},         sub:{en:"We'll show paths that don't need one yet", es:'Te mostraremos vías que no la requieren aún'}},
-  self:    {iconName:'bolt',      iconColor:'#8c4dd1', label:{en:"I'd rather work for myself", es:'Prefiero trabajar por mi cuenta'}, sub:{en:'Founder, freelancer, artist, researcher', es:'Fundador/a, freelance, artista, investigador/a'}}
+  yes:      {iconName:'briefcase', iconColor:'#00b4a8', label:{en:'Yes, from a U.S. employer',          es:'Sí, de un empleador en EE.UU.'},        sub:{en:'Or I already work for one',                       es:'O ya trabajo para uno'}},
+  looking:  {iconName:'target',    iconColor:'#ff9b21', label:{en:'Not yet — still looking',            es:'Aún no — sigo buscando'},               sub:{en:"We'll show paths that don't need one yet",       es:'Te mostraremos vías que no la requieren aún'}},
+  transfer: {iconName:'plane',     iconColor:'#8c4dd1', label:{en:'My employer could transfer me',      es:'Mi empleador podría transferirme'},     sub:{en:'A company with offices abroad and in the U.S.',    es:'Una empresa con oficinas afuera y en EE.UU.'}},
+  founder:  {iconName:'bolt',      iconColor:'#ff4d3a', label:{en:"I'm starting a company",             es:'Estoy creando una empresa'},            sub:{en:'Founder or co-founder of a startup or small business', es:'Fundador/a de una startup o pequeño negocio'}},
+  investor: {iconName:'trophy',    iconColor:'#ffc83d', label:{en:'I can invest substantial capital',   es:'Puedo invertir capital sustancial'},    sub:{en:'Roughly $800,000+ for a business or project',     es:'Aprox. $800,000+ en un negocio o proyecto'}},
+  self:     {iconName:'star',      iconColor:'#1cb0f6', label:{en:'I work for myself',                  es:'Trabajo por mi cuenta'},                sub:{en:'Freelancer, artist, athlete, researcher',         es:'Freelance, artista, atleta, investigador/a'}}
 };
+// Family in the U.S. is the single most common route — ask everyone who is not
+// already a resident or mid-petition.
+var FAMILY_TIES = {
+  'spouse-usc':   {iconName:'ring',   iconColor:'#ff4d3a', label:{en:'Married to a U.S. citizen',                   es:'Casado/a con ciudadano/a de EE.UU.'},          sub:{en:'Immediate relative — no visa waiting line',          es:'Familiar inmediato — sin fila de visas'}},
+  'fiance-usc':   {iconName:'ring',   iconColor:'#ec4f93', label:{en:'Engaged to a U.S. citizen',                   es:'Comprometido/a con ciudadano/a de EE.UU.'},    sub:{en:'K-1 fiancé(e) visa, or marry first (CR-1)',          es:'Visa K-1 de prometido/a, o casarse primero (CR-1)'}},
+  'relative-usc': {iconName:'people', iconColor:'#5e8eff', label:{en:'My parent, adult child or sibling is a citizen', es:'Mi padre/madre, hijo/a adulto/a o hermano/a es ciudadano/a'}, sub:{en:'Preference lines F1 / F3 / F4 — or IR if you are under 21', es:'Categorías F1 / F3 / F4 — o IR si tienes menos de 21'}},
+  'relative-lpr': {iconName:'home',   iconColor:'#00b4a8', label:{en:'My spouse or parent has a green card',        es:'Mi cónyuge o padre/madre tiene residencia'},    sub:{en:'F2A / F2B preference lines',                          es:'Categorías F2A / F2B'}},
+  'none':         {iconName:'smile',  iconColor:'#84807a', label:{en:'No close family with U.S. status',            es:'Sin familia cercana con estatus en EE.UU.'},   sub:{en:"That's most people — other paths follow",            es:'Es lo más común — siguen otras vías'}}
+};
+// Circumstances that unlock their own routes. Multi-select, privacy-chipped.
+var SITUATIONS = [
+  {id:'military',  iconName:'flag',   iconColor:'#ffc83d', label:{en:'I, or my spouse/parent/child, serve(d) in the U.S. military', es:'Yo, o mi cónyuge/padre/hijo, sirvo o serví en el ejército de EE.UU.'}, sub:{en:'Faster naturalization; parole in place for family',  es:'Naturalización más rápida; permiso de permanencia para familia'}},
+  {id:'tps',       iconName:'shield', iconColor:'#00b4a8', label:{en:'I currently have TPS',                     es:'Actualmente tengo TPS'},                               sub:{en:'Temporary Protected Status',                           es:'Estatus de Protección Temporal'}},
+  {id:'daca',      iconName:'id',     iconColor:'#1cb0f6', label:{en:'I currently have DACA',                    es:'Actualmente tengo DACA'},                              sub:{en:'Deferred Action for Childhood Arrivals',               es:'Acción Diferida para Llegados en la Infancia'}},
+  {id:'victim',    iconName:'shield', iconColor:'#ec4f93', label:{en:'I survived a serious crime, trafficking or abuse in the U.S.', es:'Sobreviví un delito grave, trata o abuso en EE.UU.'}, sub:{en:'U visa, T visa, VAWA — confidential, no fee',    es:'Visa U, visa T, VAWA — confidencial, sin costo'}},
+  {id:'minor',     iconName:'people', iconColor:'#ff9b21', label:{en:"I'm under 21 and can't live with my parents", es:'Tengo menos de 21 y no puedo vivir con mis padres'}, sub:{en:'Special Immigrant Juvenile Status',                es:'Estatus Especial de Inmigrante Juvenil'}},
+  {id:'religious', iconName:'home',   iconColor:'#8c4dd1', label:{en:'I work for a religious organization',      es:'Trabajo para una organización religiosa'},             sub:{en:'R-1 visa, EB-4 green card',                            es:'Visa R-1, residencia EB-4'}}
+];
+function familyTiesLabel(v, l){ return (FAMILY_TIES[v] && FAMILY_TIES[v].label[l]) || '—'; }
+// Short names for the Home row ("You may qualify: TN · K-1 · …").
+var PATH_SHORT = {'family-spouse':{en:'Spouse of citizen',es:'Cónyuge de ciudadano'}, 'family-pref':{en:'Family preference',es:'Preferencia familiar'}, k1:{en:'K-1',es:'K-1'},
+  e2:{en:'E-2',es:'E-2'}, e3h1b1:{en:'E-3/H-1B1',es:'E-3/H-1B1'}, eb5:{en:'EB-5',es:'EB-5'}, iep:{en:'Entrepreneur parole',es:'Permiso emprendedor'}, r1:{en:'R-1',es:'R-1'},
+  military:{en:'Military',es:'Militar'}, tps:{en:'TPS',es:'TPS'}, daca:{en:'DACA',es:'DACA'}, uvisa:{en:'U/T/VAWA',es:'U/T/VAWA'}, sijs:{en:'SIJS',es:'SIJS'}, cuban:{en:'Cuban Adjustment',es:'Ajuste Cubano'}};
 // The eight O-1A / EB-1A evidence categories, in plain English. Three are needed.
 var O1_CRITERIA = [
   {id:'awards',        iconName:'trophy',    iconColor:'#ffc83d', label:{en:'Won a national or international award', es:'Gané un premio nacional o internacional'},            sub:{en:'Prizes, grants, competitions in your field', es:'Premios, becas, concursos en tu campo'}},
@@ -10907,49 +11105,122 @@ function hasAdvancedDegree(edu){ return edu === 'masters' || edu === 'doctorate'
 function suggestVisaPaths(p){
   if(!p || p.phase === 'hasGC') return [];
   var out = [];
-  var edu = p.education, fld = p.field, job = p.jobOffer;
+  var edu = p.education, fld = p.field, job = p.jobOffer, fam = p.familyTies, c = p.countryOfBirth;
+  var sit = Array.isArray(p.situations) ? p.situations : [];
   var ach = Array.isArray(p.achievements) ? p.achievements.length : 0;
-  var usmca = (p.countryOfBirth === 'Canada' || p.countryOfBirth === 'Mexico');
-  function add(id, strength, en, es){ out.push({id:id, strength:strength, why:{en:en, es:es}}); }
+  var has = function(id){ return sit.indexOf(id) !== -1; };
+  var usmca = (c === 'Canada' || c === 'Mexico');
+  var treaty = E2_TREATY_COUNTRIES.indexOf(c) !== -1;
+  var cName = countryLabel(c, 'en'), cNameEs = countryLabel(c, 'es');
+  function add(id, strength, en, es){
+    for(var i=0;i<out.length;i++) if(out[i].id === id) return;
+    out.push({id:id, strength:strength, why:{en:en, es:es}});
+  }
 
+  // 1. Circumstances with their own statute — decisive when they apply.
+  if(has('military')) add('military', 'strong',
+    'Military service (yours or close family) — naturalization without the usual residence wait, N-400 fee waived; parole in place for family who entered without inspection',
+    'Servicio militar (tuyo o de familia cercana) — naturalización sin la espera habitual, sin tarifa del N-400; permiso de permanencia para familia que entró sin inspección');
+  if(has('victim')) add('uvisa', 'strong',
+    'Survivors of serious crime, trafficking or abuse by a citizen/resident family member have confidential, no-fee paths (U visa, T visa, VAWA) with a green card after',
+    'Sobrevivientes de delitos graves, trata o abuso por un familiar ciudadano/residente tienen vías confidenciales y sin costo (visa U, visa T, VAWA) con residencia después');
+  if(has('minor')) add('sijs', 'strong',
+    'Under 21 and unable to reunify with a parent — Special Immigrant Juvenile Status leads to a green card; the I-360 must be filed before you turn 21',
+    'Menor de 21 sin poder reunificarte con un padre — el Estatus Especial de Inmigrante Juvenil lleva a la residencia; el I-360 debe presentarse antes de los 21');
+  if(c === 'Cuba') add('cuban', 'strong',
+    'Cuban natives and citizens admitted or paroled into the U.S. can apply for a green card after one year — no sponsor, no visa line',
+    'Nacidos o ciudadanos de Cuba admitidos o con parole pueden pedir la residencia tras un año — sin patrocinador ni fila de visas');
+  if(has('tps')) add('tps', 'strong',
+    'You hold TPS — keep it current and pair it with a family or employment petition; TPS alone does not become a green card',
+    'Tienes TPS — mantenlo vigente y combínalo con una petición familiar o laboral; el TPS solo no se convierte en residencia');
+  if(has('daca')) add('daca', 'strong',
+    'You have DACA — renew on time and build a permanent path alongside it (family petition, employment, or U/VAWA if they apply)',
+    'Tienes DACA — renueva a tiempo y construye una vía permanente en paralelo (petición familiar, empleo, o U/VAWA si aplican)');
+
+  // 2. Family — the most common route of all.
+  if(fam === 'spouse-usc') add('family-spouse', 'strong',
+    'Spouse of a U.S. citizen — immediate relative, no visa waiting line; adjust status in the U.S. or CR-1/IR-1 from abroad',
+    'Cónyuge de ciudadano/a — familiar inmediato, sin fila de visas; ajuste de estatus en EE.UU. o CR-1/IR-1 desde el exterior');
+  if(fam === 'fiance-usc') add('k1', 'strong',
+    'Engaged to a U.S. citizen — K-1 fiancé(e) visa to enter and marry within 90 days, or marry first and use CR-1',
+    'Comprometido/a con ciudadano/a — visa K-1 para entrar y casarte en 90 días, o casarte primero y usar CR-1');
+  if(fam === 'relative-usc') add('family-pref', 'possible',
+    'A citizen parent, adult child or sibling can petition for you — preference lines F1/F3/F4 (immediate relative if you are an unmarried child under 21)',
+    'Un padre, hijo adulto o hermano ciudadano puede pedirte — categorías F1/F3/F4 (familiar inmediato si eres hijo soltero menor de 21)');
+  if(fam === 'relative-lpr') add('family-pref', 'possible',
+    'A green-card-holder spouse or parent can petition for you — F2A (spouse, child under 21) or F2B (unmarried 21+)',
+    'Un cónyuge o padre residente puede pedirte — F2A (cónyuge, hijo menor de 21) o F2B (soltero mayor de 21)');
+
+  // 3. Country-specific work visas — no lottery.
   if(usmca && hasDegree(edu)){
     add('tn', job === 'yes' ? 'strong' : 'possible',
-      (p.countryOfBirth==='Canada'?'Canadian':'Mexican')+' citizen with a university degree — TN covers 60+ USMCA professions, no lottery'+(job==='yes'?'':' (needs a job offer in a listed profession)'),
-      'Ciudadano/a '+(p.countryOfBirth==='Canada'?'canadiense':'mexicano/a')+' con título universitario — la TN cubre 60+ profesiones del T-MEC, sin lotería'+(job==='yes'?'':' (requiere oferta en una profesión listada)'));
+      (c==='Canada'?'Canadian':'Mexican')+' citizen with a university degree — TN covers 60+ USMCA professions, no lottery'+(job==='yes'?'':' (needs a job offer in a listed profession)'),
+      'Ciudadano/a '+(c==='Canada'?'canadiense':'mexicano/a')+' con título universitario — la TN cubre 60+ profesiones del T-MEC, sin lotería'+(job==='yes'?'':' (requiere oferta en una profesión listada)'));
   }
+  if((c === 'Australia' || c === 'Chile' || c === 'Singapore') && hasDegree(edu)){
+    add('e3h1b1', job === 'yes' ? 'strong' : 'possible',
+      cName+' citizen with a degree — '+(c==='Australia'?'E-3':'H-1B1')+' is a treaty work visa for degree-level jobs with no lottery; caps are rarely reached',
+      'Ciudadano/a de '+cNameEs+' con título — la '+(c==='Australia'?'E-3':'H-1B1')+' es una visa de trabajo por tratado para empleos con título, sin lotería; los cupos rara vez se agotan');
+  }
+
+  // 4. Business, investment, transfers.
+  if(job === 'investor'){
+    add('eb5', 'strong',
+      'Substantial capital — EB-5 gives a green card for an $800,000 investment in a rural/high-unemployment project that creates 10 jobs; rural visas have been current even for India and China',
+      'Capital sustancial — la EB-5 da residencia por invertir $800,000 en un proyecto rural o de alto desempleo que cree 10 empleos; las visas rurales han estado vigentes incluso para India y China');
+    if(treaty) add('e2', 'strong',
+      cName+' is an E-2 treaty country — invest in and run your own U.S. business, renewable indefinitely, spouse can work',
+      cNameEs+' es país con tratado E-2 — invierte y dirige tu propio negocio en EE.UU., renovable indefinidamente, tu cónyuge puede trabajar');
+  }
+  if(job === 'founder'){
+    if(treaty) add('e2', 'possible',
+      'Founder from an E-2 treaty country ('+cName+') — a substantial, at-risk investment in your own operating business can qualify; no fixed minimum',
+      'Fundador/a de un país con tratado E-2 ('+cNameEs+') — una inversión sustancial y en riesgo en tu propio negocio operativo puede calificar; sin mínimo fijo');
+    add('iep', 'possible',
+      'Founder with U.S. investors or grants — International Entrepreneur Parole allows up to 5 years to grow the startup (confirm the program is open)',
+      'Fundador/a con inversionistas o subvenciones de EE.UU. — el permiso para emprendedores internacionales da hasta 5 años para crecer la startup (confirma que el programa esté abierto)');
+  }
+  if(job === 'transfer') add('l1', 'strong',
+    'Employer with offices abroad and in the U.S. — L-1 transfer for managers (L-1A, fast lane to an EB-1C green card) or specialized knowledge (L-1B); no lottery',
+    'Empleador con oficinas afuera y en EE.UU. — transferencia L-1 para gerentes (L-1A, vía rápida a residencia EB-1C) o conocimiento especializado (L-1B); sin lotería');
+  if(has('religious')) add('r1', 'possible',
+    'Work for a religious organization — R-1 for ministers and religious occupations, up to 5 years, with an EB-4 green card path',
+    'Trabajo en organización religiosa — R-1 para ministros y ocupaciones religiosas, hasta 5 años, con vía a residencia EB-4');
+
+  // 5. Talent and degrees.
   if(ach >= 2){
     add('o1', ach >= 3 ? 'strong' : 'possible',
-      'You checked '+ach+' of the 8 O-1 evidence categories'+(ach>=3?' — 3 is the threshold':' — one more reaches the 3 needed')+'. No lottery, no cap.',
-      'Marcaste '+ach+' de las 8 categorías de evidencia O-1'+(ach>=3?' — 3 es el umbral':' — una más alcanza las 3 necesarias')+'. Sin lotería, sin tope.');
+      'You checked '+ach+' of the 8 O-1 evidence categories'+(ach>=3?' — 3 is the threshold':' — one more reaches the 3 needed')+'. No lottery, no cap'+(job==='self'||job==='founder'?'; an agent or your own company can petition':''),
+      'Marcaste '+ach+' de las 8 categorías de evidencia O-1'+(ach>=3?' — 3 es el umbral':' — una más alcanza las 3 necesarias')+'. Sin lotería, sin tope'+(job==='self'||job==='founder'?'; un agente o tu propia empresa puede peticionar':''));
   }
   if(hasAdvancedDegree(edu) || (edu === 'bachelors' && ach >= 2)){
     var niwStrong = (edu === 'doctorate') || (edu === 'masters' && (fld === 'stem' || fld === 'health' || fld === 'academia'));
     add('eb2', niwStrong ? 'strong' : 'possible',
-      'Advanced degree → EB-2 National Interest Waiver: self-petition for a green card, no employer or PERM needed'+(job==='self'?' — fits working for yourself':''),
-      'Posgrado → EB-2 con exención por interés nacional (NIW): auto-petición de residencia, sin empleador ni PERM'+(job==='self'?' — encaja con trabajar por tu cuenta':''));
+      'Advanced degree → EB-2 National Interest Waiver: self-petition for a green card, no employer or PERM needed'+(job==='self'||job==='founder'?' — fits working for yourself':''),
+      'Posgrado → EB-2 con exención por interés nacional (NIW): auto-petición de residencia, sin empleador ni PERM'+(job==='self'||job==='founder'?' — encaja con trabajar por tu cuenta':''));
   }
-  if(ach >= 4){
-    add('eb1', 'possible',
-      'With '+ach+' evidence categories, EB-1A (extraordinary ability green card) may be in reach — same criteria as O-1, higher bar, self-petition',
-      'Con '+ach+' categorías de evidencia, la EB-1A (residencia por habilidad extraordinaria) podría estar a tu alcance — mismos criterios que O-1, listón más alto');
-  }
-  if(hasDegree(edu) && job === 'yes' && p.phase !== 'workvisa'){
-    add('h1b', 'possible',
-      'Degree + U.S. job offer = the classic H-1B route (lottery each March; cap-exempt employers skip it)',
-      'Título + oferta en EE.UU. = la ruta clásica H-1B (lotería cada marzo; empleadores exentos la evitan)');
-  }
-  if((p.phase === 'student' || p.phase === 'opt') && fld === 'stem'){
-    add('opt', 'possible',
-      'STEM degree → OPT can stretch to 36 months with the STEM extension — more lottery attempts',
-      'Título STEM → la OPT puede extenderse a 36 meses con la extensión STEM — más intentos de lotería');
-  }
-  out.sort(function(a, b){ return (a.strength==='strong'?0:1) - (b.strength==='strong'?0:1); });
-  return out.slice(0, 3);
+  if(ach >= 4) add('eb1', 'possible',
+    'With '+ach+' evidence categories, EB-1A (extraordinary ability green card) may be in reach — same criteria as O-1, higher bar, self-petition',
+    'Con '+ach+' categorías de evidencia, la EB-1A (residencia por habilidad extraordinaria) podría estar a tu alcance — mismos criterios que O-1, listón más alto');
+  if(hasDegree(edu) && job === 'yes' && p.phase !== 'workvisa') add('h1b', 'possible',
+    'Degree + U.S. job offer = the classic H-1B route (lottery each March; cap-exempt employers skip it)',
+    'Título + oferta en EE.UU. = la ruta clásica H-1B (lotería cada marzo; empleadores exentos la evitan)');
+  if((p.phase === 'student' || p.phase === 'opt') && fld === 'stem') add('opt', 'possible',
+    'STEM degree → OPT can stretch to 36 months with the STEM extension — more lottery attempts',
+    'Título STEM → la OPT puede extenderse a 36 meses con la extensión STEM — más intentos de lotería');
+
+  // Stable sort: strong first, insertion order otherwise. Show at most 4.
+  var strong = out.filter(function(o){ return o.strength === 'strong'; });
+  var possible = out.filter(function(o){ return o.strength !== 'strong'; });
+  return strong.concat(possible).slice(0, 4);
 }
 function suggestedPathsLine(){
   var sugg = suggestVisaPaths(user);
   if(!sugg.length) return null;
-  var names = sugg.map(function(sg){ var v = findVisaPath(sg.id); return v ? v.title[lang].split(' ')[0] : null; }).filter(Boolean);
+  var names = sugg.map(function(sg){
+    if(PATH_SHORT[sg.id]) return PATH_SHORT[sg.id][lang];
+    var v = findVisaPath(sg.id); return v ? v.title[lang].split(' ')[0] : null;
+  }).filter(Boolean);
   return (lang==='es' ? 'Podrías calificar: ' : 'You may qualify: ') + names.join(' · ');
 }
 function petitionLabel(p, l){
@@ -11044,6 +11315,8 @@ var onbState = {
   field: null,
   jobOffer: null,
   achievements: [],
+  familyTies: null,
+  situations: [],
   dailyMinutes: 5
 };
 
@@ -11057,6 +11330,8 @@ function onbShouldSkip(key){
   if(key === 'education' || key === 'field') return onbState.phase === 'hasGC';
   if(key === 'jobOffer') return onbState.phase === 'hasGC' || onbState.phase === 'preGC' || onbState.phase === 'asylum';
   if(key === 'achievements') return onbState.phase === 'hasGC' || onbState.phase === 'asylum';
+  if(key === 'familyTies') return onbState.phase === 'hasGC' || onbState.phase === 'preGC';
+  if(key === 'situations') return onbState.phase === 'hasGC';
   if((key === 'gcDate' || key === 'married' || key === 'monthsOutside') && onbState.phase !== 'hasGC') return true;
   if(key === 'marriageDate') return !(onbState.phase === 'hasGC' && onbState.married === true);
   // Stage step: only relevant for GC tracks (preGC + hasGC)
@@ -11124,25 +11399,34 @@ function onbPick(key, value){
   setTimeout(onbContinue, 240);
 }
 
-// Multi-select for the O-1 evidence step: tapping does NOT auto-advance.
-function onbToggleAchievement(id){
-  var a = onbState.achievements || [];
-  if(id === 'none'){ a = []; }
-  else {
-    var i = a.indexOf(id);
-    if(i === -1) a.push(id); else a.splice(i, 1);
-  }
-  onbState.achievements = a;
-  renderOnboarding();
+// Multi-select steps (O-1 evidence, situations): tapping does NOT auto-advance.
+function toggleInList(list, id){
+  var a = Array.isArray(list) ? list.slice() : [];
+  if(id === 'none') return [];
+  var i = a.indexOf(id);
+  if(i === -1) a.push(id); else a.splice(i, 1);
+  return a;
 }
+function onbToggleAchievement(id){ onbState.achievements = toggleInList(onbState.achievements, id); renderOnboarding(); }
+function onbToggleSituation(id){ onbState.situations = toggleInList(onbState.situations, id); renderOnboarding(); }
 
-function achievementCardsHtml(selected, onclickFor){
+function multiCardsHtml(items, selected, onclickFor, noneLabel, noneSub){
   var html = '';
-  O1_CRITERIA.forEach(function(c){
-    html += onbCardHtml(ico(c.iconName, c.iconColor), c.label[lang], c.sub[lang], selected.indexOf(c.id) !== -1, onclickFor(c.id));
+  items.forEach(function(c){
+    html += onbCardHtml(ico(c.iconName, c.iconColor), c.label[lang], c.sub ? c.sub[lang] : '', selected.indexOf(c.id) !== -1, onclickFor(c.id));
   });
-  html += onbCardHtml(ico('smile','#84807a'), (lang==='es'?'Ninguna de estas (todavía)':'None of these (yet)'), (lang==='es'?'Totalmente normal — la mayoría empieza aquí':'Totally normal — most people start here'), selected.length === 0, onclickFor('none'));
+  html += onbCardHtml(ico('smile','#84807a'), noneLabel, noneSub, selected.length === 0, onclickFor('none'));
   return html;
+}
+function achievementCardsHtml(selected, onclickFor){
+  return multiCardsHtml(O1_CRITERIA, selected, onclickFor,
+    (lang==='es'?'Ninguna de estas (todavía)':'None of these (yet)'),
+    (lang==='es'?'Totalmente normal — la mayoría empieza aquí':'Totally normal — most people start here'));
+}
+function situationCardsHtml(selected, onclickFor){
+  return multiCardsHtml(SITUATIONS, selected, onclickFor,
+    (lang==='es'?'Ninguna de estas':'None of these'),
+    (lang==='es'?'Seguimos con tu perfil':'On to the rest of your profile'));
 }
 
 function onbLangPick(l){
@@ -11241,8 +11525,10 @@ function renderOnboarding(){
       + onbCardHtml(flagSVG('India', 28),      'India','',           onbState.country==='India',       "onbPick('country','India')")
       + onbCardHtml(flagSVG('China', 28),      'China','',           onbState.country==='China',       "onbPick('country','China')")
       + onbCardHtml(flagSVG('Philippines', 28),(lang==='es'?'Filipinas':'Philippines'),'',     onbState.country==='Philippines', "onbPick('country','Philippines')")
-      + onbCardHtml(flagSVG('Other', 28),      (lang==='es'?'Otro país':'Another country'), (lang==='es'?'Sin retraso significativo':'No significant backlog'), onbState.country==='Other', "onbPick('country','Other')")
-      + '</div>';
+      + '</div>'
+      + '<div class="onbStepSub onbSelectLead">'+(lang==='es'?'¿Otro país? Algunos tienen vías propias (E-2, E-3, H-1B1, Ajuste Cubano).':'Somewhere else? Some countries have their own paths (E-2, E-3, H-1B1, Cuban Adjustment).')+'</div>'
+      + countrySelectHtml(onbState.country, "if(this.value) onbPick('country', this.value)")
+      + '<button type="button" class="onbSkipLink" onclick="onbPick(\'country\',\'Other\')">'+(lang==='es'?'Prefiero no decirlo':"I'd rather not say")+'</button>';
   }
   else if(k === 'phase'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Dónde estás en tu camino?':'Where are you on your path?')+'</div>'
@@ -11263,6 +11549,26 @@ function renderOnboarding(){
       html += onbCardHtml(ico(g.iconName, g.iconColor), g.label[lang], g.sub[lang], onbState.goal===gid, "onbPick('goal','"+gid+"')");
     }
     html += '</div>';
+  }
+  else if(k === 'familyTies'){
+    html = '<div class="onbStepTitle">'+(lang==='es'?'¿Tienes familia cercana con estatus en EE.UU.?':'Close family with U.S. status?')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'La familia es la vía de inmigración más común de todas.':'Family is the most common immigration route of all.')+'</div>'
+      + '<div class="onbCards">';
+    for(var ftid in FAMILY_TIES){
+      var ft = FAMILY_TIES[ftid];
+      html += onbCardHtml(ico(ft.iconName, ft.iconColor), ft.label[lang], ft.sub[lang], onbState.familyTies===ftid, "onbPick('familyTies','"+ftid+"')");
+    }
+    html += '</div>';
+  }
+  else if(k === 'situations'){
+    var selS = onbState.situations || [];
+    html = '<div class="onbStepTitle">'+(lang==='es'?'¿Alguna de estas situaciones aplica?':'Do any of these situations apply?')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'Cada una abre una vía propia que la mayoría no conoce. Elige todas las que apliquen.':'Each one opens a path most people never hear about. Pick all that apply.')+'</div>'
+      + '<div class="onbCards">'
+      + situationCardsHtml(selS, function(id){ return "onbToggleSituation('"+id+"')"; })
+      + '</div>'
+      + privacyChipHTML('criminal');
+    footerHtml = '<button class="cta" onclick="onbContinue()">'+(lang==='es'?'Continuar':'Continue')+(selS.length ? ' ('+selS.length+')' : '')+' →</button>';
   }
   else if(k === 'education'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Cuál es tu nivel de estudios?':"What's your highest education?")+'</div>'
@@ -11393,9 +11699,11 @@ function renderOnboarding(){
       rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Vía':'Path')+'</div><div class="onbSummaryV">'+petitionLabel(onbState.petition, lang)+'</div></div>';
     }
     if(onbState.phase !== 'hasGC'){
+      if(onbState.familyTies && onbState.familyTies !== 'none') rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Familia':'Family')+'</div><div class="onbSummaryV">'+familyTiesLabel(onbState.familyTies, lang)+'</div></div>';
       if(onbState.education) rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Estudios':'Education')+'</div><div class="onbSummaryV">'+educationLabel(onbState.education, lang)+'</div></div>';
       if(onbState.field) rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Campo':'Field')+'</div><div class="onbSummaryV">'+fieldLabel(onbState.field, lang)+'</div></div>';
-      if(onbState.jobOffer) rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Oferta':'Job offer')+'</div><div class="onbSummaryV">'+jobOfferLabel(onbState.jobOffer, lang)+'</div></div>';
+      if(onbState.jobOffer) rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Trabajo':'Work')+'</div><div class="onbSummaryV">'+jobOfferLabel(onbState.jobOffer, lang)+'</div></div>';
+      if((onbState.situations||[]).length) rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Situación':'Situation')+'</div><div class="onbSummaryV">'+(onbState.situations.length)+' '+(lang==='es'?'marcada(s)':'checked')+'</div></div>';
     }
     if(onbState.phase === 'hasGC'){
       rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Residencia':'Green card')+'</div><div class="onbSummaryV">'+fmtDate(onbState.gcDate, lang)+'</div></div>';
@@ -11436,7 +11744,8 @@ function renderOnboarding(){
     var suggHtml = '';
     var sugg = suggestVisaPaths({
       phase: onbState.phase, countryOfBirth: onbState.country, education: onbState.education,
-      field: onbState.field, jobOffer: onbState.jobOffer, achievements: onbState.achievements || []
+      field: onbState.field, jobOffer: onbState.jobOffer, achievements: onbState.achievements || [],
+      familyTies: onbState.familyTies, situations: onbState.situations || []
     });
     if(sugg.length){
       var suggRows = '';
@@ -11505,6 +11814,8 @@ function finishOnboarding(){
   user.field = onbState.field || null;
   user.jobOffer = onbState.jobOffer || null;
   user.achievements = (onbState.achievements || []).slice();
+  user.familyTies = onbState.familyTies || null;
+  user.situations = (onbState.situations || []).slice();
   user.onboarded = true;
   // Fully initialize progress — every field that any render function reads.
   user.progress = {
@@ -13073,19 +13384,15 @@ var ME_FIELDS = {
   education:        {label:{en:'Highest education',    es:'Nivel de estudios'},       type:'education'},
   field:            {label:{en:'Field',                es:'Campo'},                   type:'field'},
   jobOffer:         {label:{en:'U.S. job offer',       es:'Oferta de trabajo en EE.UU.'}, type:'jobOffer'},
-  achievements:     {label:{en:'O-1 / EB-1 evidence',  es:'Evidencia O-1 / EB-1'},    type:'achievements'}
+  achievements:     {label:{en:'O-1 / EB-1 evidence',  es:'Evidencia O-1 / EB-1'},    type:'achievements'},
+  familyTies:       {label:{en:'Family with U.S. status', es:'Familia con estatus en EE.UU.'}, type:'familyTies'},
+  situations:       {label:{en:'Special situations',   es:'Situaciones especiales'},  type:'situations'}
 };
 
-// Multi-select editor for the O-1 evidence list (saved with the footer button).
+// Multi-select editors (O-1 evidence, situations) — saved with the footer button.
 function editToggleAchievement(id){
   if(!editFieldState) return;
-  var a = Array.isArray(editFieldState.value) ? editFieldState.value.slice() : [];
-  if(id === 'none'){ a = []; }
-  else {
-    var i = a.indexOf(id);
-    if(i === -1) a.push(id); else a.splice(i, 1);
-  }
-  editFieldState.value = a;
+  editFieldState.value = toggleInList(editFieldState.value, id);
   renderEditField();
 }
 
@@ -13114,7 +13421,7 @@ function saveEditField(){
   } else if(ME_FIELDS[key].type === 'date'){
     var d = document.getElementById('editFieldDate');
     if(d) v = d.value;
-  } else if(ME_FIELDS[key].type === 'achievements'){
+  } else if(ME_FIELDS[key].type === 'achievements' || ME_FIELDS[key].type === 'situations'){
     v = Array.isArray(v) ? v.slice() : [];
   }
   user[key] = v;
@@ -13184,6 +13491,16 @@ function renderEditField(){
       + achievementCardsHtml(curA, function(id){ return "editToggleAchievement('"+id+"')"; })
       + '</div>';
     showFooter = true;
+  } else if(field.type === 'situations'){
+    var curS = Array.isArray(current) ? current : [];
+    html = '<div class="onbCards">'
+      + situationCardsHtml(curS, function(id){ return "editToggleAchievement('"+id+"')"; })
+      + '</div>';
+    showFooter = true;
+  } else if(field.type === 'familyTies'){
+    html = '<div class="onbCards">';
+    for(var ftid in FAMILY_TIES){ var ftv = FAMILY_TIES[ftid]; html += onbCardHtml(ico(ftv.iconName, ftv.iconColor), ftv.label[lang], ftv.sub[lang], current===ftid, "pickEditValue('"+ftid+"')"); }
+    html += '</div>';
   } else if(field.type === 'country'){
     html = '<div class="onbCards">'
       + onbCardHtml(flagSVG('Mexico', 28),     (lang==='es'?'México':'Mexico'),'', current==='Mexico',      "pickEditValue('Mexico')")
@@ -13191,8 +13508,9 @@ function renderEditField(){
       + onbCardHtml(flagSVG('India', 28),      'India','',           current==='India',       "pickEditValue('India')")
       + onbCardHtml(flagSVG('China', 28),      'China','',           current==='China',       "pickEditValue('China')")
       + onbCardHtml(flagSVG('Philippines', 28),'Philippines','',     current==='Philippines', "pickEditValue('Philippines')")
-      + onbCardHtml(flagSVG('Other', 28),      (lang==='es'?'Otro país':'Another country'), '', current==='Other', "pickEditValue('Other')")
-      + '</div>';
+      + onbCardHtml(flagSVG('Other', 28),      (lang==='es'?'Prefiero no decirlo':"I'd rather not say"), '', current==='Other', "pickEditValue('Other')")
+      + '</div>'
+      + countrySelectHtml(current, "if(this.value) pickEditValue(this.value)");
   } else if(field.type === 'petition'){
     html = '<div class="onbCards">'
       + onbCardHtml('💍', petitionLabel('family-ir',  lang), '', current==='family-ir',  "pickEditValue('family-ir')")
@@ -13305,10 +13623,13 @@ function renderMe(){
   html += '<div class="row" onclick="openEditField(\'countryOfBirth\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'País de nacimiento':'Country of birth')+'</div><div class="rSub">'+countryLabel(user.countryOfBirth, lang)+'</div></div><div class="chev">›</div></div>';
   if(user.phase !== 'hasGC'){
     var achN = (user.achievements || []).length;
+    var sitN = (user.situations || []).length;
+    if(user.phase !== 'preGC') html += '<div class="row" onclick="openEditField(\'familyTies\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Familia con estatus en EE.UU.':'Family with U.S. status')+'</div><div class="rSub">'+familyTiesLabel(user.familyTies, lang)+'</div></div><div class="chev">›</div></div>';
     html += '<div class="row" onclick="openEditField(\'education\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Estudios':'Education')+'</div><div class="rSub">'+educationLabel(user.education, lang)+'</div></div><div class="chev">›</div></div>';
     html += '<div class="row" onclick="openEditField(\'field\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Campo':'Field')+'</div><div class="rSub">'+fieldLabel(user.field, lang)+'</div></div><div class="chev">›</div></div>';
     html += '<div class="row" onclick="openEditField(\'jobOffer\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Oferta de trabajo en EE.UU.':'U.S. job offer')+'</div><div class="rSub">'+jobOfferLabel(user.jobOffer, lang)+'</div></div><div class="chev">›</div></div>';
     html += '<div class="row" onclick="openEditField(\'achievements\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Evidencia O-1 / EB-1':'O-1 / EB-1 evidence')+'</div><div class="rSub">'+(achN ? achN+' '+(lang==='es'?'de 8 categorías':'of 8 categories') : (lang==='es'?'Ninguna marcada':'None checked'))+'</div></div><div class="chev">›</div></div>';
+    html += '<div class="row" onclick="openEditField(\'situations\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Situaciones especiales':'Special situations')+'</div><div class="rSub">'+(sitN ? sitN+' '+(lang==='es'?'marcada(s)':'checked') : (lang==='es'?'Ninguna':'None'))+'</div></div><div class="chev">›</div></div>';
   }
   html += '<div class="row" onclick="openEditField(\'petitionType\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Vía de patrocinio':'Sponsorship path')+'</div><div class="rSub">'+(user.petitionType ? petitionLabel(user.petitionType, lang) : '—')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'greenCardDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Fecha de residencia':'Green card date')+'</div><div class="rSub">'+(user.greenCardDate ? fmtDate(user.greenCardDate, lang) : '—')+'</div></div><div class="chev">›</div></div>';
@@ -13562,7 +13883,8 @@ function confirmRestartOnboarding(){
     marriageDate:user.marriageDate||'2020-01-01', monthsOutside:user.monthsOutside||null,
     criminalHistory:user.criminalHistory===true ? true : null, dailyMinutes:user.dailyMinutes||5,
     education:user.education||null, field:user.field||null, jobOffer:user.jobOffer||null,
-    achievements:(user.achievements||[]).slice()
+    achievements:(user.achievements||[]).slice(),
+    familyTies:user.familyTies||null, situations:(user.situations||[]).slice()
   };
   renderOnboarding();
   go('onboarding');
@@ -13948,6 +14270,8 @@ function toast(msg){
     user.field = stored.field || null;
     user.jobOffer = stored.jobOffer || null;
     user.achievements = Array.isArray(stored.achievements) ? stored.achievements : [];
+    user.familyTies = stored.familyTies || null;
+    user.situations = Array.isArray(stored.situations) ? stored.situations : [];
     user.pathCurrentStage = stored.pathCurrentStage || null;
     user.anthropicApiKey = CAMI_AVAILABLE ? (stored.anthropicApiKey || null) : null;
     user.camiChatHistory = CAMI_AVAILABLE ? (stored.camiChatHistory || []) : [];
