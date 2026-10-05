@@ -556,7 +556,7 @@ var STAGES = [
     id: 'oath',
     name: {en:'Oath of Allegiance', es:'Juramento de lealtad'},
     short: {en:'Oath', es:'Juramento'},
-    meta: function(u,l){ return l==='es' ? 'Te conviertes en ciudadano 🎉' : 'You become a U.S. citizen 🎉'; },
+    meta: function(u,l){ return l==='es' ? 'Te conviertes en ciudadano' : 'You become a U.S. citizen'; },
     home: {
       headline: {en:'One step from citizenship', es:'A un paso de la ciudadanía'},
       pill: {en:'Final step', es:'Paso final'},
@@ -564,7 +564,7 @@ var STAGES = [
       sub: function(u,l){ return l==='es'
         ? 'El día del juramento entregas tu residencia y recibes tu certificado de ciudadanía.'
         : 'On oath day you turn in your green card and receive your Certificate of Citizenship.'; },
-      cta: {en:'I took the oath 🎉', es:'Hice el juramento 🎉'}
+      cta: {en:'I took the oath', es:'Hice el juramento'}
     },
     upcomingTag: {en:'Final', es:'Final'}
   }
@@ -2166,13 +2166,13 @@ function renderDocDetail(){
   for(var c=0;c<DOC_CATS.length;c++) if(DOC_CATS[c].id === doc.cat){ cat = DOC_CATS[c]; break; }
 
   var crumb = document.getElementById('docDetailCrumb');
-  if(crumb) crumb.textContent = (cat ? cat.icon + ' ' + cat.label[lang] : '');
+  if(crumb) crumb.innerHTML = (cat ? inlineIcon(cat.icon, cat.color, 14) + cat.label[lang] : '');
 
   var body = document.getElementById('docDetailBody');
   if(!body) return;
 
   var statusBadge = st === 'ready'
-    ? '<div class="docDetailStatus docDetailStatusYes">✓ '+(lang==='es'?'Listo':'Ready')+'</div>'
+    ? '<div class="docDetailStatus docDetailStatusYes">'+iconSVG('check','#1c6b35',14)+' '+(lang==='es'?'Listo':'Ready')+'</div>'
     : (st === 'progress'
       ? '<div class="docDetailStatus docDetailStatusProg">'+iconSVG('clock','#8a6d00',13)+' '+(lang==='es'?'En progreso':'In progress')+'</div>'
       : '<div class="docDetailStatus docDetailStatusNo">'+(lang==='es'?'Por conseguir':'Still needed')+'</div>');
@@ -2190,7 +2190,7 @@ function renderDocDetail(){
   var formButtons = '';
   if(doc.uscisForms && doc.uscisForms.length){
     doc.uscisForms.forEach(function(f){ formButtons += uscisFormButton(f); });
-    formButtons = '<div class="docDetailSec">'+(lang==='es'?'📥 Descargar formulario':'📥 Get the form')+'</div>'
+    formButtons = '<div class="docDetailSec">'+inlineIcon('download','#1cb0f6')+(lang==='es'?'Descargar formulario':'Get the form')+'</div>'
       + '<div class="docDetailForms">'+formButtons+'</div>';
   }
 
@@ -2209,7 +2209,7 @@ function renderDocDetail(){
     + '<div class="docDetailSub">'+doc.sub[lang]+'</div>'
     + statusBadge
     + formButtons
-    + '<div class="docDetailSec">'+(lang==='es'?'📖 Cómo conseguirlo':'📖 How to get this')+'</div>'
+    + '<div class="docDetailSec">'+inlineIcon('book','#1cb0f6')+(lang==='es'?'Cómo conseguirlo':'How to get this')+'</div>'
     + '<div class="docDetailBody">'+autolinkForms(doc.howTo[lang] || doc.howTo.en)+'</div>'
     + (tipsHtml ? '<div class="docDetailSec">'+iconSVG('lightbulb','#ff9b21',16)+' '+(lang==='es'?'Consejos':'Tips')+'</div><ul class="docDetailTips">'+tipsHtml+'</ul>' : '')
     + '<div class="docDetailMeta">'
@@ -2361,7 +2361,7 @@ function renderFlashcard(){
       + '<div class="flashCard flashFront">'
       +   '<div class="flashSide flashSideQ">'+(lang==='es' ? 'PREGUNTA' : 'QUESTION')+'</div>'
       +   '<div class="flashQText">'+q.q[lang]+'</div>'
-      +   ((ttsSupported() || VoiceClips.manifest) ? '<button class="flashSpeak" id="flashSpeakBtn">🔊 '+(lang==='es' ? 'Escuchar' : 'Listen')+'</button>' : '')
+      +   ((ttsSupported() || VoiceClips.manifest) ? '<button class="flashSpeak" id="flashSpeakBtn">'+inlineIcon('speaker','#1cb0f6')+(lang==='es' ? 'Escuchar' : 'Listen')+'</button>' : '')
       + '</div>'
       + '<div class="flashHint">'+(lang==='es' ? 'Piensa la respuesta, luego voltea la carta' : 'Think of the answer, then flip the card')+'</div>'
       + '</div>';
@@ -2383,9 +2383,9 @@ function renderFlashcard(){
     if(!flashState.flipped){
       footer.innerHTML = '<button class="cta flashFlipBtn" onclick="flipFlashcard()">'+(lang==='es' ? 'Mostrar respuesta' : 'Show answer')+' →</button>';
     } else {
-      footer.innerHTML = '<button class="flashRateBtn flashRateHard" onclick="rateFlashcard(\'hard\')">😅 '+(lang==='es' ? 'Difícil' : 'Hard')+'</button>'
-        + '<button class="flashRateBtn flashRateGood" onclick="rateFlashcard(\'good\')">🙂 '+(lang==='es' ? 'Bien' : 'Good')+'</button>'
-        + '<button class="flashRateBtn flashRateEasy" onclick="rateFlashcard(\'easy\')">😎 '+(lang==='es' ? 'Fácil' : 'Easy')+'</button>';
+      footer.innerHTML = '<button class="flashRateBtn flashRateHard" onclick="rateFlashcard(\'hard\')">'+inlineIcon('mountain','#ff4d3a',16)+(lang==='es' ? 'Difícil' : 'Hard')+'</button>'
+        + '<button class="flashRateBtn flashRateGood" onclick="rateFlashcard(\'good\')">'+inlineIcon('smile','#ffc83d',16)+(lang==='es' ? 'Bien' : 'Good')+'</button>'
+        + '<button class="flashRateBtn flashRateEasy" onclick="rateFlashcard(\'easy\')">'+inlineIcon('star','#00b4a8',16)+(lang==='es' ? 'Fácil' : 'Easy')+'</button>';
     }
   }
 }
@@ -2405,19 +2405,19 @@ function renderFlashcardResults(easy, good, hard){
 
   body.innerHTML = ''
     + '<div class="flashResultsHead">'
-    +   '<div class="flashResultIcon">🎴</div>'
+    +   '<div class="flashResultIcon">'+iconSVG('cards','#ec4f93',68)+'</div>'
     +   '<div class="flashResultTitle">'+(lang==='es' ? '¡Sesión completa!' : 'Session complete!')+'</div>'
     +   '<div class="flashResultSub">'+total+' '+(lang==='es' ? 'cartas · +8 XP' : 'cards · +8 XP')+'</div>'
     + '</div>'
     + '<div class="flashBreakdown">'
-    +   '<div class="flashBreakRow flashBVEasy"><div class="flashBreakDot">😎</div><div class="flashBreakLbl">'+(lang==='es'?'Fácil':'Easy')+'</div><div class="flashBreakVal">'+easy+'</div></div>'
-    +   '<div class="flashBreakRow flashBVGood"><div class="flashBreakDot">🙂</div><div class="flashBreakLbl">'+(lang==='es'?'Bien':'Good')+'</div><div class="flashBreakVal">'+good+'</div></div>'
-    +   '<div class="flashBreakRow flashBVHard"><div class="flashBreakDot">😅</div><div class="flashBreakLbl">'+(lang==='es'?'Difícil':'Hard')+'</div><div class="flashBreakVal">'+hard+'</div></div>'
+    +   '<div class="flashBreakRow flashBVEasy"><div class="flashBreakDot">'+iconSVG('star','#00b4a8',22)+'</div><div class="flashBreakLbl">'+(lang==='es'?'Fácil':'Easy')+'</div><div class="flashBreakVal">'+easy+'</div></div>'
+    +   '<div class="flashBreakRow flashBVGood"><div class="flashBreakDot">'+iconSVG('smile','#ffc83d',22)+'</div><div class="flashBreakLbl">'+(lang==='es'?'Bien':'Good')+'</div><div class="flashBreakVal">'+good+'</div></div>'
+    +   '<div class="flashBreakRow flashBVHard"><div class="flashBreakDot">'+iconSVG('mountain','#ff4d3a',22)+'</div><div class="flashBreakLbl">'+(lang==='es'?'Difícil':'Hard')+'</div><div class="flashBreakVal">'+hard+'</div></div>'
     + '</div>'
     + (hard > 0 ? '<div class="flashTip">'+(lang==='es' ? 'Las '+hard+' difíciles están en tu lista de repaso.' : 'The '+hard+' hard ones are in your review queue.')+'</div>' : '');
 
   if(footer){
-    footer.innerHTML = '<button class="cta" onclick="startFlashcards()">'+(lang==='es' ? '🔁 Otra sesión' : '🔁 Another session')+'</button>'
+    footer.innerHTML = '<button class="cta" onclick="startFlashcards()">'+inlineIcon('refresh','#fff',16)+(lang==='es' ? 'Otra sesión' : 'Another session')+'</button>'
       + '<button class="flashBackBtn" onclick="exitFlashcards()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>';
   }
 }
@@ -2434,7 +2434,7 @@ function renderHomeFlashcardCard(){
   if(doneToday){
     titleTxt = lang==='es' ? '¡Hecho por hoy!' : 'Done for today!';
     subTxt = lang==='es' ? 'Vuelve mañana — el set cambia cada día' : 'Come back tomorrow — set changes every day';
-    metaLeft = '🔥 ' + streak + ' ' + (lang==='es' ? 'día'+(streak===1?'':'s') : 'day'+(streak===1?'':'s'));
+    metaLeft = inlineIcon('flame','#ff4d3a',13) + streak + ' ' + (lang==='es' ? 'día'+(streak===1?'':'s') : 'day'+(streak===1?'':'s'));
     metaRight = (lang==='es' ? 'Repasar' : 'Replay') + ' →';
   } else {
     titleTxt = lang==='es' ? 'Tus 15 cartas de hoy' : "Today's 15 cards";
@@ -2452,34 +2452,34 @@ function renderHomeFlashcardCard(){
 
 // ===== INTERVIEW SIMULATOR =====
 var N400_REVIEW_QUESTIONS = [
-  {key:'name', icon:'👤',
+  {key:'name', icon:'person',
     q:{en:'What is your full name?', es:'¿Cuál es tu nombre completo?'},
     tip:{en:'State your full legal name exactly as on your N-400. Don\'t shorten.', es:'Di tu nombre completo legal exactamente como en tu N-400. No lo acortes.'}},
-  {key:'country', icon:'🌍',
+  {key:'country', icon:'globe',
     q:{en:'What is your country of birth?', es:'¿Cuál es tu país de nacimiento?'},
     tip:{en:'Name the country as it is on your birth certificate.', es:'Nombra el país como aparece en tu acta de nacimiento.'}},
-  {key:'gcDate', icon:'🪪',
+  {key:'gcDate', icon:'id',
     q:{en:'When did you become a lawful permanent resident?', es:'¿Cuándo te hiciste residente permanente?'},
     tip:{en:'Give the exact date on your green card — officers cross-check this.', es:'Da la fecha exacta de tu residencia — los oficiales lo verifican.'}},
-  {key:'married', icon:'💍',
+  {key:'married', icon:'ring',
     q:{en:'Are you currently married?', es:'¿Estás casado/a actualmente?'},
     tip:{en:'A simple yes or no. If yes, the officer will ask follow-up questions.', es:'Un sí o no. Si sí, habrá preguntas adicionales.'}},
-  {key:'marriageDate', icon:'💒', conditional:'married',
+  {key:'marriageDate', icon:'calendar', conditional:'married',
     q:{en:'On what date did you get married?', es:'¿En qué fecha te casaste?'},
     tip:{en:'Be exact. The officer matches against your marriage certificate.', es:'Sé exacto. El oficial verifica con tu acta de matrimonio.'}},
-  {key:'trips', icon:'✈️',
+  {key:'trips', icon:'plane',
     q:{en:'In the last 5 years, have you taken any trip outside the U.S. longer than 6 months?', es:'En los últimos 5 años, ¿has hecho algún viaje fuera de EE.UU. de más de 6 meses?'},
     tip:{en:'A trip over 6 months can break continuous residence. Be honest — passport stamps will show it.', es:'Un viaje de más de 6 meses puede romper la residencia continua. Sé honesto — los sellos del pasaporte lo muestran.'}},
-  {key:'crime', icon:'⚖️',
+  {key:'crime', icon:'scales',
     q:{en:'Have you EVER been arrested, charged, cited, or detained by any law enforcement officer for any reason?', es:'¿Has sido ALGUNA VEZ arrestado, acusado, citado, o detenido por algún oficial por cualquier motivo?'},
     tip:{en:'Disclose EVERYTHING — dismissed cases, traffic, juvenile, anything. The officer has your full background check.', es:'Revela TODO — casos desestimados, tráfico, juvenil, lo que sea. El oficial tiene tu verificación completa.'}},
-  {key:'taxes', icon:'💰',
+  {key:'taxes', icon:'bill',
     q:{en:'Have you filed all your federal income tax returns?', es:'¿Has presentado todas tus declaraciones de impuestos federales?'},
     tip:{en:'If you owe back taxes, disclose it AND bring proof of a payment plan with the IRS.', es:'Si debes impuestos, revélalo Y trae prueba de un plan de pago con el IRS.'}},
-  {key:'support', icon:'📜',
+  {key:'support', icon:'doc',
     q:{en:'Do you support the Constitution and form of government of the United States?', es:'¿Apoyas la Constitución y la forma de gobierno de EE.UU.?'},
     tip:{en:'The answer is yes — this is one of the most important questions of the interview.', es:'La respuesta es sí — es una de las preguntas más importantes de la entrevista.'}},
-  {key:'oath', icon:'🇺🇸',
+  {key:'oath', icon:'flagUS',
     q:{en:'Are you willing to take the Oath of Allegiance to the United States?', es:'¿Estás dispuesto/a a tomar el Juramento de Lealtad a EE.UU.?'},
     tip:{en:'Yes. The oath has 5 parts: renounce other allegiances, defend the Constitution, obey U.S. law, serve in the military if required, perform civil service if required.', es:'Sí. El juramento tiene 5 partes: renunciar a otras lealtades, defender la Constitución, obedecer la ley, servir en el ejército si es requerido, hacer servicio civil si es requerido.'}}
 ];
@@ -2494,10 +2494,10 @@ function expectedN400Answer(q){
   if(k === 'trips'){
     if(user.monthsOutside === 'lt6') return (lang==='es' ? 'No' : 'No');
     if(user.monthsOutside === '6-18') return (lang==='es' ? 'No de un solo viaje, pero entre 6 y 18 meses en total' : 'No single trip, but 6 to 18 months total');
-    if(user.monthsOutside === 'gt18') return (lang==='es' ? '⚠️ Sí — consulta legal' : '⚠️ Yes — legal consult');
+    if(user.monthsOutside === 'gt18') return (lang==='es' ? 'Sí — consulta legal' : 'Yes — legal consult');
     return (lang==='es' ? 'No estoy seguro' : 'Not sure');
   }
-  if(k === 'crime') return user.criminalHistory ? (lang==='es' ? '⚠️ Sí — debes revelar todo con tu abogado' : '⚠️ Yes — disclose with your lawyer') : (lang==='es' ? 'No' : 'No');
+  if(k === 'crime') return user.criminalHistory ? (lang==='es' ? 'Sí — debes revelar todo con tu abogado' : 'Yes — disclose with your lawyer') : (lang==='es' ? 'No' : 'No');
   if(k === 'taxes') return (lang==='es' ? 'Sí, presento cada año' : 'Yes, I file every year');
   if(k === 'support') return (lang==='es' ? 'Sí' : 'Yes');
   if(k === 'oath') return (lang==='es' ? 'Sí, estoy dispuesto/a' : 'Yes, I am willing');
@@ -3686,7 +3686,7 @@ function startMicLevelMeter(){
       if(!IntvVoice.vad.speechStartedAt && (t - IntvVoice.vad.listenStartedAt) > NO_SPEECH_HINT_MS){
         hint = lang==='es' ? 'Tómate tu tiempo · habla más cerca del micrófono' : "Take your time · speak closer to the mic";
       } else if(IntvVoice.vad.speechStartedAt && IntvVoice.vad.avgLevel < 0.06){
-        hint = lang==='es' ? '🔉 Habla un poco más fuerte' : '🔉 Speak up a little';
+        hint = lang==='es' ? 'Habla un poco más fuerte' : 'Speak up a little';
       }
       var hintEl = document.getElementById('intvPacingHint');
       if(hintEl) hintEl.textContent = hint;
@@ -3750,8 +3750,8 @@ function toggleIntvHandsFree(){
   if(user){ user.intvHandsFree = intvState.handsFree; saveUser(); }
   renderInterview();
   toast(intvState.handsFree
-    ? (lang==='es' ? '🎙 Modo manos libres activado' : '🎙 Hands-free mode on')
-    : (lang==='es' ? 'Modo manos libres desactivado' : 'Hands-free mode off'));
+    ? (lang==='es' ? 'Modo manos libres activado' : 'Hands-free mode on')
+    : (lang==='es' ? 'Modo manos libres desactivado' : 'Hands-free mode off'), intvState.handsFree ? 'mic' : null);
   // If we just turned it on and we're at the ready phase, kick off listening
   if(intvState.handsFree && intvState.phase === 'ready' && IntvVoice.recognizer){
     setTimeout(startListeningToUser, 250);
@@ -3936,11 +3936,11 @@ function processIntvAnswer(){
     var cmd = detectVoiceCommand(transcript);
     if(cmd){
       if(cmd === 'next'){
-        toast(lang==='es' ? '⏭ Saltando…' : '⏭ Skipping…');
+        toast(lang==='es' ? 'Saltando…' : 'Skipping…');
         return skipInterviewQ();
       }
       if(cmd === 'repeat'){
-        toast(lang==='es' ? '🔁 Repitiendo pregunta…' : '🔁 Repeating question…');
+        toast(lang==='es' ? 'Repitiendo pregunta…' : 'Repeating question…', 'refresh');
         intvState.phase = 'asking';
         intvState.currentTranscript = '';
         renderInterview();
@@ -3948,7 +3948,7 @@ function processIntvAnswer(){
         return;
       }
       if(cmd === 'stop'){
-        toast(lang==='es' ? '⏹ Saliendo de la entrevista' : '⏹ Exiting interview');
+        toast(lang==='es' ? 'Saliendo de la entrevista' : 'Exiting interview');
         return exitInterview();
       }
     }
@@ -4194,7 +4194,7 @@ function renderInterview(){
 
   var questionText = getQuestionTextLocal(q);
   var questionEn = getQuestionTextEn(q);
-  var typeIcon = (q.type === 'civics') ? '📚' : (q.n400Q.icon || '🪪');
+  var typeIcon = inlineIcon(q.type === 'civics' ? 'book' : (q.n400Q.icon || 'id'), q.type === 'civics' ? '#1cb0f6' : '#8c4dd1', 14);
   var typeLbl = (q.type === 'civics') ? (lang==='es'?'Cívica':'Civics') : (lang==='es'?'N-400':'N-400');
 
   var hfActive = !!intvState.handsFree;
@@ -4211,7 +4211,7 @@ function renderInterview(){
   var streak = intvState.currentStreak || 0;
   var streakBadge = streak >= 2
     ? '<div class="intvStreakBadge'+(intvState.justIncrementedStreak?' intvStreakPulse':'')+'" title="'+(lang==='es'?'Racha de respuestas':'Answer streak')+'">'
-        + '🔥 <span class="intvStreakN">'+streak+'</span>'
+        + iconSVG('flame','#ff4d3a',14) + '<span class="intvStreakN">'+streak+'</span>'
         + '<span class="intvStreakRow">'+(lang==='es'?'al hilo':'in a row')+'</span>'
       + '</div>'
     : '';
@@ -4221,14 +4221,14 @@ function renderInterview(){
     + '<div class="intvOfficerRow">'
     +   '<div class="intvOfficerAvatar">'+camiOfficerSVG(40)+'</div>'
     +   '<div class="intvOfficerHeadCol"><div class="intvOfficerLabel">'+(lang==='es'?'OFICIAL DE USCIS':'USCIS OFFICER')+'</div>'
-    +   '<div class="intvOfficerSub">'+typeIcon+' '+typeLbl+(q.type==='civics'?' · '+(lang==='es'?'pregunta '+q.qId:'question '+q.qId):'')+'</div></div>'
+    +   '<div class="intvOfficerSub">'+typeIcon+typeLbl+(q.type==='civics'?' · '+(lang==='es'?'pregunta '+q.qId:'question '+q.qId):'')+'</div></div>'
     +   streakBadge
     +   hfBtn
     + '</div>'
     + '<div class="intvBubble">'+questionText+'</div>';
   if(lang !== 'en') html += '<div class="intvBubbleEn">"'+questionEn+'"</div>';
   if(ttsSupported()){
-    html += '<button class="intvReplayBtn" onclick="replayOfficer()">🔊 '+(lang==='es'?'Escuchar de nuevo':'Hear it again')+'</button>';
+    html += '<button class="intvReplayBtn" onclick="replayOfficer()">'+inlineIcon('speaker','#1cb0f6')+(lang==='es'?'Escuchar de nuevo':'Hear it again')+'</button>';
   }
 
   // Phase-specific content
@@ -4419,7 +4419,7 @@ function renderInterviewResults(){
 
   var needWork = civicsNeedsWorkCount();
   var hint = needWork > 0
-    ? '<div class="intvNextHint">📌 '+needWork+' '+(lang==='es'?'preguntas necesitan trabajo · la próxima sesión las prioriza':'questions need work · next session prioritizes them')+'</div>'
+    ? '<div class="intvNextHint">'+inlineIcon('target','#ff9b21')+needWork+' '+(lang==='es'?'preguntas necesitan trabajo · la próxima sesión las prioriza':'questions need work · next session prioritizes them')+'</div>'
     : '';
 
   body.innerHTML = ''
@@ -4439,7 +4439,7 @@ function renderInterviewResults(){
     + '<div class="intvBVList">'+breakHtml+'</div>';
 
   if(footer){
-    footer.innerHTML = '<button class="cta" onclick="startInterview()">'+(lang==='es' ? '🔁 Practicar de nuevo' : '🔁 Practice again')+'</button>'
+    footer.innerHTML = '<button class="cta" onclick="startInterview()">'+inlineIcon('refresh','#fff',16)+(lang==='es' ? 'Practicar de nuevo' : 'Practice again')+'</button>'
       + '<button class="intvBackBtn" onclick="exitInterview()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>';
   }
 }
@@ -4482,7 +4482,7 @@ function renderInterviewResults(score, got, hesitated, unsure, total){
     + '</div>';
 
   if(footer){
-    footer.innerHTML = '<button class="cta" onclick="startInterview()">'+(lang==='es' ? '🔁 Practicar de nuevo' : '🔁 Practice again')+'</button>'
+    footer.innerHTML = '<button class="cta" onclick="startInterview()">'+inlineIcon('refresh','#fff',16)+(lang==='es' ? 'Practicar de nuevo' : 'Practice again')+'</button>'
       + '<button class="intvBackBtn" onclick="exitInterview()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>';
   }
 }
@@ -4775,8 +4775,8 @@ var TUTORIAL_STEPS = [
     id: 'stats',
     title: {en: 'Track your momentum', es: 'Sigue tu impulso'},
     body: {
-      en: "Streak, XP, and how ready you are for the test. The 🔥 keeps you coming back daily; the 🎯 shows how close you are to passing.",
-      es: "Racha, XP, y qué tan listo/a estás para el examen. El 🔥 te mantiene volviendo cada día; el 🎯 muestra qué tan cerca estás."
+      en: "Streak, XP, and how ready you are for the test. The flame keeps you coming back daily; the target shows how close you are to passing.",
+      es: "Racha, XP, y qué tan listo/a estás para el examen. La llama te mantiene volviendo cada día; el blanco muestra qué tan cerca estás."
     },
     mood: 'celebrate',
     tabId: 't-home',
@@ -6036,7 +6036,7 @@ function startFreeTrial(planCode){
   go('home');
   toast(lang==='es' ? '¡Bienvenido a Camino Plus! 7 días gratis.' : 'Welcome to Camino Plus! 7 days free.');
   setTimeout(function(){
-    toast(lang==='es' ? '🎉 Exámenes ilimitados, entrevistas y más, desbloqueados' : '🎉 Unlimited tests, interviews + more, unlocked');
+    toast(lang==='es' ? 'Exámenes ilimitados, entrevistas y más, desbloqueados' : 'Unlimited tests, interviews + more, unlocked', 'trophy');
   }, 2000);
   // Cami offers a tour after the celebratory toasts settle
   setTimeout(maybeOfferTutorial, 3500);
@@ -6113,7 +6113,7 @@ var CANCEL_REASONS = [
   {id:'too-expensive', label:{en:'Too expensive', es:'Demasiado caro'}},
   {id:'not-using',     label:{en:'Not using it enough', es:'No lo uso suficiente'}},
   {id:'missing-feat',  label:{en:'Missing a feature I need', es:'Falta una función'}},
-  {id:'got-citizen',   label:{en:'I became a citizen 🎉', es:'Ya soy ciudadano 🎉'}},
+  {id:'got-citizen',   label:{en:'I became a citizen', es:'Ya soy ciudadano'}},
   {id:'temporary',     label:{en:'Just pausing temporarily', es:'Solo pausa temporal'}},
   {id:'other',         label:{en:'Other', es:'Otro'}}
 ];
@@ -6273,7 +6273,7 @@ function applyStreakFreezeIfNeeded(){
   user.streakFreezeHistory.push(todayISO());
   saveUser();
   setTimeout(function(){
-    toast(lang==='es' ? '❄️ Racha congelada · queda '+user.streakFreezes : '❄️ Streak frozen · '+user.streakFreezes+' left this month');
+    toast(lang==='es' ? 'Racha congelada · queda '+user.streakFreezes : 'Streak frozen · '+user.streakFreezes+' left this month', 'snowflake');
   }, 800);
   return true;
 }
@@ -6994,7 +6994,7 @@ function renderEligWizardResult(){
     +   '<div class="eligVerdictSub">'+verdictSub+'</div>'
     + '</div>'
     + (reasonsHtml ? '<div class="eligSection"><div class="eligSecLbl">'+(lang==='es'?'Por qué':'Why')+'</div>'+reasonsHtml+'</div>' : '')
-    + (flagsHtml ? '<div class="eligSection"><div class="eligSecLbl">'+(lang==='es'?'⚠️ Atención':'⚠️ Attention')+'</div>'+flagsHtml+'</div>' : '')
+    + (flagsHtml ? '<div class="eligSection"><div class="eligSecLbl">'+inlineIcon('warning','#ff9b21',13)+(lang==='es'?'Atención':'Attention')+'</div>'+flagsHtml+'</div>' : '')
     + nextStepsHtml
     + attorneyClose
     + (CAMI_AVAILABLE
@@ -7999,7 +7999,7 @@ function renderPathJourney(el){
     if(st==='done'){ tagCls='tagDone'; tagTxt = lang==='es'?'Hecho':'Done'; }
     else if(st==='current'){ tagCls='tagNow'; tagTxt = lang==='es'?'Estás aquí':'You are here'; }
     else { tagCls='tagNext'; tagTxt = lang==='es'?'Próximo':'Upcoming'; }
-    var etaHtml = s.eta ? '<div class="stepEst">⏱ '+s.eta[lang]+'</div>' : '';
+    var etaHtml = s.eta ? '<div class="stepEst">'+inlineIcon('clock','#1cb0f6',12)+s.eta[lang]+'</div>' : '';
     var descHtml = s.desc ? '<div class="stepMeta">'+autolinkForms(s.desc[lang])+'</div>' : '';
     var iconChip = s.iconName
       ? '<div class="pathStageIco" style="background:'+s.color+'22">'+iconSVG(s.iconName, s.color, 18)+'</div>'
@@ -8677,7 +8677,7 @@ function renderHomeVisaRow(){
 // ===== N-400 FORM WALKTHROUGH =====
 var N400_SECTIONS = [
   {
-    id:'eligibility', part:'Part 1', icon:'📋', forms:['N-400'],
+    id:'eligibility', part:'Part 1', icon:'clipboard', forms:['N-400'],
     title:{en:'Eligibility basis', es:'Base de elegibilidad'},
     asked:{en:'Which rule are you applying under?', es:'¿Bajo qué regla estás aplicando?'},
     body:{en:'Choose: the 5-year rule (most LPRs), the 3-year rule (3+ years married to a U.S. citizen), or a military basis. The form changes based on your answer.',
@@ -8688,7 +8688,7 @@ var N400_SECTIONS = [
           es:['Residencia (frente y reverso)','Acta de matrimonio (regla de 3 años)','Prueba de ciudadanía del cónyuge (regla de 3 años)','Documentos de baja militar (base militar)']}
   },
   {
-    id:'about-you', part:'Part 2', icon:'👤',
+    id:'about-you', part:'Part 2', icon:'person',
     title:{en:'About you', es:'Sobre ti'},
     asked:{en:'Your legal names, date and place of birth, country of citizenship, SSN, A-Number.', es:'Tus nombres legales, fecha y lugar de nacimiento, ciudadanía, SSN, número A.'},
     body:{en:'USCIS needs every name you have ever used — including names from prior marriages, names from childhood, and any aliases on official documents.',
@@ -8699,7 +8699,7 @@ var N400_SECTIONS = [
           es:['Acta de nacimiento','Pasaporte vigente','Tarjeta de Seguro Social','Residencia','Documentación de cambios de nombre (orden judicial, acta de matrimonio)']}
   },
   {
-    id:'addresses', part:'Part 5', icon:'🏠',
+    id:'addresses', part:'Part 5', icon:'home',
     title:{en:'5-year address history', es:'Direcciones de 5 años'},
     asked:{en:'Every physical address where you have lived in the past 5 years, with start and end dates.', es:'Cada dirección física donde has vivido en los últimos 5 años, con fechas de inicio y fin.'},
     body:{en:'No gaps allowed. If you split your time between two places, list both. PO boxes don\'t count as residences.',
@@ -8710,7 +8710,7 @@ var N400_SECTIONS = [
           es:['Contratos de arrendamiento o hipoteca','Facturas de servicios','Declaraciones de impuestos (los W-2 muestran tu dirección)','Confirmaciones de cambio de dirección de USPS']}
   },
   {
-    id:'employment', part:'Part 8', icon:'💼',
+    id:'employment', part:'Part 8', icon:'briefcase',
     title:{en:'Employment history', es:'Historial laboral'},
     asked:{en:'Every employer, school, or unemployment period in the past 5 years.', es:'Cada empleador, escuela o período de desempleo en los últimos 5 años.'},
     body:{en:'Include employer name, address, your job title, and exact start and end dates. Periods of unemployment, school, or self-employment must be listed too — leave no gaps.',
@@ -8721,7 +8721,7 @@ var N400_SECTIONS = [
           es:['W-2 y 1099 de cada año','Talones de pago','Transcripciones escolares (si fuiste estudiante)','Registros de impuestos de trabajo propio']}
   },
   {
-    id:'trips', part:'Part 9', icon:'✈️',
+    id:'trips', part:'Part 9', icon:'plane',
     title:{en:'Time outside the U.S.', es:'Tiempo fuera de EE.UU.'},
     asked:{en:'Every trip outside the U.S. lasting 24 hours or more in the past 5 years.', es:'Cada viaje fuera de EE.UU. de 24 horas o más en los últimos 5 años.'},
     body:{en:'Even short cross-border runs to Mexico or Canada count. Departure date, return date, and country. Trips longer than 6 months can break your continuous residence.',
@@ -8732,7 +8732,7 @@ var N400_SECTIONS = [
           es:['TODOS los pasaportes (vigentes y vencidos) de los últimos 5 años','Registro I-94 de viajes (i94.cbp.dhs.gov)','Registros o itinerarios de vuelos','Registros de cruce de CBP']}
   },
   {
-    id:'marital', part:'Part 10', icon:'💍',
+    id:'marital', part:'Part 10', icon:'ring',
     title:{en:'Marital history', es:'Historial matrimonial'},
     asked:{en:'Current marriage AND every prior marriage — yours and your current spouse\'s.', es:'Matrimonio actual Y todos los matrimonios anteriores — tuyos y de tu cónyuge actual.'},
     body:{en:'For each marriage: spouse\'s full name, date of marriage, how it ended (divorce, death, annulment), and the date it ended.',
@@ -8743,7 +8743,7 @@ var N400_SECTIONS = [
           es:['Acta de matrimonio actual','Decretos de divorcio de matrimonios anteriores (tuyos y del cónyuge)','Actas de defunción si un cónyuge anterior falleció','Documentos de anulación si aplica']}
   },
   {
-    id:'children', part:'Part 11', icon:'👶',
+    id:'children', part:'Part 11', icon:'people',
     title:{en:'Children', es:'Hijos'},
     asked:{en:'ALL children — biological, adopted, step-children — living or deceased, regardless of where they live.', es:'TODOS los hijos — biológicos, adoptados, hijastros — vivos o fallecidos, sin importar dónde vivan.'},
     body:{en:'Include children from prior relationships, children you don\'t have custody of, and children born outside the U.S. Provide each child\'s name, date of birth, and country of birth.',
@@ -8754,14 +8754,14 @@ var N400_SECTIONS = [
           es:['Acta de nacimiento de cada hijo','Decretos de adopción (si aplica)','Órdenes judiciales de custodia/manutención','Pasaportes de los hijos si nacieron en el extranjero']}
   },
   {
-    id:'have-you-ever', part:'Part 12', icon:'⚠️', forms:['N-400','N-648'],
+    id:'have-you-ever', part:'Part 12', icon:'warning', forms:['N-400','N-648'],
     title:{en:'"Have you ever..." questions', es:'Preguntas "¿Alguna vez...?"'},
     asked:{en:'50+ yes/no questions about criminal history, immigration violations, party memberships, drug use, lying to immigration officers, and more.',
            es:'50+ preguntas de sí/no sobre historial penal, violaciones migratorias, membresías políticas, uso de drogas, mentir a oficiales de inmigración, y más.'},
     body:{en:'Even arrests with no charges, dismissed cases, expunged records, juvenile incidents, and traffic incidents over a fine threshold must be disclosed. "Have you ever" means EVER — there is no time limit.',
           es:'Incluso arrestos sin cargos, casos desestimados, registros eliminados, incidentes juveniles, y multas de tráfico por encima del umbral deben revelarse. "Alguna vez" significa NUNCA — no hay límite de tiempo.'},
-    tip:{en:'⚠️ If you answer "yes" to ANY question in Part 12, stop and talk to an immigration lawyer BEFORE filing. A surprise "yes" at the interview can result in denial, denaturalization, or deportation. Free consults are available — check the Find Help section.',
-         es:'⚠️ Si respondes "sí" a CUALQUIER pregunta de la Parte 12, detente y habla con un abogado de inmigración ANTES de presentar. Un "sí" sorpresa en la entrevista puede resultar en negación, desnaturalización o deportación. Hay consultas gratuitas — revisa la sección de Ayuda Legal.'},
+    tip:{en:'If you answer "yes" to ANY question in Part 12, stop and talk to an immigration lawyer BEFORE filing. A surprise "yes" at the interview can result in denial, denaturalization, or deportation. Free consults are available — check the Find Help section.',
+         es:'Si respondes "sí" a CUALQUIER pregunta de la Parte 12, detente y habla con un abogado de inmigración ANTES de presentar. Un "sí" sorpresa en la entrevista puede resultar en negación, desnaturalización o deportación. Hay consultas gratuitas — revisa la sección de Ayuda Legal.'},
     docs:{en:['Court records and dispositions for ANY arrest or charge (even if dismissed)','Police reports','FBI background check (highly recommended)','Records of any immigration violations or removals'],
           es:['Registros judiciales y resoluciones de CUALQUIER arresto o cargo (incluso si fue desestimado)','Reportes policiales','Verificación de antecedentes del FBI (muy recomendado)','Registros de violaciones migratorias o remociones']}
   }
@@ -8854,12 +8854,12 @@ function renderN400(){
   if(s.forms && s.forms.length){
     var fb = '';
     s.forms.forEach(function(f){ fb += uscisFormButton(f); });
-    formsBlock = '<div class="n400DocsLabel">📥 '+(lang==='es'?'Descargar de USCIS.gov':'Get from USCIS.gov')+'</div>'
+    formsBlock = '<div class="n400DocsLabel">'+inlineIcon('download','#1cb0f6',13)+(lang==='es'?'Descargar de USCIS.gov':'Get from USCIS.gov')+'</div>'
       + '<div class="n400Forms">'+fb+'</div>';
   }
 
   body.innerHTML =
-      '<div class="n400Part">'+s.icon+' '+s.part+'</div>'
+      '<div class="n400Part">'+inlineIcon(s.icon,'#ff9b21',14)+s.part+'</div>'
     + '<div class="n400Title">'+s.title[lang]+'</div>'
     + '<div class="n400AskedLbl">'+(lang==='es'?'¿Qué pregunta USCIS?':'What USCIS asks')+'</div>'
     + '<div class="n400Asked">'+s.asked[lang]+'</div>'
@@ -8869,7 +8869,7 @@ function renderN400(){
     +   '<div class="n400TipBody">'+s.tip[lang]+'</div>'
     + '</div>'
     + formsBlock
-    + '<div class="n400DocsLabel">📋 '+(lang==='es'?'Documentos para esta sección':'Documents for this section')+'</div>'
+    + '<div class="n400DocsLabel">'+inlineIcon('clipboard','#ff9b21',13)+(lang==='es'?'Documentos para esta sección':'Documents for this section')+'</div>'
     + '<ul class="n400Docs">'+docsHtml+'</ul>';
 
   var footer = document.getElementById('n400Footer');
@@ -9004,7 +9004,7 @@ function renderHelp(){
       var sec = (p.tier === 'free')
         ? (lang==='es' ? 'Gratis o de bajo costo' : 'Free or low-cost')
         : (lang==='es' ? 'Despachos privados · Promocionado' : 'Private firms · Sponsored');
-      html += '<div class="helpCatHead">'+(p.tier==='free'?'🤝 ':'⭐ ')+sec+'</div>';
+      html += '<div class="helpCatHead">'+(p.tier==='free' ? inlineIcon('people','#00b4a8',13) : inlineIcon('star','#ffc83d',13))+sec+'</div>';
     }
     var nm = (typeof p.name === 'object') ? p.name[lang] : p.name;
     var dc = p.desc[lang] || p.desc.en;
@@ -9035,7 +9035,7 @@ function renderHomeAlert(){
   var reason = user.criminalHistory === true
     ? (lang==='es' ? 'Marcaste antecedentes penales en el onboarding.' : 'You flagged a criminal history in onboarding.')
     : (lang==='es' ? 'Tu chequeo de elegibilidad encontró un problema.' : 'Your eligibility check found an issue.');
-  el.innerHTML = '<div class="alertIcon">⚠️</div>'
+  el.innerHTML = '<div class="alertIcon">'+iconSVG('warning','#ff9b21',24)+'</div>'
     + '<div class="alertMain">'
     +   '<div class="alertTitle">'+(lang==='es'?'Habla con un abogado primero':'Talk to a lawyer first')+'</div>'
     +   '<div class="alertSub">'+reason+'</div>'
@@ -9328,7 +9328,7 @@ function n400FH_persist(){
     if(!back.n400 || back.n400.lastSavedAt !== st.lastSavedAt){
       if(!n400FH_persist._warned){
         n400FH_persist._warned = true;
-        toast(lang==='es' ? '⚠ No se pudo guardar — espacio lleno. Exporta un respaldo.' : '⚠ Could not save — storage full. Export a backup.');
+        toast(lang==='es' ? 'No se pudo guardar — espacio lleno. Exporta un respaldo.' : 'Could not save — storage full. Export a backup.', 'warning');
       }
     }
   } catch(e){}
@@ -9891,7 +9891,7 @@ function n400FormHelperCard(){
     + '<div class="n400HelperHead">'
     +   '<div class="n400HelperIco">'+iconSVG('folder','#fff',20)+'</div>'
     +   '<div class="n400HelperMain">'
-    +     '<div class="n400HelperTitle">'+(lang==='es'?'Organizador N-400':'N-400 organizer')+(locked?' 🔒':'')+'</div>'
+    +     '<div class="n400HelperTitle">'+(lang==='es'?'Organizador N-400':'N-400 organizer')+(locked?' '+iconSVG('lock','#84807a',14):'')+'</div>'
     +     '<div class="n400HelperSub">'+sub+'</div>'
     +   '</div>'
     +   '<div class="n400HelperArrow">→</div>'
@@ -10244,7 +10244,7 @@ function renderHomeStrip(){
   var timeHtml = '';
   if(timeline){
     var totalTxt = fmtMonthsTotal(timeline.totalMonthsLow, timeline.totalMonthsHigh, lang);
-    timeHtml = '<div class="jtime">⏱ ' + totalTxt + ' ' + (lang==='es' ? 'a la ciudadanía' : 'to citizenship') + '</div>';
+    timeHtml = '<div class="jtime">' + inlineIcon('clock','#1cb0f6',13) + totalTxt + ' ' + (lang==='es' ? 'a la ciudadanía' : 'to citizenship') + '</div>';
   }
   el.innerHTML =
     '<div class="jtitle">'+(lang==='es'?'Tu camino a la ciudadanía':'Your path to citizenship')+'</div>'+
@@ -10472,7 +10472,7 @@ function renderHomeSituationCard(){
     + docsLine
     + (next
         ? '<div class="situationNext'+urgentCls+'">'
-          + '<div class="situationNextLbl">'+(next.urgent ? '⚡ ' : '➜ ') + (lang==='es'?'PRÓXIMA ACCIÓN':'NEXT ACTION')+'</div>'
+          + '<div class="situationNextLbl">'+(next.urgent ? inlineIcon('bolt','#ffc83d',12) : '➜ ') + (lang==='es'?'PRÓXIMA ACCIÓN':'NEXT ACTION')+'</div>'
           + '<div class="situationNextTitle">'+next.title+'</div>'
           + '<div class="situationNextSub">'+next.sub+'</div>'
           + '<button class="situationNextBtn" onclick="'+next.ctaAction+'">'+next.ctaLabel+' →</button>'
@@ -10536,7 +10536,7 @@ function renderJourney(){
       var m = mMap[s.id];
       var rangeTxt = fmtMonthRange(m.endLow, m.endHigh, lang);
       var label = (st === 'current') ? (lang==='es' ? 'Listo: ' : 'Done by: ') : (lang==='es' ? 'Est. ' : 'Est. ');
-      estHtml = '<div class="stepEst">⏱ ' + label + rangeTxt + '</div>';
+      estHtml = '<div class="stepEst">' + inlineIcon('clock','#1cb0f6',12) + label + rangeTxt + '</div>';
     }
     var formsHtml = renderStageFormChips(s.id);
     html +=
@@ -10617,7 +10617,7 @@ function renderAll(){
 function advanceStage(){
   var i = stageIndex(user.currentStageId);
   if(i >= STAGES.length - 1){
-    toast(lang==='es' ? '🎉 ¡Felicidades, ciudadano!' : '🎉 Congratulations, citizen!');
+    toast(lang==='es' ? '¡Felicidades, ciudadano!' : 'Congratulations, citizen!', 'trophy');
     return;
   }
   var prev = user.currentStageId;
@@ -10863,7 +10863,7 @@ function renderPathSteps(container){
       var m = mMap[s.id];
       var rangeTxt = fmtMonthRange(m.endLow, m.endHigh, lang);
       var label = (st === 'current') ? (lang==='es' ? 'Listo: ' : 'Done by: ') : (lang==='es' ? 'Est. ' : 'Est. ');
-      estHtml = '<div class="stepEst">⏱ ' + label + rangeTxt + '</div>';
+      estHtml = '<div class="stepEst">' + inlineIcon('clock','#1cb0f6',12) + label + rangeTxt + '</div>';
     }
     var formsHtml = renderStageFormChips(s.id);
     html +=
@@ -11713,7 +11713,7 @@ function renderOnboarding(){
     }
     rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Diario':'Daily')+'</div><div class="onbSummaryV">'+onbState.dailyMinutes+' '+(lang==='es'?'min':'min')+'</div></div>';
     if(onbState.criminalHistory === true){
-      rows += '<div class="onbSummaryRow"><div class="onbSummaryK">⚠️ '+(lang==='es'?'Revisar':'Flag')+'</div><div class="onbSummaryV">'+(lang==='es'?'Consulta legal recomendada':'Legal consult recommended')+'</div></div>';
+      rows += '<div class="onbSummaryRow"><div class="onbSummaryK">'+inlineIcon('warning','#ff9b21',13)+(lang==='es'?'Revisar':'Flag')+'</div><div class="onbSummaryV">'+(lang==='es'?'Consulta legal recomendada':'Legal consult recommended')+'</div></div>';
     }
 
     var previewUser = {
@@ -11913,7 +11913,7 @@ function startCurrentLesson(){
 
 function startLesson(lessonId, skipIntro){
   if(!isLessonUnlocked(lessonId)){
-    toast(lang==='es' ? 'Termina la lección anterior 🔒' : 'Finish the previous lesson 🔒');
+    toast(lang==='es' ? 'Termina la lección anterior' : 'Finish the previous lesson', 'lock');
     return;
   }
   var lesson = findLesson(lessonId);
@@ -12126,7 +12126,7 @@ function check(){
   if(streakRow){
     if(ok && lessonState.inARow >= 2){
       streakRow.style.display = 'block';
-      streakRow.innerHTML = '🔥 ' + lessonState.inARow + ' ' + (lang==='es' ? 'seguidas' : 'in a row');
+      streakRow.innerHTML = inlineIcon('flame','#ff4d3a',14) + lessonState.inARow + ' ' + (lang==='es' ? 'seguidas' : 'in a row');
     } else {
       streakRow.style.display = 'none';
     }
@@ -12233,7 +12233,7 @@ function renderLessonFailed(){
     +   '<div class="failedStat"><div class="failedStatVal">'+attempted+' / '+total+'</div><div class="failedStatLbl">'+(lang==='es'?'intentadas':'attempted')+'</div></div>'
     + '</div>'
     + (lessonTitle ? '<div class="failedLessonName">'+lessonTitle+'</div>' : '')
-    + '<button class="cta failedRetry" onclick="restartLesson()">'+(lang==='es' ? '🔁 Intentar de nuevo' : '🔁 Try again')+'</button>'
+    + '<button class="cta failedRetry" onclick="restartLesson()">'+inlineIcon('refresh','#fff',16)+(lang==='es' ? 'Intentar de nuevo' : 'Try again')+'</button>'
     + (!isPlus() ? '<button class="failedExit" onclick="go(\'upgrade\')">'+(lang==='es' ? '♥ Corazones ilimitados con Plus' : '♥ Unlimited hearts with Plus')+'</button>' : '')
     + '<button class="failedExit" onclick="exitLesson()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>'
     + '</div>';
@@ -12356,9 +12356,15 @@ function iconSVG(name, color, size){
     stamp:'<rect x="4" y="13" width="16" height="6" rx="1" fill="'+color+'" stroke="'+ink+'" stroke-width="2"/><path d="M8 13 v-3 a4 4 0 0 1 8 0 v3" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="19" x2="21" y2="19" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/>',
     mountain:'<path d="M3 20 l6-12 4 7 3-4 5 9 z" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linejoin="round"/><polygon points="9,8 11,12 7,12" fill="#fff"/>',
     person:'<circle cx="12" cy="8" r="4" fill="'+color+'" stroke="'+ink+'" stroke-width="2"/><path d="M4 21 c0-5 4-8 8-8 s8 3 8 8" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    // Lightbulb — replaces 💡 emoji used throughout for tips
+    // Download tray — replaces the inbox emoji on "get the form" labels
+    download:'<path d="M4 15 v3 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2 -2 v-3" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><path d="M12 3 v10" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><path d="M8 9.5 l4 4 4-4" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="15" width="16" height="5" rx="1.5" fill="'+color+'" opacity=".35"/>',
+    // Clipboard — replaces the clipboard emoji on section/document labels
+    clipboard:'<rect x="5" y="4" width="14" height="17" rx="2" fill="'+color+'" stroke="'+ink+'" stroke-width="2"/><rect x="9" y="2.5" width="6" height="3.5" rx="1" fill="#fff" stroke="'+ink+'" stroke-width="1.6"/><line x1="8.5" y1="11" x2="15.5" y2="11" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><line x1="8.5" y1="14.5" x2="14" y2="14.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>',
+    // Graduation cap — replaces the mortarboard emoji on the first-lesson achievement
+    graduation:'<path d="M2.5 9.5 L12 5 l9.5 4.5 L12 14 z" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linejoin="round"/><path d="M6.5 11.8 v4.2 c0 1.5 2.5 3 5.5 3 s5.5-1.5 5.5-3 v-4.2" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><line x1="21" y1="9.8" x2="21" y2="15" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/>',
+    // Lightbulb — replaces the lightbulb emoji used throughout for tips
     lightbulb:'<path d="M9 18 v1 a3 3 0 0 0 6 0 v-1 z" fill="'+ink+'"/><path d="M12 2 a6 6 0 0 0 -4 10.5 c1 1 1.5 2 1.5 3.5 h5 c0-1.5 .5-2.5 1.5-3.5 a6 6 0 0 0 -4-10.5z" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linejoin="round"/><line x1="9" y1="18" x2="15" y2="18" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/>',
-    // Snowflake — replaces ❄️ emoji used for streak freeze
+    // Snowflake — replaces the snowflake emoji used for streak freeze
     snowflake:'<line x1="12" y1="3" x2="12" y2="21" stroke="'+color+'" stroke-width="2.4" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="'+color+'" stroke-width="2.4" stroke-linecap="round"/><line x1="5" y1="5" x2="19" y2="19" stroke="'+color+'" stroke-width="2.4" stroke-linecap="round"/><line x1="19" y1="5" x2="5" y2="19" stroke="'+color+'" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="12" r="1.5" fill="'+color+'"/>',
     // Padlock — matches the rest of the icon library (color fill + ink outline)
     lock:'<rect x="5" y="11" width="14" height="10" rx="2" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linejoin="round"/><path d="M8 11 V8 a4 4 0 0 1 8 0 v3" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="'+ink+'"/>'
@@ -12485,12 +12491,12 @@ function renderLessonComplete(){
     + '<div class="completeStats">'
     +   '<div class="completeStat"><div class="completeStatVal">'+correct+'/'+total+'</div><div class="completeStatLbl">'+(lang==='es'?'correctas':'correct')+'</div></div>'
     +   '<div class="completeStat"><div class="completeStatVal">+15</div><div class="completeStatLbl">XP</div></div>'
-    +   '<div class="completeStat"><div class="completeStatVal">🔥 '+p.streak+'</div><div class="completeStatLbl">'+(lang==='es'?'racha':'streak')+'</div></div>'
+    +   '<div class="completeStat"><div class="completeStatVal">'+inlineIcon('flame','#ff4d3a',20)+p.streak+'</div><div class="completeStatLbl">'+(lang==='es'?'racha':'streak')+'</div></div>'
     + '</div>'
     + '<div class="completeDaily">'
     +   '<div class="completeDailyLbl">'+(lang==='es'?'Meta diaria':'Daily goal')+' · '+tdy+'/'+goal+' XP</div>'
     +   '<div class="completeDailyBar"><div class="completeDailyFill'+(tdy>=goal?' completeDailyDone':'')+'" style="width:'+goalPct+'%"></div></div>'
-    +   (tdy >= goal ? '<div class="completeDailyDoneTxt">✨ '+(lang==='es'?'¡Meta cumplida!':'Goal met today!')+'</div>' : '')
+    +   (tdy >= goal ? '<div class="completeDailyDoneTxt">'+inlineIcon('star','#ffc83d',13)+(lang==='es'?'¡Meta cumplida!':'Goal met today!')+'</div>' : '')
     + '</div>'
     + (nextL ? '<button class="cta completeNext" onclick="startLesson(\''+nextL.id+'\')">'+(lang==='es'?'Siguiente':'Next')+': '+nextL.title[lang]+' →</button>' : '<button class="cta completeNext" onclick="exitLesson()">'+(lang==='es'?'¡Has terminado todo!':'You\'ve finished everything!')+'</button>')
     + '<button class="completeExit" onclick="exitLesson()">'+(lang==='es'?'Volver a Hoy':'Back to Today')+'</button>'
@@ -12518,10 +12524,10 @@ function renderUnitComplete(unitId){
   var p = user.progress;
 
   qwrap.innerHTML = '<div class="unitCompletePanel">'
-    + '<div class="unitCompleteTrophy">🏆</div>'
+    + '<div class="unitCompleteTrophy">'+iconSVG('trophy','#ffc83d',60)+'</div>'
     + '<div class="unitCompleteKick">'+(lang==='es'?'UNIDAD COMPLETA':'UNIT COMPLETE')+'</div>'
     + '<div class="unitCompleteTitle">'+unit.title[lang]+'</div>'
-    + '<div class="unitCompleteBadge">'+unitLessons.length+' '+(lang==='es'?'lecciones':'lessons')+' · '+totalQs+' '+(lang==='es'?'preguntas':'questions')+' · 🔥 '+p.streak+'</div>'
+    + '<div class="unitCompleteBadge">'+unitLessons.length+' '+(lang==='es'?'lecciones':'lessons')+' · '+totalQs+' '+(lang==='es'?'preguntas':'questions')+' · '+inlineIcon('flame','#ff4d3a',12)+p.streak+'</div>'
     + (nextUnit
         ? '<div class="unitCompleteNextLbl">'+(lang==='es'?'Siguiente unidad':'Next unit')+'</div><div class="unitCompleteNext">'+nextUnit.title[lang]+'</div>'
         : '<div class="unitCompleteFinal">'+(lang==='es'?'¡Has completado todas las unidades de cívica!':'You\'ve completed every civics unit!')+'</div>')
@@ -12766,7 +12772,7 @@ function renderMockResults(correct, total, passed){
   var drillCTA = '';
   if(wrongCount > 0){
     drillCTA = '<div class="mtDrillCTA" onclick="startReviewFromMock()">'
-      + '<div class="mtDrillIcon">🔁</div>'
+      + '<div class="mtDrillIcon">'+iconSVG('refresh','#8c4dd1',24)+'</div>'
       + '<div class="mtDrillMain">'
       +   '<div class="mtDrillTitle">'+(lang==='es' ? ('Repasa las '+wrongCount+' que fallaste ahora') : ('Drill the '+wrongCount+' you missed now'))+'</div>'
       +   '<div class="mtDrillSub">'+(lang==='es' ? 'Refuerza con explicaciones · +5 XP' : 'Drill with explanations · +5 XP')+'</div>'
@@ -12889,7 +12895,7 @@ function renderHomeStreakRisk(){
   if(!p.streak || p.streak === 0){ el.style.display = 'none'; return; }
   if(p.lastLessonDate === todayISO()){ el.style.display = 'none'; return; }
   el.style.display = 'flex';
-  el.innerHTML = '<div class="streakRiskIcon">🔥</div>'
+  el.innerHTML = '<div class="streakRiskIcon">'+iconSVG('flame','#ff4d3a',24)+'</div>'
     + '<div class="streakRiskMain">'
     +   '<div class="streakRiskTitle">'+(lang==='es'?'Asegura tu racha de ':'Lock in your ')+p.streak+(lang==='es'?' días':'-day streak')+'</div>'
     +   '<div class="streakRiskSub">'+(lang==='es'?'Una lección hoy la mantiene viva':'One lesson today keeps it alive')+'</div>'
@@ -13310,11 +13316,11 @@ function renderLearnPath(){
 
   var totalQs = CIVICS.length;
   var head = document.getElementById('learnMastered');
-  if(head) head.textContent = '📘 ' + user.progress.mastered + (lang==='es' ? ' / '+totalQs+' dominadas' : ' / '+totalQs+' mastered');
+  if(head) head.innerHTML = inlineIcon('book','#1cb0f6',14) + user.progress.mastered + (lang==='es' ? ' / '+totalQs+' dominadas' : ' / '+totalQs+' mastered');
   var streakHead = document.getElementById('learnStreak');
-  if(streakHead) streakHead.innerHTML = '<span class="n400KickIco">'+iconSVG('flame','#ff4d3a',14)+'</span> ' + user.progress.streak;
+  if(streakHead) streakHead.innerHTML = inlineIcon('flame','#ff4d3a',14) + user.progress.streak;
   var xpHead = document.getElementById('learnXp');
-  if(xpHead) xpHead.textContent = '⚡ ' + user.progress.xp + ' XP';
+  if(xpHead) xpHead.innerHTML = inlineIcon('bolt','#ffc83d',14) + user.progress.xp + ' XP';
 
   var dailyEl = document.getElementById('learnDailyGoal');
   if(dailyEl){
@@ -13323,7 +13329,7 @@ function renderLearnPath(){
     var done = tdy >= goal;
     var pct = Math.min(100, Math.round(tdy / goal * 100));
     dailyEl.innerHTML = '<div class="learnDailyRow">'
-      + '<div class="learnDailyLbl">'+(done?'✨ ':'')+(lang==='es'?'Meta diaria':'Daily goal')+' · '+tdy+'/'+goal+' XP</div>'
+      + '<div class="learnDailyLbl">'+(done ? inlineIcon('star','#ffc83d',13) : '')+(lang==='es'?'Meta diaria':'Daily goal')+' · '+tdy+'/'+goal+' XP</div>'
       + '<div class="learnDailyBar"><div class="learnDailyFill'+(done?' learnDailyFillDone':'')+'" style="width:'+pct+'%"></div></div>'
       + '</div>';
   }
@@ -13334,7 +13340,7 @@ function renderHomeLessonCard(){
   if(!el) return;
   var lid = getCurrentLessonId();
   if(!lid){
-    el.innerHTML = '<span class="pill">🏆 '+(lang==='es'?'¡Completado!':'Done!')+'</span>'
+    el.innerHTML = '<span class="pill">'+inlineIcon('trophy','#ffc83d',12)+(lang==='es'?'¡Completado!':'Done!')+'</span>'
       + '<div class="lessonTitle">'+(lang==='es'?'Unidad 1 completa':'Unit 1 complete')+'</div>'
       + '<div class="lessonSub">'+(lang==='es'?'Repasa para mantener tu racha':'Review to keep your streak')+'</div>';
     return;
@@ -13463,8 +13469,8 @@ function renderEditField(){
     showFooter = true;
   } else if(field.type === 'yesno'){
     html = '<div class="onbCards">'
-      + onbCardHtml('🙂', (lang==='es'?'No':'No'), '', current === false, "pickEditValue(false)")
-      + onbCardHtml('✅', (lang==='es'?'Sí':'Yes'), '', current === true,  "pickEditValue(true)")
+      + onbCardHtml(ico('smile','#84807a'), (lang==='es'?'No':'No'), '', current === false, "pickEditValue(false)")
+      + onbCardHtml(ico('check','#00b4a8'), (lang==='es'?'Sí':'Yes'), '', current === true,  "pickEditValue(true)")
       + '</div>';
   } else if(field.type === 'stage'){
     html = '<div class="onbCards">';
@@ -13513,25 +13519,25 @@ function renderEditField(){
       + countrySelectHtml(current, "if(this.value) pickEditValue(this.value)");
   } else if(field.type === 'petition'){
     html = '<div class="onbCards">'
-      + onbCardHtml('💍', petitionLabel('family-ir',  lang), '', current==='family-ir',  "pickEditValue('family-ir')")
-      + onbCardHtml('👨‍👩‍👧', petitionLabel('family-pref',lang), '', current==='family-pref',"pickEditValue('family-pref')")
-      + onbCardHtml('🏠', petitionLabel('family-lpr', lang), '', current==='family-lpr', "pickEditValue('family-lpr')")
-      + onbCardHtml('💼', petitionLabel('employment', lang), '', current==='employment', "pickEditValue('employment')")
-      + onbCardHtml('🛟', petitionLabel('asylum',     lang), '', current==='asylum',     "pickEditValue('asylum')")
-      + onbCardHtml('🌍', petitionLabel('other',      lang), '', current==='other',      "pickEditValue('other')")
+      + onbCardHtml(ico('ring','#ff4d3a'),      petitionLabel('family-ir',  lang), '', current==='family-ir',  "pickEditValue('family-ir')")
+      + onbCardHtml(ico('people','#ec4f93'),    petitionLabel('family-pref',lang), '', current==='family-pref',"pickEditValue('family-pref')")
+      + onbCardHtml(ico('home','#00b4a8'),      petitionLabel('family-lpr', lang), '', current==='family-lpr', "pickEditValue('family-lpr')")
+      + onbCardHtml(ico('briefcase','#1cb0f6'), petitionLabel('employment', lang), '', current==='employment', "pickEditValue('employment')")
+      + onbCardHtml(ico('shield','#ff9b21'),    petitionLabel('asylum',     lang), '', current==='asylum',     "pickEditValue('asylum')")
+      + onbCardHtml(ico('globe','#8c4dd1'),     petitionLabel('other',      lang), '', current==='other',      "pickEditValue('other')")
       + '</div>';
   } else if(field.type === 'monthsOutside'){
     html = '<div class="onbCards">'
-      + onbCardHtml('✅', monthsOutsideLabel('lt6',   lang), '', current==='lt6',    "pickEditValue('lt6')")
-      + onbCardHtml('🟡', monthsOutsideLabel('6-18',  lang), '', current==='6-18',   "pickEditValue('6-18')")
-      + onbCardHtml('⚠️', monthsOutsideLabel('gt18',  lang), '', current==='gt18',   "pickEditValue('gt18')")
-      + onbCardHtml('❓', monthsOutsideLabel('unsure',lang), '', current==='unsure', "pickEditValue('unsure')")
+      + onbCardHtml(ico('check','#00b4a8'),    monthsOutsideLabel('lt6',   lang), '', current==='lt6',    "pickEditValue('lt6')")
+      + onbCardHtml(ico('clock','#ff9b21'),    monthsOutsideLabel('6-18',  lang), '', current==='6-18',   "pickEditValue('6-18')")
+      + onbCardHtml(ico('warning','#ff4d3a'),  monthsOutsideLabel('gt18',  lang), '', current==='gt18',   "pickEditValue('gt18')")
+      + onbCardHtml(ico('question','#84807a'), monthsOutsideLabel('unsure',lang), '', current==='unsure', "pickEditValue('unsure')")
       + '</div>';
   } else if(field.type === 'dailyMinutes'){
     html = '<div class="onbCards">'
-      + onbCardHtml('☕', '5 ' + (lang==='es'?'min':'min'),  '', current===5,  "pickEditValue(5)")
-      + onbCardHtml('🚶', '10 ' + (lang==='es'?'min':'min'), '', current===10, "pickEditValue(10)")
-      + onbCardHtml('🔥', '15 ' + (lang==='es'?'min':'min'), '', current===15, "pickEditValue(15)")
+      + onbCardHtml(ico('cup','#ff9b21'),   '5 ' + (lang==='es'?'min':'min'),  '', current===5,  "pickEditValue(5)")
+      + onbCardHtml(ico('walk','#1cb0f6'),  '10 ' + (lang==='es'?'min':'min'), '', current===10, "pickEditValue(10)")
+      + onbCardHtml(ico('flame','#ff4d3a'), '15 ' + (lang==='es'?'min':'min'), '', current===15, "pickEditValue(15)")
       + '</div>';
   }
 
@@ -13552,18 +13558,18 @@ function renderEditField(){
 }
 
 var ACHIEVEMENTS = [
-  {id:'first-lesson', icon:'🎓', name:{en:'First lesson',           es:'Primera lección'},      check:function(u){ return u.progress.completedLessons.length >= 1; }},
-  {id:'streak-3',     icon:'🔥', name:{en:'3-day streak',           es:'Racha de 3 días'},      check:function(u){ return u.progress.streak >= 3; }},
-  {id:'streak-7',     icon:'⚡', name:{en:'7-day streak',           es:'Racha de 7 días'},      check:function(u){ return u.progress.streak >= 7; }},
-  {id:'streak-30',    icon:'💎', name:{en:'30-day streak',          es:'Racha de 30 días'},     check:function(u){ return u.progress.streak >= 30; }},
-  {id:'unit-1-master',icon:'🏛️', name:{en:'Unit 1 mastered',        es:'Unidad 1 dominada'},    check:function(u){ return ['principles','rule-of-law','constitution','three-branches','rights-freedoms','unit-1-review'].every(function(l){ return u.progress.completedLessons.indexOf(l)!==-1; }); }},
-  {id:'unit-2-master',icon:'📜', name:{en:'Unit 2 mastered',        es:'Unidad 2 dominada'},    check:function(u){ return ['colonial-era','independence','founding-era','civil-war-era','modern-era','unit-2-review'].every(function(l){ return u.progress.completedLessons.indexOf(l)!==-1; }); }},
-  {id:'unit-3-master',icon:'🗽', name:{en:'Unit 3 mastered',        es:'Unidad 3 dominada'},    check:function(u){ return ['national-symbols','holidays','states-coasts','gov-numbers','voting-courts','unit-3-review'].every(function(l){ return u.progress.completedLessons.indexOf(l)!==-1; }); }},
-  {id:'unit-4-master',icon:'⚖️', name:{en:'Unit 4 mastered',        es:'Unidad 4 dominada'},    check:function(u){ return ['becoming-citizen','voting','federal-states','civic-engagement','taxes-service','unit-4-review'].every(function(l){ return u.progress.completedLessons.indexOf(l)!==-1; }); }},
-  {id:'first-mock',   icon:'🎯', name:{en:'First mock pass',        es:'Primer aprobado'},      check:function(u){ return ((u.progress.mockScores||[]).some(function(s){ return s.passed; })); }},
-  {id:'mock-perfect', icon:'💯', name:{en:'Perfect mock score',     es:'Mock perfecto'},        check:function(u){ return ((u.progress.mockScores||[]).some(function(s){ return s.score === s.total; })); }},
-  {id:'all-docs',     icon:'📁', name:{en:'All docs ready',         es:'Documentos listos'},    check:function(u){ var d = docsReady(); return d.total > 0 && d.ready === d.total; }},
-  {id:'eligibility',  icon:'✅', name:{en:'Eligibility passed',     es:'Elegibilidad aprobada'},check:function(u){ return u.eligibility && u.eligibility.passed; }}
+  {id:'first-lesson', icon:'graduation', color:'#1cb0f6', name:{en:'First lesson',           es:'Primera lección'},      check:function(u){ return u.progress.completedLessons.length >= 1; }},
+  {id:'streak-3',     icon:'flame', color:'#ff4d3a', name:{en:'3-day streak',           es:'Racha de 3 días'},      check:function(u){ return u.progress.streak >= 3; }},
+  {id:'streak-7',     icon:'bolt', color:'#ffc83d', name:{en:'7-day streak',           es:'Racha de 7 días'},      check:function(u){ return u.progress.streak >= 7; }},
+  {id:'streak-30',    icon:'star', color:'#8c4dd1', name:{en:'30-day streak',          es:'Racha de 30 días'},     check:function(u){ return u.progress.streak >= 30; }},
+  {id:'unit-1-master',icon:'scales', color:'#5e8eff', name:{en:'Unit 1 mastered',        es:'Unidad 1 dominada'},    check:function(u){ return ['principles','rule-of-law','constitution','three-branches','rights-freedoms','unit-1-review'].every(function(l){ return u.progress.completedLessons.indexOf(l)!==-1; }); }},
+  {id:'unit-2-master',icon:'doc', color:'#ff9b21', name:{en:'Unit 2 mastered',        es:'Unidad 2 dominada'},    check:function(u){ return ['colonial-era','independence','founding-era','civil-war-era','modern-era','unit-2-review'].every(function(l){ return u.progress.completedLessons.indexOf(l)!==-1; }); }},
+  {id:'unit-3-master',icon:'flag', color:'#ffc83d', name:{en:'Unit 3 mastered',        es:'Unidad 3 dominada'},    check:function(u){ return ['national-symbols','holidays','states-coasts','gov-numbers','voting-courts','unit-3-review'].every(function(l){ return u.progress.completedLessons.indexOf(l)!==-1; }); }},
+  {id:'unit-4-master',icon:'people', color:'#ec4f93', name:{en:'Unit 4 mastered',        es:'Unidad 4 dominada'},    check:function(u){ return ['becoming-citizen','voting','federal-states','civic-engagement','taxes-service','unit-4-review'].every(function(l){ return u.progress.completedLessons.indexOf(l)!==-1; }); }},
+  {id:'first-mock',   icon:'target', color:'#ec4f93', name:{en:'First mock pass',        es:'Primer aprobado'},      check:function(u){ return ((u.progress.mockScores||[]).some(function(s){ return s.passed; })); }},
+  {id:'mock-perfect', icon:'trophy', color:'#ffc83d', name:{en:'Perfect mock score',     es:'Mock perfecto'},        check:function(u){ return ((u.progress.mockScores||[]).some(function(s){ return s.score === s.total; })); }},
+  {id:'all-docs',     icon:'folder', color:'#00b4a8', name:{en:'All docs ready',         es:'Documentos listos'},    check:function(u){ var d = docsReady(); return d.total > 0 && d.ready === d.total; }},
+  {id:'eligibility',  icon:'check', color:'#00b4a8', name:{en:'Eligibility passed',     es:'Elegibilidad aprobada'},check:function(u){ return u.eligibility && u.eligibility.passed; }}
 ];
 
 function renderMe(){
@@ -13686,14 +13692,14 @@ function renderMe(){
   html += '<div class="sec">'+(lang==='es'?'Logros':'Achievements')
        + ' <span class="secCount">'+unlockedCount+'/'+ACHIEVEMENTS.length+'</span></div>';
   if(unlockedCount === 0){
-    html += '<div class="achEmptyHint">'+(lang==='es'?'✨ Completa una lección o haz un examen para desbloquear tu primer logro.':'✨ Complete a lesson or take a test to unlock your first achievement.')+'</div>';
+    html += '<div class="achEmptyHint">'+inlineIcon('star','#ffc83d',13)+(lang==='es'?'Completa una lección o haz un examen para desbloquear tu primer logro.':'Complete a lesson or take a test to unlock your first achievement.')+'</div>';
   }
   html += '<div class="achGrid">';
   for(var ai=0; ai<ACHIEVEMENTS.length; ai++){
     var a = ACHIEVEMENTS[ai];
     var got = a.check(user);
     html += '<div class="achBadge'+(got?' achUnlocked':'')+'" role="img" aria-label="'+a.name[lang]+(got?' — unlocked':' — locked')+'">'
-      +    '<div class="achIcon">'+(got?a.icon:'<span class="achLockSvg">'+iconSVG('shield','#84807a',24)+'</span>')+'</div>'
+      +    '<div class="achIcon">'+(got ? iconSVG(a.icon, a.color, 30) : '<span class="achLockSvg">'+iconSVG('shield','#84807a',24)+'</span>')+'</div>'
       +    '<div class="achName">'+a.name[lang]+'</div>'
       +  '</div>';
   }
@@ -13791,10 +13797,10 @@ function scheduleDailyNotification(timeStr){
   var m = parseInt(parts[1], 10);
   if(isNaN(h) || isNaN(m)) return;
   var title = 'Camino';
-  var body = lang === 'es' ? 'Tiempo para tu lección diaria 🔥'
-           : lang === 'zh' ? '该上每日课程了 🔥'
-           : lang === 'vi' ? 'Đến giờ học hàng ngày 🔥'
-           :                  'Time for your daily lesson 🔥';
+  var body = lang === 'es' ? 'Tiempo para tu lección diaria'
+           : lang === 'zh' ? '该上每日课程了'
+           : lang === 'vi' ? 'Đến giờ học hàng ngày'
+           :                  'Time for your daily lesson';
   postToServiceWorker({type:'schedule-daily', hour:h, minute:m, title:title, body:body});
 }
 
@@ -13842,7 +13848,7 @@ function sendTestNotification(){
     return;
   }
   try {
-    new Notification('🔥 Camino', {
+    new Notification('Camino', {
       body: lang==='es' ? 'Asegura tu racha de '+(user.progress.streak||0)+' día(s)' : 'Lock in your '+(user.progress.streak||0)+'-day streak'
     });
   } catch(e){}
@@ -13855,7 +13861,7 @@ function maybeShowDailyNotification(){
   if(!p.streak || p.streak === 0) return;
   if(p.lastLessonDate === todayISO()) return;
   try {
-    new Notification('🔥 Camino', {
+    new Notification('Camino', {
       body: lang==='es' ? 'Una lección hoy mantiene viva tu racha de '+p.streak+' días.' : 'One lesson today keeps your '+p.streak+'-day streak alive.'
     });
   } catch(e){}
@@ -14074,8 +14080,8 @@ function renderEligibility(){
           ? 'Desde que recibiste tu residencia ('+fmtDate(user.greenCardDate,'es')+'), ¿has hecho algún viaje fuera de EE.UU. de más de 6 meses?'
           : 'Since you became a permanent resident on '+fmtDate(user.greenCardDate,'en')+', have you taken any trip outside the U.S. longer than 6 months?')+'</div>'
       + '<div class="onbCards">'
-      + eligCardHtml('🙂', (lang==='es'?'No, ningún viaje largo':'No, no long trips'), (lang==='es'?'Bien — cumples este requisito':'Good — you meet this requirement'), eligState.continuous===true, "eligPick('continuous',true)")
-      + eligCardHtml('⚠️', (lang==='es'?'Sí, uno o más':'Yes, one or more'), (lang==='es'?'Puede romper la continuidad — pide consejo legal':'May break continuity — get legal advice'), eligState.continuous===false, "eligPick('continuous',false)")
+      + eligCardHtml(ico('smile','#84807a'), (lang==='es'?'No, ningún viaje largo':'No, no long trips'), (lang==='es'?'Bien — cumples este requisito':'Good — you meet this requirement'), eligState.continuous===true, "eligPick('continuous',true)")
+      + eligCardHtml(ico('warning','#ff4d3a'), (lang==='es'?'Sí, uno o más':'Yes, one or more'), (lang==='es'?'Puede romper la continuidad — pide consejo legal':'May break continuity — get legal advice'), eligState.continuous===false, "eligPick('continuous',false)")
       + '</div>';
   }
   else if(k === 'physical'){
@@ -14084,8 +14090,8 @@ function renderEligibility(){
           ? '¿Has estado físicamente en EE.UU. al menos '+months+' meses de los últimos '+years+' años?'
           : 'Have you been physically in the U.S. for at least '+months+' months of the past '+years+' years?')+'</div>'
       + '<div class="onbCards">'
-      + eligCardHtml('✅', (lang==='es'?'Sí':'Yes'), (lang==='es'?'La mitad o más del tiempo':'At least half the time'), eligState.physical===true, "eligPick('physical',true)")
-      + eligCardHtml('❌', (lang==='es'?'No estoy seguro / No':"Not sure / No"), (lang==='es'?'Revisa pasaportes y registros':'Check passports and records'), eligState.physical===false, "eligPick('physical',false)")
+      + eligCardHtml(ico('check','#00b4a8'), (lang==='es'?'Sí':'Yes'), (lang==='es'?'La mitad o más del tiempo':'At least half the time'), eligState.physical===true, "eligPick('physical',true)")
+      + eligCardHtml(ico('x','#ff4d3a'), (lang==='es'?'No estoy seguro / No':"Not sure / No"), (lang==='es'?'Revisa pasaportes y registros':'Check passports and records'), eligState.physical===false, "eligPick('physical',false)")
       + '</div>';
   }
   else if(k === 'state'){
@@ -14094,8 +14100,8 @@ function renderEligibility(){
           ? '¿Has vivido en tu estado actual de EE.UU. (o distrito de USCIS) al menos 3 meses?'
           : 'Have you lived in your current U.S. state (or USCIS district) for at least 3 months?')+'</div>'
       + '<div class="onbCards">'
-      + eligCardHtml('🏠', (lang==='es'?'Sí, 3+ meses':'Yes, 3+ months'), '', eligState.state===true, "eligPick('state',true)")
-      + eligCardHtml('🧳', (lang==='es'?'No, me mudé recientemente':'No, I moved recently'), (lang==='es'?'Espera hasta cumplir 3 meses':'Wait until you reach 3 months'), eligState.state===false, "eligPick('state',false)")
+      + eligCardHtml(ico('home','#00b4a8'), (lang==='es'?'Sí, 3+ meses':'Yes, 3+ months'), '', eligState.state===true, "eligPick('state',true)")
+      + eligCardHtml(ico('plane','#ff9b21'), (lang==='es'?'No, me mudé recientemente':'No, I moved recently'), (lang==='es'?'Espera hasta cumplir 3 meses':'Wait until you reach 3 months'), eligState.state===false, "eligPick('state',false)")
       + '</div>';
   }
   else if(k === 'crime'){
@@ -14104,8 +14110,8 @@ function renderEligibility(){
           ? '¿Has sido arrestado, acusado o condenado por algún delito en los últimos 5 años? También cuenta DUI, fraude migratorio o evasión de impuestos.'
           : 'In the past 5 years, have you been arrested, charged, or convicted of any crime? This includes DUI, immigration fraud, or tax evasion.')+'</div>'
       + '<div class="onbCards">'
-      + eligCardHtml('✅', (lang==='es'?'No':'No'), (lang==='es'?'Sin problemas legales recientes':'No recent legal issues'), eligState.crime===false, "eligPick('crime',false)")
-      + eligCardHtml('⚠️', (lang==='es'?'Sí':'Yes'), (lang==='es'?'Consulta un abogado de inmigración antes de presentar':'Talk to an immigration lawyer before filing'), eligState.crime===true, "eligPick('crime',true)")
+      + eligCardHtml(ico('check','#00b4a8'), (lang==='es'?'No':'No'), (lang==='es'?'Sin problemas legales recientes':'No recent legal issues'), eligState.crime===false, "eligPick('crime',false)")
+      + eligCardHtml(ico('warning','#ff4d3a'), (lang==='es'?'Sí':'Yes'), (lang==='es'?'Consulta un abogado de inmigración antes de presentar':'Talk to an immigration lawyer before filing'), eligState.crime===true, "eligPick('crime',true)")
       + '</div>';
   }
   else if(k === 'result'){
@@ -14203,9 +14209,23 @@ function finishEligibilityAndOpenHelp(){
 }
 
 var tt;
-function toast(msg){
+// Inline brand icon for use inside text labels/buttons (replaces decorative emoji).
+function inlineIcon(name, color, size){
+  return '<span class="inlIco">'+iconSVG(name, color, size || 14)+'</span>';
+}
+
+// Toasts are plain text; an optional brand icon (by name) is rendered in front.
+var TOAST_ICON_COLORS = {trophy:'#ffc83d', snowflake:'#8fd9ff', lock:'#c7c7cc', warning:'#ff9b21', mic:'#1cb0f6', refresh:'#1cb0f6', flame:'#ff4d3a', check:'#00b4a8'};
+function toast(msg, icon){
   var el = document.getElementById('toast');
-  el.textContent = msg;
+  el.textContent = '';
+  if(icon){
+    var ic = document.createElement('span');
+    ic.className = 'toastIco';
+    ic.innerHTML = iconSVG(icon, TOAST_ICON_COLORS[icon] || '#fff', 16);
+    el.appendChild(ic);
+  }
+  el.appendChild(document.createTextNode(msg));
   el.classList.add('show');
   clearTimeout(tt);
   tt = setTimeout(function(){ el.classList.remove('show'); }, 1900);

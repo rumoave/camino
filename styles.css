@@ -4028,3 +4028,16 @@ select:focus-visible,
 .onbSelect:focus{outline:none;border-color:var(--teal);}
 .onbSelect:invalid, .onbSelect option[value=""]{color:var(--muted);}
 .onbSkipLink{display:block;margin:14px auto 0;background:none;border:0;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--muted);text-decoration:underline;padding:6px 12px;}
+
+/* ===== Brand icons in place of emoji ===== */
+.inlIco{display:inline-flex;align-items:center;vertical-align:-3px;margin-right:5px;line-height:0;}
+.inlIco svg{display:block;}
+.toast{display:flex;align-items:center;gap:8px;}
+.toastIco{display:inline-flex;flex:none;line-height:0;}
+.flashResultIcon svg, .unitCompleteTrophy svg, .achIcon svg, .alertIcon svg, .mtDrillIcon svg, .streakRiskIcon svg, .flashBreakDot svg{display:block;margin:0 auto;}
+.flashBreakDot{display:flex;align-items:center;justify-content:center;}
+.achIcon{display:flex;align-items:center;justify-content:center;}
+.intvStreakBadge svg{display:inline-block;vertical-align:-2px;margin-right:3px;}
+.learnStat span .inlIco{margin-right:0;}
+.n400Part .inlIco, .helpCatHead .inlIco, .eligSecLbl .inlIco, .n400DocsLabel .inlIco{vertical-align:-3px;}
+.cta .inlIco{vertical-align:-3px;margin-right:7px;}
