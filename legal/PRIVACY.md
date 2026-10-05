@@ -1,9 +1,9 @@
-# Privacy Policy — Camino
+# Privacy Policy: Camino
 
 _Last updated: July 13, 2026_
 
 > Hosted version (the URL App Store Connect points to):
-> https://rumoave.github.io/camino/privacy.html — served from the `gh-pages` branch.
+> https://rumoave.github.io/camino/privacy.html, served from the `gh-pages` branch.
 
 Camino ("we," "us") is an educational study and preparation app for the U.S.
 immigration journey. This policy explains what data the app handles. We designed
@@ -22,7 +22,7 @@ or any analytics that identify you. Camino has no user accounts in this version.
 ## Subscriptions
 
 Camino offers an optional paid subscription ("Camino Plus") with a free trial.
-Payments are processed by **Apple** through the App Store — we never see or store
+Payments are processed by **Apple** through the App Store. We never see or store
 your payment details.
 
 To manage your subscription entitlement, we use **RevenueCat**, a subscription

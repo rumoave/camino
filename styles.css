@@ -1765,8 +1765,8 @@ select:focus-visible,
    --acc / --accDark / --accSoft so each card differs by colour only. */
 .lesson, .mockCard, .flashcardCard, .interviewCard, .reviewCard{
   --acc:var(--teal); --accDark:var(--tealDark); --accSoft:var(--greenSoft);
-  background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:20px;padding:16px 16px 14px;
-  box-shadow:0 4px 0 var(--acc);cursor:pointer;margin-top:10px;
+  background:var(--card);color:var(--ink);border:1px solid var(--hair);border-radius:20px;padding:16px 16px 14px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);cursor:pointer;margin-top:10px;
   transition:transform .08s, box-shadow .08s;
 }
 .lesson, .mockCard{margin-top:0;}
@@ -1774,7 +1774,7 @@ select:focus-visible,
 .flashcardCard{--acc:var(--rose); --accDark:var(--roseDark); --accSoft:rgba(236,79,147,.13);}
 .interviewCard{--acc:var(--sky); --accDark:var(--skyDark); --accSoft:var(--skySoft);}
 .reviewCard{--acc:var(--coral); --accDark:var(--coralDark); --accSoft:var(--coralSoft);}
-.lesson:active, .mockCard:active, .flashcardCard:active, .interviewCard:active, .reviewCard:active{transform:translateY(3px);box-shadow:0 1px 0 var(--acc);}
+.lesson:active, .mockCard:active, .flashcardCard:active, .interviewCard:active, .reviewCard:active{transform:translateY(1px);box-shadow:0 0 0 rgba(0,0,0,0);background:var(--cardWarm);}
 .actHead{display:flex;align-items:center;gap:10px;}
 .actIco{flex:none;width:38px;height:38px;border-radius:12px;background:var(--accSoft);display:flex;align-items:center;justify-content:center;}
 .actIco svg{display:block;}
@@ -4030,7 +4030,7 @@ select:focus-visible,
 
 /* ===== Paths screen: personal view ===== */
 .visaStatusCard{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:14px 14px;
-  box-shadow:0 2px 0 var(--hair);margin-bottom:10px;}
+  box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:10px;}
 .visaStatusCard[onclick]{cursor:pointer;}
 .visaStatusIco{flex:none;width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;}
 .visaStatusIco svg{display:block;}
@@ -4052,7 +4052,7 @@ select:focus-visible,
 /* ===== Path progression: stage line, update button, milestone sheet ===== */
 .situationStageRow, .visaProgressRow{display:flex;align-items:center;gap:12px;margin-top:12px;padding:12px 14px;background:var(--cardWarm);
   border:1px solid var(--hair);border-radius:14px;}
-.visaProgressRow{background:#fff;margin:-4px 0 12px;box-shadow:0 2px 0 var(--hair);}
+.visaProgressRow{background:#fff;margin:-4px 0 12px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
 .situationStageMain, .visaProgressMain{flex:1;min-width:0;}
 .situationStageLbl, .visaProgressLbl{font-size:11px;font-weight:850;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);}
 .situationStageGc, .visaProgressGc{color:var(--tealDark);text-transform:none;letter-spacing:0;}

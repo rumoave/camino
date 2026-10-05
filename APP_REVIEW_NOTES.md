@@ -1,4 +1,4 @@
-# App Review reply — Guideline 2.1 "Information Needed" (rejected 2026-08-14, build 1.0 (7))
+# App Review reply: Guideline 2.1 "Information Needed" (rejected 2026-08-14, build 1.0 (7))
 
 Apple asked for seven items. Everything below is ready to paste into
 **App Store Connect → App Review Information → Notes**, and into the reply thread
@@ -22,7 +22,7 @@ triggers the microphone permission prompt), the Documents checklist, the Camino
 Plus paywall and the 7-day free-trial purchase flow (sandbox), Restore Purchases,
 and the English ⇄ Spanish toggle.
 
-Camino has no account registration, login, or account deletion — there are no
+Camino has no account registration, login, or account deletion. There are no
 accounts. There is no user-generated content shared with other users, so there
 are no reporting or blocking mechanisms. The only system permission the app
 requests is the microphone (optional, for practicing interview answers out loud).
@@ -30,8 +30,8 @@ The app does not use App Tracking Transparency, location, contacts, camera, or
 photos.
 
 **2. Devices and OS tested**
-`[e.g. iPhone 15 Pro — iOS 18.x (physical); iPhone 13 — iOS 18.x (physical);
-iPhone 16 Pro / iPhone SE (3rd gen) simulators — iOS 18.x in Xcode 16]`
+`[e.g. iPhone 15 Pro, iOS 18.x (physical); iPhone 13, iOS 18.x (physical);
+iPhone 16 Pro / iPhone SE (3rd gen) simulators, iOS 18.x in Xcode 16]`
 
 **3. What the app does and who it is for**
 Camino is a bilingual (English/Spanish) study and organization app for people
@@ -78,8 +78,8 @@ No login or credentials are needed. Nothing needs to be downloaded or imported.
 - Language can be switched at any time from the Profile screen (EN/ES).
 
 **5. External services**
-- **Apple In-App Purchase (StoreKit)** — payment processing for Camino Plus.
-- **RevenueCat** — subscription entitlement management (receives purchase status
+- **Apple In-App Purchase (StoreKit)**: payment processing for Camino Plus.
+- **RevenueCat**: subscription entitlement management (receives purchase status
   and an anonymous app-user ID only).
 - No authentication provider, no analytics SDK, no ads, no data providers, and no
   AI service is called by the app. All content (civics questions, guides,

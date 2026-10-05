@@ -9,7 +9,7 @@ var LANGUAGES = [
   {code:'en', native:'English',           flagIcon:'flagUS',    fullyTranslated:true},
   {code:'es', native:'Español',           flagIcon:'flagWorld', fullyTranslated:true}
   // v1 ships EN/ES only. The zh/vi/tl/ht/ar beta entries rendered "undefined" on
-  // untranslated surfaces (paywall, FAQ, journeys) — restore only with full coverage.
+  // untranslated surfaces (paywall, FAQ, journeys). Restore only with full coverage.
 ];
 
 // Returns an inline SVG string for the given country code's flag.
@@ -116,7 +116,7 @@ var TRANSLATIONS = {
       r3:['你可以信奉任何宗教,或不信奉任何宗教','每个人都必须去教堂','只允许一种宗教','宗教必须由国会批准'],
       r4:['资本主义/市场经济','社会主义经济','计划经济','物物交换经济'],
       r5:['制衡/三权分立','只有总统','全国投票','军队'],
-      c1:['自治 — 人民管理自己','只有富人统治','外国统治者统治','无人统治'],
+      c1:['自治，人民管理自己','只有富人统治','外国统治者统治','无人统治'],
       c2:['1787','1776','1812','1865'],
       c3:['乔治·华盛顿','亚伯拉罕·林肯','托马斯·杰斐逊','本杰明·富兰克林'],
       c4:['序言','前言','权利法案','索引'],
@@ -133,20 +133,20 @@ var TRANSLATIONS = {
       rf5:['言论和宗教自由','投票和担任联邦公职','免费大学和住房','免税收入']
     },
     explain: {
-      p1:'宪法是美国最高的法律 — 所有其他法律都必须与之一致。',
+      p1:'宪法是美国最高的法律，所有其他法律都必须与之一致。',
       p2:'宪法建立了政府,定义了其权力,并列出了基本权利。',
-      p3:'"我们人民"开启了序言 — 意味着人民,而不是国王,拥有权力。',
+      p3:'"我们人民"开启了序言，意味着人民,而不是国王,拥有权力。',
       p4:'修正案是宪法可以被修改的方式。迄今为止共有27条。',
-      p5:'前十条修正案 — 权利法案 — 保护个人自由。',
-      r1:'没有人凌驾于法律之上 — 总统、国会、警察都不行。',
+      p5:'前十条修正案，权利法案，保护个人自由。',
+      r1:'没有人凌驾于法律之上，总统、国会、警察都不行。',
       r2:'第一修正案保护言论、宗教、出版、集会和请愿。',
       r3:'你可以信奉任何宗教,改变宗教,或完全不信宗教。',
       r4:'在资本主义或市场经济中,企业和个人做出自己的经济选择。',
       r5:'三权分立和制衡防止任何一个分支变得过于强大。',
-      c1:'"我们人民"表达了自治 — 公民选择如何被治理。',
+      c1:'"我们人民"表达了自治，公民选择如何被治理。',
       c2:'宪法于1787年写成,1787年9月17日在费城签署。',
       c3:'乔治·华盛顿主持了制宪会议,是美国第一任总统。',
-      c4:'序言是开篇段落 — 以"我们人民"开始。',
+      c4:'序言是开篇段落，以"我们人民"开始。',
       c5:'宪法保护基本权利,建立政府,并限制其权力。',
       t1:'三个分支是立法(国会)、行政(总统)和司法(法院)。',
       t2:'国会制定联邦法律。总统签署它们;法院解释它们。',
@@ -155,7 +155,7 @@ var TRANSLATIONS = {
       t5:'当总统签署时,法案就成为法律。总统也可以否决。',
       rf1:'《独立宣言》将"生命、自由和追求幸福"列为不可剥夺的权利。',
       rf2:'只有美国公民可以在联邦陪审团任职并在联邦选举中投票。',
-      rf3:'在联邦选举中投票仅限于公民 — 非公民不能投票。',
+      rf3:'在联邦选举中投票仅限于公民，非公民不能投票。',
       rf4:'新公民承诺放弃对其他国家的效忠,并捍卫宪法。',
       rf5:'言论和宗教自由适用于在美国生活的每个人,不仅仅是公民。'
     },
@@ -165,7 +165,7 @@ var TRANSLATIONS = {
       'aos-interview':{name:'I-485 + 面试',          short:'调整',     headline:'调整面试即将到来'},
       'permanent-resident':{name:'永久居民',         short:'绿卡',     headline:'你是永久居民'},
       'residency-met':{name:'已满5年居住',           short:'5年',      headline:'5年居住期已达到'},
-      'file-n400':    {name:'提交N-400表',           short:'申请',     headline:'有资格申请 — 提交N-400'},
+      'file-n400':    {name:'提交N-400表',           short:'申请',     headline:'有资格申请，提交N-400'},
       interview:      {name:'生物识别 + 面试',       short:'面试',     headline:'面试准备时间'},
       oath:           {name:'忠诚宣誓',             short:'宣誓',     headline:'距离公民身份还差一步'}
     },
@@ -215,7 +215,7 @@ var TRANSLATIONS = {
       r3:['Bạn có thể theo bất kỳ tôn giáo nào, hoặc không theo gì','Mọi người phải đi nhà thờ','Chỉ cho phép một tôn giáo','Tôn giáo phải được Quốc hội chấp thuận'],
       r4:['Kinh tế tư bản / thị trường','Kinh tế xã hội chủ nghĩa','Kinh tế chỉ huy','Kinh tế trao đổi'],
       r5:['Kiểm tra và cân bằng / phân chia quyền lực','Chỉ riêng Tổng thống','Bầu cử toàn quốc','Quân đội'],
-      c1:['Tự quản — nhân dân tự cai trị','Chỉ người giàu cai trị','Người ngoại quốc cai trị','Không ai cai trị'],
+      c1:['Tự quản. Nhân dân tự cai trị','Chỉ người giàu cai trị','Người ngoại quốc cai trị','Không ai cai trị'],
       c2:['1787','1776','1812','1865'],
       c3:['George Washington','Abraham Lincoln','Thomas Jefferson','Benjamin Franklin'],
       c4:['Lời mở đầu','Lời nói đầu','Tuyên ngôn Nhân quyền','Mục lục'],
@@ -232,20 +232,20 @@ var TRANSLATIONS = {
       rf5:['Tự do ngôn luận và tôn giáo','Bầu cử và giữ chức vụ liên bang','Đại học và nhà ở miễn phí','Thu nhập miễn thuế']
     },
     explain: {
-      p1:'Hiến pháp là luật cao nhất ở Mỹ — mọi luật khác phải phù hợp với nó.',
+      p1:'Hiến pháp là luật cao nhất ở Mỹ. Mọi luật khác phải phù hợp với nó.',
       p2:'Hiến pháp thiết lập chính phủ, xác định quyền hạn của nó và liệt kê các quyền cơ bản.',
-      p3:'"Chúng tôi nhân dân" mở đầu Lời mở đầu — nghĩa là nhân dân, không phải vua, nắm giữ quyền lực.',
+      p3:'"Chúng tôi nhân dân" mở đầu Lời mở đầu. Nghĩa là nhân dân, không phải vua, nắm giữ quyền lực.',
       p4:'Tu chính án là cách Hiến pháp có thể được thay đổi. Đã có 27 tu chính án.',
-      p5:'Mười tu chính án đầu tiên — Tuyên ngôn Nhân quyền — bảo vệ tự do cá nhân.',
-      r1:'Không ai đứng trên luật pháp — không phải Tổng thống, không phải Quốc hội, không phải cảnh sát.',
+      p5:'Mười tu chính án đầu tiên. Tuyên ngôn Nhân quyền. Bảo vệ tự do cá nhân.',
+      r1:'Không ai đứng trên luật pháp. Không phải Tổng thống, không phải Quốc hội, không phải cảnh sát.',
       r2:'Tu chính án thứ nhất bảo vệ ngôn luận, tôn giáo, báo chí, hội họp và kiến nghị.',
       r3:'Bạn có thể theo bất kỳ tôn giáo nào, đổi tôn giáo, hoặc không theo tôn giáo nào cả.',
       r4:'Trong nền kinh tế tư bản hoặc thị trường, doanh nghiệp và mọi người tự đưa ra lựa chọn kinh tế.',
       r5:'Phân chia quyền lực + kiểm tra và cân bằng giữ cho bất kỳ nhánh nào không trở nên quá mạnh.',
-      c1:'"Chúng tôi nhân dân" thể hiện sự tự quản — công dân chọn cách họ được cai trị.',
+      c1:'"Chúng tôi nhân dân" thể hiện sự tự quản. Công dân chọn cách họ được cai trị.',
       c2:'Hiến pháp được viết năm 1787 và ký ngày 17 tháng 9 năm 1787 tại Philadelphia.',
       c3:'George Washington chủ trì Hội nghị Lập hiến và là Tổng thống đầu tiên của Hoa Kỳ.',
-      c4:'Lời mở đầu là đoạn mở đầu — bắt đầu với "Chúng tôi nhân dân".',
+      c4:'Lời mở đầu là đoạn mở đầu. Bắt đầu với "Chúng tôi nhân dân".',
       c5:'Hiến pháp bảo vệ quyền cơ bản, thiết lập chính phủ và giới hạn quyền lực của nó.',
       t1:'Ba nhánh là Lập pháp (Quốc hội), Hành pháp (Tổng thống), và Tư pháp (Tòa án).',
       t2:'Quốc hội viết luật liên bang. Tổng thống ký chúng; tòa án giải thích chúng.',
@@ -254,7 +254,7 @@ var TRANSLATIONS = {
       t5:'Một dự luật trở thành luật khi Tổng thống ký. Tổng thống cũng có thể phủ quyết.',
       rf1:'Tuyên ngôn nêu "cuộc sống, tự do và mưu cầu hạnh phúc" là các quyền không thể chuyển nhượng.',
       rf2:'Chỉ công dân Hoa Kỳ có thể tham gia bồi thẩm đoàn liên bang và bỏ phiếu trong các cuộc bầu cử liên bang.',
-      rf3:'Bỏ phiếu trong các cuộc bầu cử liên bang chỉ dành cho công dân — người không phải công dân không thể bỏ phiếu.',
+      rf3:'Bỏ phiếu trong các cuộc bầu cử liên bang chỉ dành cho công dân. Người không phải công dân không thể bỏ phiếu.',
       rf4:'Công dân mới hứa từ bỏ lòng trung thành với các nước khác và bảo vệ Hiến pháp.',
       rf5:'Tự do ngôn luận và tôn giáo áp dụng cho mọi người sống ở Mỹ, không chỉ công dân.'
     },
@@ -264,7 +264,7 @@ var TRANSLATIONS = {
       'aos-interview':{name:'I-485 + phỏng vấn',         short:'Điều chỉnh',headline:'Phỏng vấn điều chỉnh sắp tới'},
       'permanent-resident':{name:'Thường trú nhân',      short:'Thẻ xanh',  headline:'Bạn là thường trú nhân'},
       'residency-met':{name:'Đã đủ 5 năm thường trú',    short:'5 năm',     headline:'Đã đạt mốc 5 năm cư trú'},
-      'file-n400':    {name:'Nộp Đơn N-400',             short:'Nộp đơn',   headline:'Đủ điều kiện nộp đơn — Đơn N-400'},
+      'file-n400':    {name:'Nộp Đơn N-400',             short:'Nộp đơn',   headline:'Đủ điều kiện nộp đơn. Đơn N-400'},
       interview:      {name:'Sinh trắc học + phỏng vấn', short:'Phỏng vấn', headline:'Chế độ chuẩn bị phỏng vấn'},
       oath:           {name:'Lễ tuyên thệ',              short:'Tuyên thệ', headline:'Chỉ còn một bước nữa đến quốc tịch'}
     },
@@ -366,7 +366,7 @@ var user = {
   familyTies: null,          // FAMILY_TIES key
   situations: [],            // SITUATIONS ids (military, tps, daca, victim, minor, religious)
   gcPetition: null,          // {type:'employment'|'family'|'asylum', stage:'perm'|'i140'|'i130'|'approved'|'priority'|'i485', at:ISO} once a green-card filing is under way
-  soundEffects: true,        // feedback chimes (right/wrong/complete) — Me tab toggle
+  soundEffects: true,        // feedback chimes (right/wrong/complete). Me tab toggle
   testVersion: '2025',       // '2008' (legacy 100q test) or '2025' (current 128q, 12-of-20 to pass)
   plan: 'free',              // 'free' | 'trial' | 'plus' | 'expired'
   trialStartedAt: null,      // ISO date string
@@ -523,7 +523,7 @@ var STAGES = [
       return prefix + (l==='es' ? ' · $760 ($710 en línea) · posible exención' : ' · $760 fee ($710 online) · fee waiver may apply');
     },
     home: {
-      headline: {en:'Eligible to apply — file Form N-400', es:'Listo para aplicar — Formulario N-400'},
+      headline: {en:'Eligible to apply. File Form N-400', es:'Listo para aplicar. Formulario N-400'},
       pill: {en:'Action needed', es:'Acción requerida'},
       title: {en:'Confirm your eligibility date', es:'Confirma tu fecha de elegibilidad'},
       sub: function(u,l){
@@ -547,8 +547,8 @@ var STAGES = [
       pill: {en:'Prep time', es:'A prepararse'},
       title: {en:'Practice 5 civics questions today', es:'Practica 5 preguntas hoy'},
       sub: function(u,l){ return l==='es'
-        ? 'Mantén tu racha — el repaso diario te lleva a las 100 dominadas antes de tu cita.'
-        : 'Keep your streak — daily review gets you to 100 mastered before your appointment.'; },
+        ? 'Mantén tu racha. El repaso diario te lleva a las 100 dominadas antes de tu cita.'
+        : 'Keep your streak. Daily review gets you to 100 mastered before your appointment.'; },
       cta: {en:'I finished my interview', es:'Terminé mi entrevista'}
     },
     upcomingTag: {en:'Up next', es:'Sigue'}
@@ -622,10 +622,10 @@ var STAGE_DURATIONS_MO = {
 };
 
 function petitionDuration(p, c){
-  // Family — immediate relative of a U.S. citizen (IR-1/2/5): no quota wait, just processing
+  // Family. Immediate relative of a U.S. citizen (IR-1/2/5): no quota wait, just processing
   if(p === 'family-ir') return {low: 10, high: 20};
 
-  // Family — preference categories (F1/F3/F4) — heavy backlog, varies by country chargeability
+  // Family. Preference categories (F1/F3/F4). Heavy backlog, varies by country chargeability
   if(p === 'family-pref'){
     if(c === 'Mexico')      return {low: 240, high: 420};   // 20–35 years (F3/F4 especially)
     if(c === 'Philippines') return {low: 168, high: 360};   // 14–30 years
@@ -634,7 +634,7 @@ function petitionDuration(p, c){
     return {low: 84, high: 180};                            // ~7–15 years for other countries
   }
 
-  // Family — through an LPR (F2A — spouse/minor child of GC holder)
+  // Family. Through an LPR (F2A. Spouse/minor child of GC holder)
   if(p === 'family-lpr') return {low: 24, high: 60};         // 2–5 years currently
 
   // Employment-based GC (EB-2/EB-3 dominant cases by country)
@@ -644,7 +644,7 @@ function petitionDuration(p, c){
     return {low: 14, high: 42};                              // EB-1/2/3 most countries
   }
 
-  // Asylum — I-589 affirmative interview backlog, then 1-yr wait + I-485 processing
+  // Asylum. I-589 affirmative interview backlog, then 1-yr wait + I-485 processing
   if(p === 'asylum') return {low: 24, high: 84};             // 2–7 years total to GC currently
 
   // Other (DV winners, VAWA, U-visa)
@@ -664,7 +664,7 @@ function projectTimeline(u){
     if(s.id === 'permanent-resident'){
       // Residency clock: 5 years (or 3 if married to citizen) from when the user actually
       // becomes a permanent resident. For pre-GC users, the stored greenCardDate is a
-      // placeholder — the real start of the clock is when AOS finishes (current low/highMs
+      // placeholder. The real start of the clock is when AOS finishes (current low/highMs
       // at this point in the projection).
       var curStageIdx = stageIndex(u.currentStageId);
       var hasRealGCDate = u.phase === 'hasGC' || curStageIdx >= stageIndex('permanent-resident');
@@ -687,7 +687,7 @@ function projectTimeline(u){
         var stored2 = residencyMark(u).getTime();
         endLow = Math.max(lowMs, stored2); endHigh = Math.max(highMs, stored2);
       } else {
-        // residency-met is the boundary right after permanent-resident — instant marker
+        // residency-met is the boundary right after permanent-resident. Instant marker
         endLow = lowMs; endHigh = highMs;
       }
     } else if(s.id === 'sponsorship'){
@@ -736,7 +736,7 @@ function getImportantDates(u){
       date: gcD,
       status: gcD <= now ? 'past' : 'future',
       stageId: 'permanent-resident',
-      note: {en:'Your green-card start date — the clock begins here.', es:'Tu fecha de residencia — el reloj empieza aquí.'}
+      note: {en:'Your green-card start date. The clock begins here.', es:'Tu fecha de residencia. El reloj empieza aquí.'}
     });
   }
 
@@ -868,7 +868,7 @@ var CIVICS = [
     O('The military','El ejército')]),
 
   Q('c1','What does "We the People" mean?','¿Qué significa "Nosotros el Pueblo"?',[
-    O('Self-government — the people govern themselves','Autogobierno — el pueblo se gobierna a sí mismo',true),
+    O('Self-government. The people govern themselves','Autogobierno. El pueblo se gobierna a sí mismo',true),
     O('Only the wealthy govern','Solo los ricos gobiernan'),
     O('Foreign rulers govern','Gobernantes extranjeros'),
     O('No one governs','Nadie gobierna')]),
@@ -1219,7 +1219,7 @@ var CIVICS = [
     O('21 or older','21 años o más'),
     O('25 or older','25 años o más')]),
   Q('ci3','If you become a U.S. citizen, can you keep your other citizenship?','Si te haces ciudadano de EE.UU., ¿puedes mantener tu otra ciudadanía?',[
-    O('Sometimes — depends on the other country','A veces — depende del otro país',true),
+    O('Sometimes. Depends on the other country','A veces. Depende del otro país',true),
     O('Always','Siempre'),
     O('Never','Nunca'),
     O('Only if approved by Congress','Solo si lo aprueba el Congreso')]),
@@ -1339,7 +1339,7 @@ var CIVICS = [
     O('Only employees','Solo empleados')])
 ];
 
-// ===== 2025 CIVICS TEST — 128 OFFICIAL QUESTIONS =====
+// ===== 2025 CIVICS TEST. 128 OFFICIAL QUESTIONS =====
 // Source: USCIS M-1778 (09/25), "2025-Civics-Test-128-Questions-and-Answers.pdf"
 // In effect for N-400 applications filed on or after Oct 20, 2025.
 // Test format: officer asks up to 20 questions orally; pass at 12 correct, fail at 9 wrong.
@@ -1616,12 +1616,12 @@ var LESSONS = [
           es:'La base del gobierno: la Constitución como ley suprema, derechos individuales y autogobierno. Espera 2–3 preguntas de esta sección en el examen real.'},
    qIds:['p1','p2','p3','p4','p5']},
   {id:'rule-of-law', unit:1, pos:'r1', title:{en:'Rule of law', es:'Estado de derecho'},
-   intro:{en:'Why no one — not even the President — is above the law. Covers the First Amendment, freedom of religion, and how government powers check each other. Common officer topics.',
-          es:'Por qué nadie — ni el presidente — está por encima de la ley. Cubre la Primera Enmienda, libertad religiosa y cómo los poderes se controlan entre sí.'},
+   intro:{en:'Why no one. Not even the President. Is above the law. Covers the First Amendment, freedom of religion, and how government powers check each other. Common officer topics.',
+          es:'Por qué nadie. Ni el presidente. Está por encima de la ley. Cubre la Primera Enmienda, libertad religiosa y cómo los poderes se controlan entre sí.'},
    qIds:['r1','r2','r3','r4','r5']},
   {id:'constitution', unit:1, pos:'r2', title:{en:'The Constitution', es:'La Constitución'},
    intro:{en:'The 1787 document that built the United States. Officers often ask exact dates and the role of George Washington here, so pay attention to the numbers.',
-          es:'El documento de 1787 que formó EE.UU. Los oficiales suelen preguntar fechas exactas y sobre George Washington — presta atención a los números.'},
+          es:'El documento de 1787 que formó EE.UU. Los oficiales suelen preguntar fechas exactas y sobre George Washington. Presta atención a los números.'},
    qIds:['c1','c2','c3','c4','c5']},
   {id:'three-branches', unit:1, pos:'r1', title:{en:'Three branches', es:'Tres ramas'},
    intro:{en:'Legislative (Congress) makes laws, Executive (President) enforces them, Judicial (Courts) interprets them. You will be asked which branch does what.',
@@ -1639,8 +1639,8 @@ var LESSONS = [
           es:'Por qué los europeos vinieron, quién vivía aquí primero, y las 13 colonias originales. Conocimiento base que aparece en todo el examen.'},
    qIds:['h1','h2','h3','h4','h5']},
   {id:'independence', unit:2, pos:'l1', title:{en:'Independence', es:'Independencia'},
-   intro:{en:'July 4, 1776 — the Declaration of Independence and George Washington as the first President. High-value test material; the date itself comes up often.',
-          es:'4 de julio, 1776 — la Declaración de Independencia y George Washington como primer presidente. Material de alto valor; la fecha aparece a menudo.'},
+   intro:{en:'July 4, 1776. The Declaration of Independence and George Washington as the first President. High-value test material; the date itself comes up often.',
+          es:'4 de julio, 1776. La Declaración de Independencia y George Washington como primer presidente. Material de alto valor; la fecha aparece a menudo.'},
    qIds:['h6','h7','h8','h9','h10']},
   {id:'founding-era', unit:2, pos:'l2', title:{en:'Founding era', es:'Era fundacional'},
    intro:{en:'Abraham Lincoln, the Civil War, and the end of slavery. Some of the most-asked civics questions live here.',
@@ -1658,11 +1658,11 @@ var LESSONS = [
    qIds:['h1','h7','h13','h18','h24']},
 
   {id:'national-symbols', unit:3, pos:'c', title:{en:'National symbols', es:'Símbolos nacionales'},
-   intro:{en:'The flag, the national anthem, and the Statue of Liberty. The "what and where" of American identity — straightforward recall questions.',
-          es:'La bandera, el himno nacional y la Estatua de la Libertad. El "qué y dónde" de la identidad americana — preguntas directas.'},
+   intro:{en:'The flag, the national anthem, and the Statue of Liberty. The "what and where" of American identity. Straightforward recall questions.',
+          es:'La bandera, el himno nacional y la Estatua de la Libertad. El "qué y dónde" de la identidad americana. Preguntas directas.'},
    qIds:['s1','s2','s3','s4','s5']},
   {id:'holidays', unit:3, pos:'r1', title:{en:'Holidays', es:'Feriados'},
-   intro:{en:'Federal holidays, why they\'re celebrated, and Election Day. Quick factual recall — memorize the dates.',
+   intro:{en:'Federal holidays, why they\'re celebrated, and Election Day. Quick factual recall. Memorize the dates.',
           es:'Feriados federales, por qué se celebran, y el Día de Elecciones. Memoriza las fechas.'},
    qIds:['s6','s7','s8','s9','s10']},
   {id:'states-coasts', unit:3, pos:'r2', title:{en:'States & coasts', es:'Estados y costas'},
@@ -1670,8 +1670,8 @@ var LESSONS = [
           es:'Los océanos Pacífico y Atlántico, estados que limitan con Canadá y México, y Washington D.C. como capital federal.'},
    qIds:['s11','s12','s13','s14','s15']},
   {id:'gov-numbers', unit:3, pos:'r1', title:{en:'Government numbers', es:'Números del gobierno'},
-   intro:{en:'50 states, 100 senators, 435 House members, and how long each serves. Memorize the numbers — they come up word-for-word.',
-          es:'50 estados, 100 senadores, 435 representantes, y cuánto duran sus mandatos. Memoriza los números — aparecen literalmente.'},
+   intro:{en:'50 states, 100 senators, 435 House members, and how long each serves. Memorize the numbers. They come up word-for-word.',
+          es:'50 estados, 100 senadores, 435 representantes, y cuánto duran sus mandatos. Memoriza los números. Aparecen literalmente.'},
    qIds:['s16','s17','s18','s19','s20']},
   {id:'voting-courts', unit:3, pos:'c', title:{en:'Voting & courts', es:'Voto y cortes'},
    intro:{en:'When elections happen, term lengths for senators, and the Supreme Court\'s 9 justices. Civic-system fundamentals.',
@@ -1705,20 +1705,20 @@ var LESSONS = [
 ];
 
 var EXPLAIN = {
-  p1: {en:'The Constitution is the highest law in the U.S. — every other law must agree with it.', es:'La Constitución es la ley más alta — todas las demás leyes deben estar de acuerdo con ella.'},
+  p1: {en:'The Constitution is the highest law in the U.S. Every other law must agree with it.', es:'La Constitución es la ley más alta. Todas las demás leyes deben estar de acuerdo con ella.'},
   p2: {en:'The Constitution sets up the government, defines its powers, and lists basic rights.', es:'La Constitución establece el gobierno, define sus poderes y enumera derechos básicos.'},
-  p3: {en:'"We the People" begins the Preamble — meaning the people, not a king, hold power.', es:'"Nosotros el Pueblo" inicia el Preámbulo — el pueblo, no un rey, tiene el poder.'},
+  p3: {en:'"We the People" begins the Preamble. Meaning the people, not a king, hold power.', es:'"Nosotros el Pueblo" inicia el Preámbulo. El pueblo, no un rey, tiene el poder.'},
   p4: {en:'Amendments are how the Constitution can be changed. There are 27 so far.', es:'Las enmiendas son la forma de cambiar la Constitución. Hay 27 hasta ahora.'},
-  p5: {en:'The first 10 amendments — the Bill of Rights — protect individual freedoms.', es:'Las primeras 10 enmiendas — la Carta de Derechos — protegen libertades individuales.'},
-  r1: {en:'No one is above the law — not the President, not Congress, not the police.', es:'Nadie está por encima de la ley — ni el presidente, ni el Congreso, ni la policía.'},
+  p5: {en:'The first 10 amendments. The Bill of Rights. Protect individual freedoms.', es:'Las primeras 10 enmiendas. La Carta de Derechos. Protegen libertades individuales.'},
+  r1: {en:'No one is above the law. Not the President, not Congress, not the police.', es:'Nadie está por encima de la ley. Ni el presidente, ni el Congreso, ni la policía.'},
   r2: {en:'The First Amendment protects speech, religion, press, assembly, and petition.', es:'La Primera Enmienda protege la expresión, religión, prensa, reunión y petición.'},
   r3: {en:'You can follow any religion, change religions, or have no religion at all.', es:'Puedes seguir cualquier religión, cambiar de religión, o no tener religión.'},
   r4: {en:'In a capitalist or market economy, businesses and people make their own economic choices.', es:'En una economía capitalista o de mercado, los negocios y las personas toman sus propias decisiones.'},
   r5: {en:'Separation of powers + checks and balances keep any one branch from getting too strong.', es:'La separación de poderes y los frenos y contrapesos evitan que una rama sea demasiado poderosa.'},
-  c1: {en:'"We the People" expresses self-government — citizens choose how they are governed.', es:'"Nosotros el Pueblo" expresa el autogobierno — los ciudadanos eligen cómo se les gobierna.'},
+  c1: {en:'"We the People" expresses self-government. Citizens choose how they are governed.', es:'"Nosotros el Pueblo" expresa el autogobierno. Los ciudadanos eligen cómo se les gobierna.'},
   c2: {en:'The Constitution was written in 1787 and signed September 17, 1787 in Philadelphia.', es:'La Constitución se escribió en 1787 y se firmó el 17 de septiembre de 1787 en Filadelfia.'},
   c3: {en:'George Washington led the Constitutional Convention and was the first U.S. president.', es:'George Washington presidió la Convención Constitucional y fue el primer presidente de EE.UU.'},
-  c4: {en:'The Preamble is the opening paragraph — it starts with "We the People."', es:'El Preámbulo es el párrafo inicial — comienza con "Nosotros el Pueblo".'},
+  c4: {en:'The Preamble is the opening paragraph. It starts with "We the People."', es:'El Preámbulo es el párrafo inicial. Comienza con "Nosotros el Pueblo".'},
   c5: {en:'The Constitution protects basic rights, sets up the government, and limits its power.', es:'La Constitución protege derechos básicos, establece el gobierno y limita su poder.'},
   t1: {en:'The three branches are Legislative (Congress), Executive (President), and Judicial (Courts).', es:'Las tres ramas son Legislativa (Congreso), Ejecutiva (Presidente) y Judicial (Cortes).'},
   t2: {en:'Congress writes federal laws. The President signs them; courts interpret them.', es:'El Congreso escribe las leyes federales. El presidente las firma; las cortes las interpretan.'},
@@ -1727,7 +1727,7 @@ var EXPLAIN = {
   t5: {en:'A bill becomes law when the President signs it. The President can also veto.', es:'Un proyecto se hace ley cuando el presidente lo firma. El presidente también puede vetar.'},
   rf1: {en:'The Declaration names "life, liberty, and the pursuit of happiness" as unalienable rights.', es:'La Declaración nombra "vida, libertad y la búsqueda de la felicidad" como derechos inalienables.'},
   rf2: {en:'Only U.S. citizens can serve on a federal jury and vote in federal elections.', es:'Solo los ciudadanos pueden servir en un jurado federal y votar en elecciones federales.'},
-  rf3: {en:'Voting in federal elections is reserved for citizens — non-citizens cannot vote.', es:'Votar en elecciones federales es solo para ciudadanos — los no-ciudadanos no pueden votar.'},
+  rf3: {en:'Voting in federal elections is reserved for citizens. Non-citizens cannot vote.', es:'Votar en elecciones federales es solo para ciudadanos. Los no-ciudadanos no pueden votar.'},
   rf4: {en:'New citizens promise to give up loyalty to other countries and defend the Constitution.', es:'Los nuevos ciudadanos prometen renunciar a la lealtad a otros países y defender la Constitución.'},
   rf5: {en:'Freedom of expression and religion apply to everyone living in the U.S., not just citizens.', es:'La libertad de expresión y religión aplica a todos los que viven en EE.UU., no solo ciudadanos.'},
 
@@ -1739,7 +1739,7 @@ var EXPLAIN = {
   h6: {en:'July 4, 1776 is celebrated as Independence Day every year.', es:'El 4 de julio de 1776 se celebra cada año como el Día de la Independencia.'},
   h7: {en:'The American Revolution (1775–1783) was fought to gain independence from Great Britain.', es:'La Revolución (1775-1783) se libró para independizarse de Gran Bretaña.'},
   h8: {en:'George Washington served as the first U.S. president (1789–1797).', es:'George Washington fue el primer presidente (1789-1797).'},
-  h9: {en:'Religious freedom — escaping the Church of England — drove many early colonists.', es:'La libertad religiosa — escapar de la Iglesia de Inglaterra — motivó a muchos colonos.'},
+  h9: {en:'Religious freedom. Escaping the Church of England. Drove many early colonists.', es:'La libertad religiosa. Escapar de la Iglesia de Inglaterra. Motivó a muchos colonos.'},
   h10: {en:'The Federalist Papers were written by Hamilton, Madison, and Jay to support the Constitution.', es:'Los Federalistas fueron escritos por Hamilton, Madison y Jay para apoyar la Constitución.'},
   h11: {en:'Issued by Lincoln in 1863, it freed enslaved people in Confederate states.', es:'Emitida por Lincoln en 1863, liberó a los esclavos en estados confederados.'},
   h12: {en:'Lincoln led the country through the Civil War and preserved the Union.', es:'Lincoln lideró al país durante la Guerra Civil y preservó la Unión.'},
@@ -1747,13 +1747,13 @@ var EXPLAIN = {
   h14: {en:'Lincoln saved the Union, freed the slaves, and led the Civil War effort.', es:'Lincoln salvó la Unión, liberó a los esclavos y lideró la Guerra Civil.'},
   h15: {en:'The North (Union) fought the South (Confederacy) over slavery and states\' rights.', es:'El Norte (Unión) luchó contra el Sur (Confederación) por la esclavitud y derechos estatales.'},
   h16: {en:'Other 1800s wars: War of 1812, Mexican-American War, Spanish-American War.', es:'Otras guerras del siglo XIX: 1812, México-EE.UU., y España-EE.UU.'},
-  h17: {en:'Susan B. Anthony was a leader for women\'s suffrage — the right to vote.', es:'Susan B. Anthony lideró el sufragio femenino — el derecho al voto.'},
+  h17: {en:'Susan B. Anthony was a leader for women\'s suffrage. The right to vote.', es:'Susan B. Anthony lideró el sufragio femenino. El derecho al voto.'},
   h18: {en:'The Louisiana Purchase doubled U.S. territory for about $15 million.', es:'La Compra de Luisiana duplicó el territorio por unos $15 millones.'},
   h19: {en:'Slavery, economic differences between North and South, and states\' rights all contributed.', es:'La esclavitud, diferencias económicas Norte-Sur, y derechos estatales contribuyeron.'},
   h20: {en:'The 15th Amendment (1870) prohibited denying the vote based on race.', es:'La Enmienda 15 (1870) prohibió negar el voto por raza.'},
   h21: {en:'1900s wars: WWI, WWII, Korean War, Vietnam War, and the Gulf War (1990–91).', es:'Guerras del siglo XX: PGM, SGM, Corea, Vietnam, y la Guerra del Golfo (1990-91).'},
   h22: {en:'Woodrow Wilson led the U.S. during WWI (1914–1918).', es:'Woodrow Wilson lideró durante la PGM (1914-1918).'},
-  h23: {en:'FDR served four terms — the only president to do so — leading through the Depression and WWII.', es:'FDR sirvió cuatro mandatos — el único — durante la Depresión y la SGM.'},
+  h23: {en:'FDR served four terms. The only president to do so. Leading through the Depression and WWII.', es:'FDR sirvió cuatro mandatos. El único. Durante la Depresión y la SGM.'},
   h24: {en:'The civil rights movement (1950s–60s) fought to end discrimination, especially against Black Americans.', es:'El movimiento de derechos civiles (1950-60) luchó contra la discriminación, sobre todo hacia negros.'},
   h25: {en:'Dr. King led nonviolent protests for civil rights and racial equality.', es:'Dr. King lideró protestas no violentas por derechos civiles e igualdad racial.'},
 
@@ -1772,11 +1772,11 @@ var EXPLAIN = {
   s13: {en:'States bordering Canada: ME, NH, VT, NY, PA, OH, MI, MN, ND, MT, ID, WA, AK.', es:'Estados que limitan con Canadá: ME, NH, VT, NY, PA, OH, MI, MN, ND, MT, ID, WA, AK.'},
   s14: {en:'States bordering Mexico: California, Arizona, New Mexico, and Texas.', es:'Estados que limitan con México: California, Arizona, Nuevo México y Texas.'},
   s15: {en:'Washington, D.C. is the federal capital, separate from any state.', es:'Washington, D.C. es la capital federal, separada de los estados.'},
-  s16: {en:'50 states — the last two (Alaska and Hawaii) joined in 1959.', es:'50 estados — los últimos dos (Alaska y Hawái) se unieron en 1959.'},
+  s16: {en:'50 states. The last two (Alaska and Hawaii) joined in 1959.', es:'50 estados. Los últimos dos (Alaska y Hawái) se unieron en 1959.'},
   s17: {en:'Each state has 2 senators, regardless of population. Total = 100.', es:'Cada estado tiene 2 senadores. Total = 100.'},
-  s18: {en:'House seats are based on each state\'s population — 435 voting members in total.', es:'Los escaños de la Cámara dependen de la población — 435 miembros con voto.'},
+  s18: {en:'House seats are based on each state\'s population. 435 voting members in total.', es:'Los escaños de la Cámara dependen de la población. 435 miembros con voto.'},
   s19: {en:'Senators serve 6-year terms; about 1/3 are up for election every 2 years.', es:'Los senadores sirven 6 años; alrededor de 1/3 se eligen cada 2 años.'},
-  s20: {en:'House members serve 2-year terms — the whole House is up every election.', es:'Los representantes sirven 2 años — toda la Cámara se elige cada elección.'},
+  s20: {en:'House members serve 2-year terms. The whole House is up every election.', es:'Los representantes sirven 2 años. Toda la Cámara se elige cada elección.'},
   s21: {en:'Presidential elections happen in November every 4 years.', es:'Las elecciones presidenciales son en noviembre cada 4 años.'},
   s22: {en:'A senator serves 6 years; senators can be re-elected without a term limit.', es:'Un senador sirve 6 años; pueden ser reelegidos sin límite de mandatos.'},
   s23: {en:'The Supreme Court is the highest federal court; its rulings are final.', es:'La Corte Suprema es la corte federal más alta; sus fallos son finales.'},
@@ -1789,19 +1789,19 @@ var EXPLAIN = {
   ci4: {en:'After approval, USCIS schedules an Oath ceremony. You\'re a citizen the moment you take the Oath.', es:'Tras aprobación, USCIS programa una ceremonia. Eres ciudadano al tomar el Juramento.'},
   ci5: {en:'The English test has reading, writing, and speaking parts. The civics test is up to 10 questions.', es:'El examen de inglés tiene partes de lectura, escritura y habla. El de cívica son hasta 10 preguntas.'},
   vo1: {en:'The Democratic and Republican parties dominate U.S. elections; smaller parties exist too.', es:'Los partidos Demócrata y Republicano dominan; existen también partidos menores.'},
-  vo2: {en:'15th (race), 19th (women), 24th (no poll tax), 26th (age 18) — all expanded voting rights.', es:'15 (raza), 19 (mujeres), 24 (sin impuesto al voto), 26 (edad 18) — todas ampliaron el voto.'},
+  vo2: {en:'15th (race), 19th (women), 24th (no poll tax), 26th (age 18). All expanded voting rights.', es:'15 (raza), 19 (mujeres), 24 (sin impuesto al voto), 26 (edad 18). Todas ampliaron el voto.'},
   vo3: {en:'Only U.S. citizens age 18+ can vote in federal elections.', es:'Solo ciudadanos de 18 años o más pueden votar en elecciones federales.'},
   vo4: {en:'By federal law, Election Day is the Tuesday after the first Monday in November.', es:'Por ley federal, el Día de Elecciones es el martes después del primer lunes de noviembre.'},
-  vo5: {en:'Democracy works when people participate — voting is the most common but not the only way.', es:'La democracia funciona cuando la gente participa — votar es la más común pero no la única.'},
+  vo5: {en:'Democracy works when people participate. Voting is the most common but not the only way.', es:'La democracia funciona cuando la gente participa. Votar es la más común pero no la única.'},
   fs1: {en:'Federal powers include foreign policy, currency, treaties, war, and interstate commerce.', es:'Los poderes federales incluyen política exterior, moneda, tratados, guerra y comercio interestatal.'},
   fs2: {en:'States handle most day-to-day matters: schools, police, marriage, driver\'s licenses, zoning.', es:'Los estados manejan asuntos diarios: escuelas, policía, matrimonio, licencias, zonificación.'},
   fs3: {en:'Each state has a Governor, elected by the people of that state.', es:'Cada estado tiene un Gobernador, elegido por la gente de ese estado.'},
   fs4: {en:'The President is the head of the executive branch and Commander in Chief.', es:'El presidente dirige la rama ejecutiva y es el Comandante en Jefe.'},
   fs5: {en:'The Cabinet (15 department heads + VP) advises the President on policy and operations.', es:'El Gabinete (15 jefes + VP) asesora al presidente en política y operaciones.'},
-  ce1: {en:'Patriotism takes many forms — voting and civic engagement are valued highly.', es:'El patriotismo toma muchas formas — votar y la participación cívica son muy valoradas.'},
-  ce2: {en:'The Constitution protects everyone in the U.S. — including non-citizens — though rights differ.', es:'La Constitución protege a todos en EE.UU. — incluso no-ciudadanos — aunque los derechos difieren.'},
+  ce1: {en:'Patriotism takes many forms. Voting and civic engagement are valued highly.', es:'El patriotismo toma muchas formas. Votar y la participación cívica son muy valoradas.'},
+  ce2: {en:'The Constitution protects everyone in the U.S. Including non-citizens. Though rights differ.', es:'La Constitución protege a todos en EE.UU. Incluso no-ciudadanos. Aunque los derechos difieren.'},
   ce3: {en:'Only citizens can vote in federal elections and serve on a federal jury.', es:'Solo los ciudadanos pueden votar en elecciones federales y servir en jurados federales.'},
-  ce4: {en:'Local participation builds the democratic foundation — meetings, volunteering, and elections.', es:'La participación local es la base democrática — reuniones, voluntariado y elecciones.'},
+  ce4: {en:'Local participation builds the democratic foundation. Meetings, volunteering, and elections.', es:'La participación local es la base democrática. Reuniones, voluntariado y elecciones.'},
   ce5: {en:'The Oath includes promises to defend the Constitution and obey U.S. laws.', es:'El Juramento incluye promesas de defender la Constitución y obedecer las leyes.'},
   tx1: {en:'Males must register with Selective Service within 30 days of their 18th birthday.', es:'Los hombres deben registrarse en el Servicio Selectivo dentro de 30 días de cumplir 18.'},
   tx2: {en:'Tax Day is April 15 (or the next business day if it falls on a weekend).', es:'El Día de Impuestos es el 15 de abril (o el siguiente día hábil).'},
@@ -1872,10 +1872,10 @@ var DOCUMENTS = [
   {id:'gc', cat:'identity', uscisForms:['I-90'], paths:['n400','family-ir','family-pref','family-lpr','employment'],
     name:{en:'Green card (front + back)', es:'Residencia (frente y reverso)'},
     sub:{en:'Copy your Permanent Resident Card', es:'Copia tu tarjeta de residente permanente'},
-    howTo:{en:'You already have this — it came in the mail when you became a permanent resident. Make clear color copies of BOTH sides of the most recent version of your I-551 card.',
-           es:'Ya la tienes — llegó por correo cuando te hiciste residente. Haz copias a color claras de AMBOS lados de la versión más reciente de tu tarjeta I-551.'},
-    tips:{en:['If lost or stolen, file Form I-90 to replace it.','If expired, it remains valid for naturalization — but USCIS may ask why you didn\'t renew.','Bring the ORIGINAL card to your interview, plus your copy.'],
-          es:['Si se perdió o robó, presenta el Formulario I-90 para reemplazo.','Si vencida, aún es válida para naturalización — pero USCIS puede preguntar por qué no la renovaste.','Lleva la tarjeta ORIGINAL a tu entrevista, más tu copia.']},
+    howTo:{en:'You already have this. It came in the mail when you became a permanent resident. Make clear color copies of BOTH sides of the most recent version of your I-551 card.',
+           es:'Ya la tienes. Llegó por correo cuando te hiciste residente. Haz copias a color claras de AMBOS lados de la versión más reciente de tu tarjeta I-551.'},
+    tips:{en:['If lost or stolen, file Form I-90 to replace it.','If expired, it remains valid for naturalization. But USCIS may ask why you didn\'t renew.','Bring the ORIGINAL card to your interview, plus your copy.'],
+          es:['Si se perdió o robó, presenta el Formulario I-90 para reemplazo.','Si vencida, aún es válida para naturalización. Pero USCIS puede preguntar por qué no la renovaste.','Lleva la tarjeta ORIGINAL a tu entrevista, más tu copia.']},
     cost:{en:'$465 online ($415 paper) to replace via I-90', es:'$465 en línea ($415 en papel) con I-90'},
     time:{en:'Have it now; ~10–12 months for I-90 replacement', es:'La tienes ahora; ~10–12 meses para reemplazo I-90'}},
 
@@ -1892,10 +1892,10 @@ var DOCUMENTS = [
   {id:'passports', cat:'identity', paths:['n400','student','opt','workvisa','family-ir','family-pref','family-lpr','employment','asylum'],
     name:{en:'All passports', es:'Todos los pasaportes'},
     sub:{en:'Current and expired, every country', es:'Vigentes y vencidos, todos los países'},
-    howTo:{en:'Collect every passport you\'ve ever held — from every country of citizenship — including expired ones. Pull them from old document storage, parents\' files, or safe-deposit boxes.',
-           es:'Reúne cada pasaporte que hayas tenido — de cada país de ciudadanía — incluidos los vencidos. Búscalos en archivos viejos, con tus padres, o en cajas de seguridad.'},
-    tips:{en:['USCIS examines each passport at the interview to track travel history.','Don\'t throw out expired passports — they\'re your proof of past trips.','If you lost one, get an official letter from the issuing consulate.'],
-          es:['USCIS examina cada pasaporte en la entrevista para rastrear tu historial de viajes.','No tires los vencidos — son la prueba de tus viajes pasados.','Si perdiste uno, consigue una carta oficial del consulado emisor.']},
+    howTo:{en:'Collect every passport you\'ve ever held. From every country of citizenship. Including expired ones. Pull them from old document storage, parents\' files, or safe-deposit boxes.',
+           es:'Reúne cada pasaporte que hayas tenido. De cada país de ciudadanía. Incluidos los vencidos. Búscalos en archivos viejos, con tus padres, o en cajas de seguridad.'},
+    tips:{en:['USCIS examines each passport at the interview to track travel history.','Don\'t throw out expired passports. They\'re your proof of past trips.','If you lost one, get an official letter from the issuing consulate.'],
+          es:['USCIS examina cada pasaporte en la entrevista para rastrear tu historial de viajes.','No tires los vencidos. Son la prueba de tus viajes pasados.','Si perdiste uno, consigue una carta oficial del consulado emisor.']},
     cost:{en:'Free if you have them; $130+ to replace via consulate', es:'Gratis si los tienes; $130+ para reemplazo en consulado'},
     time:{en:'Pull from records; up to 8 weeks for replacements', es:'Búscalos en tus archivos; hasta 8 semanas para reemplazos'}},
 
@@ -1904,28 +1904,28 @@ var DOCUMENTS = [
     sub:{en:'2 x 2 in, white background', es:'2 x 2 pulg, fondo blanco'},
     howTo:{en:'Get them at Walgreens, CVS, Costco, AAA, or any photo printing service. Just ask for "passport photos." They handle the spec automatically.',
            es:'Sácalas en Walgreens, CVS, Costco, AAA o cualquier servicio de fotos. Solo pide "fotos de pasaporte". Ellos manejan la especificación.'},
-    tips:{en:['Take them within 30 days of submitting your application.','Neutral facial expression, no glasses, no hat.','You only need two — but bring extras to your interview just in case.'],
-          es:['Tómalas dentro de 30 días de presentar tu aplicación.','Expresión neutral, sin lentes, sin sombrero.','Solo necesitas dos — pero lleva extras a la entrevista por si acaso.']},
+    tips:{en:['Take them within 30 days of submitting your application.','Neutral facial expression, no glasses, no hat.','You only need two. But bring extras to your interview just in case.'],
+          es:['Tómalas dentro de 30 días de presentar tu aplicación.','Expresión neutral, sin lentes, sin sombrero.','Solo necesitas dos. Pero lleva extras a la entrevista por si acaso.']},
     cost:{en:'$15–$20', es:'$15–$20'},
     time:{en:'15 minutes', es:'15 minutos'}},
 
   {id:'taxes', cat:'records', paths:['n400','family-ir','employment'],
     name:{en:'Tax returns (last 5 years)', es:'Declaraciones (últimos 5 años)'},
     sub:{en:'IRS transcripts also work', es:'Transcripciones del IRS también sirven'},
-    howTo:{en:'Get free IRS tax transcripts at irs.gov/individuals/get-transcript — online (instant) or by mail via Form 4506-T (5–10 days). Use 3 years if you\'re applying under the 3-year rule.',
-           es:'Consigue transcripciones gratis del IRS en irs.gov/individuals/get-transcript — en línea (al instante) o por correo con el Formulario 4506-T (5–10 días). Usa 3 años si aplicas bajo la regla de 3 años.'},
-    tips:{en:['IRS transcripts are stronger than self-prepared copies — USCIS prefers them.','If you filed jointly, you\'ll see your spouse\'s name too.','If you didn\'t earn enough to file, get a "Verification of Non-filing Letter" instead.'],
-          es:['Las transcripciones del IRS son más fuertes que copias propias — USCIS las prefiere.','Si presentaste conjunto, verás también el nombre de tu cónyuge.','Si no ganaste lo suficiente para presentar, consigue una "Carta de Verificación de No-Presentación".']},
+    howTo:{en:'Get free IRS tax transcripts at irs.gov/individuals/get-transcript. Online (instant) or by mail via Form 4506-T (5–10 days). Use 3 years if you\'re applying under the 3-year rule.',
+           es:'Consigue transcripciones gratis del IRS en irs.gov/individuals/get-transcript. En línea (al instante) o por correo con el Formulario 4506-T (5–10 días). Usa 3 años si aplicas bajo la regla de 3 años.'},
+    tips:{en:['IRS transcripts are stronger than self-prepared copies. USCIS prefers them.','If you filed jointly, you\'ll see your spouse\'s name too.','If you didn\'t earn enough to file, get a "Verification of Non-filing Letter" instead.'],
+          es:['Las transcripciones del IRS son más fuertes que copias propias. USCIS las prefiere.','Si presentaste conjunto, verás también el nombre de tu cónyuge.','Si no ganaste lo suficiente para presentar, consigue una "Carta de Verificación de No-Presentación".']},
     cost:{en:'Free', es:'Gratis'},
     time:{en:'Instant online; 5–10 days by mail', es:'Inmediato en línea; 5–10 días por correo'}},
 
   {id:'travel', cat:'records', paths:['n400','family-ir','employment','asylum'],
     name:{en:'Travel history', es:'Historial de viajes'},
     sub:{en:'Every trip outside the U.S. > 24 hrs', es:'Cada viaje fuera de EE.UU. > 24 horas'},
-    howTo:{en:'Pull your official I-94 travel record at i94.cbp.dhs.gov — it logs entries to the U.S. by air and sea. Cross-reference with your passport stamps to fill in dates.',
-           es:'Saca tu registro oficial I-94 en i94.cbp.dhs.gov — registra entradas a EE.UU. por aire y mar. Verifica con sellos de tu pasaporte para completar fechas.'},
-    tips:{en:['Land border crossings (Mexico/Canada) often don\'t appear in I-94 — list them from memory.','Even short trips count (anything > 24 hours).','Use Google Calendar, photos, or credit card records to jog your memory.'],
-          es:['Cruces terrestres (México/Canadá) muchas veces no aparecen en I-94 — listálos de memoria.','Incluso viajes cortos cuentan (cualquier cosa > 24 horas).','Usa Google Calendar, fotos o registros de tarjeta para recordar.']},
+    howTo:{en:'Pull your official I-94 travel record at i94.cbp.dhs.gov. It logs entries to the U.S. by air and sea. Cross-reference with your passport stamps to fill in dates.',
+           es:'Saca tu registro oficial I-94 en i94.cbp.dhs.gov. Registra entradas a EE.UU. por aire y mar. Verifica con sellos de tu pasaporte para completar fechas.'},
+    tips:{en:['Land border crossings (Mexico/Canada) often don\'t appear in I-94. List them from memory.','Even short trips count (anything > 24 hours).','Use Google Calendar, photos, or credit card records to jog your memory.'],
+          es:['Cruces terrestres (México/Canadá) muchas veces no aparecen en I-94. Listálos de memoria.','Incluso viajes cortos cuentan (cualquier cosa > 24 horas).','Usa Google Calendar, fotos o registros de tarjeta para recordar.']},
     cost:{en:'Free', es:'Gratis'},
     time:{en:'5 minutes for I-94; longer to reconstruct', es:'5 minutos para el I-94; más para reconstruir'}},
 
@@ -1934,8 +1934,8 @@ var DOCUMENTS = [
     sub:{en:'Even if charges were dropped', es:'Aunque los cargos hayan sido retirados'},
     howTo:{en:'Request police records from the law enforcement agency that handled each incident, and court records from the court clerk where the case was filed. Many states have online portals.',
            es:'Pide registros policiales de la agencia que manejó cada incidente, y registros judiciales del secretario del tribunal donde se presentó el caso. Muchos estados tienen portales en línea.'},
-    tips:{en:['You must disclose dismissed, expunged, and sealed records — USCIS\'s background check will find them.','Get certified copies — USCIS may reject plain copies.','If you have ANY criminal history, talk to a lawyer before filing.'],
-          es:['Debes revelar registros desestimados, eliminados y sellados — la verificación de USCIS los encontrará.','Consigue copias certificadas — USCIS puede rechazar copias simples.','Si tienes CUALQUIER antecedente, habla con un abogado antes de presentar.']},
+    tips:{en:['You must disclose dismissed, expunged, and sealed records. USCIS\'s background check will find them.','Get certified copies. USCIS may reject plain copies.','If you have ANY criminal history, talk to a lawyer before filing.'],
+          es:['Debes revelar registros desestimados, eliminados y sellados. La verificación de USCIS los encontrará.','Consigue copias certificadas. USCIS puede rechazar copias simples.','Si tienes CUALQUIER antecedente, habla con un abogado antes de presentar.']},
     cost:{en:'$5–$50 per record', es:'$5–$50 por registro'},
     time:{en:'2–4 weeks', es:'2–4 semanas'}},
 
@@ -1944,8 +1944,8 @@ var DOCUMENTS = [
     sub:{en:'Required under 3-year rule', es:'Requerido bajo regla de 3 años'},
     howTo:{en:'Order a certified copy from the vital records office (or city/county clerk) in the state where you married. Most states have online ordering at the state Department of Health website.',
            es:'Pide una copia certificada de la oficina de registros vitales (o del secretario del condado/ciudad) en el estado donde te casaste. La mayoría de estados tienen pedido en línea.'},
-    tips:{en:['You need a "certified" or "long-form" copy — not just an informational copy.','If married abroad, the certificate may need an Apostille for U.S. recognition.','Order 2 copies — keep one at home, send one with N-400.'],
-          es:['Necesitas una copia "certificada" o "long-form" — no solo una informacional.','Si te casaste fuera, la copia puede necesitar Apostilla para reconocimiento en EE.UU.','Pide 2 copias — guarda una en casa, envía una con el N-400.']},
+    tips:{en:['You need a "certified" or "long-form" copy. Not just an informational copy.','If married abroad, the certificate may need an Apostille for U.S. recognition.','Order 2 copies. Keep one at home, send one with N-400.'],
+          es:['Necesitas una copia "certificada" o "long-form". No solo una informacional.','Si te casaste fuera, la copia puede necesitar Apostilla para reconocimiento en EE.UU.','Pide 2 copias. Guarda una en casa, envía una con el N-400.']},
     cost:{en:'$15–$40 per copy', es:'$15–$40 por copia'},
     time:{en:'2–6 weeks', es:'2–6 semanas'}},
 
@@ -1954,8 +1954,8 @@ var DOCUMENTS = [
     sub:{en:'Birth cert, passport, or N-550', es:'Acta, pasaporte o N-550'},
     howTo:{en:"Your U.S.-citizen spouse provides ONE of: a certified U.S. birth certificate, a current U.S. passport, or their Certificate of Naturalization (Form N-550 / N-570).",
            es:'Tu cónyuge ciudadano provee UNA de: acta de nacimiento certificada de EE.UU., pasaporte vigente de EE.UU., o su Certificado de Naturalización (Formulario N-550 / N-570).'},
-    tips:{en:["A driver's license is NOT proof of citizenship.",'If spouse is naturalized, the N-550 is best.','Make a clear color copy — keep the original.'],
-          es:['Una licencia de conducir NO es prueba de ciudadanía.','Si el cónyuge es naturalizado, el N-550 es lo mejor.','Haz una copia clara a color — guarda el original.']},
+    tips:{en:["A driver's license is NOT proof of citizenship.",'If spouse is naturalized, the N-550 is best.','Make a clear color copy. Keep the original.'],
+          es:['Una licencia de conducir NO es prueba de ciudadanía.','Si el cónyuge es naturalizado, el N-550 es lo mejor.','Haz una copia clara a color. Guarda el original.']},
     cost:{en:'Free if available; $20–$40 to order copies', es:'Gratis si está disponible; $20–$40 para copias'},
     time:{en:'Have it now or 4–6 weeks', es:'Lo tienes ahora o 4–6 semanas'}},
 
@@ -1964,8 +1964,8 @@ var DOCUMENTS = [
     sub:{en:'For prior marriages, you or spouse', es:'De matrimonios anteriores, tuyos o del cónyuge'},
     howTo:{en:'Order certified copies from the vital records or court office where the divorce was finalized or the death occurred. You need records for EVERY prior marriage of you AND your spouse.',
            es:'Pide copias certificadas de la oficina de registros vitales o tribunal donde se finalizó el divorcio o ocurrió el fallecimiento. Necesitas registros de CADA matrimonio anterior tuyo Y de tu cónyuge.'},
-    tips:{en:['Certified copies only — informational copies are rejected.','If divorce was abroad, may need an Apostille.','If you don\'t have it, USCIS can find it themselves — but it slows your case.'],
-          es:['Solo copias certificadas — las informacionales se rechazan.','Si el divorcio fue en el extranjero, puede necesitar Apostilla.','Si no la tienes, USCIS puede encontrarla — pero retrasa tu caso.']},
+    tips:{en:['Certified copies only. Informational copies are rejected.','If divorce was abroad, may need an Apostille.','If you don\'t have it, USCIS can find it themselves. But it slows your case.'],
+          es:['Solo copias certificadas. Las informacionales se rechazan.','Si el divorcio fue en el extranjero, puede necesitar Apostilla.','Si no la tienes, USCIS puede encontrarla. Pero retrasa tu caso.']},
     cost:{en:'$15–$50 per record', es:'$15–$50 por registro'},
     time:{en:'2–6 weeks', es:'2–6 semanas'}},
 
@@ -1974,18 +1974,18 @@ var DOCUMENTS = [
     sub:{en:'Form I-912 if you qualify for a waiver', es:'Formulario I-912 si calificas para exención'},
     howTo:{en:'Pay by check or money order to "U.S. Department of Homeland Security," or by credit card with Form G-1450. To request a waiver, file Form I-912 with proof of income or means-tested benefits.',
            es:'Paga con cheque o money order a "U.S. Department of Homeland Security," o con tarjeta usando el Formulario G-1450. Para pedir exención, presenta el Formulario I-912 con prueba de ingresos o beneficios.'},
-    tips:{en:['Fee waiver: receiving Medicaid, SNAP, SSI, or TANF auto-qualifies you.','Income below 150% of federal poverty also qualifies (~$22,500/year for one person).','Many people qualify and don\'t know it — check before paying.'],
-          es:['Exención: recibir Medicaid, SNAP, SSI o TANF te califica automáticamente.','Ingreso por debajo del 150% del nivel federal de pobreza también califica (~$22,500/año para una persona).','Muchas personas califican y no lo saben — verifica antes de pagar.']},
-    cost:{en:'$760 paper, $710 online — or $0 with approved I-912', es:'$760 papel, $710 en línea — o $0 con I-912 aprobado'},
+    tips:{en:['Fee waiver: receiving Medicaid, SNAP, SSI, or TANF auto-qualifies you.','Income below 150% of federal poverty also qualifies (~$22,500/year for one person).','Many people qualify and don\'t know it. Check before paying.'],
+          es:['Exención: recibir Medicaid, SNAP, SSI o TANF te califica automáticamente.','Ingreso por debajo del 150% del nivel federal de pobreza también califica (~$22,500/año para una persona).','Muchas personas califican y no lo saben. Verifica antes de pagar.']},
+    cost:{en:'$760 paper, $710 online. Or $0 with approved I-912', es:'$760 papel, $710 en línea. O $0 con I-912 aprobado'},
     time:{en:'Immediate', es:'Inmediato'}},
 
   {id:'n400', cat:'fees', uscisForms:['N-400'], paths:['n400'],
     name:{en:'Completed Form N-400', es:'Formulario N-400 completo'},
     sub:{en:'Filled, signed, and dated', es:'Completo, firmado y fechado'},
-    howTo:{en:'Download the current version from uscis.gov/n-400. It\'s 20 pages. Fill it out in black ink (or type and print) — use the "N-400 walkthrough" in this app for a section-by-section guide.',
-           es:'Descarga la versión actual de uscis.gov/n-400. Son 20 páginas. Llénala con tinta negra (o escribe y imprime) — usa la "Guía del N-400" de esta app como ayuda.'},
-    tips:{en:['Always use the LATEST version — outdated versions are rejected.','Sign and date every page that asks for a signature.','Make a copy of EVERYTHING you mail to USCIS before sending.','You can also file online via my.uscis.gov.'],
-          es:['Siempre usa la versión MÁS RECIENTE — las viejas se rechazan.','Firma y fecha cada página que pida firma.','Haz copia de TODO antes de enviar a USCIS.','También puedes presentar en línea en my.uscis.gov.']},
+    howTo:{en:'Download the current version from uscis.gov/n-400. It\'s 20 pages. Fill it out in black ink (or type and print). Use the "N-400 walkthrough" in this app for a section-by-section guide.',
+           es:'Descarga la versión actual de uscis.gov/n-400. Son 20 páginas. Llénala con tinta negra (o escribe y imprime). Usa la "Guía del N-400" de esta app como ayuda.'},
+    tips:{en:['Always use the LATEST version. Outdated versions are rejected.','Sign and date every page that asks for a signature.','Make a copy of EVERYTHING you mail to USCIS before sending.','You can also file online via my.uscis.gov.'],
+          es:['Siempre usa la versión MÁS RECIENTE. Las viejas se rechazan.','Firma y fecha cada página que pida firma.','Haz copia de TODO antes de enviar a USCIS.','También puedes presentar en línea en my.uscis.gov.']},
     cost:{en:'Free to download', es:'Gratis descargar'},
     time:{en:'2–4 hours to fill carefully', es:'2–4 horas para llenarlo bien'}},
 
@@ -1993,30 +1993,30 @@ var DOCUMENTS = [
   {id:'i20', cat:'identity', paths:['student','opt'],
     name:{en:'Form I-20', es:'Formulario I-20'},
     sub:{en:'Certificate of Eligibility for F-1/M-1 status', es:'Certificado de Elegibilidad para estatus F-1/M-1'},
-    howTo:{en:'Your school\'s Designated School Official (DSO) issues your I-20 once you\'re accepted. Keep every version — original entry, transfer, program extension, OPT recommendation, STEM extension. Each is a chapter of your status.',
-           es:'El DSO (Oficial Escolar Designado) de tu escuela emite tu I-20 al ser aceptado. Guarda cada versión — entrada inicial, transferencia, extensión de programa, recomendación de OPT, extensión STEM. Cada una es un capítulo de tu estatus.'},
-    tips:{en:['Sign and date page 2 of every I-20 the day you receive it.','Never let it expire while you\'re in the U.S. — talk to your DSO 90 days before.','Take your I-20 every time you re-enter the U.S.'],
-          es:['Firma y fecha la página 2 de cada I-20 el día que la recibes.','Nunca dejes que venza mientras estés en EE.UU. — habla con tu DSO 90 días antes.','Lleva tu I-20 cada vez que reentres a EE.UU.']},
+    howTo:{en:'Your school\'s Designated School Official (DSO) issues your I-20 once you\'re accepted. Keep every version. Original entry, transfer, program extension, OPT recommendation, STEM extension. Each is a chapter of your status.',
+           es:'El DSO (Oficial Escolar Designado) de tu escuela emite tu I-20 al ser aceptado. Guarda cada versión. Entrada inicial, transferencia, extensión de programa, recomendación de OPT, extensión STEM. Cada una es un capítulo de tu estatus.'},
+    tips:{en:['Sign and date page 2 of every I-20 the day you receive it.','Never let it expire while you\'re in the U.S. Talk to your DSO 90 days before.','Take your I-20 every time you re-enter the U.S.'],
+          es:['Firma y fecha la página 2 de cada I-20 el día que la recibes.','Nunca dejes que venza mientras estés en EE.UU. Habla con tu DSO 90 días antes.','Lleva tu I-20 cada vez que reentres a EE.UU.']},
     cost:{en:'Free from your school', es:'Gratis de tu escuela'},
     time:{en:'Have it now', es:'Ya la tienes'}},
 
   {id:'i94', cat:'identity', paths:['student','opt','workvisa','asylum'],
     name:{en:'I-94 Arrival/Departure Record', es:'I-94 Registro de Entrada/Salida'},
-    sub:{en:'Proof of legal entry — pull every 6 months', es:'Prueba de entrada legal — descarga cada 6 meses'},
-    howTo:{en:'Download the latest from i94.cbp.dhs.gov. Enter your passport number + country of citizenship. Save the PDF — it logs every U.S. arrival.',
-           es:'Descarga la más reciente de i94.cbp.dhs.gov. Ingresa tu número de pasaporte + país de ciudadanía. Guarda el PDF — registra cada entrada a EE.UU.'},
-    tips:{en:['Check the admit-until date — that\'s when your status expires.','Land border crossings (Mexico/Canada) might not appear — add manually for travel history.','Free from CBP — never pay for an "I-94 lookup service."'],
-          es:['Revisa la fecha "admit-until" — es cuando expira tu estatus.','Cruces terrestres (México/Canadá) pueden no aparecer — agrégalos manualmente.','Gratis de CBP — nunca pagues por un "servicio de búsqueda I-94".']},
+    sub:{en:'Proof of legal entry. Pull every 6 months', es:'Prueba de entrada legal. Descarga cada 6 meses'},
+    howTo:{en:'Download the latest from i94.cbp.dhs.gov. Enter your passport number + country of citizenship. Save the PDF. It logs every U.S. arrival.',
+           es:'Descarga la más reciente de i94.cbp.dhs.gov. Ingresa tu número de pasaporte + país de ciudadanía. Guarda el PDF. Registra cada entrada a EE.UU.'},
+    tips:{en:['Check the admit-until date. That\'s when your status expires.','Land border crossings (Mexico/Canada) might not appear. Add manually for travel history.','Free from CBP. Never pay for an "I-94 lookup service."'],
+          es:['Revisa la fecha "admit-until". Es cuando expira tu estatus.','Cruces terrestres (México/Canadá) pueden no aparecer. Agrégalos manualmente.','Gratis de CBP. Nunca pagues por un "servicio de búsqueda I-94".']},
     cost:{en:'Free', es:'Gratis'},
     time:{en:'2 minutes online', es:'2 minutos en línea'}},
 
   {id:'sevisFee', cat:'fees', paths:['student'],
     name:{en:'SEVIS fee receipt (I-901)', es:'Recibo de tarifa SEVIS (I-901)'},
     sub:{en:'Paid before visa interview', es:'Pagada antes de la entrevista de visa'},
-    howTo:{en:'Pay the $350 SEVIS I-901 fee at fmjfee.com. You\'ll need the SEVIS ID from your I-20. Print the receipt — bring it to your consulate interview.',
-           es:'Paga la tarifa SEVIS I-901 de $350 en fmjfee.com. Necesitas el SEVIS ID de tu I-20. Imprime el recibo — llévalo a la entrevista en el consulado.'},
-    tips:{en:['Must be paid at least 3 days before your consulate visa interview.','Required for F-1, M-1, and J-1 — different forms each.','Keep the receipt — you may need it again to re-enter the U.S.'],
-          es:['Debe pagarse al menos 3 días antes de tu entrevista de visa.','Requerido para F-1, M-1 y J-1 — formulario distinto cada uno.','Guarda el recibo — puede que lo necesites de nuevo para reentrar.']},
+    howTo:{en:'Pay the $350 SEVIS I-901 fee at fmjfee.com. You\'ll need the SEVIS ID from your I-20. Print the receipt. Bring it to your consulate interview.',
+           es:'Paga la tarifa SEVIS I-901 de $350 en fmjfee.com. Necesitas el SEVIS ID de tu I-20. Imprime el recibo. Llévalo a la entrevista en el consulado.'},
+    tips:{en:['Must be paid at least 3 days before your consulate visa interview.','Required for F-1, M-1, and J-1. Different forms each.','Keep the receipt. You may need it again to re-enter the U.S.'],
+          es:['Debe pagarse al menos 3 días antes de tu entrevista de visa.','Requerido para F-1, M-1 y J-1. Formulario distinto cada uno.','Guarda el recibo. Puede que lo necesites de nuevo para reentrar.']},
     cost:{en:'$350 (F-1/M-1) or $220 (J-1)', es:'$350 (F-1/M-1) o $220 (J-1)'},
     time:{en:'Immediate after payment', es:'Inmediato después del pago'}},
 
@@ -2025,18 +2025,18 @@ var DOCUMENTS = [
     sub:{en:'Your work permit card', es:'Tu permiso de trabajo'},
     howTo:{en:'File Form I-765 with USCIS. Asylum applicants: free after 150 days. OPT applicants: $470 online ($520 paper) + your I-20 endorsed for OPT. Once approved, the EAD card arrives by mail.',
            es:'Presenta el Formulario I-765 con USCIS. Solicitantes de asilo: gratis después de 150 días. Solicitantes OPT: $470 en línea ($520 en papel) + tu I-20 endosado para OPT. Una vez aprobado, la tarjeta EAD llega por correo.'},
-    tips:{en:['You CANNOT work until you have the EAD card in hand.','OPT card lists a specific start date — don\'t start work until then.','If expired or lost, you stop being authorized to work immediately.'],
-          es:['NO PUEDES trabajar hasta tener la tarjeta EAD en mano.','La tarjeta OPT lista una fecha de inicio específica — no empieces a trabajar antes.','Si expira o se pierde, dejas de estar autorizado a trabajar inmediatamente.']},
+    tips:{en:['You CANNOT work until you have the EAD card in hand.','OPT card lists a specific start date. Don\'t start work until then.','If expired or lost, you stop being authorized to work immediately.'],
+          es:['NO PUEDES trabajar hasta tener la tarjeta EAD en mano.','La tarjeta OPT lista una fecha de inicio específica. No empieces a trabajar antes.','Si expira o se pierde, dejas de estar autorizado a trabajar inmediatamente.']},
     cost:{en:'$470 online, $520 paper (OPT) or $0 (asylum)', es:'$470 en línea, $520 papel (OPT) o $0 (asilo)'},
     time:{en:'2–6 months', es:'2–6 meses'}},
 
   {id:'i797', cat:'work', paths:['workvisa','family-ir','employment'],
     name:{en:'I-797 Approval Notice', es:'Aviso de Aprobación I-797'},
     sub:{en:'Proof your petition was approved', es:'Prueba de que tu petición fue aprobada'},
-    howTo:{en:'USCIS mails the I-797 to your employer (workvisa) or sponsor (family/employment GC) once your petition is approved. Get a copy — you\'ll need it for visa applications, GC adjustment, and travel.',
-           es:'USCIS envía el I-797 a tu empleador (visa de trabajo) o patrocinador (residencia familiar/empleo) una vez aprobada tu petición. Obtén una copia — la necesitas para visas, ajuste de residencia y viajes.'},
-    tips:{en:['The I-797B has a tear-off bottom — keep it intact (do not tear it off).','Save the original AND make copies.','Your petition is valid only until the I-797 expiration date.'],
-          es:['El I-797B tiene una parte desprendible — mantenla intacta (no la arranques).','Guarda el original Y haz copias.','Tu petición es válida solo hasta la fecha de expiración del I-797.']},
+    howTo:{en:'USCIS mails the I-797 to your employer (workvisa) or sponsor (family/employment GC) once your petition is approved. Get a copy. You\'ll need it for visa applications, GC adjustment, and travel.',
+           es:'USCIS envía el I-797 a tu empleador (visa de trabajo) o patrocinador (residencia familiar/empleo) una vez aprobada tu petición. Obtén una copia. La necesitas para visas, ajuste de residencia y viajes.'},
+    tips:{en:['The I-797B has a tear-off bottom. Keep it intact (do not tear it off).','Save the original AND make copies.','Your petition is valid only until the I-797 expiration date.'],
+          es:['El I-797B tiene una parte desprendible. Mantenla intacta (no la arranques).','Guarda el original Y haz copias.','Tu petición es válida solo hasta la fecha de expiración del I-797.']},
     cost:{en:'Free (already covered by petition fee)', es:'Gratis (cubierto por la tarifa de petición)'},
     time:{en:'Arrives ~2 weeks after approval', es:'Llega ~2 semanas tras aprobación'}},
 
@@ -2045,18 +2045,18 @@ var DOCUMENTS = [
     sub:{en:'Required for the 24-month STEM extension', es:'Requerido para extensión STEM de 24 meses'},
     howTo:{en:'Get the I-983 from studyinthestates.dhs.gov. Fill out the training plan with your employer (must be E-Verify enrolled), then submit it to your DSO with your STEM extension request.',
            es:'Obtén el I-983 en studyinthestates.dhs.gov. Llena el plan de entrenamiento con tu empleador (debe estar inscrito en E-Verify), luego entrégalo a tu DSO con tu solicitud de extensión STEM.'},
-    tips:{en:['Employer must be enrolled in E-Verify — check before applying.','Your training must directly relate to your degree.','Report any changes (employer, salary, role) to your DSO within 10 days.'],
-          es:['El empleador debe estar inscrito en E-Verify — verifica antes de aplicar.','Tu entrenamiento debe relacionarse directamente con tu carrera.','Reporta cualquier cambio (empleador, salario, rol) a tu DSO en 10 días.']},
+    tips:{en:['Employer must be enrolled in E-Verify. Check before applying.','Your training must directly relate to your degree.','Report any changes (employer, salary, role) to your DSO within 10 days.'],
+          es:['El empleador debe estar inscrito en E-Verify. Verifica antes de aplicar.','Tu entrenamiento debe relacionarse directamente con tu carrera.','Reporta cualquier cambio (empleador, salario, rol) a tu DSO en 10 días.']},
     cost:{en:'Free', es:'Gratis'},
     time:{en:'1–2 weeks with employer', es:'1–2 semanas con empleador'}},
 
   {id:'i589', cat:'records', paths:['asylum'], uscisForms:['I-589'],
     name:{en:'Form I-589 (Asylum Application)', es:'Formulario I-589 (Solicitud de Asilo)'},
     sub:{en:'Filed within 1 year of arrival', es:'Presentada dentro de 1 año de llegar'},
-    howTo:{en:'Download Form I-589 from uscis.gov/i-589. The form asks for your story of persecution. Include corroborating evidence — affidavits, news reports, country conditions, medical records, etc.',
-           es:'Descarga el Formulario I-589 de uscis.gov/i-589. El formulario pide tu historia de persecución. Incluye evidencia — declaraciones juradas, reportes, condiciones del país, registros médicos, etc.'},
-    tips:{en:['MUST be filed within 1 year of entering the U.S. (with rare exceptions).','No filing fee.','Bring at least 3 copies to your interview.','An attorney is highly recommended — even pro bono.'],
-          es:['DEBE presentarse dentro de 1 año de entrar a EE.UU. (con raras excepciones).','Sin tarifa.','Lleva al menos 3 copias a la entrevista.','Un abogado es muy recomendado — incluso pro bono.']},
+    howTo:{en:'Download Form I-589 from uscis.gov/i-589. The form asks for your story of persecution. Include corroborating evidence. Affidavits, news reports, country conditions, medical records, etc.',
+           es:'Descarga el Formulario I-589 de uscis.gov/i-589. El formulario pide tu historia de persecución. Incluye evidencia. Declaraciones juradas, reportes, condiciones del país, registros médicos, etc.'},
+    tips:{en:['MUST be filed within 1 year of entering the U.S. (with rare exceptions).','No filing fee.','Bring at least 3 copies to your interview.','An attorney is highly recommended. Even pro bono.'],
+          es:['DEBE presentarse dentro de 1 año de entrar a EE.UU. (con raras excepciones).','Sin tarifa.','Lleva al menos 3 copias a la entrevista.','Un abogado es muy recomendado. Incluso pro bono.']},
     cost:{en:'Free', es:'Gratis'},
     time:{en:'Days to weeks to prepare', es:'Días o semanas para preparar'}},
 
@@ -2067,7 +2067,7 @@ var DOCUMENTS = [
            es:'Reúne todo lo que apoye tu historia: reportes policiales, registros médicos, cartas amenazantes, fotos de heridas, artículos de noticias sobre eventos en tu país, declaraciones de expertos y testigos.'},
     tips:{en:['Translate every non-English document with a certified translator.','Country-condition reports (State Dept, HRW, Amnesty) are powerful evidence.','Keep originals safe; submit copies.','Specific facts beat general claims.'],
           es:['Traduce cada documento no inglés con traductor certificado.','Reportes de condiciones del país (Dept de Estado, HRW, Amnistía) son evidencia poderosa.','Guarda originales; entrega copias.','Hechos específicos son mejor que afirmaciones generales.']},
-    cost:{en:'Varies — translation $25–$50/page', es:'Varía — traducción $25–$50/página'},
+    cost:{en:'Varies. Translation $25–$50/page', es:'Varía. Traducción $25–$50/página'},
     time:{en:'Weeks to months', es:'Semanas a meses'}}
 ];
 
@@ -2353,7 +2353,7 @@ function renderFlashcard(){
 
   var correctOpt = null;
   for(var i=0;i<q.options.length;i++) if(q.options[i].correct){ correctOpt = q.options[i]; break; }
-  var answerText = correctOpt ? correctOpt[lang] : '—';
+  var answerText = correctOpt ? correctOpt[lang] : '–';
   var exp = EXPLAIN[qId];
   var expText = (exp && exp[lang]) || (exp && exp.en) || '';
 
@@ -2434,7 +2434,7 @@ function renderHomeFlashcardCard(){
   var titleTxt, subTxt, metaLeft, metaRight;
   if(doneToday){
     titleTxt = lang==='es' ? '¡Hecho por hoy!' : 'Done for today!';
-    subTxt = lang==='es' ? 'Vuelve mañana — el set cambia cada día' : 'Come back tomorrow — set changes every day';
+    subTxt = lang==='es' ? 'Vuelve mañana. El set cambia cada día' : 'Come back tomorrow. Set changes every day';
     metaLeft = inlineIcon('flame','#ff4d3a',13) + streak + ' ' + (lang==='es' ? 'día'+(streak===1?'':'s') : 'day'+(streak===1?'':'s'));
     metaRight = (lang==='es' ? 'Repasar' : 'Replay');
   } else {
@@ -2458,7 +2458,7 @@ var N400_REVIEW_QUESTIONS = [
     tip:{en:'Name the country as it is on your birth certificate.', es:'Nombra el país como aparece en tu acta de nacimiento.'}},
   {key:'gcDate', icon:'id',
     q:{en:'When did you become a lawful permanent resident?', es:'¿Cuándo te hiciste residente permanente?'},
-    tip:{en:'Give the exact date on your green card — officers cross-check this.', es:'Da la fecha exacta de tu residencia — los oficiales lo verifican.'}},
+    tip:{en:'Give the exact date on your green card. Officers cross-check this.', es:'Da la fecha exacta de tu residencia. Los oficiales lo verifican.'}},
   {key:'married', icon:'ring',
     q:{en:'Are you currently married?', es:'¿Estás casado/a actualmente?'},
     tip:{en:'A simple yes or no. If yes, the officer will ask follow-up questions.', es:'Un sí o no. Si sí, habrá preguntas adicionales.'}},
@@ -2467,16 +2467,16 @@ var N400_REVIEW_QUESTIONS = [
     tip:{en:'Be exact. The officer matches against your marriage certificate.', es:'Sé exacto. El oficial verifica con tu acta de matrimonio.'}},
   {key:'trips', icon:'plane',
     q:{en:'In the last 5 years, have you taken any trip outside the U.S. longer than 6 months?', es:'En los últimos 5 años, ¿has hecho algún viaje fuera de EE.UU. de más de 6 meses?'},
-    tip:{en:'A trip over 6 months can break continuous residence. Be honest — passport stamps will show it.', es:'Un viaje de más de 6 meses puede romper la residencia continua. Sé honesto — los sellos del pasaporte lo muestran.'}},
+    tip:{en:'A trip over 6 months can break continuous residence. Be honest. Passport stamps will show it.', es:'Un viaje de más de 6 meses puede romper la residencia continua. Sé honesto. Los sellos del pasaporte lo muestran.'}},
   {key:'crime', icon:'scales',
     q:{en:'Have you EVER been arrested, charged, cited, or detained by any law enforcement officer for any reason?', es:'¿Has sido ALGUNA VEZ arrestado, acusado, citado, o detenido por algún oficial por cualquier motivo?'},
-    tip:{en:'Disclose EVERYTHING — dismissed cases, traffic, juvenile, anything. The officer has your full background check.', es:'Revela TODO — casos desestimados, tráfico, juvenil, lo que sea. El oficial tiene tu verificación completa.'}},
+    tip:{en:'Disclose EVERYTHING. Dismissed cases, traffic, juvenile, anything. The officer has your full background check.', es:'Revela TODO. Casos desestimados, tráfico, juvenil, lo que sea. El oficial tiene tu verificación completa.'}},
   {key:'taxes', icon:'bill',
     q:{en:'Have you filed all your federal income tax returns?', es:'¿Has presentado todas tus declaraciones de impuestos federales?'},
     tip:{en:'If you owe back taxes, disclose it AND bring proof of a payment plan with the IRS.', es:'Si debes impuestos, revélalo Y trae prueba de un plan de pago con el IRS.'}},
   {key:'support', icon:'doc',
     q:{en:'Do you support the Constitution and form of government of the United States?', es:'¿Apoyas la Constitución y la forma de gobierno de EE.UU.?'},
-    tip:{en:'The answer is yes — this is one of the most important questions of the interview.', es:'La respuesta es sí — es una de las preguntas más importantes de la entrevista.'}},
+    tip:{en:'The answer is yes. This is one of the most important questions of the interview.', es:'La respuesta es sí. Es una de las preguntas más importantes de la entrevista.'}},
   {key:'oath', icon:'flagUS',
     q:{en:'Are you willing to take the Oath of Allegiance to the United States?', es:'¿Estás dispuesto/a a tomar el Juramento de Lealtad a EE.UU.?'},
     tip:{en:'Yes. The oath has 5 parts: renounce other allegiances, defend the Constitution, obey U.S. law, serve in the military if required, perform civil service if required.', es:'Sí. El juramento tiene 5 partes: renunciar a otras lealtades, defender la Constitución, obedecer la ley, servir en el ejército si es requerido, hacer servicio civil si es requerido.'}}
@@ -2484,29 +2484,29 @@ var N400_REVIEW_QUESTIONS = [
 
 function expectedN400Answer(q){
   var k = q.key;
-  if(k === 'name') return user.name || '—';
+  if(k === 'name') return user.name || '–';
   if(k === 'country') return countryLabel(user.countryOfBirth || 'Other', lang);
-  if(k === 'gcDate') return user.greenCardDate ? fmtDate(user.greenCardDate, lang) : '—';
+  if(k === 'gcDate') return user.greenCardDate ? fmtDate(user.greenCardDate, lang) : '–';
   if(k === 'married') return user.marriedToCitizen ? (lang==='es'?'Sí':'Yes') : (lang==='es'?'No':'No');
-  if(k === 'marriageDate') return user.marriageDate ? fmtDate(user.marriageDate, lang) : '—';
+  if(k === 'marriageDate') return user.marriageDate ? fmtDate(user.marriageDate, lang) : '–';
   if(k === 'trips'){
     if(user.monthsOutside === 'lt6') return (lang==='es' ? 'No' : 'No');
     if(user.monthsOutside === '6-18') return (lang==='es' ? 'No de un solo viaje, pero entre 6 y 18 meses en total' : 'No single trip, but 6 to 18 months total');
-    if(user.monthsOutside === 'gt18') return (lang==='es' ? 'Sí — consulta legal' : 'Yes — legal consult');
+    if(user.monthsOutside === 'gt18') return (lang==='es' ? 'Sí. Consulta legal' : 'Yes. Legal consult');
     return (lang==='es' ? 'No estoy seguro' : 'Not sure');
   }
-  if(k === 'crime') return user.criminalHistory ? (lang==='es' ? 'Sí — debes revelar todo con tu abogado' : 'Yes — disclose with your lawyer') : (lang==='es' ? 'No' : 'No');
+  if(k === 'crime') return user.criminalHistory ? (lang==='es' ? 'Sí. Debes revelar todo con tu abogado' : 'Yes. Disclose with your lawyer') : (lang==='es' ? 'No' : 'No');
   if(k === 'taxes') return (lang==='es' ? 'Sí, presento cada año' : 'Yes, I file every year');
   if(k === 'support') return (lang==='es' ? 'Sí' : 'Yes');
   if(k === 'oath') return (lang==='es' ? 'Sí, estoy dispuesto/a' : 'Yes, I am willing');
-  return '—';
+  return '–';
 }
 
 function expectedCivicsAnswer(qId){
   var q = findQ(qId);
-  if(!q) return '—';
+  if(!q) return '–';
   for(var i=0;i<q.options.length;i++) if(q.options[i].correct) return q.options[i][lang];
-  return '—';
+  return '–';
 }
 
 function ttsSupported(){ return 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window; }
@@ -2533,7 +2533,7 @@ if(typeof document !== 'undefined'){
 
 // ===== SOUND EFFECTS (Web Audio, synthesized) =====
 // Short feedback chimes for right/wrong answers, session completion, and card
-// flips. Synthesized at play time — no audio assets, works offline, ~zero cost.
+// flips. Synthesized at play time. No audio assets, works offline, ~zero cost.
 // Muted via the "Sound effects" toggle in the Me tab (user.soundEffects).
 var Sfx = { ctx: null };
 
@@ -2549,7 +2549,7 @@ function sfxCtx(){
   return Sfx.ctx;
 }
 
-// iOS suspends AudioContext until a user gesture — resumed from warmupTTS,
+// iOS suspends AudioContext until a user gesture. Resumed from warmupTTS,
 // which already runs on the first tap anywhere.
 function sfxUnlock(){
   var c = sfxCtx();
@@ -2598,8 +2598,8 @@ function toggleSoundEffects(){
 // Every fixed spoken line (civics Q&A, N-400 questions, officer feedback) ships
 // as a studio-quality MP3 in audio/tts/, generated by scripts/generate-tts.js.
 // Lookup is by normalized "lang|text" key via manifest.json. Anything not in
-// the manifest (user-specific N-400 answers, Cami replies) — and any playback
-// failure — falls back to the legacy speechSynthesis path, so this layer can
+// the manifest (user-specific N-400 answers, Cami replies). And any playback
+// failure. Falls back to the legacy speechSynthesis path, so this layer can
 // never make speech WORSE than before.
 var VoiceClips = {
   base: 'audio/tts/',
@@ -2619,7 +2619,7 @@ function clipKey(langCode, text){
     fetch(VoiceClips.base + 'manifest.json', {cache: 'force-cache'})
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(m){ if(m && m.clips) VoiceClips.manifest = m.clips; })
-      .catch(function(){ /* no clips shipped — speechSynthesis handles everything */ });
+      .catch(function(){ /* no clips shipped. SpeechSynthesis handles everything */ });
   } catch(e){}
 })();
 
@@ -2656,7 +2656,7 @@ function stopVoiceClip(){
 }
 
 // Play one clip. Calls onEnd() when finished; calls onFail() (instead of onEnd)
-// if playback can't start — caller falls back to speechSynthesis.
+// if playback can't start. Caller falls back to speechSynthesis.
 function playVoiceClip(url, opts, onEnd, onFail){
   try {
     stopVoiceClip();
@@ -2666,7 +2666,7 @@ function playVoiceClip(url, opts, onEnd, onFail){
     a.src = url;
     a.volume = 1.0;
     a.playbackRate = (opts && opts.playbackRate) || 1.0;
-    // Slowed playback must not drop pitch (chipmunk in reverse) — keep it natural
+    // Slowed playback must not drop pitch (chipmunk in reverse). Keep it natural
     try { a.preservesPitch = true; a.webkitPreservesPitch = true; } catch(e){}
     var settled = false;
     function finish(ok){
@@ -2683,13 +2683,13 @@ function playVoiceClip(url, opts, onEnd, onFail){
     return true;
   } catch(e){
     if(onFail) onFail();
-    return true; // we already routed to onFail — caller must not double-speak
+    return true; // we already routed to onFail. Caller must not double-speak
   }
 }
 
 // Play clips back-to-back (e.g. "The correct answer is:" + the answer).
 // Routes to onFail only if the FIRST clip can't start (caller then falls back
-// to full speechSynthesis); a later clip failing just ends the sequence —
+// to full speechSynthesis); a later clip failing just ends the sequence. 
 // re-speaking the whole line would repeat what was already heard.
 function playVoiceClipSequence(urls, opts, onEnd, onFail){
   function next(i){
@@ -2721,7 +2721,7 @@ function speakInterviewLegacy(text){
     if(IntvVoice.officerVoice && lang !== 'es') u.voice = IntvVoice.officerVoice;
     u.lang = (lang === 'es') ? 'es-US' : 'en-US';
     u.rate = 0.97;   // natural conversational pace
-    u.pitch = 1.06;  // slightly warmer/higher — reads as a natural female voice, not flat/robotic
+    u.pitch = 1.06;  // slightly warmer/higher. Reads as a natural female voice, not flat/robotic
     u.volume = 1.0;
     window.speechSynthesis.speak(u);
   } catch(e){}
@@ -2740,11 +2740,11 @@ var IntvVoice = {
   audioCtx: null,
   analyser: null,
   meterRaf: null,
-  // VAD state — updated each animation frame from the analyser
+  // VAD state. Updated each animation frame from the analyser
   vad: {
     speechStartedAt: 0,    // ts when amplitude first crossed speech threshold (0 = none yet)
     lastSpeechAt: 0,       // ts of most recent above-threshold sample
-    avgLevel: 0,           // exponential moving average — used by pacing coach
+    avgLevel: 0,           // exponential moving average. Used by pacing coach
     listenStartedAt: 0     // ts when current listen() began
   }
 };
@@ -2808,7 +2808,7 @@ function pickOfficerVoice(){
     // Hard penalties for novelty / compact / low-quality voices that absolutely will sound robotic
     if(/compact/.test(name) || /compact/.test(voiceURI)) s -= 60;
     if(/novelty|whisper|bahh|bells|boing|bubbles|cellos|deranged|hysterical|good\s*news|bad\s*news|trinoids|pipe|albert|junior|zarvox|kathy|princess|ralph|organ/.test(name)) s -= 200;
-    // Local (on-device) voices are higher quality on iOS — server fallbacks are choppy
+    // Local (on-device) voices are higher quality on iOS. Server fallbacks are choppy
     if(v.localService) s += 12;
     if(v.default) s += 4;
     return s;
@@ -2821,7 +2821,7 @@ function pickOfficerVoice(){
   return ranked.length ? ranked[0].v : voices[0];
 }
 
-// Insert small pauses + ensure punctuation breathes — fights the "all one breath" robot tell.
+// Insert small pauses + ensure punctuation breathes. Fights the "all one breath" robot tell.
 function humanizeOfficerText(text){
   if(!text) return text;
   var t = String(text);
@@ -2890,7 +2890,7 @@ async function ensureMicPermission(){
     saveUser();
     return false;
   }
-  // Keep an active stream around for the interview session — avoids re-prompting per turn.
+  // Keep an active stream around for the interview session. Avoids re-prompting per turn.
   if(IntvVoice.micStream && IntvVoice.micStream.active){
     user.micPermission = 'granted';
     return true;
@@ -2941,7 +2941,7 @@ function startAudioRecording(){
     };
     rec.start();
   } catch(e){
-    // Recording is best-effort — the interview still works without it
+    // Recording is best-effort. The interview still works without it
   }
 }
 
@@ -2978,7 +2978,7 @@ var INTV_NUM_WORDS = {
 };
 var INTV_STOPWORDS = {'the':1,'a':1,'an':1,'of':1,'to':1,'in':1,'is':1,'was':1,'were':1,'and':1,'or':1,'on':1,'at':1,'for':1,'this':1,'that':1,'with':1,'by':1,'be':1,'are':1,'as':1,'from':1,'it':1,'i':1,'we':1,'my':1};
 
-// Synonym map — collapses paraphrase variants to a single canonical token before matching.
+// Synonym map. Collapses paraphrase variants to a single canonical token before matching.
 // Order matters: longer phrases first so e.g. "united states" doesn't get split to "us united states".
 var INTV_SYNONYMS = [
   [/\b(u\s*s\s*a|u\s*s\s*of\s*a|united\s+states\s+of\s+america|the\s+united\s+states|america|american|americas)\b/g, 'unitedstates'],
@@ -3088,7 +3088,7 @@ function normalizeIntvAnswer(s){
   return t;
 }
 
-// Lightweight "metaphone-like" phonetic encoder. NOT exact metaphone — tuned
+// Lightweight "metaphone-like" phonetic encoder. NOT exact metaphone. Tuned
 // for civics vocabulary and the Web Speech API's common substitutions.
 // "iroquois" / "earache way" → "irki" / "rwy" (close enough for fallback match)
 // "lincoln" / "link in" → "lnkn" / "lnkn" (exact)
@@ -3113,7 +3113,7 @@ function phoneticCode(s){
        .replace(/z/g,'s');
   // Drop silent w/h between consonants
   t = t.replace(/(?<=[bcdfgjklmnpqrstv])[wh]/g, '');
-  // Drop all vowels (preserve word boundaries with space) — keeps consonant skeleton
+  // Drop all vowels (preserve word boundaries with space). Keeps consonant skeleton
   t = t.split(/\s+/).map(function(w){
     if(!w) return '';
     var first = w.charAt(0);
@@ -3143,7 +3143,7 @@ function levenshteinIntv(a, b){
 }
 
 function intvKeywordScore(transcript, expected){
-  // Keep digit-only keys (like "6", "27", "1776") — they're meaningful, just short.
+  // Keep digit-only keys (like "6", "27", "1776"). They're meaningful, just short.
   var keys = expected.split(/\s+/).filter(function(w){
     if(INTV_STOPWORDS[w]) return false;
     if(w.length > 1) return true;
@@ -3163,7 +3163,7 @@ function intvKeywordScore(transcript, expected){
       if(tWords[i].length >= 4 && Math.abs(tWords[i].length - k.length) <= tol &&
          levenshteinIntv(tWords[i], k) <= tol){ hits++; return; }
     }
-    // Phonetic fallback — catches unseen mishears not in the synonym map
+    // Phonetic fallback. Catches unseen mishears not in the synonym map
     var kPhon = phoneticCode(k);
     if(kPhon.length >= 3){
       for(var p=0;p<tPhonetics.length;p++){
@@ -3205,7 +3205,7 @@ function evaluateIntvAnswer(transcript, expectedVariants){
   scored.sort(function(a,b){ return b.score - a.score; });
   var best = scored.length ? scored[0].score : 0;
   var bestMatch = scored.length ? scored[0].variant : expectedVariants[0];
-  // Top suggestions for the "Did you mean?" panel — meaningfully-scored, distinct ones
+  // Top suggestions for the "Did you mean?" panel. Meaningfully-scored, distinct ones
   var topMatches = [];
   var seen = {};
   for(var k=0;k<scored.length && topMatches.length < 3;k++){
@@ -3223,7 +3223,7 @@ function evaluateIntvAnswer(transcript, expectedVariants){
 
 // Acceptable-answer variants for the trickier civics questions where keyword-match alone
 // might miss. Indexed by civics question ID. For most questions, the keyword matcher
-// against the official answer is enough — these are explicit alternates.
+// against the official answer is enough. These are explicit alternates.
 var INTERVIEW_VARIANTS = {
   1:  ['Constitution','the Constitution','U.S. Constitution','United States Constitution','American Constitution','supreme law'],
   2:  ['sets up the government','defines the government','protects basic rights','protects the rights of Americans','it sets up the government'],
@@ -3325,19 +3325,19 @@ function expectedN400AnswerEn(q){
   var k = q.key;
   if(k === 'name'){
     var n = (user.name||'').trim();
-    return n ? [n, n.split(' ')[0]] : ['—'];
+    return n ? [n, n.split(' ')[0]] : ['–'];
   }
   if(k === 'country'){
     var c = countryLabel(user.countryOfBirth || 'Other', 'en');
     return [c];
   }
   if(k === 'gcDate'){
-    var d = user.greenCardDate ? fmtDate(user.greenCardDate, 'en') : '—';
+    var d = user.greenCardDate ? fmtDate(user.greenCardDate, 'en') : '–';
     return [d];
   }
   if(k === 'married') return user.marriedToCitizen ? ['yes','I am','I am married'] : ['no','I am not','I am not married','single'];
   if(k === 'marriageDate'){
-    var md = user.marriageDate ? fmtDate(user.marriageDate, 'en') : '—';
+    var md = user.marriageDate ? fmtDate(user.marriageDate, 'en') : '–';
     return [md];
   }
   if(k === 'trips'){
@@ -3350,16 +3350,16 @@ function expectedN400AnswerEn(q){
   if(k === 'taxes') return ['yes','I have','yes I have','I file every year'];
   if(k === 'support') return ['yes','I do','yes I do'];
   if(k === 'oath') return ['yes','I am','I am willing','yes I am willing'];
-  return ['—'];
+  return ['–'];
 }
 
-// Mastery tracking — drives adaptive question selection in future sessions.
+// Mastery tracking. Drives adaptive question selection in future sessions.
 // State machine per question:
-//   'new'        — never attempted
-//   'weak'       — got it wrong last time
-//   'practicing' — got it right once recently OR after being weak
-//   'mastered'   — 2 consecutive correct attempts
-// One wrong/close after mastered demotes to practicing (not weak — gentler).
+//   'new'       . Never attempted
+//   'weak'      . Got it wrong last time
+//   'practicing'. Got it right once recently OR after being weak
+//   'mastered'  . 2 consecutive correct attempts
+// One wrong/close after mastered demotes to practicing (not weak. Gentler).
 function getCivicsMastery(qId){
   var m = (user.progress && user.progress.civicsMastery) || {};
   return m[qId] || {state:'new', streak:0, lastAt:null};
@@ -3624,7 +3624,7 @@ function startMicLevelMeter(){
     IntvVoice.vad.speechStartedAt = 0;
     IntvVoice.vad.lastSpeechAt = 0;
     IntvVoice.vad.avgLevel = 0;
-    // Ambient noise calibration — sample for ~400ms before raising the speech threshold
+    // Ambient noise calibration. Sample for ~400ms before raising the speech threshold
     // so users in noisy environments don't get false triggers (HVAC, traffic, etc.).
     IntvVoice.vad.calibrating = true;
     IntvVoice.vad.calibrationMax = 0;
@@ -3649,7 +3649,7 @@ function startMicLevelMeter(){
       }
       var level = Math.min(1, peak / 50);
       var t = (typeof performance !== 'undefined' && performance.now) ? performance.now() : 0;
-      // Exponential moving average of level — drives pacing coach
+      // Exponential moving average of level. Drives pacing coach
       IntvVoice.vad.avgLevel = IntvVoice.vad.avgLevel * 0.85 + level * 0.15;
 
       // Ambient calibration: for the first 400ms, treat all input as noise.
@@ -3679,7 +3679,7 @@ function startMicLevelMeter(){
         if(!IntvVoice.vad.speechStartedAt) IntvVoice.vad.speechStartedAt = t;
         IntvVoice.vad.lastSpeechAt = t;
       }
-      // Pacing coach line — gentle hints
+      // Pacing coach line. Gentle hints
       var hint = '';
       if(!IntvVoice.vad.speechStartedAt && (t - IntvVoice.vad.listenStartedAt) > NO_SPEECH_HINT_MS){
         hint = lang==='es' ? 'Tómate tu tiempo · habla más cerca del micrófono' : "Take your time · speak closer to the mic";
@@ -3689,7 +3689,7 @@ function startMicLevelMeter(){
       var hintEl = document.getElementById('intvPacingHint');
       if(hintEl) hintEl.textContent = hint;
 
-      // Auto-stop on silence after speech (hands-free or not — keeps recognition snappy)
+      // Auto-stop on silence after speech (hands-free or not. Keeps recognition snappy)
       if(IntvVoice.vad.lastSpeechAt && (t - IntvVoice.vad.lastSpeechAt) > SILENCE_END_MS){
         try { IntvVoice.recognizer && IntvVoice.recognizer.stop(); } catch(e){}
         IntvVoice.meterRaf = null;
@@ -3704,7 +3704,7 @@ function startMicLevelMeter(){
       IntvVoice.meterRaf = requestAnimationFrame(tick);
     }
     IntvVoice.meterRaf = requestAnimationFrame(tick);
-  } catch(e){ /* AudioContext denied or stream unsupported — silent fallback */ }
+  } catch(e){ /* AudioContext denied or stream unsupported. Silent fallback */ }
 }
 
 function stopMicLevelMeter(){
@@ -3763,7 +3763,7 @@ function replayOfficer(){
 }
 
 function userPressMic(){
-  // NOT async — we need to call start() synchronously to preserve iOS user gesture.
+  // NOT async. We need to call start() synchronously to preserve iOS user gesture.
   if(!intvState) return;
   if(intvState.phase === 'listening'){
     stopListening();
@@ -3782,7 +3782,7 @@ function userPressMic(){
     toast(lang==='es' ? 'Tu navegador no soporta voz. Usa el modo de texto.' : 'Voice not supported. Use text mode.');
     return;
   }
-  // Kick off audio stream + recording in parallel (best-effort) but don't await — the
+  // Kick off audio stream + recording in parallel (best-effort) but don't await. The
   // SpeechRecognition start() must happen in the same synchronous tick as the click.
   ensureMicPermission().catch(function(){});
   startListeningToUser();
@@ -3850,15 +3850,15 @@ function startListeningToUser(){
     if(err === 'not-allowed' || err === 'service-not-allowed'){
       user.micPermission = 'denied';
       saveUser();
-      toast(lang==='es' ? 'Permiso del micrófono bloqueado — actívalo en el navegador' : 'Mic blocked — enable it in browser settings');
+      toast(lang==='es' ? 'Permiso del micrófono bloqueado. Actívalo en el navegador' : 'Mic blocked. Enable it in browser settings');
     } else if(err === 'no-speech'){
-      toast(lang==='es' ? 'No te oí — toca el micrófono y habla' : "I didn't hear you — tap mic and speak");
+      toast(lang==='es' ? 'No te oí. Toca el micrófono y habla' : "I didn't hear you. Tap mic and speak");
     } else if(err === 'audio-capture'){
       toast(lang==='es' ? 'No se encontró micrófono' : 'No microphone found');
     } else if(err === 'network'){
       toast(lang==='es' ? 'Error de red al reconocer voz' : 'Network error during recognition');
     } else if(err === 'aborted'){
-      // silent — user pressed stop
+      // silent. User pressed stop
     } else {
       toast(lang==='es' ? 'Error de voz: '+err : 'Voice error: '+err);
     }
@@ -3883,7 +3883,7 @@ function startListeningToUser(){
           intvState.phase = 'ready';
           renderInterview();
         }
-        toast(lang==='es' ? 'No se pudo iniciar la voz' : 'Could not start voice — try again');
+        toast(lang==='es' ? 'No se pudo iniciar la voz' : 'Could not start voice. Try again');
       }
     }, 200);
   }
@@ -3928,7 +3928,7 @@ function processIntvAnswer(){
   if(!intvState) return;
   var transcript = (intvState.currentTranscript || '').trim();
 
-  // Voice command intercept — only when hands-free is on (avoids false positives
+  // Voice command intercept. Only when hands-free is on (avoids false positives
   // when someone genuinely says "stop" or "next" as part of a real civics answer).
   if(intvState.handsFree && !intvState._forceGrade){
     var cmd = detectVoiceCommand(transcript);
@@ -3955,7 +3955,7 @@ function processIntvAnswer(){
   var q = intvState.questions[intvState.qIdx];
   var variants = getAcceptedVariants(q);
 
-  // Pull together every transcript the recognizer ever gave us — the main one PLUS
+  // Pull together every transcript the recognizer ever gave us. The main one PLUS
   // the up-to-5 alternatives from each final result. Score them all; pick the best.
   // Web Speech's top alternative is often a less-good match than its #2/3/4.
   var candidates = [];
@@ -3979,7 +3979,7 @@ function processIntvAnswer(){
   var result = best;
 
   // Smart-retry: very-low recognizer confidence + nothing matched → don't punish.
-  // Surface a "Didn't catch that — try again?" path instead of marking wrong.
+  // Surface a "Didn't catch that. Try again?" path instead of marking wrong.
   // User can override via forceGradeIntvAnswer() ("Grade anyway") to skip this gate.
   if(!intvState._forceGrade
      && result.verdict === 'wrong' && result.score < 0.15
@@ -4043,7 +4043,7 @@ function processIntvAnswer(){
 }
 
 // Speaks the verdict. For close/wrong verdicts the line is "<stem> <expected>",
-// where expected can be a fixed civics answer (has a clip) — play stem clip +
+// where expected can be a fixed civics answer (has a clip). Play stem clip +
 // answer clip back-to-back. User-specific N-400 answers have no clip, so the
 // whole composed line falls back to speechSynthesis.
 function speakOfficerFeedback(verdict, expected, onEnd){
@@ -4072,7 +4072,7 @@ function overrideAsCorrect(){
   var r = intvState.results[intvState.results.length - 1];
   r.verdict = 'correct';
   r.overridden = true;
-  // Override updates mastery — STT misheard the user, the answer was right
+  // Override updates mastery. STT misheard the user, the answer was right
   if(r.type === 'civics' && r.qId){
     updateCivicsMastery(r.qId, 'correct');
     saveUser();
@@ -4081,7 +4081,7 @@ function overrideAsCorrect(){
   toast(lang==='es' ? 'Marcado como correcto' : 'Marked correct');
 }
 
-// "Did you mean?" tap-to-accept — bumps verdict to correct with the chosen variant noted.
+// "Did you mean?" tap-to-accept. Bumps verdict to correct with the chosen variant noted.
 function acceptDidYouMean(idx){
   if(!intvState || !intvState.results.length) return;
   var r = intvState.results[intvState.results.length - 1];
@@ -4153,7 +4153,7 @@ function finishInterview(){
   renderInterview();
 }
 
-// Cami's head in an officer's peaked cap — the "USCIS officer" avatar in the interview sim.
+// Cami's head in an officer's peaked cap. The "USCIS officer" avatar in the interview sim.
 function camiOfficerSVG(size){
   size = size || 40;
   return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
@@ -4205,7 +4205,7 @@ function renderInterview(){
     + iconSVG('mic', hfActive?'#fff':'#84807a', 14)
     + '<span class="intvHandsFreeLbl">'+(lang==='es'?'Manos libres':'Hands-free')+'</span>'
     + '</button>';
-  // Session streak badge — pulses on increment
+  // Session streak badge. Pulses on increment
   var streak = intvState.currentStreak || 0;
   var streakBadge = streak >= 2
     ? '<div class="intvStreakBadge'+(intvState.justIncrementedStreak?' intvStreakPulse':'')+'" title="'+(lang==='es'?'Racha de respuestas':'Answer streak')+'">'
@@ -4243,7 +4243,7 @@ function renderInterview(){
         + '<div class="intvMicHint">'+(lang==='es'?'Toca y responde en voz alta':'Tap, then answer out loud')+'</div>'
         + '</div>';
     } else {
-      // No SpeechRecognition (iOS WKWebView): typed answers ARE the flow — no dead mic button.
+      // No SpeechRecognition (iOS WKWebView): typed answers ARE the flow. No dead mic button.
       html += '<div class="intvFallback">'
         + '<div class="intvFallbackLbl">'+(lang==='es'?'Escribe tu respuesta:':'Type your answer:')+'</div>'
         + '<input type="text" id="intvFallbackInput" class="intvFallbackInput" placeholder="'+(lang==='es'?'Tu respuesta…':'Your answer…')+'" />'
@@ -4272,7 +4272,7 @@ function renderInterview(){
       + '<div class="intvLowConfTitle">'+(lang==='es'?"No te oí bien":"I didn't catch that")+'</div>'
       + (intvState.lowConfHeard
           ? '<div class="intvLowConfHeard">'+(lang==='es'?'Te oí: ':'I heard: ')+'"<em>'+intvState.lowConfHeard+'</em>"</div>'
-          : '<div class="intvLowConfHeard">'+(lang==='es'?'No oí nada — habla más cerca del micrófono':'I heard silence — speak closer to the mic')+'</div>')
+          : '<div class="intvLowConfHeard">'+(lang==='es'?'No oí nada. Habla más cerca del micrófono':'I heard silence. Speak closer to the mic')+'</div>')
       + '<div class="intvLowConfRow">'
       +   '<button class="cta intvLowConfRetry" onclick="userPressMic()">'+iconSVG('mic','#fff',16)+' '+(lang==='es'?'Reintentar':'Try again')+'</button>'
       +   '<button class="intvLowConfShow" onclick="forceGradeIntvAnswer()">'+(lang==='es'?'Calificar de todos modos':'Grade anyway')+'</button>'
@@ -4295,7 +4295,7 @@ function renderInterview(){
     var playBtn = last.audioUrl
       ? '<button class="intvPlayBtn" onclick="playUserAudio(\''+last.audioUrl+'\')">▶ '+(lang==='es'?'Escucharme':'Play my answer')+'</button>'
       : '';
-    // "Did you mean?" — show top distinct variants the user can tap if they had a near miss.
+    // "Did you mean?". Show top distinct variants the user can tap if they had a near miss.
     // Only meaningful when not already 'correct' AND we have candidates with non-zero score.
     var didYouMeanHtml = '';
     if(last.verdict !== 'correct' && last.topMatches && last.topMatches.length){
@@ -4317,13 +4317,13 @@ function renderInterview(){
       : '';
     html += '<div class="intvVerdict intvVerdict-'+verdictClass+'">'
       + '<div class="intvVerdictHead">'+verdictLbl+'</div>'
-      + '<div class="intvVerdictRow"><div class="intvVerdictKey">'+(lang==='es'?'TE OÍ':'I HEARD')+'</div><div class="intvVerdictVal">"'+(last.heard || '—')+'"</div></div>'
+      + '<div class="intvVerdictRow"><div class="intvVerdictKey">'+(lang==='es'?'TE OÍ':'I HEARD')+'</div><div class="intvVerdictVal">"'+(last.heard || '–')+'"</div></div>'
       + playBtn
       + '<div class="intvVerdictRow"><div class="intvVerdictKey">'+(lang==='es'?'RESPUESTA OFICIAL':'OFFICIAL ANSWER')+'</div><div class="intvVerdictVal intvVerdictExpected">'+last.expected+'</div></div>'
       + hearBtn
       + (last.matched && last.matched !== last.expected ? '<div class="intvVerdictRow"><div class="intvVerdictKey">'+(lang==='es'?'COINCIDIÓ CON':'MATCHED')+'</div><div class="intvVerdictVal">'+last.matched+'</div></div>' : '')
       + didYouMeanHtml
-      + (last.verdict !== 'correct' ? '<button class="intvOverrideBtn" onclick="overrideAsCorrect()">'+(lang==='es'?'Realmente lo dije bien — marcar como correcto':'I said it right — mark correct')+'</button>' : '')
+      + (last.verdict !== 'correct' ? '<button class="intvOverrideBtn" onclick="overrideAsCorrect()">'+(lang==='es'?'Realmente lo dije bien. Marcar como correcto':'I said it right. Mark correct')+'</button>' : '')
       + '</div>';
   }
   body.innerHTML = html;
@@ -4389,7 +4389,7 @@ function renderInterviewResults(){
       + '</div>';
   }
 
-  // Topic heatmap — per-civics-unit mastery from your overall study, not just this session
+  // Topic heatmap. Per-civics-unit mastery from your overall study, not just this session
   var heatmap = civicsUnitMastery();
   var heatmapHtml = '';
   if(heatmap.length){
@@ -4544,24 +4544,24 @@ var LEGAL_DISCLAIMER = {
     en: 'Camino is a self-help educational tool, not a law firm. Nothing here is legal advice for your case.',
     es: 'Camino es una herramienta educativa de autoayuda, no un bufete. Nada aquí es asesoría legal para tu caso.'
   },
-  title: {en: 'Important — read before using', es: 'Importante — léelo antes de usar'},
+  title: {en: 'Important. Read before using', es: 'Importante. Léelo antes de usar'},
   full: {
     en: [
       'Camino is **self-help software** that provides general information and study tools. It is **not a law firm**, is **not a substitute for the advice of an attorney**, and does **not provide legal advice, opinions, or recommendations**.',
       'Using Camino does **not create an attorney-client relationship**, and nothing you enter is protected by attorney-client privilege.',
-      'Camino **cannot tell you whether you qualify** for any immigration benefit and does not review your information for legal sufficiency. Its document tools only record **your own answers, at your direction**, and place them **verbatim** on forms for your personal review — you complete, sign, and file everything yourself.',
-      'Immigration law changes often and outcomes are fact-specific. **No outcome is guaranteed**, and content may not reflect the most recent changes — always verify with uscis.gov. Before any decision affecting your legal status, consult a **licensed U.S. immigration attorney or a BIA-accredited representative**.',
+      'Camino **cannot tell you whether you qualify** for any immigration benefit and does not review your information for legal sufficiency. Its document tools only record **your own answers, at your direction**, and place them **verbatim** on forms for your personal review. You complete, sign, and file everything yourself.',
+      'Immigration law changes often and outcomes are fact-specific. **No outcome is guaranteed**, and content may not reflect the most recent changes. Always verify with uscis.gov. Before any decision affecting your legal status, consult a **licensed U.S. immigration attorney or a BIA-accredited representative**.',
       'Camino is not affiliated with USCIS or any government agency. To the fullest extent permitted by law, Camino, its authors, and affiliates **disclaim all liability** for actions taken in reliance on this app.'
     ],
     es: [
       'Camino es **software de autoayuda** que ofrece información general y herramientas de estudio. **No es un bufete**, **no sustituye la asesoría de un abogado**, y **no da asesoría, opiniones ni recomendaciones legales**.',
       'Usar Camino **no crea una relación abogado-cliente**, y nada de lo que ingreses está protegido por el privilegio abogado-cliente.',
-      'Camino **no puede decirte si calificas** para ningún beneficio migratorio y no revisa tu información para suficiencia legal. Sus herramientas de documentos solo registran **tus propias respuestas, bajo tu dirección**, y las colocan **textualmente** en formularios para tu revisión personal — tú completas, firmas y presentas todo.',
-      'La ley de inmigración cambia con frecuencia y los resultados dependen de los hechos. **Ningún resultado está garantizado**, y el contenido puede no reflejar los cambios más recientes — verifica siempre en uscis.gov. Antes de cualquier decisión que afecte tu estatus legal, consulta a un **abogado licenciado de inmigración o un representante acreditado por la BIA**.',
+      'Camino **no puede decirte si calificas** para ningún beneficio migratorio y no revisa tu información para suficiencia legal. Sus herramientas de documentos solo registran **tus propias respuestas, bajo tu dirección**, y las colocan **textualmente** en formularios para tu revisión personal. Tú completas, firmas y presentas todo.',
+      'La ley de inmigración cambia con frecuencia y los resultados dependen de los hechos. **Ningún resultado está garantizado**, y el contenido puede no reflejar los cambios más recientes. Verifica siempre en uscis.gov. Antes de cualquier decisión que afecte tu estatus legal, consulta a un **abogado licenciado de inmigración o un representante acreditado por la BIA**.',
       'Camino no está afiliado a USCIS ni a ninguna agencia del gobierno. En la máxima medida permitida por la ley, Camino, sus autores y afiliados **no aceptan responsabilidad** por acciones tomadas con base en esta app.'
     ]
   },
-  accept: {en: 'I understand — continue', es: 'Entiendo — continuar'},
+  accept: {en: 'I understand. Continue', es: 'Entiendo. Continuar'},
   later: {en: 'Read full terms later', es: 'Leer términos después'}
 };
 
@@ -4700,24 +4700,24 @@ function disclaimerFooterHTML(opts){
 // criminal-history steps). Opens the full privacy modal. The claim is literal:
 // the app has no backend and stores everything in localStorage only.
 // variant: 'onb' (default, one line in current lang) | 'firstrun' (bilingual,
-// pre-language-pick) | 'criminal' (full sentence — the scariest question).
+// pre-language-pick) | 'criminal' (full sentence. The scariest question).
 function privacyChipHTML(variant){
   var inner;
   if(variant === 'firstrun'){
-    inner = '<span class="privacyChipMain">Everything stays on your phone — no account, no servers.'
-      + '<span class="privacyChipEs">Todo queda en tu teléfono — sin cuenta, sin servidores.</span></span>';
+    inner = '<span class="privacyChipMain">Everything stays on your phone. No account, no servers.'
+      + '<span class="privacyChipEs">Todo queda en tu teléfono. Sin cuenta, sin servidores.</span></span>';
   } else if(variant === 'criminal'){
     inner = '<span class="privacyChipMain">'+(lang==='es'
-      ? 'Esta respuesta nunca sale de tu teléfono. Camino no tiene servidores ni cuentas — nadie más que tú puede verla.'
-      : 'This answer never leaves your phone. Camino has no servers and no account — nobody but you can see it.')+'</span>';
+      ? 'Esta respuesta nunca sale de tu teléfono. Camino no tiene servidores ni cuentas. Nadie más que tú puede verla.'
+      : 'This answer never leaves your phone. Camino has no servers and no account. Nobody but you can see it.')+'</span>';
   } else if(variant === 'about'){
     inner = '<span class="privacyChipMain"><strong>'+(lang==='es'?'Privado por diseño.':'Private by design.')+'</strong> '+(lang==='es'
-      ? 'Todo lo que ingresas queda en tu teléfono — sin cuenta, sin servidores, sin compartir nada.'
-      : 'Everything you enter stays on your phone — no account, no servers, nothing shared.')+'</span>';
+      ? 'Todo lo que ingresas queda en tu teléfono. Sin cuenta, sin servidores, sin compartir nada.'
+      : 'Everything you enter stays on your phone. No account, no servers, nothing shared.')+'</span>';
   } else {
     inner = '<span class="privacyChipMain">'+(lang==='es'
-      ? 'Se guarda solo en tu dispositivo — nunca se sube.'
-      : 'Stays on your device — never uploaded.')+'</span>';
+      ? 'Se guarda solo en tu dispositivo. Nunca se sube.'
+      : 'Stays on your device. Never uploaded.')+'</span>';
   }
   return '<button type="button" class="privacyChip'+((variant==='criminal'||variant==='about')?' privacyChipStrong':'')+'" onclick="showPrivacyNote()">'
     + iconSVG('shield','#00b4a8',14)
@@ -4728,7 +4728,7 @@ function privacyChipHTML(variant){
 
 // ===== CAMI AI COACH =====
 // Claude-powered chat covering both civics + immigration topics.
-// User provides their own Anthropic API key (saved locally) — for production this
+// User provides their own Anthropic API key (saved locally). For production this
 // would be proxied through a backend. Plus-gated with daily message cap.
 
 var CAMI_MODEL = 'claude-haiku-4-5-20251001'; // fast + cheap for back-and-forth
@@ -4751,8 +4751,8 @@ var TUTORIAL_STEPS = [
     id: 'welcome',
     title: {en: 'Hi {name}! Welcome to Camino.', es: '¡Hola, {name}! Bienvenido/a a Camino.'},
     body: {
-      en: "I'm Cami — your immigration and civics coach. Let me show you around in 60 seconds. You can skip anytime.",
-      es: "Soy Cami — tu tutor de inmigración y cívica. Te enseño todo en 60 segundos. Puedes saltar cuando quieras."
+      en: "I'm Cami. Your immigration and civics coach. Let me show you around in 60 seconds. You can skip anytime.",
+      es: "Soy Cami. Tu tutor de inmigración y cívica. Te enseño todo en 60 segundos. Puedes saltar cuando quieras."
     },
     mood: 'happy',
     cta: {en: 'Show me around', es: 'Muéstrame'},
@@ -4762,8 +4762,8 @@ var TUTORIAL_STEPS = [
     id: 'today',
     title: {en: 'Your daily lesson lives here', es: 'Tu lección diaria vive aquí'},
     body: {
-      en: "Tap this card to start a 5-minute civics lesson. Your streak, XP, and progress all build from here — one lesson a day.",
-      es: "Toca esta tarjeta para empezar una lección de cívica de 5 minutos. Tu racha, XP y progreso crecen desde aquí — una lección al día."
+      en: "Tap this card to start a 5-minute civics lesson. Your streak, XP, and progress all build from here. One lesson a day.",
+      es: "Toca esta tarjeta para empezar una lección de cívica de 5 minutos. Tu racha, XP y progreso crecen desde aquí. Una lección al día."
     },
     mood: 'happy',
     tabId: 't-home',
@@ -4786,8 +4786,8 @@ var TUTORIAL_STEPS = [
     id: 'path',
     title: {en: 'Your immigration roadmap', es: 'Tu hoja de ruta de inmigración'},
     body: {
-      en: "Every stage from where you are today to citizenship — with the *exact USCIS forms* you need at each step. Tap any form chip to open the official PDF.",
-      es: "Cada etapa desde hoy hasta la ciudadanía — con los formularios USCIS exactos para cada paso. Toca cualquier formulario para abrir el PDF oficial."
+      en: "Every stage from where you are today to citizenship. With the *exact USCIS forms* you need at each step. Tap any form chip to open the official PDF.",
+      es: "Cada etapa desde hoy hasta la ciudadanía. Con los formularios USCIS exactos para cada paso. Toca cualquier formulario para abrir el PDF oficial."
     },
     mood: 'happy',
     tabId: 't-path',
@@ -4798,8 +4798,8 @@ var TUTORIAL_STEPS = [
     id: 'learn',
     title: {en: 'Learn civics, the smart way', es: 'Aprende cívica, de forma inteligente'},
     body: {
-      en: "All 100 USCIS questions in 4 themed units. Tap a lesson to start — the green one is what's next for you.",
-      es: "Las 100 preguntas USCIS en 4 unidades. Toca una lección para empezar — la verde es tu siguiente."
+      en: "All 100 USCIS questions in 4 themed units. Tap a lesson to start. The green one is what's next for you.",
+      es: "Las 100 preguntas USCIS en 4 unidades. Toca una lección para empezar. La verde es tu siguiente."
     },
     mood: 'happy',
     tabId: 't-lesson',
@@ -4810,8 +4810,8 @@ var TUTORIAL_STEPS = [
     id: 'me',
     title: {en: 'Profile, settings, and Plus', es: 'Perfil, ajustes, y Plus'},
     body: {
-      en: "Your achievements, language, Plus subscription, USCIS case status — all here. Tap your name at the top to edit your info.",
-      es: "Tus logros, idioma, suscripción Plus, estado de caso USCIS — todo aquí. Toca tu nombre arriba para editar tus datos."
+      en: "Your achievements, language, Plus subscription, USCIS case status. All here. Tap your name at the top to edit your info.",
+      es: "Tus logros, idioma, suscripción Plus, estado de caso USCIS. Todo aquí. Toca tu nombre arriba para editar tus datos."
     },
     mood: 'happy',
     tabId: 't-me',
@@ -4872,7 +4872,7 @@ function tutorialPrimaryAction(){
     return;
   }
   if(step.navTo){
-    // Highlight + navigate, but DON'T finish yet — user can keep tutorial going
+    // Highlight + navigate, but DON'T finish yet. User can keep tutorial going
     // Actually, simpler: just advance and the next step's nav happens via its own button
     tutorialNext();
     return;
@@ -4975,7 +4975,7 @@ function paintTutorialOverlay(){
       +     '<div class="tutProgress">'+dots+'</div>'
       +     '<button class="tutSkipBtn" onclick="tutorialSkip()">'+(step.skipLabel ? step.skipLabel[lang] : (lang==='es'?'Saltar':'Skip'))+'</button>'
       +   '</div>'
-      + (box ? '' : '<div class="tutCami">'+camiSVG(step.mood || 'happy')+'</div>')   // hide big Cami when spotlight active — small avatar instead
+      + (box ? '' : '<div class="tutCami">'+camiSVG(step.mood || 'happy')+'</div>')   // hide big Cami when spotlight active. Small avatar instead
       + (box ? '<div class="tutCamiMini">'+camiSVG(step.mood || 'happy')+'</div>' : '')
       +   '<div class="tutTitle">'+titleText+'</div>'
       +   '<div class="tutBody">'+bodyText.replace(/\*([^*]+)\*/g, '<em>$1</em>')+'</div>'
@@ -4998,46 +4998,46 @@ if(typeof window !== 'undefined'){
 
 // ===== CAMI DEMO RESPONSES =====
 // Curated canned answers for the most common civics + immigration questions.
-// Used when no Anthropic API key is configured — lets users experience Cami without
+// Used when no Anthropic API key is configured. Lets users experience Cami without
 // any setup. For paying production users, you'd swap to a backend proxy with your key.
 var CAMI_DEMO_RESPONSES = [
   // Greetings + meta
   {match: ['hello', 'hi ', 'hey', 'hola'],
-   reply: "Hi! I'm Cami — your immigration and civics coach. Ask me anything about your path: visa types, the N-400, the civics test, processing times. What's on your mind?"},
+   reply: "Hi! I'm Cami. Your immigration and civics coach. Ask me anything about your path: visa types, the N-400, the civics test, processing times. What's on your mind?"},
   {match: ['who are you', 'what are you', 'what is cami'],
-   reply: "I'm Cami, the AI study coach built into Camino. I help you prep for the U.S. naturalization civics test and understand your immigration path. I'm informed but not a lawyer — for case-specific advice, always consult a licensed immigration attorney."},
+   reply: "I'm Cami, the AI study coach built into Camino. I help you prep for the U.S. naturalization civics test and understand your immigration path. I'm informed but not a lawyer. For case-specific advice, always consult a licensed immigration attorney."},
   {match: ['thanks', 'thank you', 'gracias'],
    reply: "You got it. Anything else you'd like to dig into?"},
 
   // ===== CIVICS QUESTIONS =====
   {match: ['supreme law', 'highest law', 'most important law'],
-   reply: "**The Constitution** is the supreme law of the land. Every other law — federal, state, or local — must be consistent with it. That's because the Constitution sets up the entire government and limits what it can do.\n\nThis is question #1 on the 100-question civics list."},
+   reply: "**The Constitution** is the supreme law of the land. Every other law. Federal, state, or local. Must be consistent with it. That's because the Constitution sets up the entire government and limits what it can do.\n\nThis is question #1 on the 100-question civics list."},
   {match: ['how many amendments', 'number of amendments', 'amendments'],
-   reply: "**27 amendments** to the U.S. Constitution.\n\nThe first 10 are the **Bill of Rights** (ratified 1791). The most recent — the 27th — was ratified in 1992 and deals with congressional pay raises. Memorize \"27\" for the test, and \"Bill of Rights = first 10\" — those come up often."},
+   reply: "**27 amendments** to the U.S. Constitution.\n\nThe first 10 are the **Bill of Rights** (ratified 1791). The most recent. The 27th. Was ratified in 1992 and deals with congressional pay raises. Memorize \"27\" for the test, and \"Bill of Rights = first 10\". Those come up often."},
   {match: ['bill of rights', 'first ten amendments', 'first 10 amendments'],
    reply: "The **Bill of Rights** is the first 10 amendments to the Constitution, ratified in 1791. They protect individual liberties: freedom of speech, religion, the press, the right to bear arms, due process, jury trial, protection from unreasonable searches, etc.\n\nFor the test, common questions ask: what's one right in the 1st Amendment? (speech, religion, assembly, press, petition)."},
   {match: ['we the people', 'self-government', 'self government'],
-   reply: "**\"We the People\"** — the opening words of the Constitution. It captures the idea of self-government: the people are the source of the government's power. Not a king, not the states, not a religious authority. The people.\n\nIf USCIS asks \"the idea of self-government is in the first three words of the Constitution — what are they?\" — the answer is \"We the People.\""},
+   reply: "**\"We the People\"**. The opening words of the Constitution. It captures the idea of self-government: the people are the source of the government's power. Not a king, not the states, not a religious authority. The people.\n\nIf USCIS asks \"the idea of self-government is in the first three words of the Constitution. What are they?\". The answer is \"We the People.\""},
   {match: ['checks and balances', 'separation of powers', 'one branch from becoming too powerful', 'branch from becoming too powerful'],
-   reply: "**Checks and balances** (or **separation of powers**). The 3 branches — legislative (Congress), executive (President), judicial (Supreme Court) — each check the others. Congress passes laws but the President can veto; the President nominates judges but the Senate confirms; the Supreme Court can rule laws unconstitutional. No single branch holds it all."},
+   reply: "**Checks and balances** (or **separation of powers**). The 3 branches. Legislative (Congress), executive (President), judicial (Supreme Court). Each check the others. Congress passes laws but the President can veto; the President nominates judges but the Senate confirms; the Supreme Court can rule laws unconstitutional. No single branch holds it all."},
   {match: ['three branches', '3 branches', 'branches of government'],
-   reply: "Three branches of the U.S. government:\n• **Legislative** — Congress (Senate + House of Representatives) writes laws\n• **Executive** — the President enforces laws\n• **Judicial** — the Supreme Court interprets laws\n\nFor the test, you might be asked to name them, name a part (e.g., \"Congress\"), or explain checks and balances."},
+   reply: "Three branches of the U.S. government:\n• **Legislative**. Congress (Senate + House of Representatives) writes laws\n• **Executive**. The President enforces laws\n• **Judicial**. The Supreme Court interprets laws\n\nFor the test, you might be asked to name them, name a part (e.g., \"Congress\"), or explain checks and balances."},
   {match: ['president', 'commander in chief', 'who is the president'],
    reply: "The current U.S. President is **Donald Trump**, serving his second term (sworn in January 2025).\n\nThe President is also the **Commander in Chief** of the military. Term: 4 years. We elect a President every 4 years in November. The Vice President takes over if the President can no longer serve."},
   {match: ['how many senators', 'us senators', 'senators in congress', 'senators are there'],
-   reply: "**100 senators** — two per state × 50 states. Each senator serves a **6-year term**. The Senate is one of the two parts of Congress (the other is the House of Representatives, which has 435 voting members)."},
+   reply: "**100 senators**. Two per state × 50 states. Each senator serves a **6-year term**. The Senate is one of the two parts of Congress (the other is the House of Representatives, which has 435 voting members)."},
   {match: ['how many representatives', 'house of representatives members', 'voting members of the house'],
-   reply: "**435 voting members** in the House of Representatives. Each serves a **2-year term**. The number of representatives per state depends on that state's population — California has the most, smaller states have fewer."},
+   reply: "**435 voting members** in the House of Representatives. Each serves a **2-year term**. The number of representatives per state depends on that state's population. California has the most, smaller states have fewer."},
   {match: ['vice president', 'who is the vp', 'second in command'],
    reply: "The current Vice President is **J.D. Vance**.\n\nThe VP becomes President if the President can no longer serve, and serves as **President of the Senate** (casting tie-breaking votes)."},
   {match: ['speaker of the house', 'house speaker'],
-   reply: "The current Speaker of the House is **Mike Johnson** (Republican, Louisiana). The Speaker leads the House of Representatives — sets the agenda, decides what bills come up for a vote."},
+   reply: "The current Speaker of the House is **Mike Johnson** (Republican, Louisiana). The Speaker leads the House of Representatives. Sets the agenda, decides what bills come up for a vote."},
   {match: ['supreme court', 'justices', 'how many justices'],
    reply: "The Supreme Court is the highest court in the U.S. It has **9 justices**. The Chief Justice is **John Roberts**. They serve for life (until they retire or die). The Court interprets the Constitution and can rule laws unconstitutional."},
   {match: ['declaration of independence', 'jefferson wrote', 'declared independence'],
    reply: "The **Declaration of Independence** was adopted on **July 4, 1776**. **Thomas Jefferson** wrote most of it. It declared the 13 colonies' independence from Great Britain.\n\nThe document lists three unalienable rights: **life, liberty, and the pursuit of happiness**."},
   {match: ['july 4', '1776', 'independence day'],
-   reply: "**July 4, 1776** — the date the Declaration of Independence was adopted. The U.S. celebrates this as **Independence Day** every year. It's a federal holiday."},
+   reply: "**July 4, 1776**. The date the Declaration of Independence was adopted. The U.S. celebrates this as **Independence Day** every year. It's a federal holiday."},
   {match: ['civil war', 'lincoln', 'between the states'],
    reply: "The **Civil War** (1861–1865) was fought between the Northern (Union) and Southern (Confederate) states. **Abraham Lincoln** was the President. Key reasons: **slavery, states' rights, and economic differences**. Lincoln's **Emancipation Proclamation** freed slaves in the Confederate states."},
   {match: ['statue of liberty', 'liberty island'],
@@ -5051,13 +5051,13 @@ var CAMI_DEMO_RESPONSES = [
 
   // ===== IMMIGRATION QUESTIONS =====
   {match: ['n-400', 'n400', 'naturalization application'],
-   reply: "**Form N-400** is the application for U.S. citizenship. To file, you generally need:\n• Be a lawful permanent resident (green card) for **5 years** (or 3 if married to a U.S. citizen)\n• **Continuous residence** + at least half the time **physically present** in the U.S.\n• **Good moral character**\n• Pass the **civics test** (6/10 questions) and **English** test\n• Pay the **$760 filing fee** (or apply for a fee waiver with Form I-912)\n\nYou can file **90 days early** — before your 5-year (or 3-year) anniversary."},
+   reply: "**Form N-400** is the application for U.S. citizenship. To file, you generally need:\n• Be a lawful permanent resident (green card) for **5 years** (or 3 if married to a U.S. citizen)\n• **Continuous residence** + at least half the time **physically present** in the U.S.\n• **Good moral character**\n• Pass the **civics test** (6/10 questions) and **English** test\n• Pay the **$760 filing fee** (or apply for a fee waiver with Form I-912)\n\nYou can file **90 days early**. Before your 5-year (or 3-year) anniversary."},
   {match: ['5 year rule', '5-year rule', 'five year rule'],
-   reply: "The **5-year rule** is the standard naturalization eligibility path:\n• Be an LPR for at least **5 years**\n• **Physically present** in the U.S. for at least **30 months** (half the time) in those 5 years\n• **Continuous residence** — no single trip outside the U.S. lasting 6+ months\n• Live in the same USCIS district/state for **3 months**\n\nYou can file N-400 up to **90 days before** your 5-year anniversary."},
+   reply: "The **5-year rule** is the standard naturalization eligibility path:\n• Be an LPR for at least **5 years**\n• **Physically present** in the U.S. for at least **30 months** (half the time) in those 5 years\n• **Continuous residence**. No single trip outside the U.S. lasting 6+ months\n• Live in the same USCIS district/state for **3 months**\n\nYou can file N-400 up to **90 days before** your 5-year anniversary."},
   {match: ['3 year rule', '3-year rule', 'three year rule'],
    reply: "The **3-year rule** applies if you're married to a U.S. citizen:\n• You've been an LPR for at least **3 years**\n• You've been **married to a U.S. citizen** for those 3 years\n• Your **spouse has been a U.S. citizen** for those 3 years\n• You've lived in **marital union** with that citizen spouse\n• Physically present for at least **18 months**\n\nIf the marriage ends (divorce, death) before you naturalize, you typically revert to the 5-year rule."},
   {match: ['green card', 'permanent resident', 'lpr', 'i-485', 'i485'],
-   reply: "A **green card** (Form I-551) means you're a **Lawful Permanent Resident (LPR)** — you can live and work in the U.S. permanently. To apply from inside the U.S., you file **Form I-485** (Adjustment of Status). From abroad, it's **DS-260** (consular processing).\n\nCurrent I-485 processing: ~12-24 months. The green card itself is valid for 10 years and you renew with Form I-90."},
+   reply: "A **green card** (Form I-551) means you're a **Lawful Permanent Resident (LPR)**. You can live and work in the U.S. permanently. To apply from inside the U.S., you file **Form I-485** (Adjustment of Status). From abroad, it's **DS-260** (consular processing).\n\nCurrent I-485 processing: ~12-24 months. The green card itself is valid for 10 years and you renew with Form I-90."},
   {match: ['h-1b', 'h1b', 'h 1 b'],
    reply: "**H-1B** is a specialty-occupation work visa. Requirements:\n• **Bachelor's degree or equivalent** in the field\n• U.S. employer sponsor files **Form I-129**\n• Job pays the **prevailing wage** for the role + location\n• Subject to an annual **cap** (85,000 visas) with a **lottery** in March\n\nValid for **3 years**, renewable to **6 years** (or longer with an approved I-140). To stay beyond 6, you need a green card process going."},
   {match: ['opt', 'optional practical training'],
@@ -5065,38 +5065,38 @@ var CAMI_DEMO_RESPONSES = [
   {match: ['stem opt', 'stem extension'],
    reply: "**STEM OPT extension** gives you 24 more months on top of the standard 12-month OPT. Requirements:\n• Your most recent U.S. degree is on the **DHS STEM list** (most CS, engineering, math, science)\n• Your employer is enrolled in **E-Verify**\n• The job directly relates to your STEM degree\n• You complete a **Form I-983** training plan with your employer\n\nYou can use STEM extension once per degree level (so once after BS, once after MS, etc.)."},
   {match: ['asylum', 'i-589', 'i589'],
-   reply: "**Asylum** protects people who fear persecution in their home country based on race, religion, nationality, political opinion, or membership in a particular social group.\n\nKey rules:\n• File **Form I-589 within 1 year** of arrival (with rare exceptions)\n• You can apply for an **EAD** (work permit) **150 days** after filing\n• Asylum interview wait is currently **2-7 years**\n• After asylum is granted, wait **1 year**, then file for green card (I-485)\n\nNo filing fee. An attorney (pro bono if needed) makes a huge difference — every case turns on the specific facts."},
+   reply: "**Asylum** protects people who fear persecution in their home country based on race, religion, nationality, political opinion, or membership in a particular social group.\n\nKey rules:\n• File **Form I-589 within 1 year** of arrival (with rare exceptions)\n• You can apply for an **EAD** (work permit) **150 days** after filing\n• Asylum interview wait is currently **2-7 years**\n• After asylum is granted, wait **1 year**, then file for green card (I-485)\n\nNo filing fee. An attorney (pro bono if needed) makes a huge difference. Every case turns on the specific facts."},
   {match: ['dv lottery', 'diversity visa', 'green card lottery'],
    reply: "The **DV (Diversity Visa) Lottery** offers ~55,000 immigrant visas per year. Requirements:\n• Born in an **eligible country** (countries with low immigration to the U.S.)\n• Have either a **high-school diploma** OR **2 years of skilled work experience**\n\nFree entry at **dvprogram.state.gov** during the annual October window. Submit ONE entry only (duplicates disqualify). Selection in May. If selected, you have 1 year to complete the visa process."},
   {match: ['visa bulletin', 'priority date', 'pd is current', 'pd current'],
-   reply: "The **Visa Bulletin** (published monthly by the State Department) tells you whether your priority date has become \"current\" — meaning a visa is available so you can file the I-485 or DS-260.\n\nTwo charts:\n• **Final Action Dates** — when you can actually get approved\n• **Dates for Filing** — when you can submit the I-485\n\nWait times vary enormously by category + country. India and China EB categories have multi-decade waits; F-2A is currently almost current."},
+   reply: "The **Visa Bulletin** (published monthly by the State Department) tells you whether your priority date has become \"current\". Meaning a visa is available so you can file the I-485 or DS-260.\n\nTwo charts:\n• **Final Action Dates**. When you can actually get approved\n• **Dates for Filing**. When you can submit the I-485\n\nWait times vary enormously by category + country. India and China EB categories have multi-decade waits; F-2A is currently almost current."},
   {match: ['eb-2', 'eb2', 'eb-3', 'eb3', 'employment based green card', 'employment-based green card'],
-   reply: "**Employment-based green cards** (EB-2, EB-3) require:\n• U.S. employer sponsor\n• **PERM labor certification** (proves no qualified U.S. worker available) — takes ~12 months\n• **Form I-140** approved (the immigrant petition) — takes 6-12 months\n• **Priority date current** on the Visa Bulletin — wait varies wildly by country\n• Then file **I-485** (~12-24 months processing)\n\nIndia and China EB-2/EB-3 currently have 10-50+ year waits. Other countries are 1-3 years."},
+   reply: "**Employment-based green cards** (EB-2, EB-3) require:\n• U.S. employer sponsor\n• **PERM labor certification** (proves no qualified U.S. worker available). Takes ~12 months\n• **Form I-140** approved (the immigrant petition). Takes 6-12 months\n• **Priority date current** on the Visa Bulletin. Wait varies wildly by country\n• Then file **I-485** (~12-24 months processing)\n\nIndia and China EB-2/EB-3 currently have 10-50+ year waits. Other countries are 1-3 years."},
   {match: ['marriage green card', 'marriage gc', 'spouse green card', 'married to citizen'],
-   reply: "Marriage to a U.S. citizen is the **fastest family path** (no quota wait, immediate relative category):\n• Citizen spouse files **Form I-130** for you\n• If you're in the U.S., file **Form I-485** concurrently (adjustment of status)\n• If abroad, consular processing via **DS-260**\n• USCIS interviews to verify the marriage is genuine\n• Marriages under 2 years at GC approval get a **2-year conditional GC** — must file **Form I-751** jointly to remove conditions\n\nTotal timeline: ~12-18 months."},
+   reply: "Marriage to a U.S. citizen is the **fastest family path** (no quota wait, immediate relative category):\n• Citizen spouse files **Form I-130** for you\n• If you're in the U.S., file **Form I-485** concurrently (adjustment of status)\n• If abroad, consular processing via **DS-260**\n• USCIS interviews to verify the marriage is genuine\n• Marriages under 2 years at GC approval get a **2-year conditional GC**. Must file **Form I-751** jointly to remove conditions\n\nTotal timeline: ~12-18 months."},
   {match: ['continuous residence', 'physical presence', 'broke continuous'],
-   reply: "Two distinct requirements for N-400:\n• **Continuous residence** — no single trip outside the U.S. of 6+ months (a trip 6-12 months may break it; 12+ months almost certainly does)\n• **Physical presence** — actually in the U.S. for at least half the required time (30 months out of 5 years, or 18 months out of 3)\n\nLong trips can reset the clock. If you took a trip over 6 months and aren't sure of the impact, that's a lawyer question."},
+   reply: "Two distinct requirements for N-400:\n• **Continuous residence**. No single trip outside the U.S. of 6+ months (a trip 6-12 months may break it; 12+ months almost certainly does)\n• **Physical presence**. Actually in the U.S. for at least half the required time (30 months out of 5 years, or 18 months out of 3)\n\nLong trips can reset the clock. If you took a trip over 6 months and aren't sure of the impact, that's a lawyer question."},
   {match: ['good moral character', 'gmc', 'moral character'],
    reply: "**Good moral character (GMC)** is required for the past 5 years (or 3 for marriage). USCIS looks at:\n• Criminal record (some convictions are absolute bars)\n• Failure to file taxes / unpaid taxes\n• Lying to USCIS or other government agencies\n• Failure to register for Selective Service (men 18-25)\n• Failure to pay court-ordered child support\n\nMinor stuff like one traffic ticket usually isn't an issue, but a lawyer should review any criminal history."},
   {match: ['biometrics', 'fingerprinting', 'asc appointment'],
-   reply: "**Biometrics** = USCIS takes your fingerprints, photo, and signature, then runs them through the FBI background check.\n\nAfter filing N-400, you'll get a biometrics appointment notice — usually within **3-6 weeks** of filing. The appointment itself is at an **Application Support Center (ASC)**, takes about 15 minutes. Bring your ID + the appointment notice."},
+   reply: "**Biometrics** = USCIS takes your fingerprints, photo, and signature, then runs them through the FBI background check.\n\nAfter filing N-400, you'll get a biometrics appointment notice. Usually within **3-6 weeks** of filing. The appointment itself is at an **Application Support Center (ASC)**, takes about 15 minutes. Bring your ID + the appointment notice."},
   {match: ['oath of allegiance', 'oath ceremony', 'become citizen'],
-   reply: "The **Oath of Allegiance** is the final step — you take the oath and immediately become a U.S. citizen. Five promises in the oath:\n1. Renounce allegiance to other countries\n2. Support and defend the Constitution\n3. Obey U.S. laws\n4. Serve in the military if required\n5. Perform civilian service if required\n\nAfter the oath, you get your **Certificate of Naturalization** (Form N-550). Take it to the Social Security office to update your status, then apply for a U.S. passport."},
+   reply: "The **Oath of Allegiance** is the final step. You take the oath and immediately become a U.S. citizen. Five promises in the oath:\n1. Renounce allegiance to other countries\n2. Support and defend the Constitution\n3. Obey U.S. laws\n4. Serve in the military if required\n5. Perform civilian service if required\n\nAfter the oath, you get your **Certificate of Naturalization** (Form N-550). Take it to the Social Security office to update your status, then apply for a U.S. passport."},
   {match: ['english test', 'english requirement', 'reading writing speaking'],
-   reply: "The naturalization English test has three parts:\n• **Speaking** — the officer assesses your English throughout the interview\n• **Reading** — read 1 of 3 short sentences correctly\n• **Writing** — write 1 of 3 short sentences correctly\n\nWords for the test come from a USCIS vocabulary list (civics + simple words like \"a, of, the, can, has, is\"). You can fail one sentence and still pass.\n\n**65/20 exception**: If you're 65+ AND have been an LPR for 20+ years, you can take the test in your native language and only need to study **20 of the 100** civics questions."},
+   reply: "The naturalization English test has three parts:\n• **Speaking**. The officer assesses your English throughout the interview\n• **Reading**. Read 1 of 3 short sentences correctly\n• **Writing**. Write 1 of 3 short sentences correctly\n\nWords for the test come from a USCIS vocabulary list (civics + simple words like \"a, of, the, can, has, is\"). You can fail one sentence and still pass.\n\n**65/20 exception**: If you're 65+ AND have been an LPR for 20+ years, you can take the test in your native language and only need to study **20 of the 100** civics questions."},
   {match: ['civics test format', 'civics interview', 'how civics test works'],
    reply: "**USCIS civics test** at the interview:\n• Officer asks **up to 10 questions** from the 100-question list (orally, in English)\n• You need to **answer 6 correctly** to pass\n• Officer stops at 6 correct or 5 wrong (whichever comes first)\n\nYou're tested on civics + U.S. history. Camino's lesson and flashcard system has all 100 questions. Practice with the mock test until you can hit 8+/10 consistently."},
   {match: ['fee waiver', 'i-912', 'can i waive the fee'],
-   reply: "You qualify for a **fee waiver** (Form **I-912**) if any of these is true:\n• Receiving a means-tested benefit (Medicaid, SNAP, SSI, TANF)\n• Household income at or below **150% of federal poverty level** (~$22,500/yr for a household of 1)\n• Financial hardship (medical bills, unemployment, etc.)\n\nThe full $760 N-400 fee is waived if approved. Many people qualify and don't know it — worth checking before paying."},
+   reply: "You qualify for a **fee waiver** (Form **I-912**) if any of these is true:\n• Receiving a means-tested benefit (Medicaid, SNAP, SSI, TANF)\n• Household income at or below **150% of federal poverty level** (~$22,500/yr for a household of 1)\n• Financial hardship (medical bills, unemployment, etc.)\n\nThe full $760 N-400 fee is waived if approved. Many people qualify and don't know it. Worth checking before paying."},
   {match: ['uscis processing time', 'how long does it take', 'how long for'],
    reply: "Current USCIS processing times (typical, not guaranteed):\n• **N-400**: 6-12 months\n• **I-485** (adjustment): 12-24 months\n• **I-130** (family petition, immediate relative): 12-15 months\n• **I-589** (asylum interview): 2-7 years\n• **I-765** (work permit): 2-5 months\n\nUSCIS publishes its own estimates at **egov.uscis.gov/processing-times**. Times vary by service center. For your specific case, an attorney can give a more grounded estimate."},
   {match: ['what is next', "what's next", 'what should i do next'],
-   reply: "Open the **Path** tab — it shows your specific journey based on what you picked during onboarding (student/OPT/work-visa/family/employment GC/asylum/citizenship). Each stage has a description and typical timeline.\n\nIf you're studying for the civics test, hit **Learn** for lessons or **Cami** for any specific question. The **Mock test** simulates the interview format."},
+   reply: "Open the **Path** tab. It shows your specific journey based on what you picked during onboarding (student/OPT/work-visa/family/employment GC/asylum/citizenship). Each stage has a description and typical timeline.\n\nIf you're studying for the civics test, hit **Learn** for lessons or **Cami** for any specific question. The **Mock test** simulates the interview format."},
 
-  // ===== Catchall — soft redirect for off-topic questions =====
+  // ===== Catchall. Soft redirect for off-topic questions =====
 ];
 
-// Fallback when no match found — keeps the persona but admits limitation.
+// Fallback when no match found. Keeps the persona but admits limitation.
 function camiDemoFallback(){
   return "I'm in **demo mode** (no API key configured), so I can only answer the most common questions right now. For deeper conversations on your specific case, set up an API key in Cami → Key, or talk to a licensed immigration attorney for case-specific advice.\n\nTry me on: civics test questions, the N-400 process, visa types (H-1B, OPT, EB-2, asylum, DV), the 5-year rule, fee waivers, or processing times.";
 }
@@ -5126,13 +5126,13 @@ function camiInDemoMode(){
 }
 
 function camiBoot(){
-  if(!CAMI_AVAILABLE) return;   // v1: Cami disabled — never touch keys/history at boot
+  if(!CAMI_AVAILABLE) return;   // v1: Cami disabled. Never touch keys/history at boot
   // Restore prior chat if user has persisted history
   if(user.camiChatHistory && Array.isArray(user.camiChatHistory)){
     camiState.messages = user.camiChatHistory.slice(-40); // cap context window
   }
   // Auto-load API key from config.local.js if present and user hasn't set one.
-  // This is the dev / prototype convenience path — for production, swap to a backend proxy.
+  // This is the dev / prototype convenience path. For production, swap to a backend proxy.
   if(!user.anthropicApiKey && window.CAMINO_CONFIG && window.CAMINO_CONFIG.anthropicApiKey){
     user.anthropicApiKey = window.CAMINO_CONFIG.anthropicApiKey;
     saveUser();
@@ -5178,20 +5178,20 @@ function camiSystemPrompt(){
   return ''
     + 'You are Cami, a knowledgeable immigration coach and the friendly dove mascot of Camino, an iOS-style immigration assistance app.\n\n'
     + '## Your expertise (you go DEEP on these)\n'
-    + '1) **U.S. naturalization civics** — all 100 USCIS civics questions, the constitutional + historical reasoning behind each answer, the test format (10 questions verbally, 6/10 to pass), the English reading + writing + speaking components, N-648 medical waiver, 65/20 rule, study strategies.\n'
-    + '2) **U.S. immigration paths + processes** — F-1/J-1/M-1 student visas (and how schools issue I-20s, SEVIS, maintaining status); OPT, CPT, and STEM OPT (I-765, I-983, E-Verify, 90-day unemployment limit); H-1B (lottery mechanics, cap-exempt, max-out, I-94 dependent issues); L-1, O-1, E-2, TN, P-3; EB-1A/B/C, EB-2 (NIW vs. PERM), EB-3 (skilled vs. other workers, country backlogs especially India + China); family-based GCs (IR-1/2/5, CR-1, F1/F2A/F2B/F3/F4, K-1 fiancé); adjustment of status (I-485) vs. consular processing (DS-260); asylum (affirmative + defensive, I-589, EAD eligibility after 150 days, 1-year filing bar); DV lottery (DS-5501, country eligibility); VAWA, U/T visas; naturalization (N-400, 5-year rule vs. 3-year rule, continuous residence, physical presence, good moral character); the Visa Bulletin (priority dates, Final Action vs. Dates for Filing, retrogression); USCIS forms by number; current processing times trends.\n\n'
+    + '1) **U.S. naturalization civics**. All 100 USCIS civics questions, the constitutional + historical reasoning behind each answer, the test format (10 questions verbally, 6/10 to pass), the English reading + writing + speaking components, N-648 medical waiver, 65/20 rule, study strategies.\n'
+    + '2) **U.S. immigration paths + processes**. F-1/J-1/M-1 student visas (and how schools issue I-20s, SEVIS, maintaining status); OPT, CPT, and STEM OPT (I-765, I-983, E-Verify, 90-day unemployment limit); H-1B (lottery mechanics, cap-exempt, max-out, I-94 dependent issues); L-1, O-1, E-2, TN, P-3; EB-1A/B/C, EB-2 (NIW vs. PERM), EB-3 (skilled vs. other workers, country backlogs especially India + China); family-based GCs (IR-1/2/5, CR-1, F1/F2A/F2B/F3/F4, K-1 fiancé); adjustment of status (I-485) vs. consular processing (DS-260); asylum (affirmative + defensive, I-589, EAD eligibility after 150 days, 1-year filing bar); DV lottery (DS-5501, country eligibility); VAWA, U/T visas; naturalization (N-400, 5-year rule vs. 3-year rule, continuous residence, physical presence, good moral character); the Visa Bulletin (priority dates, Final Action vs. Dates for Filing, retrogression); USCIS forms by number; current processing times trends.\n\n'
     + '## What you are NOT\n'
     + 'You are **not a licensed attorney** and you **cannot provide legal advice** for an individual user\'s specific case. You explain how the system works, name the relevant forms, lay out typical timelines, and surface the questions someone should bring to an attorney. You never tell a user "you qualify" or "you should file X" as if it were a binding determination.\n\n'
-    + 'When a user asks anything that depends on their specific facts — eligibility, whether to file, how their case will be decided, what to disclose, how to interpret a notice, immigration consequences of an arrest or trip abroad, etc. — your reply MUST end with a one-line reminder to consult a licensed immigration attorney. Phrase it naturally ("This is one to take to an immigration attorney — they can look at your specific timeline and decide"). Do NOT bury it; do NOT skip it.\n\n'
+    + 'When a user asks anything that depends on their specific facts. Eligibility, whether to file, how their case will be decided, what to disclose, how to interpret a notice, immigration consequences of an arrest or trip abroad, etc. Your reply MUST end with a one-line reminder to consult a licensed immigration attorney. Phrase it naturally ("This is one to take to an immigration attorney. They can look at your specific timeline and decide"). Do NOT bury it; do NOT skip it.\n\n'
     + '## How you respond\n'
-    + '- **Warm, patient, concise.** 3-6 sentences or a short bulleted list. Immigration is stressful — meet users with empathy, never panic them.\n'
+    + '- **Warm, patient, concise.** 3-6 sentences or a short bulleted list. Immigration is stressful. Meet users with empathy, never panic them.\n'
     + '- **Civics questions**: give the answer + a one-sentence reason ("because [historical / constitutional logic]"). This builds retention.\n'
     + '- **Process questions**: give the framework, typical timeline, and the form number. Flag policy areas where the answer varies by case or has changed recently.\n'
     + '- **Personal-fact questions**: explain how the rules generally work, what factors matter, and that the actual answer depends on details an attorney would need to review. End with the consult line.\n'
-    + '- **Off-topic** (cooking, dating, coding help, etc.): gently redirect — "I focus on immigration and civics. Anything in those areas?"\n'
+    + '- **Off-topic** (cooking, dating, coding help, etc.): gently redirect. "I focus on immigration and civics. Anything in those areas?"\n'
     + '- **Cite USCIS forms by number** (I-485, N-400, I-130, etc.) and reference uscis.gov pages where useful.\n'
     + '- **Respond in ' + langName + '.**\n'
-    + '- **Tone**: thoughtful peer, not cheerleader. Occasional warmth ("Good question") sparingly. No emoji unless the user uses them first. Never roleplay physical actions ("I\'d fly over to check" — no).\n\n'
+    + '- **Tone**: thoughtful peer, not cheerleader. Occasional warmth ("Good question") sparingly. No emoji unless the user uses them first. Never roleplay physical actions ("I\'d fly over to check". No).\n\n'
     + '## User context (personalize accordingly)\n'
     + '- Name: ' + name + '\n'
     + '- Current immigration phase: ' + phaseLabel + '\n'
@@ -5228,7 +5228,7 @@ async function camiSend(userText){
   renderCamiChat();
   camiScrollToBottom();
 
-  // DEMO MODE — no API key configured: respond with curated canned answers
+  // DEMO MODE. No API key configured: respond with curated canned answers
   if(!user.anthropicApiKey){
     setTimeout(function(){
       var demoReply = camiDemoMatch(userText) || camiDemoFallback();
@@ -5337,7 +5337,7 @@ function renderCamiChat(){
   var hostFooter = document.getElementById('camiFooter');
   if(!hostBody) return;
 
-  // "Coming soon" placeholder — hides the chat UI entirely until CAMI_AVAILABLE flips
+  // "Coming soon" placeholder. Hides the chat UI entirely until CAMI_AVAILABLE flips
   if(!CAMI_AVAILABLE){
     hostBody.innerHTML = ''
       + '<div class="camiSoonCard">'
@@ -5379,8 +5379,8 @@ function renderCamiChat(){
       +   '<div class="camiGateCami">'+camiSVG('happy')+'</div>'
       +   '<div class="camiGateTitle">'+(lang==='es'?'Hola, soy Cami':'Hi, I\'m Cami')+'</div>'
       +   '<div class="camiGateSub">'+(lang==='es'
-            ? 'Tu tutor de cívica e inmigración. Pregúntame lo que sea — explico la lógica, no solo la respuesta.'
-            : 'Your civics + immigration tutor. Ask me anything — I explain the why, not just the answer.')+'</div>'
+            ? 'Tu tutor de cívica e inmigración. Pregúntame lo que sea. Explico la lógica, no solo la respuesta.'
+            : 'Your civics + immigration tutor. Ask me anything. I explain the why, not just the answer.')+'</div>'
       +   '<div class="camiGateBullets">'
       +     '<div class="camiGateBullet">'+iconSVG('check','#00b4a8',14)+' '+(lang==='es'?'Cívica: explico las 100 preguntas a fondo':'Civics: deep-dive on the 100 questions')+'</div>'
       +     '<div class="camiGateBullet">'+iconSVG('check','#00b4a8',14)+' '+(lang==='es'?'Inmigración: visas, GC, asilo, N-400':'Immigration: visas, GC, asylum, N-400')+'</div>'
@@ -5393,7 +5393,7 @@ function renderCamiChat(){
     return;
   }
 
-  // KEY SETUP screen — only when user explicitly requested it (no longer blocks first use)
+  // KEY SETUP screen. Only when user explicitly requested it (no longer blocks first use)
   if(camiState.showKeySetup){
     hostBody.innerHTML = ''
       + '<div class="camiSetupCard">'
@@ -5401,7 +5401,7 @@ function renderCamiChat(){
       +   '<div class="camiSetupTitle">'+(lang==='es'?'Conecta tu clave de Anthropic':'Connect your Anthropic key')+'</div>'
       +   '<div class="camiSetupSub">'+(lang==='es'
             ? 'En esta versión, Cami usa tu propia clave de API. Tu clave se guarda solo en este dispositivo.'
-            : 'In this build, Cami uses your own API key. Your key is stored only on this device — never sent to us.')+'</div>'
+            : 'In this build, Cami uses your own API key. Your key is stored only on this device. Never sent to us.')+'</div>'
       +   '<ol class="camiSetupSteps">'
       +     '<li>'+(lang==='es'?'Crea una cuenta en':'Create an account at')+' <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a></li>'
       +     '<li>'+(lang==='es'?'Compra ~$5 de crédito (cada mensaje cuesta ~$0.005)':'Add ~$5 in credit (each chat costs ~$0.005)')+'</li>'
@@ -5567,7 +5567,7 @@ function camiVoiceToggle(){
     return;
   }
   // CRITICAL: call start() synchronously from the click handler. On iOS Safari the
-  // user-gesture context is lost across awaits — so we don't await permission first.
+  // user-gesture context is lost across awaits. So we don't await permission first.
   // SpeechRecognition itself triggers the permission prompt on first use.
   camiVoiceStart();
 }
@@ -5578,7 +5578,7 @@ function camiVoiceStart(){
     toast(lang==='es' ? 'Tu navegador no soporta voz' : 'Voice not supported in this browser');
     return;
   }
-  // Always create a FRESH recognizer — re-using across sessions causes stale-state
+  // Always create a FRESH recognizer. Re-using across sessions causes stale-state
   // errors ("recognition has already started" / handlers firing twice).
   try {
     if(camiMic.recognizer) try { camiMic.recognizer.abort(); } catch(e){}
@@ -5611,15 +5611,15 @@ function camiVoiceStart(){
     if(btn) btn.classList.remove('camiMicLoading');
     var err = (event && event.error) || 'unknown';
     if(err === 'not-allowed' || err === 'service-not-allowed'){
-      toast(lang==='es' ? 'Permiso del micrófono bloqueado — actívalo en la configuración del navegador' : 'Microphone blocked — enable it in browser settings');
+      toast(lang==='es' ? 'Permiso del micrófono bloqueado. Actívalo en la configuración del navegador' : 'Microphone blocked. Enable it in browser settings');
     } else if(err === 'no-speech'){
-      toast(lang==='es' ? 'No te oí — vuelve a tocar el micrófono' : "I didn't hear you — tap the mic again");
+      toast(lang==='es' ? 'No te oí. Vuelve a tocar el micrófono' : "I didn't hear you. Tap the mic again");
     } else if(err === 'audio-capture'){
       toast(lang==='es' ? 'No se encontró micrófono' : 'No microphone found');
     } else if(err === 'network'){
       toast(lang==='es' ? 'Sin conexión para reconocer voz' : 'Network error during voice recognition');
     } else if(err === 'aborted'){
-      // Silent — user pressed stop
+      // Silent. User pressed stop
     } else {
       toast(lang==='es' ? 'Error de voz: '+err : 'Voice error: '+err);
     }
@@ -5631,14 +5631,14 @@ function camiVoiceStart(){
     if(btn) btn.classList.remove('camiMicLoading');
     var transcript = (camiMic.transcript || '').trim();
     if(transcript){
-      // Always auto-submit — user can edit before sending if input shows the text
+      // Always auto-submit. User can edit before sending if input shows the text
       var inp = document.getElementById('camiInput');
       if(inp) inp.value = '';
       camiSend(transcript);
     }
   };
 
-  // start() may throw if a previous recognition is still pending — abort + retry.
+  // start() may throw if a previous recognition is still pending. Abort + retry.
   try {
     rec.start();
   } catch(e){
@@ -5647,7 +5647,7 @@ function camiVoiceStart(){
       try { rec.start(); } catch(e3){
         camiMic.listening = false;
         camiSyncMicButton();
-        toast(lang==='es' ? 'No se pudo iniciar la voz' : 'Could not start voice — try again');
+        toast(lang==='es' ? 'No se pudo iniciar la voz' : 'Could not start voice. Try again');
       }
     }, 200);
   }
@@ -5660,7 +5660,7 @@ function camiVoiceStop(){
   if(camiMic.recognizer){
     try { camiMic.recognizer.stop(); } catch(e){}
   }
-  // Don't set listening=false here — onend will fire and trigger auto-submit.
+  // Don't set listening=false here. Onend will fire and trigger auto-submit.
 }
 
 function camiSyncMicButton(){
@@ -5751,7 +5751,7 @@ function camiSaveKeyFromInput(){
   camiHideKeySetup();
 }
 
-// Suggested first-message chips — customized to user's phase
+// Suggested first-message chips. Customized to user's phase
 function camiSuggestions(){
   var phase = user.phase;
   var goal = user.immigrationGoal;
@@ -5802,7 +5802,7 @@ function camiSuggestions(){
 // ===== CAMINO PLUS (SUBSCRIPTION) =====
 var PLUS_PRICING = {
   // $7.99/mo lands below the $15.99 market median while above Citizen Now's $3.99.
-  // Annual $49.99 ≈ $4.17/mo, ~48% off monthly — strong anchor without race-to-bottom feel.
+  // Annual $49.99 ≈ $4.17/mo, ~48% off monthly. Strong anchor without race-to-bottom feel.
   monthly:{price:7.99,  period:{en:'month',es:'mes'}, code:'monthly'},
   annual: {price:49.99, period:{en:'year', es:'año'}, code:'annual', monthlyEquiv:4.17, savePct:48}
 };
@@ -5838,7 +5838,7 @@ var Store = {
   init: async function(){
     if(!this.isNative()){ this.ready = true; return; }        // web: nothing to configure
     if(/REPLACE_WITH/.test(STORE_CONFIG.revenueCatApiKey)){
-      console.error('STORE_CONFIG.revenueCatApiKey is still the placeholder — purchases will not work.');
+      console.error('STORE_CONFIG.revenueCatApiKey is still the placeholder. Purchases will not work.');
       return;
     }
     var rc = this._rc();
@@ -5970,7 +5970,7 @@ var Store = {
 };
 
 // Open a URL outside the app. In the Capacitor webview, plain window.open /
-// target=_blank loads the URL in the SAME webview with no back button — the app
+// target=_blank loads the URL in the SAME webview with no back button. The app
 // looks hijacked. Route through the Browser plugin (in-app Safari sheet) instead.
 function openExternal(url){
   try {
@@ -6099,7 +6099,7 @@ function tutorialOfferDecline(){
 }
 
 function cancelPlus(){
-  // Real subscriptions are managed by Apple — never "cancel" locally on device.
+  // Real subscriptions are managed by Apple. Never "cancel" locally on device.
   if(Store.isNative()){
     openExternal('https://apps.apple.com/account/subscriptions');
     return;
@@ -6170,14 +6170,14 @@ function confirmCancelPlus(reasonId){
 // ends in 3 days or 1 day. Stored per-day in user.trialReminderShown so we don't spam.
 function checkTrialReminders(){
   // Native: trial/renewal state comes from RevenueCat (real StoreKit billing).
-  // The local simulation below must never run on device — it would grant Plus for free.
+  // The local simulation below must never run on device. It would grant Plus for free.
   if(Store.isNative()) return;
   if(user.plan !== 'trial' || !user.trialEndsAt) return;
   var daysLeft = trialDaysLeft();
   var todayKey = todayISO();
   if(!user.trialReminderShown) user.trialReminderShown = {};
   if(daysLeft === 0){
-    // Trial expired today — auto-convert to Plus (prototype simulates the App Store renewal)
+    // Trial expired today. Auto-convert to Plus (prototype simulates the App Store renewal)
     if(user.trialReminderShown['expired'] === todayKey) return;
     user.plan = 'plus';
     user.planRenewsAt = new Date(Date.now() + (user.planSelected === 'monthly' ? 30 : 365) * 24 * 3600 * 1000).toISOString();
@@ -6285,14 +6285,14 @@ function maybeFreezeStreak(){
   var today = new Date(todayISO());
   var daysSince = Math.floor((today - last) / (24*3600*1000));
   if(daysSince === 1){
-    // Last activity was yesterday — no freeze needed
+    // Last activity was yesterday. No freeze needed
     return;
   }
   if(daysSince === 2){
-    // Missed exactly one day — try to apply a freeze
+    // Missed exactly one day. Try to apply a freeze
     applyStreakFreezeIfNeeded();
   }
-  // If daysSince > 2, the streak is gone — too late for a single freeze
+  // If daysSince > 2, the streak is gone. Too late for a single freeze
 }
 
 function todayMockTestsAvailable(){
@@ -6379,7 +6379,7 @@ function renderVisaBulletin(){
     statusHtml = '<div class="vbStatus vbStatusEmpty">'
       + iconSVG('clock','#84807a',22)
       + '<div><div class="vbStatusTitle">'+(lang==='es'?'Ingresa tu fecha de prioridad arriba':'Enter your priority date above')+'</div>'
-      + '<div class="vbStatusSub">'+(lang==='es'?'La fecha de prioridad está en tu recibo I-797 — es el día que USCIS recibió tu petición.':'Your priority date is on your I-797 receipt — the day USCIS received your petition.')+'</div></div>'
+      + '<div class="vbStatusSub">'+(lang==='es'?'La fecha de prioridad está en tu recibo I-797. Es el día que USCIS recibió tu petición.':'Your priority date is on your I-797 receipt. The day USCIS received your petition.')+'</div></div>'
       + '</div>';
   } else if(savedPD){
     var pd = new Date(savedPD);
@@ -6449,7 +6449,7 @@ function saveVBSettings(){
 // ===== PATH-SPECIFIC ELIGIBILITY WIZARDS =====
 // Each wizard is a series of questions with branching logic, ending in:
 //   - 'likely' (green): you appear to meet the basic eligibility criteria
-//   - 'unsure' (orange): some flag — a lawyer should verify
+//   - 'unsure' (orange): some flag. A lawyer should verify
 //   - 'not_eligible' (red): a hard rule excludes you (with reason)
 // EVERY result ends with the attorney-consult close (per the disclaimer).
 
@@ -6476,7 +6476,7 @@ var ELIGIBILITY_WIZARDS = {
          {value: 'nationality', label: {en: 'My nationality / ethnicity', es: 'Mi nacionalidad / etnia'}},
          {value: 'political', label: {en: 'My political opinion', es: 'Mi opinión política'}},
          {value: 'social', label: {en: 'A particular social group I belong to (LGBTQ, family, gender, etc.)', es: 'Un grupo social al que pertenezco (LGBTQ, familia, género, etc.)'}},
-         {value: 'none', label: {en: 'None of these — I fear general violence / poverty', es: 'Ninguno — temo violencia general / pobreza'}}
+         {value: 'none', label: {en: 'None of these. I fear general violence / poverty', es: 'Ninguno. Temo violencia general / pobreza'}}
        ]},
       {id: 'returned', type: 'yesno',
        q: {en: 'Have you returned to your home country since the persecution began?', es: '¿Has regresado a tu país desde que empezó la persecución?'},
@@ -6503,7 +6503,7 @@ var ELIGIBILITY_WIZARDS = {
         return {verdict: 'not_eligible', reasons: [{en: 'Asylum requires the fear to be on account of race, religion, nationality, political opinion, or a particular social group. General violence or poverty alone does not qualify.', es: 'El asilo requiere que el miedo sea por raza, religión, nacionalidad, opinión política o grupo social. La violencia general o pobreza por sí solas no califican.'}], flags: []};
       }
       if(a.crimes === 'yes') flags.push({en: 'Certain serious convictions are absolute bars to asylum. A lawyer must review your record.', es: 'Ciertas condenas graves son barreras absolutas. Un abogado debe revisar.'});
-      if(a.returned === 'yes') flags.push({en: 'You returned home after the persecution began. The officer will ask about this — a lawyer can help frame it.', es: 'Regresaste tras empezar la persecución. El oficial lo preguntará — un abogado puede ayudar.'});
+      if(a.returned === 'yes') flags.push({en: 'You returned home after the persecution began. The officer will ask about this. A lawyer can help frame it.', es: 'Regresaste tras empezar la persecución. El oficial lo preguntará. Un abogado puede ayudar.'});
       if(a['safe-third'] === 'yes') flags.push({en: 'Passing through a "safe third country" may bar your claim depending on current policy. Lawyer check needed.', es: 'Pasar por un "tercer país seguro" puede bloquear el caso según política actual.'});
       if(flags.length === 0 && arrivalDate && yearsAgo <= 1){
         reasons.push({en: 'You appear to meet the basic asylum eligibility criteria: timely filing + fear on a protected ground.', es: 'Pareces cumplir con los criterios básicos: presentación a tiempo + miedo por motivo protegido.'});
@@ -6514,10 +6514,10 @@ var ELIGIBILITY_WIZARDS = {
     nextSteps: {
       en: ['File Form I-589 (no fee) within 1 year of arrival.',
            'Gather corroborating evidence: country reports, witness affidavits, medical/police records, photos.',
-           'Find a free pro-bono attorney — search "asylum legal aid" + your city, or check Catholic Charities, IRCA, KIND, or your local Bar Association.'],
+           'Find a free pro-bono attorney. Search "asylum legal aid" + your city, or check Catholic Charities, IRCA, KIND, or your local Bar Association.'],
       es: ['Presenta el Formulario I-589 (sin tarifa) dentro de 1 año de llegar.',
            'Reúne evidencia: reportes del país, declaraciones de testigos, registros médicos/policiales, fotos.',
-           'Busca un abogado pro-bono — "asylum legal aid" + tu ciudad, o Catholic Charities, IRCA, KIND, o el Colegio de Abogados local.']
+           'Busca un abogado pro-bono. "Asylum legal aid" + tu ciudad, o Catholic Charities, IRCA, KIND, o el Colegio de Abogados local.']
     }
   },
 
@@ -6530,7 +6530,7 @@ var ELIGIBILITY_WIZARDS = {
     steps: [
       {id: 'spouse-citizen', type: 'yesno',
        q: {en: 'Is your spouse a U.S. citizen?', es: '¿Tu cónyuge es ciudadano de EE.UU.?'},
-       help: {en: 'If LPR (green card holder) instead, you\'d use the F2A category — different wait times.', es: 'Si es residente, sería F2A — espera distinta.'}},
+       help: {en: 'If LPR (green card holder) instead, you\'d use the F2A category. Different wait times.', es: 'Si es residente, sería F2A. Espera distinta.'}},
       {id: 'married', type: 'yesno',
        q: {en: 'Are you currently legally married?', es: '¿Estás casado/a legalmente?'},
        help: {en: 'Engagements/relationships don\'t count. K-1 fiancé visa is a different path.', es: 'Noviazgo no cuenta. K-1 es vía distinta.'}},
@@ -6548,7 +6548,7 @@ var ELIGIBILITY_WIZARDS = {
        help: {en: 'If yes, you file I-485 (adjustment). If abroad, consular processing via DS-260.', es: 'Si sí, presentas I-485. Si afuera, procesamiento consular vía DS-260.'}},
       {id: 'crimes', type: 'yesno',
        q: {en: 'Any criminal record (including DUI or drugs)?', es: '¿Antecedentes penales (incluyendo DUI o drogas)?'},
-       help: {en: 'Some convictions trigger inadmissibility — a lawyer should review.', es: 'Algunas condenas activan inadmisibilidad — abogado debe revisar.'}},
+       help: {en: 'Some convictions trigger inadmissibility. A lawyer should review.', es: 'Algunas condenas activan inadmisibilidad. Abogado debe revisar.'}},
       {id: 'prior-fraud', type: 'yesno',
        q: {en: 'Ever used false documents or claimed U.S. citizenship?', es: '¿Usado documentos falsos o reclamado ser ciudadano?'},
        help: {en: 'Either can be a permanent bar without a waiver.', es: 'Pueden ser barrera permanente sin perdón.'}}
@@ -6556,13 +6556,13 @@ var ELIGIBILITY_WIZARDS = {
     evaluate: function(a){
       var reasons = [], flags = [];
       if(a['spouse-citizen'] === 'no'){
-        return {verdict: 'not_eligible', reasons: [{en: 'This wizard covers IR/CR (spouse-of-U.S.-citizen). If your spouse is an LPR (green card holder), use the F2A category — there\'s a quota wait.', es: 'Este check cubre cónyuge de ciudadano. Si es residente, usa F2A — hay espera de cuota.'}], flags: []};
+        return {verdict: 'not_eligible', reasons: [{en: 'This wizard covers IR/CR (spouse-of-U.S.-citizen). If your spouse is an LPR (green card holder), use the F2A category. There\'s a quota wait.', es: 'Este check cubre cónyuge de ciudadano. Si es residente, usa F2A. Hay espera de cuota.'}], flags: []};
       }
       if(a.married === 'no'){
         return {verdict: 'not_eligible', reasons: [{en: 'You must be legally married. If engaged, look at the K-1 fiancé visa instead.', es: 'Debes estar casado. Si comprometido, mira la visa K-1.'}], flags: []};
       }
       if(a.genuine === 'no'){
-        return {verdict: 'not_eligible', reasons: [{en: 'A marriage entered into for immigration purposes is fraud — federal crime, prison, permanent bar.', es: 'Matrimonio por inmigración es fraude — crimen federal, cárcel, barrera permanente.'}], flags: []};
+        return {verdict: 'not_eligible', reasons: [{en: 'A marriage entered into for immigration purposes is fraud. Federal crime, prison, permanent bar.', es: 'Matrimonio por inmigración es fraude. Crimen federal, cárcel, barrera permanente.'}], flags: []};
       }
       if(a['prior-fraud'] === 'yes') flags.push({en: 'Prior fraud is often a permanent bar. A lawyer can assess waiver options.', es: 'Fraude previo es a menudo barrera permanente. Abogado puede ver opciones de perdón.'});
       if(a.crimes === 'yes') flags.push({en: 'Your criminal record needs lawyer review for inadmissibility.', es: 'Tu récord penal necesita revisión legal para inadmisibilidad.'});
@@ -6600,13 +6600,13 @@ var ELIGIBILITY_WIZARDS = {
        help: {en: 'Check the DHS STEM Designated Degree Program List at ICE.gov. Many CS, engineering, math, science programs qualify.', es: 'Revisa la lista DHS en ICE.gov. Muchos programas CS, ingeniería, matemáticas, ciencias califican.'}},
       {id: 'sevp-school', type: 'yesno',
        q: {en: 'Was the school SEVP-certified and accredited?', es: '¿La escuela era certificada SEVP y acreditada?'},
-       help: {en: 'Required for STEM eligibility — most accredited U.S. universities qualify.', es: 'Requerido — la mayoría de universidades acreditadas califican.'}},
+       help: {en: 'Required for STEM eligibility. Most accredited U.S. universities qualify.', es: 'Requerido. La mayoría de universidades acreditadas califican.'}},
       {id: 'employer-everify', type: 'yesno',
        q: {en: 'Is your current/proposed employer enrolled in E-Verify?', es: '¿Tu empleador está inscrito en E-Verify?'},
        help: {en: 'Employer MUST be in E-Verify for STEM OPT. Check at e-verify.uscis.gov.', es: 'Empleador DEBE estar en E-Verify. Revisa en e-verify.uscis.gov.'}},
       {id: 'job-relates', type: 'yesno',
        q: {en: 'Does the job directly relate to your STEM degree?', es: '¿El trabajo se relaciona directamente con tu título STEM?'},
-       help: {en: 'Required — your duties must use the knowledge from your degree.', es: 'Requerido — tus tareas deben usar el conocimiento del título.'}},
+       help: {en: 'Required. Your duties must use the knowledge from your degree.', es: 'Requerido. Tus tareas deben usar el conocimiento del título.'}},
       {id: 'prior-stem', type: 'yesno',
        q: {en: 'Have you previously used a 24-month STEM OPT extension?', es: '¿Has usado una extensión STEM antes?'},
        help: {en: 'You can only get a STEM extension twice in your career (one per degree level).', es: 'Solo puedes obtener extensión STEM dos veces (una por nivel de título).'}}
@@ -6620,7 +6620,7 @@ var ELIGIBILITY_WIZARDS = {
         return {verdict: 'not_eligible', reasons: [{en: 'Your most recent U.S. degree must be on the DHS STEM Designated Degree Program List.', es: 'Tu título debe estar en la lista DHS STEM.'}], flags: []};
       }
       if(a['employer-everify'] === 'no'){
-        return {verdict: 'not_eligible', reasons: [{en: 'Your employer must be enrolled in E-Verify before you can be approved for STEM OPT.', es: 'Tu empleador debe estar en E-Verify.'}], flags: [{en: 'If they\'re not, ask HR — enrollment takes ~1 week.', es: 'Si no, pregunta a RRHH — inscripción toma ~1 semana.'}]};
+        return {verdict: 'not_eligible', reasons: [{en: 'Your employer must be enrolled in E-Verify before you can be approved for STEM OPT.', es: 'Tu empleador debe estar en E-Verify.'}], flags: [{en: 'If they\'re not, ask HR. Enrollment takes ~1 week.', es: 'Si no, pregunta a RRHH. Inscripción toma ~1 semana.'}]};
       }
       if(a['job-relates'] === 'no'){
         flags.push({en: 'The job must directly use the knowledge from your STEM degree. A lawyer can help craft the I-983 to show the connection.', es: 'El trabajo debe usar el conocimiento del título. Abogado puede ayudar con el I-983.'});
@@ -6678,13 +6678,13 @@ var ELIGIBILITY_WIZARDS = {
     evaluate: function(a){
       var reasons = [], flags = [];
       if(a.country === 'no'){
-        return {verdict: 'not_eligible', reasons: [{en: 'Your country of birth is on the high-immigration excluded list. You may still qualify via your spouse\'s or parents\' country of birth — check with the State Department\'s DV instructions.', es: 'Tu país está en la lista excluida. Aún puedes calificar por cónyuge o padres — revisa las instrucciones DV.'}], flags: []};
+        return {verdict: 'not_eligible', reasons: [{en: 'Your country of birth is on the high-immigration excluded list. You may still qualify via your spouse\'s or parents\' country of birth. Check with the State Department\'s DV instructions.', es: 'Tu país está en la lista excluida. Aún puedes calificar por cónyuge o padres. Revisa las instrucciones DV.'}], flags: []};
       }
       var ed = Array.isArray(a['education-or-work']) ? a['education-or-work'] : [];
       if(ed.indexOf('neither') !== -1 || ed.length === 0){
         return {verdict: 'not_eligible', reasons: [{en: 'DV requires EITHER a high school diploma OR 2 years of qualifying work experience.', es: 'DV requiere O diploma de secundaria O 2 años de experiencia calificada.'}], flags: []};
       }
-      if(a.crimes === 'yes') flags.push({en: 'Criminal record needs lawyer review — even winning the lottery doesn\'t guarantee a visa.', es: 'Récord penal necesita revisión legal — ganar la lotería no garantiza visa.'});
+      if(a.crimes === 'yes') flags.push({en: 'Criminal record needs lawyer review. Even winning the lottery doesn\'t guarantee a visa.', es: 'Récord penal necesita revisión legal. Ganar la lotería no garantiza visa.'});
       if(a.medical === 'yes') flags.push({en: 'Some medical conditions trigger consular review. Be prepared with documentation.', es: 'Algunas condiciones médicas activan revisión consular.'});
       if(flags.length === 0){
         return {verdict: 'likely', reasons: [{en: 'Based on your answers, you meet the DV entry requirements. The lottery itself is a random selection of about 1% of applicants.', es: 'Según tus respuestas, cumples los requisitos de entrada. La lotería selecciona aleatoriamente ~1% de solicitantes.'}], flags: []};
@@ -6693,12 +6693,12 @@ var ELIGIBILITY_WIZARDS = {
     },
     nextSteps: {
       en: ['Entry is free at dvprogram.state.gov during the annual registration window (typically October).',
-           'Submit only ONE entry — duplicates disqualify you.',
-           'Save your confirmation number — it\'s the ONLY way to check selection status.',
+           'Submit only ONE entry. Duplicates disqualify you.',
+           'Save your confirmation number. It\'s the ONLY way to check selection status.',
            'Selection results are published in May. If selected, you have 1 year to complete the visa process.'],
       es: ['Inscripción gratis en dvprogram.state.gov durante la ventana anual (octubre típico).',
-           'Solo UNA entrada — duplicados te descalifican.',
-           'Guarda tu número de confirmación — única forma de verificar.',
+           'Solo UNA entrada. Duplicados te descalifican.',
+           'Guarda tu número de confirmación. Única forma de verificar.',
            'Resultados en mayo. Si te seleccionan, 1 año para completar el proceso.']
     }
   },
@@ -6735,18 +6735,18 @@ var ELIGIBILITY_WIZARDS = {
         return {verdict: 'not_eligible', reasons: [{en: 'H-1B requires at least a bachelor\'s degree (or work-experience equivalency at a 3:1 ratio).', es: 'H-1B requiere al menos licenciatura (o experiencia equivalente 3:1).'}], flags: []};
       }
       if(a.specialty === 'no'){
-        return {verdict: 'not_eligible', reasons: [{en: 'The role must be a "specialty occupation" — degree-required, theoretical knowledge applied.', es: 'El rol debe ser "ocupación especializada" — requiere título, conocimiento teórico aplicado.'}], flags: []};
+        return {verdict: 'not_eligible', reasons: [{en: 'The role must be a "specialty occupation". Degree-required, theoretical knowledge applied.', es: 'El rol debe ser "ocupación especializada". Requiere título, conocimiento teórico aplicado.'}], flags: []};
       }
       if(a.employer === 'no'){
         return {verdict: 'not_eligible', reasons: [{en: 'You need a U.S. employer to file the petition. You cannot self-sponsor H-1B.', es: 'Necesitas empleador en EE.UU. para presentar. No puedes auto-patrocinarte.'}], flags: []};
       }
       if(a['max-out'] === 'yes') flags.push({en: 'You\'re at or past the 6-year max. You need an approved I-140 for extensions beyond 6 years.', es: 'Estás en o pasaste el máximo de 6 años. Necesitas I-140 aprobado.'});
-      if(a.wage === 'no') flags.push({en: 'The employer must commit to prevailing wage — if they won\'t, this won\'t fly with DOL.', es: 'Empleador debe pagar salario prevaleciente — si no, no pasará DOL.'});
+      if(a.wage === 'no') flags.push({en: 'The employer must commit to prevailing wage. If they won\'t, this won\'t fly with DOL.', es: 'Empleador debe pagar salario prevaleciente. Si no, no pasará DOL.'});
       if(a['cap-exempt'] === 'no') flags.push({en: 'You\'re subject to the H-1B lottery (~25-30% selection rate). Plan accordingly.', es: 'Estás sujeto a la lotería (~25-30% selección). Planifica.'});
       if(flags.length === 0){
-        return {verdict: 'likely', reasons: [{en: 'Based on your answers, you meet the basic H-1B requirements AND appear cap-exempt (university/research) — an employer could file anytime, no lottery.', es: 'Pareces elegible Y exento del límite — tu empleador puede presentar en cualquier momento.'}], flags: []};
+        return {verdict: 'likely', reasons: [{en: 'Based on your answers, you meet the basic H-1B requirements AND appear cap-exempt (university/research). An employer could file anytime, no lottery.', es: 'Pareces elegible Y exento del límite. Tu empleador puede presentar en cualquier momento.'}], flags: []};
       }
-      return {verdict: 'unsure', reasons: [{en: 'Based on your answers, the basic requirements match — the flagged items below are about navigating the process.', es: 'Pareces elegible — los puntos marcados son cómo navegar el proceso.'}], flags: flags};
+      return {verdict: 'unsure', reasons: [{en: 'Based on your answers, the basic requirements match. The flagged items below are about navigating the process.', es: 'Pareces elegible. Los puntos marcados son cómo navegar el proceso.'}], flags: flags};
     },
     nextSteps: {
       en: ['Employer files LCA (Labor Condition Application) with DOL.',
@@ -6799,7 +6799,7 @@ function renderEligWizard(){
 
   var step = wiz.steps[eligWizState.stepIdx];
   var input = '';
-  // NOTE: no inline onclick / onchange handlers — they conflict with the JS-bound
+  // NOTE: no inline onclick / onchange handlers. They conflict with the JS-bound
   // listeners attached below (which were added for reliable cross-environment behavior).
   if(step.type === 'yesno'){
     var pick = eligWizState.answers[step.id];
@@ -6827,7 +6827,7 @@ function renderEligWizard(){
     + '</div>'
     + '<div class="eligWizInput">'+input+'</div>';
 
-  // POST-RENDER HANDLER BINDING — more reliable than inline `onchange` attributes.
+  // POST-RENDER HANDLER BINDING. More reliable than inline `onchange` attributes.
   // The inline handlers can fail to fire in some WebViews (iOS Safari, some Androids)
   // when the value is set programmatically OR the picker dispatches a change event
   // that doesn't bubble. Binding via addEventListener handles every case.
@@ -6940,7 +6940,7 @@ function renderEligWizardResult(){
   if(!body || !r) return;
 
   // Wording note: these are requirement CHECKPOINTS based on the user's own
-  // answers — never an eligibility determination (that's legal judgment).
+  // answers. Never an eligibility determination (that's legal judgment).
   var verdictClass, verdictTxt, verdictSub;
   if(r.verdict === 'likely'){
     verdictClass = 'eligVerdictGood';
@@ -7065,8 +7065,8 @@ var FAQ_ENTRIES = [
   },
   {
     q:{en:'Why are some questions difficult to pass with voice?', es:'¿Por qué algunas preguntas son difíciles con voz?'},
-    a:{en:'The voice recognition (Web Speech API) varies in accent handling. If Cami marked your answer wrong but you said it right, tap "I said it right — mark correct" on the verdict card.',
-       es:'El reconocimiento de voz varía con acentos. Si Cami marcó mal una respuesta correcta, toca "Lo dije bien — marcar correcto" en la tarjeta de resultado.'}
+    a:{en:'The voice recognition (Web Speech API) varies in accent handling. If Cami marked your answer wrong but you said it right, tap "I said it right. Mark correct" on the verdict card.',
+       es:'El reconocimiento de voz varía con acentos. Si Cami marcó mal una respuesta correcta, toca "Lo dije bien. Marcar correcto" en la tarjeta de resultado.'}
   },
   {
     q:{en:'How accurate are the timeline estimates?', es:'¿Qué tan precisos son los plazos?'},
@@ -7080,8 +7080,8 @@ var FAQ_ENTRIES = [
   },
   {
     q:{en:'What is the N-400 walkthrough?', es:'¿Qué es la guía del N-400?'},
-    a:{en:'A free educational guide that walks you through the 8 main sections of Form N-400 — what USCIS asks in each, why it matters, tips, and the documents to gather — so you understand the form before you fill out the official version yourself. It is educational only and not legal advice.',
-       es:'Una guía educativa gratuita que te lleva por las 8 secciones principales del N-400 — qué pide USCIS en cada una, por qué importa, consejos, y los documentos a reunir — para que entiendas el formulario antes de llenar tú mismo la versión oficial. Es solo educativa, no asesoría legal.'}
+    a:{en:'A free educational guide that walks you through the 8 main sections of Form N-400. What USCIS asks in each, why it matters, tips, and the documents to gather. So you understand the form before you fill out the official version yourself. It is educational only and not legal advice.',
+       es:'Una guía educativa gratuita que te lleva por las 8 secciones principales del N-400. Qué pide USCIS en cada una, por qué importa, consejos, y los documentos a reunir. Para que entiendas el formulario antes de llenar tú mismo la versión oficial. Es solo educativa, no asesoría legal.'}
   },
   {
     q:{en:'Is my data private?', es:'¿Mis datos son privados?'},
@@ -7090,8 +7090,8 @@ var FAQ_ENTRIES = [
   },
   {
     q:{en:'Can I use Camino in multiple languages?', es:'¿Puedo usar Camino en varios idiomas?'},
-    a:{en:'Yes — English and Spanish are fully supported, and you can switch anytime in Me → Language.',
-       es:'Sí — inglés y español son completos, y puedes cambiar cuando quieras en Yo → Idioma.'}
+    a:{en:'Yes. English and Spanish are fully supported, and you can switch anytime in Me → Language.',
+       es:'Sí. Inglés y español son completos, y puedes cambiar cuando quieras en Yo → Idioma.'}
   },
   {
     q:{en:'What is a streak freeze?', es:'¿Qué es un congelamiento de racha?'},
@@ -7164,9 +7164,9 @@ function sendFeedback(){
     toast(lang==='es' ? 'Escribe tu comentario primero' : 'Write your feedback first');
     return;
   }
-  // Hand off to the user's mail app — this actually reaches us.
+  // Hand off to the user's mail app. This actually reaches us.
   var subject = encodeURIComponent('Camino feedback');
-  var body = encodeURIComponent(t.trim() + '\n\n—\nCamino v1.0 · ' + (Store.isNative() ? 'iOS' : 'web') + ' · ' + lang);
+  var body = encodeURIComponent(t.trim() + '\n\n, \nCamino v1.0 · ' + (Store.isNative() ? 'iOS' : 'web') + ' · ' + lang);
   window.location.href = 'mailto:' + SUPPORT_EMAIL + '?subject=' + subject + '&body=' + body;
   var el = document.getElementById('helpFeedbackText');
   if(el) el.value = '';
@@ -7328,7 +7328,7 @@ function openPurchaseSheet(){
         : (lang==='es'
             ? 'Se cobra hoy a tu cuenta de App Store. Cancela cuando quieras en Ajustes.'
             : 'Charged today to your App Store account. Cancel anytime in Settings.'))+'</div>'
-    + '<button class="cta purchaseSheetCta" onclick="confirmTrialPurchase()">'+(lang==='es'?'Confirmar — Toca para suscribirte':'Confirm — Tap to Subscribe')+'</button>'
+    + '<button class="cta purchaseSheetCta" onclick="confirmTrialPurchase()">'+(lang==='es'?'Confirmar. Toca para suscribirte':'Confirm. Tap to Subscribe')+'</button>'
     + '<button class="purchaseSheetCancel" onclick="closePurchaseSheet()">'+(lang==='es'?'Cancelar':'Cancel')+'</button>';
 
   sheet.style.display = '';
@@ -7346,12 +7346,12 @@ function closePurchaseSheet(){
 function confirmTrialPurchase(){
   closePurchaseSheet();
   if(!Store.isNative()){
-    // Web preview — mock: Face-ID-style flash, then grant a local trial (unchanged behavior).
+    // Web preview. Mock: Face-ID-style flash, then grant a local trial (unchanged behavior).
     showConfirmedFlash();
     setTimeout(function(){ startFreeTrial(trialOfferSelectedPlan); }, 800);
     return;
   }
-  // Native — real StoreKit purchase via RevenueCat (StoreKit shows its own sheet).
+  // Native. Real StoreKit purchase via RevenueCat (StoreKit shows its own sheet).
   Store.purchase(trialOfferSelectedPlan).then(function(ok){
     if(!ok) return; // cancelled or failed
     showConfirmedFlash();
@@ -7388,7 +7388,7 @@ function restorePurchases(){
 }
 
 function showPrivacyNote(){
-  // Simple in-app modal — would link to a real privacy policy page on launch
+  // Simple in-app modal. Would link to a real privacy policy page on launch
   var existing = document.getElementById('disclaimerModal');
   if(existing) existing.remove();
   var modal = document.createElement('div');
@@ -7397,18 +7397,18 @@ function showPrivacyNote(){
   var text = lang==='es'
     ? [
         'Camino guarda tu perfil, progreso de estudio y configuraciones **solo en tu dispositivo** (localStorage del navegador).',
-        'Tus datos nunca salen de tu dispositivo — no tenemos servidores que los reciban.',
+        'Tus datos nunca salen de tu dispositivo. No tenemos servidores que los reciban.',
         'No vendemos ni compartimos datos personales con terceros.',
         'No usamos analíticas de terceros que rastreen tu actividad.',
-        'Camino es una app **independiente** — no está afiliada a USCIS ni a ninguna agencia del gobierno, y no es un bufete de abogados.',
+        'Camino es una app **independiente**. No está afiliada a USCIS ni a ninguna agencia del gobierno, y no es un bufete de abogados.',
         'Para más información o para borrar todos tus datos, ve a Yo → Borrar todos los datos.'
       ]
     : [
         'Camino stores your profile, study progress, and settings **only on your device** (browser localStorage).',
-        'Your data never leaves your device — we have no servers that receive it.',
+        'Your data never leaves your device. We have no servers that receive it.',
         'We do not sell or share personal data with third parties.',
         'We do not use third-party analytics that track your activity.',
-        'Camino is an **independent** app — not affiliated with USCIS or any government agency, and not a law firm.',
+        'Camino is an **independent** app. Not affiliated with USCIS or any government agency, and not a law firm.',
         'For more info or to delete all your data, go to Me → Clear all data.'
       ];
   var bullets = text.map(function(b){
@@ -7427,7 +7427,7 @@ function showPrivacyNote(){
   document.body.appendChild(modal);
 }
 
-// Subscription Terms of Use (EULA) — required on the paywall by App Store 3.1.2.
+// Subscription Terms of Use (EULA). Required on the paywall by App Store 3.1.2.
 function showTermsModal(){
   var existing = document.getElementById('disclaimerModal');
   if(existing) existing.remove();
@@ -7440,7 +7440,7 @@ function showTermsModal(){
         'El pago se carga a tu cuenta de Apple al confirmar la compra. La suscripción se **renueva automáticamente** salvo que la canceles al menos 24 horas antes del fin del periodo.',
         'Administra o cancela en cualquier momento en Ajustes → [tu nombre] → Suscripciones. Los reembolsos los gestiona Apple en reportaproblem.apple.com.',
         'Camino es **software de autoayuda educativo**. No es un bufete, **no da asesoría legal**, no determina elegibilidad, y usarlo **no crea una relación abogado-cliente**. Sus herramientas de documentos solo registran tus propias respuestas, textualmente, bajo tu dirección.',
-        'La app se ofrece **"tal cual", sin garantías** de ningún tipo — incluida la exactitud del contenido o cualquier resultado migratorio. El contenido puede cambiar; verifica siempre con fuentes oficiales (uscis.gov).',
+        'La app se ofrece **"tal cual", sin garantías** de ningún tipo. Incluida la exactitud del contenido o cualquier resultado migratorio. El contenido puede cambiar; verifica siempre con fuentes oficiales (uscis.gov).',
         'En la máxima medida permitida por la ley, la responsabilidad total de Camino se **limita al monto que pagaste** por la suscripción en los últimos 12 meses.',
         'El uso de la app se rige por el Acuerdo de Licencia estándar de Apple (EULA): <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">apple.com/legal/…/stdeula</a>. Términos completos: <a href="https://rumoave.github.io/camino/terms.html" target="_blank" rel="noopener">rumoave.github.io/camino/terms</a>',
         'Preguntas: **cruiz@rumostrategies.com**'
@@ -7450,7 +7450,7 @@ function showTermsModal(){
         'Payment is charged to your Apple account at purchase confirmation. The subscription **renews automatically** unless cancelled at least 24 hours before the period ends.',
         'Manage or cancel anytime in Settings → [your name] → Subscriptions. Refunds are handled by Apple at reportaproblem.apple.com.',
         'Camino is **educational self-help software**. It is not a law firm, **does not provide legal advice**, does not determine eligibility, and using it **does not create an attorney-client relationship**. Its document tools only record your own answers, verbatim, at your direction.',
-        'The app is provided **"as is," without warranties** of any kind — including the accuracy of content or any immigration outcome. Content may change; always verify with official sources (uscis.gov).',
+        'The app is provided **"as is," without warranties** of any kind. Including the accuracy of content or any immigration outcome. Content may change; always verify with official sources (uscis.gov).',
         'To the fullest extent permitted by law, Camino\'s total liability is **limited to the amount you paid** for the subscription in the past 12 months.',
         'Use of the app is governed by Apple\'s standard Licensed Application End User License Agreement (EULA): <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener">apple.com/legal/…/stdeula</a>. Full terms: <a href="https://rumoave.github.io/camino/terms.html" target="_blank" rel="noopener">rumoave.github.io/camino/terms</a>',
         'Questions: **cruiz@rumostrategies.com**'
@@ -7634,7 +7634,7 @@ function upgradeOpenPurchaseSheet(){
   openPurchaseSheet();
 }
 
-// ===== PATH JOURNEYS — outlined roadmap per immigration path =====
+// ===== PATH JOURNEYS. Outlined roadmap per immigration path =====
 // Each user gets their own outlined journey based on phase + petitionType + goal.
 // Stages are visualized in the Journey view with done/current/upcoming states.
 // User can tap a stage to mark it as current; previous stages auto-mark as done.
@@ -7775,7 +7775,7 @@ var PATH_JOURNEYS = {
        eta:{en:'2-7 years',                    es:'2-7 años'}},
       {id:'a-granted',    iconName:'shield',    color:'#ffc83d',
        name:{en:'Asylum granted',              es:'Asilo otorgado'},
-       desc:{en:'You have refugee/asylee status — can stay indefinitely', es:'Tienes estatus de refugiado/asilo'},
+       desc:{en:'You have refugee/asylee status. Can stay indefinitely', es:'Tienes estatus de refugiado/asilo'},
        eta:{en:'1-2 months',                   es:'1-2 meses'}},
       {id:'a-wait',       iconName:'calendar',  color:'#84807a',
        name:{en:'1-year wait',                 es:'Espera de 1 año'},
@@ -7992,7 +7992,7 @@ function updatePathProgress(stageId){
   var ms = stageMilestone(stageId);
 
   if(ms && ms.type === 'greenCard'){
-    // Needs a green card date for the 3/5-year math — ask, then promote.
+    // Needs a green card date for the 3/5-year math. Ask, then promote.
     openGreenCardSheet(ms.currentStageId, stage);
     return;
   }
@@ -8024,7 +8024,7 @@ function updatePathProgress(stageId){
 }
 
 // Green card received: move to the citizenship track (Home strip, N-400 journey,
-// eligibility math) — the whole app re-keys off user.phase === 'hasGC'.
+// eligibility math). The whole app re-keys off user.phase === 'hasGC'.
 function promoteToGreenCard(dateISO, currentStageId){
   user.phase = 'hasGC';
   user.greenCardDate = dateISO || todayISO();
@@ -8107,8 +8107,8 @@ function openGreenCardSheet(currentStageId, stage){
     +   '<div class="progCelebrate">'+iconSVG('trophy','#ffc83d',40)+'</div>'
     +   '<div class="progTitle">'+(lang==='es'?'¡Felicidades!':'Congratulations!')+'</div>'
     +   '<div class="progSub">'+(lang==='es'
-          ? 'Tu camino pasa a la ciudadanía. ¿Cuándo te hiciste residente permanente? Una fecha aproximada sirve — la usamos para tus 3 o 5 años.'
-          : 'Your path moves to citizenship. When did you become a permanent resident? A rough date is fine — we use it for your 3- or 5-year math.')+'</div>'
+          ? 'Tu camino pasa a la ciudadanía. ¿Cuándo te hiciste residente permanente? Una fecha aproximada sirve. La usamos para tus 3 o 5 años.'
+          : 'Your path moves to citizenship. When did you become a permanent resident? A rough date is fine. We use it for your 3- or 5-year math.')+'</div>'
     + '</div>'
     + '<div class="onbBig"><input class="onbDateBig" type="date" id="progGcDate" value="'+todayISO()+'" max="'+todayISO()+'" /></div>'
     + privacyChipHTML()
@@ -8242,7 +8242,7 @@ var USCIS_FORMS = {
                                                   desc:{en:'STEM OPT Training Plan',                          es:'Plan de Entrenamiento STEM OPT'}},
   // F-1 / student forms (issued by SEVP / ICE, not USCIS)
   'I-20':   {url:'https://studyinthestates.dhs.gov/students/form-i-20', desc:{en:'Certificate of Eligibility for F-1 / M-1 Status', es:'Certificado de Elegibilidad para Estatus F-1 / M-1'}},
-  // Customs & Border Protection — I-94 is retrieved electronically, not filed
+  // Customs & Border Protection. I-94 is retrieved electronically, not filed
   'I-94':   {url:'https://i94.cbp.dhs.gov/',     desc:{en:'Arrival / Departure Record (retrieve online)',   es:'Registro de Entrada / Salida (consulta en línea)'}},
   // Dept of State visa applications
   'DS-160': {url:'https://ceac.state.gov/genniv', desc:{en:'Online Nonimmigrant Visa Application',           es:'Solicitud de Visa No Inmigrante en línea'}},
@@ -8251,12 +8251,12 @@ var USCIS_FORMS = {
 
 // Scans free-form copy ("File the I-485...", "Your I-130 was approved", "Form N-400 fee waiver")
 // and converts every USCIS/DOS form code into a teal link to the official PDF page.
-// Safe to apply to any plain-text or already-HTML string — won't touch text already inside a tag.
+// Safe to apply to any plain-text or already-HTML string. Won't touch text already inside a tag.
 function autolinkForms(text){
   if(text == null) return '';
   var s = String(text);
   // Match 1-2 letter prefix + 2-4 digit suffix. Covers: I-20, I-94, N-400, AR-11, DS-260, I-797, G-1450.
-  // The lookup in USCIS_FORMS is the source of truth — unknown codes (like the imaginary J-1) pass through unchanged.
+  // The lookup in USCIS_FORMS is the source of truth. Unknown codes (like the imaginary J-1) pass through unchanged.
   return s.replace(/\b(Form\s+)?([A-Z]{1,2}-\d{2,4})\b/g, function(match, prefix, code){
     var canonical = code.toUpperCase();
     var info = USCIS_FORMS[canonical];
@@ -8333,7 +8333,7 @@ function saveUSCISReceipt(){
 }
 
 function checkUSCISStatus(){
-  // USCIS Case Status site — they don't support deep-linking with the receipt prefilled,
+  // USCIS Case Status site. They don't support deep-linking with the receipt prefilled,
   // so we open the landing page in a new tab. User pastes their saved receipt there.
   openExternal('https://egov.uscis.gov/casestatus/landing.do');
 }
@@ -8356,36 +8356,36 @@ var VISA_PATHS = [
              es:'Estudio a tiempo completo en una escuela aprobada por SEVP. Válida durante tus estudios más 60 días de gracia.'},
     eligibility:{en:['Accepted at a SEVP-certified school','Proof of financial support','Strong ties to your home country','English proficient (or in ESL program)'],
                  es:['Aceptado en escuela certificada por SEVP','Prueba de apoyo financiero','Lazos fuertes con tu país','Suficiente inglés (o en programa ESL)']},
-    tips:{en:['Maintain a full course load every semester.','Don\'t work off-campus without CPT or OPT authorization — it\'s a status violation.','Travel? Get a fresh I-20 signature before leaving the U.S.'],
-          es:['Mantén carga completa de cursos cada semestre.','No trabajes fuera del campus sin CPT u OPT — es una violación de estatus.','¿Viajas? Consigue una firma fresca en tu I-20 antes de salir.']}},
+    tips:{en:['Maintain a full course load every semester.','Don\'t work off-campus without CPT or OPT authorization. It\'s a status violation.','Travel? Get a fresh I-20 signature before leaving the U.S.'],
+          es:['Mantén carga completa de cursos cada semestre.','No trabajes fuera del campus sin CPT u OPT. Es una violación de estatus.','¿Viajas? Consigue una firma fresca en tu I-20 antes de salir.']}},
   {id:'cpt', iconName:'briefcase', color:'#ec4f93', cat:'student',
     title:{en:'CPT (Curricular Practical Training)', es:'CPT (Entrenamiento Práctico Curricular)'},
-    summary:{en:'Work tied to your degree program — must be integral to your curriculum. Authorized by your school, not USCIS.',
-             es:'Trabajo ligado a tu carrera — debe ser parte integral del plan de estudios. Lo autoriza tu escuela, no USCIS.'},
+    summary:{en:'Work tied to your degree program. Must be integral to your curriculum. Authorized by your school, not USCIS.',
+             es:'Trabajo ligado a tu carrera. Debe ser parte integral del plan de estudios. Lo autoriza tu escuela, no USCIS.'},
     eligibility:{en:['Enrolled F-1 student for 1+ academic year','Work directly related to your major','School designates the employment'],
                  es:['Estudiante F-1 con 1+ año académico','Trabajo directamente relacionado con tu carrera','Tu escuela designa el empleo']},
-    tips:{en:['12+ months of full-time CPT eliminates OPT eligibility — use part-time CPT to preserve it.','Each CPT period needs a new I-20 from your DSO.'],
-          es:['12+ meses de CPT a tiempo completo elimina la elegibilidad para OPT — usa CPT parcial para conservarla.','Cada período de CPT necesita un I-20 nuevo de tu DSO.']}},
+    tips:{en:['12+ months of full-time CPT eliminates OPT eligibility. Use part-time CPT to preserve it.','Each CPT period needs a new I-20 from your DSO.'],
+          es:['12+ meses de CPT a tiempo completo elimina la elegibilidad para OPT. Usa CPT parcial para conservarla.','Cada período de CPT necesita un I-20 nuevo de tu DSO.']}},
   {id:'opt', iconName:'star', color:'#ff9b21', cat:'student', forms:['I-765','I-983'],
     title:{en:'OPT (Optional Practical Training)', es:'OPT (Entrenamiento Práctico Opcional)'},
     summary:{en:'12 months of work authorization in your field of study after graduation. STEM grads can extend by 24 months.',
              es:'12 meses de autorización de trabajo en tu área de estudio tras graduarte. Graduados STEM pueden extender 24 meses.'},
     eligibility:{en:['Completed 1+ academic year as F-1','Work in field directly related to your degree','Apply within 60 days of graduation','For STEM extension: bachelor\'s+ in eligible STEM field + E-Verify employer'],
                  es:['Completaste 1+ año académico como F-1','Trabajo en área directamente relacionada','Aplicar dentro de 60 días de graduarte','Para STEM: licenciatura+ en STEM elegible + empleador E-Verify']},
-    tips:{en:['Don\'t accumulate more than 90 days unemployed during OPT — you lose status.','Report every job change within 10 days via SEVP Portal.','Apply for STEM extension BEFORE your initial OPT expires.','OPT is your runway to find an H-1B sponsor.'],
-          es:['No acumules más de 90 días de desempleo durante OPT — pierdes estatus.','Reporta cada cambio de trabajo dentro de 10 días por el Portal SEVP.','Solicita extensión STEM ANTES de que venza tu OPT inicial.','OPT es tu pista para encontrar un patrocinador H-1B.']},
+    tips:{en:['Don\'t accumulate more than 90 days unemployed during OPT. You lose status.','Report every job change within 10 days via SEVP Portal.','Apply for STEM extension BEFORE your initial OPT expires.','OPT is your runway to find an H-1B sponsor.'],
+          es:['No acumules más de 90 días de desempleo durante OPT. Pierdes estatus.','Reporta cada cambio de trabajo dentro de 10 días por el Portal SEVP.','Solicita extensión STEM ANTES de que venza tu OPT inicial.','OPT es tu pista para encontrar un patrocinador H-1B.']},
     howItWorks:{en:[
-        'Pre-completion OPT — work BEFORE you graduate: part-time (≤20 hrs/week) while school is in session, full-time during breaks. Every month used is subtracted from your 12-month total.',
-        'Post-completion OPT — the main one: up to 12 months of full-time work in your field AFTER graduation. Your DSO recommends it in SEVIS; you then file Form I-765 with USCIS.',
+        'Pre-completion OPT. Work BEFORE you graduate: part-time (≤20 hrs/week) while school is in session, full-time during breaks. Every month used is subtracted from your 12-month total.',
+        'Post-completion OPT. The main one: up to 12 months of full-time work in your field AFTER graduation. Your DSO recommends it in SEVIS; you then file Form I-765 with USCIS.',
         'Apply in the window: from 90 days before your program end date to 60 days after. USCIS approval + the physical EAD card must arrive before you can start work.',
-        'STEM OPT extension — eligible STEM degree + E-Verify employer = +24 months (36 total). File Form I-983 training plan with your employer, then I-765 before your initial OPT expires.',
+        'STEM OPT extension. Eligible STEM degree + E-Verify employer = +24 months (36 total). File Form I-983 training plan with your employer, then I-765 before your initial OPT expires.',
         'Unemployment clock: 90 days max on standard OPT, 150 days total with the STEM extension. Report every employer and address change in the SEVP Portal within 10 days.',
         'Cap-gap: if your H-1B is selected and filed while on OPT, your status and work authorization auto-extend to October 1 so you don\'t fall out of status.'],
       es:[
-        'OPT pre-graduación — trabaja ANTES de graduarte: medio tiempo (≤20 hrs/semana) durante clases, tiempo completo en vacaciones. Cada mes usado se resta de tu total de 12 meses.',
-        'OPT post-graduación — la principal: hasta 12 meses de trabajo a tiempo completo en tu área DESPUÉS de graduarte. Tu DSO la recomienda en SEVIS; luego presentas el Formulario I-765 con USCIS.',
+        'OPT pre-graduación. Trabaja ANTES de graduarte: medio tiempo (≤20 hrs/semana) durante clases, tiempo completo en vacaciones. Cada mes usado se resta de tu total de 12 meses.',
+        'OPT post-graduación. La principal: hasta 12 meses de trabajo a tiempo completo en tu área DESPUÉS de graduarte. Tu DSO la recomienda en SEVIS; luego presentas el Formulario I-765 con USCIS.',
         'Aplica en la ventana: desde 90 días antes de terminar tu programa hasta 60 días después. La aprobación de USCIS + la tarjeta EAD física deben llegar antes de poder trabajar.',
-        'Extensión STEM — título STEM elegible + empleador E-Verify = +24 meses (36 en total). Presenta el plan I-983 con tu empleador, luego el I-765 antes de que venza tu OPT inicial.',
+        'Extensión STEM. Título STEM elegible + empleador E-Verify = +24 meses (36 en total). Presenta el plan I-983 con tu empleador, luego el I-765 antes de que venza tu OPT inicial.',
         'Reloj de desempleo: máximo 90 días en OPT estándar, 150 días con la extensión STEM. Reporta cada empleador y cambio de dirección en el Portal SEVP dentro de 10 días.',
         'Cap-gap: si tu H-1B es seleccionada y presentada mientras estás en OPT, tu estatus y permiso de trabajo se extienden automáticamente hasta el 1 de octubre.']}},
   {id:'h1b', iconName:'briefcase', color:'#00b4a8', cat:'work', forms:['I-129'],
@@ -8394,56 +8394,56 @@ var VISA_PATHS = [
              es:'Visa patrocinada para trabajos que requieren licenciatura o más. Mandato de 3 años, renovable a 6 (o más si comienza el proceso de residencia).'},
     eligibility:{en:['Bachelor\'s degree (or equivalent) in a specialty field','Job offer from a U.S. employer','Employer files H-1B petition','Win the annual lottery (March registration, ~25% selection rate)'],
                  es:['Licenciatura (o equivalente) en área especializada','Oferta de trabajo de empleador en EE.UU.','El empleador presenta la petición H-1B','Ganar la lotería anual (registro en marzo, ~25% de selección)']},
-    tips:{en:['Cap-exempt employers (universities, nonprofit research) skip the lottery — strategic option.','You can\'t change jobs without your new employer filing a transfer petition.','H-1B is "dual intent" — you can pursue a green card while on it.','Start I-140 employment-based GC ASAP to stay protected past year 6.'],
-          es:['Empleadores exentos del cap (universidades, investigación sin fines de lucro) saltan la lotería — opción estratégica.','No puedes cambiar de trabajo sin que el nuevo empleador presente petición de transferencia.','H-1B tiene "doble intención" — puedes buscar residencia mientras estás en ella.','Empieza I-140 (GC por empleo) cuanto antes para mantenerte protegido después del año 6.']},
+    tips:{en:['Cap-exempt employers (universities, nonprofit research) skip the lottery. Strategic option.','You can\'t change jobs without your new employer filing a transfer petition.','H-1B is "dual intent". You can pursue a green card while on it.','Start I-140 employment-based GC ASAP to stay protected past year 6.'],
+          es:['Empleadores exentos del cap (universidades, investigación sin fines de lucro) saltan la lotería. Opción estratégica.','No puedes cambiar de trabajo sin que el nuevo empleador presente petición de transferencia.','H-1B tiene "doble intención". Puedes buscar residencia mientras estás en ella.','Empieza I-140 (GC por empleo) cuanto antes para mantenerte protegido después del año 6.']},
     howItWorks:{en:[
-        'Registration (March): your employer creates a USCIS account and electronically registers you during the ~2-week window. Fee is $215 per registration (as of FY2026). One registration per person per employer — duplicates are thrown out.',
-        'The lottery (late March): USCIS runs a random selection. Two pools — 65,000 regular cap, plus 20,000 extra for holders of a U.S. master\'s degree or higher (a second chance in the advanced-degree draw).',
+        'Registration (March): your employer creates a USCIS account and electronically registers you during the ~2-week window. Fee is $215 per registration (as of FY2026). One registration per person per employer. Duplicates are thrown out.',
+        'The lottery (late March): USCIS runs a random selection. Two pools. 65,000 regular cap, plus 20,000 extra for holders of a U.S. master\'s degree or higher (a second chance in the advanced-degree draw).',
         'Selected? (April–June): only now does your employer file the full I-129 petition with your credentials, plus a certified Labor Condition Application (LCA) from the Department of Labor. Premium processing (15 days) is optional for an extra fee.',
-        'Approved: H-1B status begins October 1 — the start of the new fiscal year. F-1 students on OPT get "cap-gap" so their work authorization bridges to Oct 1 without a gap.',
-        'Not selected: nothing carries over — you must re-register next March. Meanwhile, keep working via a STEM OPT extension, or pivot to a cap-exempt employer, O-1, L-1, or an EB green-card path.'],
+        'Approved: H-1B status begins October 1. The start of the new fiscal year. F-1 students on OPT get "cap-gap" so their work authorization bridges to Oct 1 without a gap.',
+        'Not selected: nothing carries over. You must re-register next March. Meanwhile, keep working via a STEM OPT extension, or pivot to a cap-exempt employer, O-1, L-1, or an EB green-card path.'],
       es:[
-        'Registro (marzo): tu empleador crea una cuenta USCIS y te registra electrónicamente durante la ventana de ~2 semanas. El costo es $215 por registro (para FY2026). Un registro por persona por empleador — los duplicados se descartan.',
-        'La lotería (fines de marzo): USCIS hace una selección aleatoria. Dos grupos — 65,000 del cap regular, más 20,000 adicionales para quienes tienen maestría+ de EE.UU. (una segunda oportunidad en el sorteo de grado avanzado).',
+        'Registro (marzo): tu empleador crea una cuenta USCIS y te registra electrónicamente durante la ventana de ~2 semanas. El costo es $215 por registro (para FY2026). Un registro por persona por empleador. Los duplicados se descartan.',
+        'La lotería (fines de marzo): USCIS hace una selección aleatoria. Dos grupos. 65,000 del cap regular, más 20,000 adicionales para quienes tienen maestría+ de EE.UU. (una segunda oportunidad en el sorteo de grado avanzado).',
         '¿Seleccionado? (abril–junio): solo ahora tu empleador presenta la petición completa I-129 con tus credenciales, más una Solicitud de Condición Laboral (LCA) certificada por el Departamento de Trabajo. El procesamiento premium (15 días) es opcional por un costo extra.',
-        'Aprobado: el estatus H-1B comienza el 1 de octubre — inicio del nuevo año fiscal. Los estudiantes F-1 en OPT reciben "cap-gap" para que su permiso de trabajo llegue hasta el 1 de octubre sin interrupción.',
-        'No seleccionado: nada se guarda — debes registrarte de nuevo en marzo. Mientras tanto, sigue trabajando con una extensión STEM OPT, o cambia a un empleador exento del cap, O-1, L-1, o una vía de residencia EB.']}},
+        'Aprobado: el estatus H-1B comienza el 1 de octubre. Inicio del nuevo año fiscal. Los estudiantes F-1 en OPT reciben "cap-gap" para que su permiso de trabajo llegue hasta el 1 de octubre sin interrupción.',
+        'No seleccionado: nada se guarda. Debes registrarte de nuevo en marzo. Mientras tanto, sigue trabajando con una extensión STEM OPT, o cambia a un empleador exento del cap, O-1, L-1, o una vía de residencia EB.']}},
   {id:'l1', iconName:'plane', color:'#8c4dd1', cat:'work', forms:['I-129'],
     title:{en:'L-1 Intracompany Transfer', es:'L-1 Transferencia Intra-empresa'},
     summary:{en:'For employees of multinational companies transferring from a foreign office to a U.S. office. L-1A for managers, L-1B for specialized knowledge.',
              es:'Para empleados de empresas multinacionales que se transfieren de oficina extranjera a EE.UU. L-1A para gerentes, L-1B para conocimiento especializado.'},
     eligibility:{en:['1 year of continuous employment with the foreign company in past 3 years','Coming to work in managerial, executive, or specialized-knowledge role','Foreign office must maintain operations'],
                  es:['1 año de empleo continuo con la empresa extranjera en los últimos 3 años','Vienes a un puesto gerencial, ejecutivo o de conocimiento especializado','La oficina extranjera debe seguir operando']},
-    tips:{en:['No annual lottery — file anytime.','L-1A is the fast lane to EB-1C green card.','Spouses (L-2) can work in the U.S. with EAD.'],
-          es:['No hay lotería anual — presenta en cualquier momento.','L-1A es la vía rápida a residencia EB-1C.','Cónyuges (L-2) pueden trabajar con EAD.']}},
+    tips:{en:['No annual lottery. File anytime.','L-1A is the fast lane to EB-1C green card.','Spouses (L-2) can work in the U.S. with EAD.'],
+          es:['No hay lotería anual. Presenta en cualquier momento.','L-1A es la vía rápida a residencia EB-1C.','Cónyuges (L-2) pueden trabajar con EAD.']}},
   {id:'e2', iconName:'bolt', color:'#d4a000', cat:'work', forms:['DS-160','I-129'],
     title:{en:'E-2 Treaty Investor', es:'E-2 Inversionista por Tratado'},
     summary:{en:'For citizens of about 80 treaty countries who invest a substantial amount in a U.S. business they own or run. 2-year stays, unlimited renewals. India, China, Brazil and Vietnam are not treaty countries.',
              es:'Para ciudadanos de unos 80 países con tratado que invierten una suma sustancial en un negocio en EE.UU. que poseen o dirigen. Estancias de 2 años, renovaciones ilimitadas. India, China, Brasil y Vietnam no tienen tratado.'},
-    eligibility:{en:['Citizen of an E-2 treaty country (Canada, Mexico, Philippines, most of Europe, Japan, South Korea, Pakistan, Argentina…)','A real, operating business you own at least 50% of or control','A substantial, at-risk investment — no legal minimum; many approvals are $100,000+','The business must do more than support you: it should create jobs (not "marginal")'],
-                 es:['Ciudadano/a de un país con tratado E-2 (Canadá, México, Filipinas, casi toda Europa, Japón, Corea del Sur, Pakistán, Argentina…)','Un negocio real y operativo del que posees al menos 50% o controlas','Inversión sustancial y en riesgo — sin mínimo legal; muchas aprobaciones superan $100,000','El negocio debe ser más que tu sustento: debe crear empleos (no "marginal")']},
-    tips:{en:['No cap, no lottery; many consulates issue 5-year visas.','Spouses get automatic work authorization (E-2S).','Not dual intent — pursue a green card carefully; EB-5, EB-1C or NIW are common bridges.','Children lose E-2 status at 21 — plan their status early.'],
-          es:['Sin tope ni lotería; muchos consulados emiten visas de 5 años.','Los cónyuges obtienen permiso de trabajo automático (E-2S).','No es de doble intención — busca la residencia con cuidado; EB-5, EB-1C o NIW son puentes comunes.','Los hijos pierden el E-2 a los 21 — planifica su estatus con tiempo.']},
-    howItWorks:{en:['Form the business, open accounts, sign leases and contracts, and spend or irrevocably commit the funds — the investment must be at risk before you apply.','Build the business plan: 5-year projections, hiring plan, and a clean source-of-funds trail.','Abroad: DS-160 plus DS-156E and a consular interview (visa fee $315). In the U.S.: your company files Form I-129 to change your status.','Each entry grants 2 years; extend indefinitely while the business stays active and non-marginal.'],
-                es:['Constituye el negocio, abre cuentas, firma contratos y gasta o comprometa los fondos de forma irrevocable — la inversión debe estar en riesgo antes de solicitar.','Prepara el plan de negocio: proyecciones a 5 años, plan de contratación y rastro limpio del origen de los fondos.','Desde el exterior: DS-160 más DS-156E y entrevista consular (tarifa $315). En EE.UU.: tu empresa presenta el Formulario I-129 para cambiar tu estatus.','Cada entrada otorga 2 años; extiende indefinidamente mientras el negocio siga activo y no marginal.']}},
+    eligibility:{en:['Citizen of an E-2 treaty country (Canada, Mexico, Philippines, most of Europe, Japan, South Korea, Pakistan, Argentina…)','A real, operating business you own at least 50% of or control','A substantial, at-risk investment. No legal minimum; many approvals are $100,000+','The business must do more than support you: it should create jobs (not "marginal")'],
+                 es:['Ciudadano/a de un país con tratado E-2 (Canadá, México, Filipinas, casi toda Europa, Japón, Corea del Sur, Pakistán, Argentina…)','Un negocio real y operativo del que posees al menos 50% o controlas','Inversión sustancial y en riesgo. Sin mínimo legal; muchas aprobaciones superan $100,000','El negocio debe ser más que tu sustento: debe crear empleos (no "marginal")']},
+    tips:{en:['No cap, no lottery; many consulates issue 5-year visas.','Spouses get automatic work authorization (E-2S).','Not dual intent. Pursue a green card carefully; EB-5, EB-1C or NIW are common bridges.','Children lose E-2 status at 21. Plan their status early.'],
+          es:['Sin tope ni lotería; muchos consulados emiten visas de 5 años.','Los cónyuges obtienen permiso de trabajo automático (E-2S).','No es de doble intención. Busca la residencia con cuidado; EB-5, EB-1C o NIW son puentes comunes.','Los hijos pierden el E-2 a los 21. Planifica su estatus con tiempo.']},
+    howItWorks:{en:['Form the business, open accounts, sign leases and contracts, and spend or irrevocably commit the funds. The investment must be at risk before you apply.','Build the business plan: 5-year projections, hiring plan, and a clean source-of-funds trail.','Abroad: DS-160 plus DS-156E and a consular interview (visa fee $315). In the U.S.: your company files Form I-129 to change your status.','Each entry grants 2 years; extend indefinitely while the business stays active and non-marginal.'],
+                es:['Constituye el negocio, abre cuentas, firma contratos y gasta o comprometa los fondos de forma irrevocable. La inversión debe estar en riesgo antes de solicitar.','Prepara el plan de negocio: proyecciones a 5 años, plan de contratación y rastro limpio del origen de los fondos.','Desde el exterior: DS-160 más DS-156E y entrevista consular (tarifa $315). En EE.UU.: tu empresa presenta el Formulario I-129 para cambiar tu estatus.','Cada entrada otorga 2 años; extiende indefinidamente mientras el negocio siga activo y no marginal.']}},
   {id:'e3h1b1', iconName:'globe', color:'#1cb0f6', cat:'work', forms:['DS-160','I-129'],
     title:{en:'E-3 & H-1B1 (Australia, Chile, Singapore)', es:'E-3 y H-1B1 (Australia, Chile, Singapur)'},
-    summary:{en:'Treaty work visas for degree-level jobs — like H-1B without the lottery. E-3 for Australians (10,500/yr), H-1B1 for Chileans (1,400) and Singaporeans (5,400). The caps are rarely reached.',
-             es:'Visas de trabajo por tratado para empleos con título — como la H-1B sin lotería. E-3 para australianos (10,500/año), H-1B1 para chilenos (1,400) y singapurenses (5,400). Los cupos rara vez se agotan.'},
+    summary:{en:'Treaty work visas for degree-level jobs. Like H-1B without the lottery. E-3 for Australians (10,500/yr), H-1B1 for Chileans (1,400) and Singaporeans (5,400). The caps are rarely reached.',
+             es:'Visas de trabajo por tratado para empleos con título. Como la H-1B sin lotería. E-3 para australianos (10,500/año), H-1B1 para chilenos (1,400) y singapurenses (5,400). Los cupos rara vez se agotan.'},
     eligibility:{en:['Citizen of Australia (E-3) or Chile / Singapore (H-1B1)','Bachelor\'s degree or higher in the field','A specialty-occupation job offer from a U.S. employer','A Labor Condition Application certified by the Department of Labor'],
                  es:['Ciudadano/a de Australia (E-3) o Chile / Singapur (H-1B1)','Licenciatura o superior en el campo','Oferta de empleo de ocupación especializada de un empleador en EE.UU.','Una LCA (Labor Condition Application) certificada por el Departamento de Trabajo']},
-    tips:{en:['Apply directly at a consulate — no USCIS petition needed from abroad.','E-3 spouses can work; H-1B1 spouses cannot.','H-1B1 is not dual intent and renews in 1-year steps; E-3 renews in 2-year steps.','Switching to H-1B later is common once a green card is in motion.'],
-          es:['Solicita directamente en un consulado — no hace falta petición a USCIS desde el exterior.','Los cónyuges E-3 pueden trabajar; los H-1B1 no.','La H-1B1 no es de doble intención y se renueva cada año; la E-3 cada 2 años.','Pasar a H-1B más adelante es común cuando la residencia está en marcha.']},
-    howItWorks:{en:['Employer files the LCA (Form ETA-9035) with the Department of Labor — about a week.','DS-160, visa fee, and a consular interview with the LCA, job letter and degree.','Enter and start work; extend indefinitely while employed in the role.','Already in the U.S.? The employer can file Form I-129 to change your status instead.'],
-                es:['El empleador presenta la LCA (Formulario ETA-9035) ante el Departamento de Trabajo — alrededor de una semana.','DS-160, tarifa de visa y entrevista consular con la LCA, carta de trabajo y título.','Entra y empieza a trabajar; extiende indefinidamente mientras sigas en el puesto.','¿Ya estás en EE.UU.? El empleador puede presentar el Formulario I-129 para cambiar tu estatus.']}},
+    tips:{en:['Apply directly at a consulate. No USCIS petition needed from abroad.','E-3 spouses can work; H-1B1 spouses cannot.','H-1B1 is not dual intent and renews in 1-year steps; E-3 renews in 2-year steps.','Switching to H-1B later is common once a green card is in motion.'],
+          es:['Solicita directamente en un consulado. No hace falta petición a USCIS desde el exterior.','Los cónyuges E-3 pueden trabajar; los H-1B1 no.','La H-1B1 no es de doble intención y se renueva cada año; la E-3 cada 2 años.','Pasar a H-1B más adelante es común cuando la residencia está en marcha.']},
+    howItWorks:{en:['Employer files the LCA (Form ETA-9035) with the Department of Labor. About a week.','DS-160, visa fee, and a consular interview with the LCA, job letter and degree.','Enter and start work; extend indefinitely while employed in the role.','Already in the U.S.? The employer can file Form I-129 to change your status instead.'],
+                es:['El empleador presenta la LCA (Formulario ETA-9035) ante el Departamento de Trabajo. Alrededor de una semana.','DS-160, tarifa de visa y entrevista consular con la LCA, carta de trabajo y título.','Entra y empieza a trabajar; extiende indefinidamente mientras sigas en el puesto.','¿Ya estás en EE.UU.? El empleador puede presentar el Formulario I-129 para cambiar tu estatus.']}},
   {id:'r1', iconName:'home', color:'#8c4dd1', cat:'work', forms:['I-129','I-360'],
     title:{en:'R-1 Religious Worker', es:'R-1 Trabajador Religioso'},
     summary:{en:'For ministers and people in religious vocations or occupations working at least part-time for a U.S. nonprofit religious organization. Up to 5 years, with an EB-4 green card path.',
              es:'Para ministros y personas en vocaciones u ocupaciones religiosas que trabajan al menos medio tiempo para una organización religiosa sin fines de lucro en EE.UU. Hasta 5 años, con vía a residencia EB-4.'},
     eligibility:{en:['Member of the same denomination for the past 2 years','Work as a minister or in a religious vocation/occupation (not purely administrative)','At least 20 hours per week for a bona fide 501(c)(3) religious organization','The organization files the petition for you'],
                  es:['Miembro de la misma denominación durante los últimos 2 años','Trabajo como ministro o en vocación/ocupación religiosa (no puramente administrativa)','Al menos 20 horas semanales para una organización religiosa 501(c)(3) legítima','La organización presenta la petición por ti']},
-    tips:{en:['USCIS often inspects the religious site before approving.','The EB-4 green card line has been heavily backlogged since 2023 — start early.','The non-minister EB-4 program needs periodic congressional renewal — check that it is active.'],
-          es:['USCIS suele inspeccionar el lugar de culto antes de aprobar.','La fila de residencia EB-4 está muy retrasada desde 2023 — empieza temprano.','El programa EB-4 para no ministros requiere renovación periódica del Congreso — verifica que esté activo.']},
+    tips:{en:['USCIS often inspects the religious site before approving.','The EB-4 green card line has been heavily backlogged since 2023. Start early.','The non-minister EB-4 program needs periodic congressional renewal. Check that it is active.'],
+          es:['USCIS suele inspeccionar el lugar de culto antes de aprobar.','La fila de residencia EB-4 está muy retrasada desde 2023. Empieza temprano.','El programa EB-4 para no ministros requiere renovación periódica del Congreso. Verifica que esté activo.']},
     howItWorks:{en:['The organization files Form I-129 with the R-1 supplement and employer attestation.','Initial stay of up to 30 months, extendable to 5 years total.','After 2 years of qualifying work the organization can file Form I-360 for an EB-4 green card; adjust status when a visa number is available.'],
                 es:['La organización presenta el Formulario I-129 con el suplemento R-1 y la declaración del empleador.','Estancia inicial de hasta 30 meses, extensible a 5 años en total.','Tras 2 años de trabajo calificado la organización puede presentar el Formulario I-360 para residencia EB-4; ajustas estatus cuando haya número de visa.']}},
   {id:'iep', iconName:'bolt', color:'#ff4d3a', cat:'work', forms:['I-941'],
@@ -8452,82 +8452,82 @@ var VISA_PATHS = [
              es:'Hasta 5 años en EE.UU. para hacer crecer una startup que cofundaste, si inversionistas calificados de EE.UU. o subvenciones gubernamentales la respaldaron. Es un permiso (parole), no una visa, y su disponibilidad ha cambiado entre gobiernos.'},
     eligibility:{en:['Startup formed in the U.S. within the last 5 years','You own at least 10% and play a central, active role','About $265,000 from qualified U.S. investors, or about $106,000 in federal, state or local grants (thresholds adjust for inflation)','Up to 3 founders per startup'],
                  es:['Startup constituida en EE.UU. en los últimos 5 años','Posees al menos 10% y tienes un rol central y activo','Unos $265,000 de inversionistas calificados de EE.UU., o unos $106,000 en subvenciones federales, estatales o locales (los umbrales se ajustan por inflación)','Hasta 3 fundadores por startup']},
-    tips:{en:['Confirm on uscis.gov that the program is open before planning around it.','Spouses can apply for work authorization; children cannot work.','Does not lead to a green card by itself — pair it with O-1, EB-1A or EB-2 NIW.','Partial funding can be supplemented with other compelling evidence of growth potential.'],
-          es:['Confirma en uscis.gov que el programa esté abierto antes de planificar en torno a él.','Los cónyuges pueden pedir permiso de trabajo; los hijos no pueden trabajar.','No lleva a la residencia por sí solo — combínalo con O-1, EB-1A o EB-2 NIW.','Financiamiento parcial puede complementarse con otra evidencia sólida de potencial de crecimiento.']},
-    howItWorks:{en:['File Form I-941 with evidence of the entity, your role and the funding.','If approved: initial parole of up to 30 months (enter from abroad, or leave and re-enter if you are in the U.S.).','Re-parole for up to 30 more months with proof of growth — roughly $530,000 in revenue or funding, or 5 jobs created.','Maximum 5 years total.'],
-                es:['Presenta el Formulario I-941 con evidencia de la empresa, tu rol y el financiamiento.','Si se aprueba: permiso inicial de hasta 30 meses (entras desde el exterior, o sales y reingresas si estás en EE.UU.).','Renovación de hasta 30 meses más con prueba de crecimiento — unos $530,000 en ingresos o financiamiento, o 5 empleos creados.','Máximo 5 años en total.']}},
+    tips:{en:['Confirm on uscis.gov that the program is open before planning around it.','Spouses can apply for work authorization; children cannot work.','Does not lead to a green card by itself. Pair it with O-1, EB-1A or EB-2 NIW.','Partial funding can be supplemented with other compelling evidence of growth potential.'],
+          es:['Confirma en uscis.gov que el programa esté abierto antes de planificar en torno a él.','Los cónyuges pueden pedir permiso de trabajo; los hijos no pueden trabajar.','No lleva a la residencia por sí solo. Combínalo con O-1, EB-1A o EB-2 NIW.','Financiamiento parcial puede complementarse con otra evidencia sólida de potencial de crecimiento.']},
+    howItWorks:{en:['File Form I-941 with evidence of the entity, your role and the funding.','If approved: initial parole of up to 30 months (enter from abroad, or leave and re-enter if you are in the U.S.).','Re-parole for up to 30 more months with proof of growth. Roughly $530,000 in revenue or funding, or 5 jobs created.','Maximum 5 years total.'],
+                es:['Presenta el Formulario I-941 con evidencia de la empresa, tu rol y el financiamiento.','Si se aprueba: permiso inicial de hasta 30 meses (entras desde el exterior, o sales y reingresas si estás en EE.UU.).','Renovación de hasta 30 meses más con prueba de crecimiento. Unos $530,000 en ingresos o financiamiento, o 5 empleos creados.','Máximo 5 años en total.']}},
   {id:'o1', iconName:'star', color:'#ff4d3a', cat:'work', forms:['I-129'],
     title:{en:'O-1 Extraordinary Ability', es:'O-1 Habilidad Extraordinaria'},
-    summary:{en:'For people at the top of their field — sciences, arts, education, business, athletics. Initial 3-year period, indefinite renewals possible.',
-             es:'Para personas en la cima de su campo — ciencias, artes, educación, negocios, atletismo. Período inicial de 3 años, renovaciones indefinidas posibles.'},
+    summary:{en:'For people at the top of their field. Sciences, arts, education, business, athletics. Initial 3-year period, indefinite renewals possible.',
+             es:'Para personas en la cima de su campo. Ciencias, artes, educación, negocios, atletismo. Período inicial de 3 años, renovaciones indefinidas posibles.'},
     eligibility:{en:['Sustained national or international acclaim','Evidence across multiple categories (awards, publications, press, original contributions, judging, high salary)','U.S. employer or agent sponsor'],
                  es:['Reconocimiento sostenido nacional o internacional','Evidencia en múltiples categorías (premios, publicaciones, prensa, contribuciones, jurado, salario alto)','Patrocinador empleador o agente en EE.UU.']},
     tips:{en:['No lottery, no annual cap.','Document everything: press, awards, citations, recommendation letters from experts.','Often a backup when H-1B lottery doesn\'t hit.'],
           es:['Sin lotería, sin tope anual.','Documenta todo: prensa, premios, citas, cartas de recomendación de expertos.','Frecuentemente un respaldo cuando no ganas la lotería H-1B.']}},
   {id:'tn', iconName:'map', color:'#5e8eff', cat:'work', forms:['I-129'],
     title:{en:'TN (USMCA Professionals)', es:'TN (Profesionales del T-MEC)'},
-    summary:{en:'For Canadian and Mexican citizens with a job offer in one of 60+ listed professions — engineers, accountants, scientists, nurses, computer systems analysts, college teachers and more. 3-year periods, renewable indefinitely, no lottery.',
-             es:'Para ciudadanos canadienses y mexicanos con oferta de trabajo en una de 60+ profesiones listadas — ingenieros, contadores, científicos, enfermeros, analistas de sistemas, profesores universitarios y más. Períodos de 3 años, renovable indefinidamente, sin lotería.'},
-    eligibility:{en:['Citizen of Canada or Mexico (permanent residents of those countries do not qualify)','Pre-arranged full- or part-time job with a U.S. employer in a USMCA-listed profession','The credential that profession requires — usually a bachelor\'s degree; a few accept a license or experience','Temporary intent — TN is not a dual-intent visa, so plan any green card step carefully'],
-                 es:['Ciudadano/a de Canadá o México (residentes permanentes de esos países no califican)','Trabajo acordado con un empleador en EE.UU. en una profesión listada en el T-MEC','La credencial que exige esa profesión — usualmente licenciatura; algunas aceptan licencia o experiencia','Intención temporal — la TN no es de doble intención; planifica con cuidado cualquier paso hacia la residencia']},
-    tips:{en:['No lottery, no annual cap — Canadians are often approved the same day at the border.','Your job title AND duties must match a listed profession; "consultant" or "manager" alone usually fails.','A new employer or a different profession needs a new TN.','Want a green card later? Many move to H-1B (dual intent) or have the employer start PERM/I-140 — talk to a lawyer before filing while on TN.','Spouse and children under 21 get TD status: they can study but not work.'],
-          es:['Sin lotería ni tope anual — a los canadienses suelen aprobarlos el mismo día en la frontera.','Tu título Y funciones deben coincidir con una profesión listada; "consultor" o "gerente" solos suelen fallar.','Un nuevo empleador o una profesión distinta requiere una nueva TN.','¿Residencia después? Muchos pasan a H-1B (doble intención) o el empleador inicia PERM/I-140 — consulta a un abogado antes de presentar estando en TN.','Cónyuge e hijos menores de 21 obtienen estatus TD: pueden estudiar pero no trabajar.']},
+    summary:{en:'For Canadian and Mexican citizens with a job offer in one of 60+ listed professions. Engineers, accountants, scientists, nurses, computer systems analysts, college teachers and more. 3-year periods, renewable indefinitely, no lottery.',
+             es:'Para ciudadanos canadienses y mexicanos con oferta de trabajo en una de 60+ profesiones listadas. Ingenieros, contadores, científicos, enfermeros, analistas de sistemas, profesores universitarios y más. Períodos de 3 años, renovable indefinidamente, sin lotería.'},
+    eligibility:{en:['Citizen of Canada or Mexico (permanent residents of those countries do not qualify)','Pre-arranged full- or part-time job with a U.S. employer in a USMCA-listed profession','The credential that profession requires. Usually a bachelor\'s degree; a few accept a license or experience','Temporary intent. TN is not a dual-intent visa, so plan any green card step carefully'],
+                 es:['Ciudadano/a de Canadá o México (residentes permanentes de esos países no califican)','Trabajo acordado con un empleador en EE.UU. en una profesión listada en el T-MEC','La credencial que exige esa profesión. Usualmente licenciatura; algunas aceptan licencia o experiencia','Intención temporal. La TN no es de doble intención; planifica con cuidado cualquier paso hacia la residencia']},
+    tips:{en:['No lottery, no annual cap. Canadians are often approved the same day at the border.','Your job title AND duties must match a listed profession; "consultant" or "manager" alone usually fails.','A new employer or a different profession needs a new TN.','Want a green card later? Many move to H-1B (dual intent) or have the employer start PERM/I-140. Talk to a lawyer before filing while on TN.','Spouse and children under 21 get TD status: they can study but not work.'],
+          es:['Sin lotería ni tope anual. A los canadienses suelen aprobarlos el mismo día en la frontera.','Tu título Y funciones deben coincidir con una profesión listada; "consultor" o "gerente" solos suelen fallar.','Un nuevo empleador o una profesión distinta requiere una nueva TN.','¿Residencia después? Muchos pasan a H-1B (doble intención) o el empleador inicia PERM/I-140. Consulta a un abogado antes de presentar estando en TN.','Cónyuge e hijos menores de 21 obtienen estatus TD: pueden estudiar pero no trabajar.']},
     howItWorks:{en:[
         'Match your job to the USMCA profession list (Appendix 2 to Annex 16-A). The title, duties and your credential all have to line up with one listed profession.',
         'Get a support letter from the employer: job title, duties, length of stay (up to 3 years), salary, and your qualifications. Bring your degree, transcripts and, for foreign degrees, a credential evaluation.',
-        'Canadians: apply in person at a U.S. port of entry or airport preclearance — no visa, no USCIS petition. Pay the TN application and I-94 fees (about $56 total) and you can start work on approval.',
+        'Canadians: apply in person at a U.S. port of entry or airport preclearance. No visa, no USCIS petition. Pay the TN application and I-94 fees (about $56 total) and you can start work on approval.',
         'Mexicans: complete the DS-160, pay the visa fee ($185), and interview at a U.S. consulate. Enter with the TN visa plus your employer letter.',
         'Already in the U.S. in another status (F-1, OPT, H-1B…)? Your employer can instead file Form I-129 with USCIS to change your status to TN without leaving.',
-        'Extend in 3-year increments — a fresh letter at the border, or an I-129 extension — as long as the job stays temporary in nature. There is no maximum number of renewals.'],
+        'Extend in 3-year increments. A fresh letter at the border, or an I-129 extension. As long as the job stays temporary in nature. There is no maximum number of renewals.'],
       es:[
         'Empareja tu trabajo con la lista de profesiones del T-MEC (Apéndice 2 del Anexo 16-A). Título, funciones y credencial deben coincidir con una profesión listada.',
         'Consigue una carta del empleador: puesto, funciones, duración (hasta 3 años), salario y tus calificaciones. Lleva tu título, historial académico y, si es extranjero, una evaluación de credenciales.',
-        'Canadienses: solicitan en persona en un puerto de entrada o preinspección aeroportuaria — sin visa ni petición a USCIS. Pagan las tarifas de TN e I-94 (unos $56 en total) y pueden trabajar al ser aprobados.',
+        'Canadienses: solicitan en persona en un puerto de entrada o preinspección aeroportuaria. Sin visa ni petición a USCIS. Pagan las tarifas de TN e I-94 (unos $56 en total) y pueden trabajar al ser aprobados.',
         'Mexicanos: completan el DS-160, pagan la tarifa de visa ($185) y tienen entrevista en un consulado de EE.UU. Entran con la visa TN y la carta del empleador.',
         '¿Ya estás en EE.UU. con otro estatus (F-1, OPT, H-1B…)? Tu empleador puede presentar el Formulario I-129 ante USCIS para cambiar tu estatus a TN sin salir del país.',
-        'Extiende en períodos de 3 años — carta nueva en la frontera o extensión por I-129 — mientras el trabajo siga siendo temporal. No hay límite de renovaciones.']}},
+        'Extiende en períodos de 3 años. Carta nueva en la frontera o extensión por I-129. Mientras el trabajo siga siendo temporal. No hay límite de renovaciones.']}},
   {id:'eb1', iconName:'trophy', color:'#ffc83d', cat:'gc', forms:['I-140','I-485'],
     title:{en:'EB-1 Priority Workers (Green Card)', es:'EB-1 Trabajadores Prioritarios (Residencia)'},
     summary:{en:'Fastest employment-based green card. Three subcategories: EB-1A (extraordinary ability), EB-1B (outstanding professor/researcher), EB-1C (multinational manager).',
              es:'La residencia por empleo más rápida. Tres subcategorías: EB-1A (habilidad extraordinaria), EB-1B (profesor/investigador destacado), EB-1C (gerente multinacional).'},
     eligibility:{en:['EB-1A: top of field, can self-petition','EB-1B: outstanding researcher with 3+ years experience + employer sponsor','EB-1C: 1+ year as multinational manager/executive abroad + U.S. transfer'],
                  es:['EB-1A: cima de su campo, puede auto-petición','EB-1B: investigador destacado con 3+ años + patrocinador','EB-1C: 1+ año como gerente/ejecutivo multinacional + transferencia a EE.UU.']},
-    tips:{en:['No labor certification (PERM) required — saves 1-2 years.','Often current for most countries (less backlog).','India and China still have multi-year backlogs.'],
-          es:['No requiere certificación laboral (PERM) — ahorra 1-2 años.','Frecuentemente vigente para la mayoría de países (menos retraso).','India y China aún tienen retrasos de varios años.']}},
+    tips:{en:['No labor certification (PERM) required. Saves 1-2 years.','Often current for most countries (less backlog).','India and China still have multi-year backlogs.'],
+          es:['No requiere certificación laboral (PERM). Ahorra 1-2 años.','Frecuentemente vigente para la mayoría de países (menos retraso).','India y China aún tienen retrasos de varios años.']}},
   {id:'eb2', iconName:'star', color:'#5e8eff', cat:'gc', forms:['I-140','I-485'],
     title:{en:'EB-2 Advanced Degree / Exceptional Ability', es:'EB-2 Grado Avanzado / Habilidad Excepcional'},
     summary:{en:'For professionals with master\'s+ degrees or exceptional ability. Standard employer-sponsored path, or NIW (National Interest Waiver) for self-petition.',
              es:'Para profesionales con maestría+ o habilidad excepcional. Vía estándar con patrocinador, o NIW (Exención por Interés Nacional) para auto-petición.'},
-    eligibility:{en:['Master\'s degree (or bachelor\'s + 5 years progressive experience)','Standard EB-2: job offer + PERM labor certification','NIW: your work is in U.S. national interest — no employer needed'],
-                 es:['Maestría (o licenciatura + 5 años de experiencia progresiva)','EB-2 estándar: oferta de trabajo + certificación PERM','NIW: tu trabajo es de interés nacional — sin empleador']},
-    tips:{en:['NIW is a powerful self-petition option — great for entrepreneurs, researchers, healthcare workers.','India backlog: 10+ years. China: ~5 years. Other countries: relatively current.','PERM process takes 6-18 months on its own.'],
-          es:['NIW es opción poderosa de auto-petición — ideal para emprendedores, investigadores, trabajadores de salud.','Retraso India: 10+ años. China: ~5 años. Otros: relativamente vigente.','El proceso PERM toma 6-18 meses por sí solo.']}},
+    eligibility:{en:['Master\'s degree (or bachelor\'s + 5 years progressive experience)','Standard EB-2: job offer + PERM labor certification','NIW: your work is in U.S. national interest. No employer needed'],
+                 es:['Maestría (o licenciatura + 5 años de experiencia progresiva)','EB-2 estándar: oferta de trabajo + certificación PERM','NIW: tu trabajo es de interés nacional. Sin empleador']},
+    tips:{en:['NIW is a powerful self-petition option. Great for entrepreneurs, researchers, healthcare workers.','India backlog: 10+ years. China: ~5 years. Other countries: relatively current.','PERM process takes 6-18 months on its own.'],
+          es:['NIW es opción poderosa de auto-petición. Ideal para emprendedores, investigadores, trabajadores de salud.','Retraso India: 10+ años. China: ~5 años. Otros: relativamente vigente.','El proceso PERM toma 6-18 meses por sí solo.']}},
   {id:'eb3', iconName:'briefcase', color:'#84807a', cat:'gc', forms:['I-140','I-485'],
     title:{en:'EB-3 Skilled Workers / Professionals', es:'EB-3 Trabajadores Calificados / Profesionales'},
     summary:{en:'For bachelor\'s-degree professionals, skilled workers (2+ years experience), and other workers (unskilled). Standard employer-sponsored path with PERM.',
              es:'Para profesionales con licenciatura, trabajadores calificados (2+ años), y otros trabajadores (no calificados). Vía estándar con patrocinador y PERM.'},
     eligibility:{en:['Bachelor\'s degree OR 2+ years of training/experience','Permanent full-time job offer','Employer completes PERM labor certification'],
                  es:['Licenciatura O 2+ años de capacitación/experiencia','Oferta de trabajo permanente a tiempo completo','Empleador completa certificación PERM']},
-    tips:{en:['Longer waits than EB-2 — sometimes much longer for India/China.','"Other Workers" subcategory has its own annual cap of 10,000.','If you qualify for EB-2 NIW, that\'s usually faster.'],
-          es:['Esperas más largas que EB-2 — a veces mucho más para India/China.','La subcategoría "Otros trabajadores" tiene su propio tope anual de 10,000.','Si calificas para NIW EB-2, suele ser más rápido.']}},
+    tips:{en:['Longer waits than EB-2. Sometimes much longer for India/China.','"Other Workers" subcategory has its own annual cap of 10,000.','If you qualify for EB-2 NIW, that\'s usually faster.'],
+          es:['Esperas más largas que EB-2. A veces mucho más para India/China.','La subcategoría "Otros trabajadores" tiene su propio tope anual de 10,000.','Si calificas para NIW EB-2, suele ser más rápido.']}},
   {id:'eb5', iconName:'trophy', color:'#008a7e', cat:'gc', forms:['I-526E','I-485','I-829'],
     title:{en:'EB-5 Immigrant Investor', es:'EB-5 Inversionista Inmigrante'},
-    summary:{en:'A green card through investment — $800,000 in a rural or high-unemployment area (or $1,050,000 elsewhere) that creates 10 full-time U.S. jobs. Self-petition: no employer, no lottery.',
-             es:'Residencia por inversión — $800,000 en una zona rural o de alto desempleo (o $1,050,000 en otras) que cree 10 empleos de tiempo completo. Auto-petición: sin empleador ni lotería.'},
+    summary:{en:'A green card through investment. $800,000 in a rural or high-unemployment area (or $1,050,000 elsewhere) that creates 10 full-time U.S. jobs. Self-petition: no employer, no lottery.',
+             es:'Residencia por inversión. $800,000 en una zona rural o de alto desempleo (o $1,050,000 en otras) que cree 10 empleos de tiempo completo. Auto-petición: sin empleador ni lotería.'},
     eligibility:{en:['Invest $800,000 (targeted employment area or infrastructure project) or $1,050,000','Lawful source of funds, fully documented','Creates or preserves 10 full-time jobs for U.S. workers','Direct investment in your own business, or through a USCIS-designated regional center'],
                  es:['Invertir $800,000 (zona de empleo focalizada o proyecto de infraestructura) o $1,050,000','Origen legal de los fondos, totalmente documentado','Crea o preserva 10 empleos de tiempo completo para trabajadores de EE.UU.','Inversión directa en tu propio negocio, o a través de un centro regional designado por USCIS']},
-    tips:{en:['Rural set-aside visas have been "current" even for India and China — far faster than the EB-2/EB-3 lines.','Inside the U.S. you can file I-485 together with I-526E (concurrent filing) and get a work permit while you wait.','Due diligence on regional centers is everything — losses are real.','The filing fee alone is over $11,000, before legal fees.'],
-          es:['Las visas reservadas rurales han estado "vigentes" incluso para India y China — mucho más rápido que las filas EB-2/EB-3.','Dentro de EE.UU. puedes presentar el I-485 junto con el I-526E (presentación concurrente) y obtener permiso de trabajo mientras esperas.','La debida diligencia sobre centros regionales lo es todo — las pérdidas son reales.','Solo la tarifa de presentación supera los $11,000, sin contar abogados.']},
+    tips:{en:['Rural set-aside visas have been "current" even for India and China. Far faster than the EB-2/EB-3 lines.','Inside the U.S. you can file I-485 together with I-526E (concurrent filing) and get a work permit while you wait.','Due diligence on regional centers is everything. Losses are real.','The filing fee alone is over $11,000, before legal fees.'],
+          es:['Las visas reservadas rurales han estado "vigentes" incluso para India y China. Mucho más rápido que las filas EB-2/EB-3.','Dentro de EE.UU. puedes presentar el I-485 junto con el I-526E (presentación concurrente) y obtener permiso de trabajo mientras esperas.','La debida diligencia sobre centros regionales lo es todo. Las pérdidas son reales.','Solo la tarifa de presentación supera los $11,000, sin contar abogados.']},
     howItWorks:{en:['Choose a direct or regional-center project and document the source and path of every dollar.','File Form I-526E (regional center) or I-526 (direct).','When approved and a visa is available: I-485 inside the U.S. or consular processing abroad → a conditional 2-year green card.','In the 90 days before it expires, file Form I-829 to prove the jobs were created and remove the conditions.'],
                 es:['Elige un proyecto directo o de centro regional y documenta el origen y la ruta de cada dólar.','Presenta el Formulario I-526E (centro regional) o I-526 (directo).','Al aprobarse y con visa disponible: I-485 dentro de EE.UU. o proceso consular afuera → residencia condicional de 2 años.','En los 90 días antes de que venza, presenta el Formulario I-829 para probar los empleos creados y quitar las condiciones.']}},
   {id:'family-spouse', iconName:'ring', color:'#ff4d3a', cat:'family', forms:['I-130','I-485','I-751'],
     title:{en:'Marriage to U.S. Citizen (IR-1/CR-1)', es:'Matrimonio con Ciudadano (IR-1/CR-1)'},
-    summary:{en:'Immediate-relative category — no annual cap, no waiting in line. The fastest family-based path to a green card.',
-             es:'Categoría de familiar inmediato — sin tope anual, sin esperas. La vía familiar más rápida a la residencia.'},
+    summary:{en:'Immediate-relative category. No annual cap, no waiting in line. The fastest family-based path to a green card.',
+             es:'Categoría de familiar inmediato. Sin tope anual, sin esperas. La vía familiar más rápida a la residencia.'},
     eligibility:{en:['Married to a U.S. citizen','Bona fide marriage (not for immigration purposes)','U.S. citizen spouse files I-130 petition','Can adjust status in U.S. or process at consulate abroad'],
                  es:['Casado/a con ciudadano de EE.UU.','Matrimonio de buena fe (no por inmigración)','Cónyuge ciudadano presenta petición I-130','Puede ajustar estatus en EE.UU. o procesar en consulado']},
-    tips:{en:['If married < 2 years at GC approval, you get a 2-year conditional GC (CR-1). File I-751 to remove conditions.','Bring tons of evidence: joint bank accounts, leases, photos, communications, affidavits.','3-year rule for naturalization — can file N-400 after 3 years of marriage + GC.'],
-          es:['Si casado < 2 años al aprobar GC, obtienes residencia condicional de 2 años (CR-1). Presenta I-751 para remover condiciones.','Trae mucha evidencia: cuentas bancarias conjuntas, contratos, fotos, comunicaciones, declaraciones.','Regla de 3 años para naturalización — N-400 después de 3 años de matrimonio + GC.']}},
+    tips:{en:['If married < 2 years at GC approval, you get a 2-year conditional GC (CR-1). File I-751 to remove conditions.','Bring tons of evidence: joint bank accounts, leases, photos, communications, affidavits.','3-year rule for naturalization. Can file N-400 after 3 years of marriage + GC.'],
+          es:['Si casado < 2 años al aprobar GC, obtienes residencia condicional de 2 años (CR-1). Presenta I-751 para remover condiciones.','Trae mucha evidencia: cuentas bancarias conjuntas, contratos, fotos, comunicaciones, declaraciones.','Regla de 3 años para naturalización. N-400 después de 3 años de matrimonio + GC.']}},
   {id:'family-parent', iconName:'people', color:'#ec4f93', cat:'family', forms:['I-130','I-485'],
     title:{en:'Parents of U.S. Citizens (IR-5)', es:'Padres de Ciudadanos (IR-5)'},
     summary:{en:'Immediate-relative category for parents of citizens 21+. No annual cap, no waiting list.',
@@ -8540,56 +8540,56 @@ var VISA_PATHS = [
     title:{en:'K-1 Fiancé(e) Visa', es:'Visa K-1 de Prometido/a'},
     summary:{en:'For the fiancé(e) of a U.S. citizen living abroad: enter, marry within 90 days, then apply for the green card from inside the U.S.',
              es:'Para el/la prometido/a de un ciudadano de EE.UU. que vive en el exterior: entra, cásate en 90 días y luego solicita la residencia desde dentro de EE.UU.'},
-    eligibility:{en:['Your partner is a U.S. citizen — green card holders cannot sponsor a K-1','Both of you are legally free to marry','You met in person within the last 2 years (hardship or cultural waivers exist)','Intent to marry within 90 days of arrival'],
-                 es:['Tu pareja es ciudadana de EE.UU. — los residentes no pueden patrocinar una K-1','Ambos libres legalmente para casarse','Se conocieron en persona en los últimos 2 años (hay exenciones por dificultad o cultura)','Intención de casarse dentro de los 90 días de la llegada']},
-    tips:{en:['Compare with marrying first and doing a CR-1/IR-1 — you arrive as a resident and it is often cheaper overall.','Unmarried children under 21 come on K-2.','Do not enter on a tourist visa planning to marry and stay — misrepresentation risk.','The 90-day clock is strict.'],
-          es:['Compara con casarse primero y hacer CR-1/IR-1 — llegas como residente y suele ser más barato en total.','Hijos solteros menores de 21 vienen con K-2.','No entres con visa de turista planeando casarte y quedarte — riesgo de tergiversación.','El plazo de 90 días es estricto.']},
-    howItWorks:{en:['Your fiancé(e) files Form I-129F with USCIS ($675).','Approval goes to the National Visa Center and then the consulate: DS-160, medical exam, interview (visa fee $265).','Enter the U.S. and marry within 90 days.','File Form I-485 (with I-765 for work and I-131 for travel) for the green card — conditional at first if married under 2 years.'],
-                es:['Tu prometido/a presenta el Formulario I-129F ante USCIS ($675).','La aprobación pasa al Centro Nacional de Visas y luego al consulado: DS-160, examen médico, entrevista (tarifa $265).','Entras a EE.UU. y te casas dentro de 90 días.','Presentas el Formulario I-485 (con I-765 para trabajar e I-131 para viajar) para la residencia — condicional al inicio si llevan menos de 2 años casados.']}},
+    eligibility:{en:['Your partner is a U.S. citizen. Green card holders cannot sponsor a K-1','Both of you are legally free to marry','You met in person within the last 2 years (hardship or cultural waivers exist)','Intent to marry within 90 days of arrival'],
+                 es:['Tu pareja es ciudadana de EE.UU. Los residentes no pueden patrocinar una K-1','Ambos libres legalmente para casarse','Se conocieron en persona en los últimos 2 años (hay exenciones por dificultad o cultura)','Intención de casarse dentro de los 90 días de la llegada']},
+    tips:{en:['Compare with marrying first and doing a CR-1/IR-1. You arrive as a resident and it is often cheaper overall.','Unmarried children under 21 come on K-2.','Do not enter on a tourist visa planning to marry and stay. Misrepresentation risk.','The 90-day clock is strict.'],
+          es:['Compara con casarse primero y hacer CR-1/IR-1. Llegas como residente y suele ser más barato en total.','Hijos solteros menores de 21 vienen con K-2.','No entres con visa de turista planeando casarte y quedarte. Riesgo de tergiversación.','El plazo de 90 días es estricto.']},
+    howItWorks:{en:['Your fiancé(e) files Form I-129F with USCIS ($675).','Approval goes to the National Visa Center and then the consulate: DS-160, medical exam, interview (visa fee $265).','Enter the U.S. and marry within 90 days.','File Form I-485 (with I-765 for work and I-131 for travel) for the green card. Conditional at first if married under 2 years.'],
+                es:['Tu prometido/a presenta el Formulario I-129F ante USCIS ($675).','La aprobación pasa al Centro Nacional de Visas y luego al consulado: DS-160, examen médico, entrevista (tarifa $265).','Entras a EE.UU. y te casas dentro de 90 días.','Presentas el Formulario I-485 (con I-765 para trabajar e I-131 para viajar) para la residencia. Condicional al inicio si llevan menos de 2 años casados.']}},
   {id:'family-pref', iconName:'people', color:'#5e8eff', cat:'family', forms:['I-130','DS-260','I-485'],
     title:{en:'Family Preference Lines (F1–F4)', es:'Categorías Familiares de Preferencia (F1–F4)'},
-    summary:{en:'Green cards for relatives who are not "immediate relatives": adult children and siblings of citizens, and spouses and children of green card holders. Capped each year — expect a Visa Bulletin wait.',
-             es:'Residencia para familiares que no son "inmediatos": hijos adultos y hermanos de ciudadanos, y cónyuges e hijos de residentes. Con tope anual — espera según el Boletín de Visas.'},
+    summary:{en:'Green cards for relatives who are not "immediate relatives": adult children and siblings of citizens, and spouses and children of green card holders. Capped each year. Expect a Visa Bulletin wait.',
+             es:'Residencia para familiares que no son "inmediatos": hijos adultos y hermanos de ciudadanos, y cónyuges e hijos de residentes. Con tope anual. Espera según el Boletín de Visas.'},
     eligibility:{en:['F1: unmarried sons and daughters (21+) of U.S. citizens','F2A: spouses and unmarried children (under 21) of green card holders','F2B: unmarried sons and daughters (21+) of green card holders','F3: married sons and daughters of citizens · F4: siblings of citizens (the citizen must be 21+)'],
                  es:['F1: hijos solteros (21+) de ciudadanos','F2A: cónyuges e hijos solteros (menores de 21) de residentes','F2B: hijos solteros (21+) de residentes','F3: hijos casados de ciudadanos · F4: hermanos de ciudadanos (el ciudadano debe tener 21+)']},
-    tips:{en:['Your place in line is the I-130 filing date (priority date) — file early even if the wait is long.','F2A moves fastest; F4 can take 15+ years (20+ for Mexico and the Philippines).','Marrying while in F1 or F2B moves you to another line or ends F2B eligibility.','The Child Status Protection Act can keep a child "under 21" — ask a lawyer before anyone ages out.'],
-          es:['Tu lugar en la fila es la fecha de presentación del I-130 (fecha de prioridad) — presenta temprano aunque la espera sea larga.','F2A avanza más rápido; F4 puede tomar 15+ años (20+ para México y Filipinas).','Casarte estando en F1 o F2B te cambia de fila o termina la elegibilidad F2B.','La Ley de Protección del Estatus del Menor puede mantener a un hijo "menor de 21" — consulta antes de que alguien cumpla la edad.']},
-    howItWorks:{en:['Your relative files Form I-130 for you ($675 on paper, $625 online).','Wait for your priority date to become current in the monthly Visa Bulletin — Camino\'s tracker follows it.','Abroad: DS-260 and a consular interview. In the U.S. with lawful status: Form I-485 once your date is current.','Green card — no conditional period for spouses of residents.'],
-                es:['Tu familiar presenta el Formulario I-130 por ti ($675 en papel, $625 en línea).','Esperas a que tu fecha de prioridad esté vigente en el Boletín de Visas mensual — el rastreador de Camino lo sigue.','Afuera: DS-260 y entrevista consular. En EE.UU. con estatus legal: Formulario I-485 cuando tu fecha esté vigente.','Residencia — sin período condicional para cónyuges de residentes.']}},
+    tips:{en:['Your place in line is the I-130 filing date (priority date). File early even if the wait is long.','F2A moves fastest; F4 can take 15+ years (20+ for Mexico and the Philippines).','Marrying while in F1 or F2B moves you to another line or ends F2B eligibility.','The Child Status Protection Act can keep a child "under 21". Ask a lawyer before anyone ages out.'],
+          es:['Tu lugar en la fila es la fecha de presentación del I-130 (fecha de prioridad). Presenta temprano aunque la espera sea larga.','F2A avanza más rápido; F4 puede tomar 15+ años (20+ para México y Filipinas).','Casarte estando en F1 o F2B te cambia de fila o termina la elegibilidad F2B.','La Ley de Protección del Estatus del Menor puede mantener a un hijo "menor de 21". Consulta antes de que alguien cumpla la edad.']},
+    howItWorks:{en:['Your relative files Form I-130 for you ($675 on paper, $625 online).','Wait for your priority date to become current in the monthly Visa Bulletin. Camino\'s tracker follows it.','Abroad: DS-260 and a consular interview. In the U.S. with lawful status: Form I-485 once your date is current.','Green card. No conditional period for spouses of residents.'],
+                es:['Tu familiar presenta el Formulario I-130 por ti ($675 en papel, $625 en línea).','Esperas a que tu fecha de prioridad esté vigente en el Boletín de Visas mensual. El rastreador de Camino lo sigue.','Afuera: DS-260 y entrevista consular. En EE.UU. con estatus legal: Formulario I-485 cuando tu fecha esté vigente.','Residencia. Sin período condicional para cónyuges de residentes.']}},
   {id:'asylum', iconName:'shield', color:'#ff9b21', cat:'humanitarian', forms:['I-589','I-765','I-485'],
     title:{en:'Asylum', es:'Asilo'},
     summary:{en:'Protection for people fleeing persecution based on race, religion, nationality, political opinion, or social group membership. Must apply within 1 year of arrival.',
              es:'Protección para personas que huyen de persecución por raza, religión, nacionalidad, opinión política o pertenencia a grupo social. Debes aplicar dentro de 1 año de llegada.'},
     eligibility:{en:['Inside the U.S. (affirmative) or at the border (defensive)','Past persecution OR well-founded fear of future persecution','One of 5 protected grounds','File I-589 within 1 year of arrival (with limited exceptions)'],
                  es:['Dentro de EE.UU. (afirmativo) o en la frontera (defensivo)','Persecución pasada O temor bien fundado de persecución futura','Uno de 5 motivos protegidos','Presenta I-589 dentro de 1 año (con excepciones limitadas)']},
-    tips:{en:['Get a lawyer — asylum cases are complex and the stakes are highest.','Work authorization comes after 150 days of pending application.','After 1 year of asylum status, can apply for green card.','5 years total before naturalization eligibility.'],
-          es:['Consigue un abogado — los casos de asilo son complejos y las apuestas son altas.','Autorización de trabajo viene después de 150 días con aplicación pendiente.','Después de 1 año con estatus de asilo, puedes pedir residencia.','5 años en total antes de elegibilidad para naturalización.']}},
+    tips:{en:['Get a lawyer. Asylum cases are complex and the stakes are highest.','Work authorization comes after 150 days of pending application.','After 1 year of asylum status, can apply for green card.','5 years total before naturalization eligibility.'],
+          es:['Consigue un abogado. Los casos de asilo son complejos y las apuestas son altas.','Autorización de trabajo viene después de 150 días con aplicación pendiente.','Después de 1 año con estatus de asilo, puedes pedir residencia.','5 años en total antes de elegibilidad para naturalización.']}},
   {id:'dv', iconName:'globe', color:'#5e8eff', cat:'humanitarian', forms:['DS-260','I-485'],
     title:{en:'Diversity Visa Lottery (DV)', es:'Lotería de Visa de Diversidad (DV)'},
     summary:{en:'55,000 green cards per year by random selection for people from countries with low U.S. immigration. Annual registration in October.',
              es:'55,000 residencias al año por selección aleatoria para personas de países con baja inmigración a EE.UU. Registro anual en octubre.'},
     eligibility:{en:['Born in an eligible country (Mexico, China, India, Philippines, and several others NOT eligible most years)','High school diploma OR 2 years of work in qualifying occupation','Selected in the random draw'],
                  es:['Nacido en país elegible (México, China, India, Filipinas y varios otros NO elegibles la mayoría de años)','Diploma de secundaria O 2 años de trabajo en ocupación calificada','Seleccionado en sorteo aleatorio']},
-    tips:{en:['Free to enter — never pay a "DV agent."','Register at dvprogram.state.gov in October each year.','If selected, you get one shot: must complete adjustment or consular processing by Sept 30 of the FY.','Spouses and children under 21 can be derivative beneficiaries.'],
-          es:['Entrada gratis — nunca pagues a un "agente DV."','Regístrate en dvprogram.state.gov en octubre cada año.','Si te seleccionan, tienes una oportunidad: debes completar antes del 30 de septiembre del año fiscal.','Cónyuges e hijos menores de 21 pueden ser beneficiarios derivados.']}},
+    tips:{en:['Free to enter. Never pay a "DV agent."','Register at dvprogram.state.gov in October each year.','If selected, you get one shot: must complete adjustment or consular processing by Sept 30 of the FY.','Spouses and children under 21 can be derivative beneficiaries.'],
+          es:['Entrada gratis. Nunca pagues a un "agente DV."','Regístrate en dvprogram.state.gov en octubre cada año.','Si te seleccionan, tienes una oportunidad: debes completar antes del 30 de septiembre del año fiscal.','Cónyuges e hijos menores de 21 pueden ser beneficiarios derivados.']}},
   {id:'military', iconName:'flag', color:'#ffc83d', cat:'special', forms:['N-400','N-426'],
     title:{en:'Citizenship through Military Service', es:'Ciudadanía por Servicio Militar'},
-    summary:{en:'Honorable service in the U.S. armed forces opens a faster naturalization route — and during designated periods of hostilities (in effect since 2001) you can naturalize without a green card. Close family of service members may qualify for parole in place.',
-             es:'El servicio honorable en las fuerzas armadas de EE.UU. abre una vía más rápida a la naturalización — y durante períodos designados de hostilidades (vigentes desde 2001) puedes naturalizarte sin residencia. Familiares cercanos de militares pueden calificar para permiso de permanencia.'},
-    eligibility:{en:['Peacetime (INA 328): green card holder with 1 year of honorable service, filing while serving or within 6 months of discharge','Hostilities (INA 329): any honorable service since Sept. 11, 2001, enlisted in the U.S. — no green card or residence period needed','Good moral character and the civics and English tests still apply','Family: spouses, parents and children of service members or veterans who entered without inspection can request parole in place'],
-                 es:['Tiempo de paz (INA 328): residente con 1 año de servicio honorable, presentando mientras sirve o dentro de 6 meses de la baja','Hostilidades (INA 329): cualquier servicio honorable desde el 11 de septiembre de 2001, enlistado en EE.UU. — sin residencia ni período de residencia requerido','Buen carácter moral y los exámenes de cívica e inglés siguen aplicando','Familia: cónyuges, padres e hijos de militares o veteranos que entraron sin inspección pueden pedir permiso de permanencia (parole in place)']},
-    tips:{en:['No N-400 fee for military applicants; USCIS has a dedicated military helpline (877-247-4645).','Get Form N-426 certified by your unit before filing.','Citizenship can be revoked if you separate under other-than-honorable conditions before 5 years of service.','Parole in place is discretionary — your base legal office or a lawyer can help.'],
-          es:['Sin tarifa del N-400 para militares; USCIS tiene una línea dedicada (877-247-4645).','Consigue que tu unidad certifique el Formulario N-426 antes de presentar.','La ciudadanía puede revocarse si te separas en condiciones no honorables antes de 5 años de servicio.','El permiso de permanencia es discrecional — la oficina legal de tu base o un abogado pueden ayudar.']},
-    howItWorks:{en:['Confirm which section you qualify under (328 or 329).','Complete Form N-426 (Request for Certification of Military or Naval Service) and have it signed.','File Form N-400 (fee waived) with the N-426 and your documents.','Interview and oath — often expedited; overseas interviews can be arranged.'],
-                es:['Confirma bajo qué sección calificas (328 o 329).','Completa el Formulario N-426 (certificación de servicio militar) y haz que lo firmen.','Presenta el Formulario N-400 (sin tarifa) con el N-426 y tus documentos.','Entrevista y juramento — a menudo acelerados; se pueden organizar entrevistas en el exterior.']}},
+    summary:{en:'Honorable service in the U.S. armed forces opens a faster naturalization route. And during designated periods of hostilities (in effect since 2001) you can naturalize without a green card. Close family of service members may qualify for parole in place.',
+             es:'El servicio honorable en las fuerzas armadas de EE.UU. abre una vía más rápida a la naturalización. Y durante períodos designados de hostilidades (vigentes desde 2001) puedes naturalizarte sin residencia. Familiares cercanos de militares pueden calificar para permiso de permanencia.'},
+    eligibility:{en:['Peacetime (INA 328): green card holder with 1 year of honorable service, filing while serving or within 6 months of discharge','Hostilities (INA 329): any honorable service since Sept. 11, 2001, enlisted in the U.S. No green card or residence period needed','Good moral character and the civics and English tests still apply','Family: spouses, parents and children of service members or veterans who entered without inspection can request parole in place'],
+                 es:['Tiempo de paz (INA 328): residente con 1 año de servicio honorable, presentando mientras sirve o dentro de 6 meses de la baja','Hostilidades (INA 329): cualquier servicio honorable desde el 11 de septiembre de 2001, enlistado en EE.UU. Sin residencia ni período de residencia requerido','Buen carácter moral y los exámenes de cívica e inglés siguen aplicando','Familia: cónyuges, padres e hijos de militares o veteranos que entraron sin inspección pueden pedir permiso de permanencia (parole in place)']},
+    tips:{en:['No N-400 fee for military applicants; USCIS has a dedicated military helpline (877-247-4645).','Get Form N-426 certified by your unit before filing.','Citizenship can be revoked if you separate under other-than-honorable conditions before 5 years of service.','Parole in place is discretionary. Your base legal office or a lawyer can help.'],
+          es:['Sin tarifa del N-400 para militares; USCIS tiene una línea dedicada (877-247-4645).','Consigue que tu unidad certifique el Formulario N-426 antes de presentar.','La ciudadanía puede revocarse si te separas en condiciones no honorables antes de 5 años de servicio.','El permiso de permanencia es discrecional. La oficina legal de tu base o un abogado pueden ayudar.']},
+    howItWorks:{en:['Confirm which section you qualify under (328 or 329).','Complete Form N-426 (Request for Certification of Military or Naval Service) and have it signed.','File Form N-400 (fee waived) with the N-426 and your documents.','Interview and oath. Often expedited; overseas interviews can be arranged.'],
+                es:['Confirma bajo qué sección calificas (328 o 329).','Completa el Formulario N-426 (certificación de servicio militar) y haz que lo firmen.','Presenta el Formulario N-400 (sin tarifa) con el N-426 y tus documentos.','Entrevista y juramento. A menudo acelerados; se pueden organizar entrevistas en el exterior.']}},
   {id:'tps', iconName:'shield', color:'#00b4a8', cat:'special', forms:['I-821','I-765'],
     title:{en:'Temporary Protected Status (TPS)', es:'Estatus de Protección Temporal (TPS)'},
-    summary:{en:'Protection from removal plus a work permit for nationals of countries DHS designates because of war or disaster. It is temporary and designations change — several were ended in 2025 and challenged in court.',
-             es:'Protección contra la deportación más permiso de trabajo para nacionales de países que DHS designa por guerra o desastre. Es temporal y las designaciones cambian — varias terminaron en 2025 y fueron impugnadas en tribunales.'},
-    eligibility:{en:['National of a currently designated country (or a stateless person who last lived there)','Continuous residence and physical presence since the dates in the designation','Not barred by certain criminal convictions or persecution grounds','File during the registration window — late filing is possible only in limited cases'],
-                 es:['Nacional de un país actualmente designado (o apátrida que vivió allí por última vez)','Residencia continua y presencia física desde las fechas de la designación','Sin ciertas condenas penales ni causales de persecución que lo impidan','Presentar durante el período de registro — la presentación tardía solo es posible en casos limitados']},
-    tips:{en:['TPS is not a green card and does not lead to one by itself — pair it with a family or employment petition.','If you entered without inspection, ask a lawyer about TPS travel authorization (Form I-131) before trying to adjust status.','Re-register every time your country is extended, even if your card still looks valid.','Read the Federal Register notice for your country — dates and deadlines are specific.'],
-          es:['El TPS no es residencia y no lleva a ella por sí solo — combínalo con una petición familiar o laboral.','Si entraste sin inspección, consulta a un abogado sobre la autorización de viaje TPS (Formulario I-131) antes de intentar ajustar estatus.','Vuelve a registrarte cada vez que extiendan tu país, aunque tu tarjeta parezca vigente.','Lee el aviso del Registro Federal de tu país — fechas y plazos son específicos.']},
+    summary:{en:'Protection from removal plus a work permit for nationals of countries DHS designates because of war or disaster. It is temporary and designations change. Several were ended in 2025 and challenged in court.',
+             es:'Protección contra la deportación más permiso de trabajo para nacionales de países que DHS designa por guerra o desastre. Es temporal y las designaciones cambian. Varias terminaron en 2025 y fueron impugnadas en tribunales.'},
+    eligibility:{en:['National of a currently designated country (or a stateless person who last lived there)','Continuous residence and physical presence since the dates in the designation','Not barred by certain criminal convictions or persecution grounds','File during the registration window. Late filing is possible only in limited cases'],
+                 es:['Nacional de un país actualmente designado (o apátrida que vivió allí por última vez)','Residencia continua y presencia física desde las fechas de la designación','Sin ciertas condenas penales ni causales de persecución que lo impidan','Presentar durante el período de registro. La presentación tardía solo es posible en casos limitados']},
+    tips:{en:['TPS is not a green card and does not lead to one by itself. Pair it with a family or employment petition.','If you entered without inspection, ask a lawyer about TPS travel authorization (Form I-131) before trying to adjust status.','Re-register every time your country is extended, even if your card still looks valid.','Read the Federal Register notice for your country. Dates and deadlines are specific.'],
+          es:['El TPS no es residencia y no lleva a ella por sí solo. Combínalo con una petición familiar o laboral.','Si entraste sin inspección, consulta a un abogado sobre la autorización de viaje TPS (Formulario I-131) antes de intentar ajustar estatus.','Vuelve a registrarte cada vez que extiendan tu país, aunque tu tarjeta parezca vigente.','Lee el aviso del Registro Federal de tu país. Fechas y plazos son específicos.']},
     howItWorks:{en:['File Form I-821 ($50) and, for a work permit, Form I-765 during the registration period.','Biometrics appointment; USCIS decides.','Re-register during each extension period to keep TPS and the work permit.'],
                 es:['Presenta el Formulario I-821 ($50) y, para permiso de trabajo, el Formulario I-765 durante el período de registro.','Cita de biométricos; USCIS decide.','Vuelve a registrarte en cada período de extensión para mantener el TPS y el permiso de trabajo.']}},
   {id:'daca', iconName:'id', color:'#1cb0f6', cat:'special', forms:['I-821D','I-765'],
@@ -8598,18 +8598,18 @@ var VISA_PATHS = [
              es:'Protección renovable de 2 años contra la deportación y permiso de trabajo para quienes llegaron de niños antes de 2007. Las renovaciones continúan; las solicitudes iniciales no se procesan desde 2021 por órdenes judiciales, y el programa sigue en litigio.'},
     eligibility:{en:['Arrived before age 16 and lived in the U.S. continuously since June 15, 2007','Under 31 on June 15, 2012','In school, graduated, GED, or honorably discharged','No felony, significant misdemeanor, or three or more misdemeanors'],
                  es:['Llegó antes de los 16 y ha vivido en EE.UU. continuamente desde el 15 de junio de 2007','Menor de 31 el 15 de junio de 2012','Estudiando, graduado, GED o baja honorable','Sin delito grave, delito menor significativo ni tres o más delitos menores']},
-    tips:{en:['DACA is not a status and does not lead to a green card on its own — but it can be combined with a family petition.','Marrying a U.S. citizen leads to a green card only if you were "inspected and admitted or paroled"; a return on advance parole can satisfy that — get legal advice before traveling.','Renew 120–150 days before expiration.','Keep every expired card and approval notice — they document continuous presence.'],
-          es:['DACA no es un estatus y no lleva a la residencia por sí solo — pero puede combinarse con una petición familiar.','Casarte con ciudadano lleva a la residencia solo si fuiste "inspeccionado y admitido o con parole"; regresar con permiso adelantado puede cumplirlo — busca asesoría legal antes de viajar.','Renueva 120–150 días antes del vencimiento.','Guarda cada tarjeta vencida y aviso de aprobación — documentan tu presencia continua.']},
+    tips:{en:['DACA is not a status and does not lead to a green card on its own. But it can be combined with a family petition.','Marrying a U.S. citizen leads to a green card only if you were "inspected and admitted or paroled"; a return on advance parole can satisfy that. Get legal advice before traveling.','Renew 120–150 days before expiration.','Keep every expired card and approval notice. They document continuous presence.'],
+          es:['DACA no es un estatus y no lleva a la residencia por sí solo. Pero puede combinarse con una petición familiar.','Casarte con ciudadano lleva a la residencia solo si fuiste "inspeccionado y admitido o con parole"; regresar con permiso adelantado puede cumplirlo. Busca asesoría legal antes de viajar.','Renueva 120–150 días antes del vencimiento.','Guarda cada tarjeta vencida y aviso de aprobación. Documentan tu presencia continua.']},
     howItWorks:{en:['Renewal: Form I-821D with I-765 and I-765WS.','Biometrics if requested; decisions usually take a few months.','Build a permanent path in parallel: family petition plus adjustment, employment-based with INA 245(i) or a lawful entry, or U visa/VAWA if they apply.'],
                 es:['Renovación: Formulario I-821D con I-765 e I-765WS.','Biométricos si los piden; la decisión suele tardar unos meses.','Construye una vía permanente en paralelo: petición familiar más ajuste, vía laboral con INA 245(i) o una entrada legal, o visa U/VAWA si aplican.']}},
   {id:'uvisa', iconName:'shield', color:'#ec4f93', cat:'special', forms:['I-918','I-914','I-360'],
     title:{en:'U Visa, T Visa & VAWA (survivors)', es:'Visa U, Visa T y VAWA (sobrevivientes)'},
     summary:{en:'Protection and a path to a green card for survivors of serious crimes (U visa), human trafficking (T visa), and abuse by a U.S.-citizen or resident spouse, parent or child (VAWA self-petition). All are confidential and have no filing fee.',
              es:'Protección y vía a la residencia para sobrevivientes de delitos graves (visa U), trata de personas (visa T) y abuso por parte de cónyuge, padre o hijo ciudadano o residente (auto-petición VAWA). Todas son confidenciales y sin tarifa.'},
-    eligibility:{en:['U visa: victim of a qualifying crime in the U.S., substantial harm, and helpful to police or prosecutors (they sign Form I-918B)','T visa: victim of sex or labor trafficking, present in the U.S. because of it','VAWA: abused spouse, child or parent of a U.S. citizen or green card holder — the abuser is never told','Any gender qualifies'],
-                 es:['Visa U: víctima de un delito calificado en EE.UU., daño sustancial y colaboración con policía o fiscales (firman el Formulario I-918B)','Visa T: víctima de trata sexual o laboral, presente en EE.UU. a causa de ello','VAWA: cónyuge, hijo o padre abusado por un ciudadano o residente — al abusador nunca se le informa','Cualquier género califica']},
-    tips:{en:['No fee for any of these, and fee waivers for related forms.','U visas are capped at 10,000 a year — the wait is long, but a "bona fide determination" can bring a work permit and protection in the meantime.','Unlawful entry and some immigration violations can be waived.','Local legal aid and domestic-violence organizations know these cases well — you do not need a private lawyer.'],
-          es:['Sin tarifa para ninguna, y exenciones para formularios relacionados.','Las visas U tienen tope de 10,000 al año — la espera es larga, pero una "determinación de buena fe" puede dar permiso de trabajo y protección mientras tanto.','La entrada ilegal y algunas violaciones migratorias pueden exonerarse.','Las organizaciones de ayuda legal y contra la violencia doméstica conocen bien estos casos — no necesitas abogado privado.']},
+    eligibility:{en:['U visa: victim of a qualifying crime in the U.S., substantial harm, and helpful to police or prosecutors (they sign Form I-918B)','T visa: victim of sex or labor trafficking, present in the U.S. because of it','VAWA: abused spouse, child or parent of a U.S. citizen or green card holder. The abuser is never told','Any gender qualifies'],
+                 es:['Visa U: víctima de un delito calificado en EE.UU., daño sustancial y colaboración con policía o fiscales (firman el Formulario I-918B)','Visa T: víctima de trata sexual o laboral, presente en EE.UU. a causa de ello','VAWA: cónyuge, hijo o padre abusado por un ciudadano o residente. Al abusador nunca se le informa','Cualquier género califica']},
+    tips:{en:['No fee for any of these, and fee waivers for related forms.','U visas are capped at 10,000 a year. The wait is long, but a "bona fide determination" can bring a work permit and protection in the meantime.','Unlawful entry and some immigration violations can be waived.','Local legal aid and domestic-violence organizations know these cases well. You do not need a private lawyer.'],
+          es:['Sin tarifa para ninguna, y exenciones para formularios relacionados.','Las visas U tienen tope de 10,000 al año. La espera es larga, pero una "determinación de buena fe" puede dar permiso de trabajo y protección mientras tanto.','La entrada ilegal y algunas violaciones migratorias pueden exonerarse.','Las organizaciones de ayuda legal y contra la violencia doméstica conocen bien estos casos. No necesitas abogado privado.']},
     howItWorks:{en:['U: get Form I-918B signed by law enforcement, then file Form I-918. T: file Form I-914. VAWA: file Form I-360 with evidence of the relationship and the abuse.','While pending: a work permit after a bona fide determination (U), or with Form I-765 (T; VAWA once approved).','Green card: U and T after 3 years in status (Form I-485); VAWA self-petitioners adjust as immediate relatives if the abuser is a citizen, or through the F2 line if a resident.'],
                 es:['U: consigue el Formulario I-918B firmado por la autoridad, luego presenta el I-918. T: presenta el Formulario I-914. VAWA: presenta el Formulario I-360 con evidencia de la relación y el abuso.','Mientras está pendiente: permiso de trabajo tras una determinación de buena fe (U), o con el Formulario I-765 (T; VAWA al aprobarse).','Residencia: U y T tras 3 años en estatus (Formulario I-485); los auto-peticionarios VAWA ajustan como familiares inmediatos si el abusador es ciudadano, o por la fila F2 si es residente.']}},
   {id:'sijs', iconName:'people', color:'#ff9b21', cat:'special', forms:['I-360','I-485'],
@@ -8618,20 +8618,20 @@ var VISA_PATHS = [
              es:'Vía a la residencia para jóvenes menores de 21 a quienes un tribunal estatal determinó que no pueden reunificarse con un padre por abuso, negligencia o abandono. Presentar antes de los 21 asegura la elegibilidad.'},
     eligibility:{en:['Under 21 and unmarried when Form I-360 is filed','A state juvenile, family or probate court order with the required findings','Reunification with one or both parents not viable due to abuse, neglect, abandonment or similar','Not in your best interest to return to your home country'],
                  es:['Menor de 21 y soltero al presentar el Formulario I-360','Una orden de un tribunal estatal de menores, familia o sucesiones con las determinaciones requeridas','Reunificación con uno o ambos padres no viable por abuso, negligencia, abandono o similar','No es en tu mejor interés regresar a tu país']},
-    tips:{en:['The court order comes first — a guardianship, custody or dependency case in state court, not immigration court.','EB-4 visas are backlogged; approved SIJS applicants receive deferred action and a work permit while they wait.','You can never petition for your parents later through this route.','Free help: legal aid, law school clinics, Kids in Need of Defense (KIND).'],
-          es:['Primero la orden judicial — un caso de tutela, custodia o dependencia en tribunal estatal, no de inmigración.','Las visas EB-4 están retrasadas; los aprobados reciben acción diferida y permiso de trabajo mientras esperan.','Nunca podrás pedir a tus padres por esta vía.','Ayuda gratuita: asistencia legal, clínicas de facultades de derecho, Kids in Need of Defense (KIND).']},
-    howItWorks:{en:['Obtain the state court order (guardianship, custody or dependency case).','File Form I-360 with USCIS (no fee) before turning 21 — USCIS must decide within 180 days.','Deferred action and a work permit while the EB-4 visa number is pending.','File Form I-485 when your date becomes current.'],
-                es:['Obtén la orden del tribunal estatal (tutela, custodia o dependencia).','Presenta el Formulario I-360 ante USCIS (sin tarifa) antes de cumplir 21 — USCIS debe decidir en 180 días.','Acción diferida y permiso de trabajo mientras el número de visa EB-4 esté pendiente.','Presenta el Formulario I-485 cuando tu fecha esté vigente.']}},
+    tips:{en:['The court order comes first. A guardianship, custody or dependency case in state court, not immigration court.','EB-4 visas are backlogged; approved SIJS applicants receive deferred action and a work permit while they wait.','You can never petition for your parents later through this route.','Free help: legal aid, law school clinics, Kids in Need of Defense (KIND).'],
+          es:['Primero la orden judicial. Un caso de tutela, custodia o dependencia en tribunal estatal, no de inmigración.','Las visas EB-4 están retrasadas; los aprobados reciben acción diferida y permiso de trabajo mientras esperan.','Nunca podrás pedir a tus padres por esta vía.','Ayuda gratuita: asistencia legal, clínicas de facultades de derecho, Kids in Need of Defense (KIND).']},
+    howItWorks:{en:['Obtain the state court order (guardianship, custody or dependency case).','File Form I-360 with USCIS (no fee) before turning 21. USCIS must decide within 180 days.','Deferred action and a work permit while the EB-4 visa number is pending.','File Form I-485 when your date becomes current.'],
+                es:['Obtén la orden del tribunal estatal (tutela, custodia o dependencia).','Presenta el Formulario I-360 ante USCIS (sin tarifa) antes de cumplir 21. USCIS debe decidir en 180 días.','Acción diferida y permiso de trabajo mientras el número de visa EB-4 esté pendiente.','Presenta el Formulario I-485 cuando tu fecha esté vigente.']}},
   {id:'cuban', iconName:'flag', color:'#5e8eff', cat:'special', forms:['I-485'],
     title:{en:'Cuban Adjustment Act', es:'Ley de Ajuste Cubano'},
-    summary:{en:'Cuban natives and citizens who were inspected and admitted or paroled into the U.S. can apply for a green card after one year of physical presence — no petition, no visa number, no sponsor.',
-             es:'Nacidos o ciudadanos de Cuba inspeccionados y admitidos o con parole en EE.UU. pueden solicitar la residencia tras un año de presencia física — sin petición, sin número de visa, sin patrocinador.'},
-    eligibility:{en:['Native or citizen of Cuba','Inspected and admitted, or paroled, into the U.S. — how you entered matters; those who entered without inspection need legal advice','Physically present for at least 1 year','Admissible (criminal and other bars apply); your spouse and children of any nationality can adjust with you if they live with you'],
-                 es:['Nacido o ciudadano de Cuba','Inspeccionado y admitido, o con parole, en EE.UU. — cómo entraste importa; quienes entraron sin inspección necesitan asesoría legal','Presencia física de al menos 1 año','Admisible (aplican causales penales y otras); tu cónyuge e hijos de cualquier nacionalidad pueden ajustar contigo si viven contigo']},
-    tips:{en:['Keep your I-94, parole document and every piece of proof of the year of presence.','Parole programs such as CHNV ended in 2025 and the situation of people whose parole was terminated is being litigated — get advice before filing.','A denied asylum case does not stop a Cuban Adjustment filing.','Your residence date can be rolled back up to 30 months ("rollback") — ask a lawyer how it affects your citizenship timeline.'],
-          es:['Guarda tu I-94, documento de parole y toda prueba del año de presencia.','Los programas de parole como CHNV terminaron en 2025 y la situación de quienes perdieron el parole está en litigio — busca asesoría antes de presentar.','Un caso de asilo denegado no impide una solicitud de Ajuste Cubano.','Tu fecha de residencia puede retrotraerse hasta 30 meses ("rollback") — pregunta a un abogado cómo afecta tu plazo para la ciudadanía.']},
-    howItWorks:{en:['Gather proof of Cuban nationality, of your admission or parole, and of a year of presence.','File Form I-485 ($1,440) with I-765 and I-131 if you want a work permit and travel document while it is pending.','Biometrics, possibly an interview, then the green card — no conditional period.'],
-                es:['Reúne prueba de nacionalidad cubana, de tu admisión o parole, y de un año de presencia.','Presenta el Formulario I-485 ($1,440) con I-765 e I-131 si quieres permiso de trabajo y documento de viaje mientras está pendiente.','Biométricos, posiblemente entrevista, y luego la residencia — sin período condicional.']}}
+    summary:{en:'Cuban natives and citizens who were inspected and admitted or paroled into the U.S. can apply for a green card after one year of physical presence. No petition, no visa number, no sponsor.',
+             es:'Nacidos o ciudadanos de Cuba inspeccionados y admitidos o con parole en EE.UU. pueden solicitar la residencia tras un año de presencia física. Sin petición, sin número de visa, sin patrocinador.'},
+    eligibility:{en:['Native or citizen of Cuba','Inspected and admitted, or paroled, into the U.S. How you entered matters; those who entered without inspection need legal advice','Physically present for at least 1 year','Admissible (criminal and other bars apply); your spouse and children of any nationality can adjust with you if they live with you'],
+                 es:['Nacido o ciudadano de Cuba','Inspeccionado y admitido, o con parole, en EE.UU. Cómo entraste importa; quienes entraron sin inspección necesitan asesoría legal','Presencia física de al menos 1 año','Admisible (aplican causales penales y otras); tu cónyuge e hijos de cualquier nacionalidad pueden ajustar contigo si viven contigo']},
+    tips:{en:['Keep your I-94, parole document and every piece of proof of the year of presence.','Parole programs such as CHNV ended in 2025 and the situation of people whose parole was terminated is being litigated. Get advice before filing.','A denied asylum case does not stop a Cuban Adjustment filing.','Your residence date can be rolled back up to 30 months ("rollback"). Ask a lawyer how it affects your citizenship timeline.'],
+          es:['Guarda tu I-94, documento de parole y toda prueba del año de presencia.','Los programas de parole como CHNV terminaron en 2025 y la situación de quienes perdieron el parole está en litigio. Busca asesoría antes de presentar.','Un caso de asilo denegado no impide una solicitud de Ajuste Cubano.','Tu fecha de residencia puede retrotraerse hasta 30 meses ("rollback"). Pregunta a un abogado cómo afecta tu plazo para la ciudadanía.']},
+    howItWorks:{en:['Gather proof of Cuban nationality, of your admission or parole, and of a year of presence.','File Form I-485 ($1,440) with I-765 and I-131 if you want a work permit and travel document while it is pending.','Biometrics, possibly an interview, then the green card. No conditional period.'],
+                es:['Reúne prueba de nacionalidad cubana, de tu admisión o parole, y de un año de presencia.','Presenta el Formulario I-485 ($1,440) con I-765 e I-131 si quieres permiso de trabajo y documento de viaje mientras está pendiente.','Biométricos, posiblemente entrevista, y luego la residencia. Sin período condicional.']}}
 ];
 
 var VISA_CATEGORIES = [
@@ -8645,7 +8645,7 @@ var VISA_CATEGORIES = [
 
 var openVisaPath = null;
 
-// ===== PATHS SCREEN — personal first, catalog second ==========================
+// ===== PATHS SCREEN. Personal first, catalog second ==========================
 // A work-visa holder should not be handed student visas. The default view is
 // built from the user's status: where they are now, what their profile says
 // they may qualify for, and the usual next moves from that status. The full
@@ -8673,7 +8673,7 @@ var NEXT_FROM = {
   other:    ['family-spouse','family-pref','h1b','o1','eb2','e2','eb5','asylum','dv']
 };
 
-// Hard gates that make a guide pointless for this person — nationality for the
+// Hard gates that make a guide pointless for this person. Nationality for the
 // treaty visas, and status for student-only paths.
 function pathApplies(id, u){
   var c = u.countryOfBirth;
@@ -8791,8 +8791,8 @@ function renderVisaPaths(){
     + '</button>';
   if(visaBrowseAll){
     html += '<div class="visaBrowseNote">'+(lang==='es'
-      ? 'Todas las vías, incluidas las que no aplican a tu situación — útil si tu caso cambia o buscas para alguien más.'
-      : 'Every path, including ones that do not fit your situation — useful if your case changes or you are looking for someone else.')+'</div>';
+      ? 'Todas las vías, incluidas las que no aplican a tu situación. Útil si tu caso cambia o buscas para alguien más.'
+      : 'Every path, including ones that do not fit your situation. Useful if your case changes or you are looking for someone else.')+'</div>';
     html += visaCatalogHtml(shown);
   }
 
@@ -8812,7 +8812,7 @@ function visaCatalogHtml(skip){
   return html;
 }
 
-// One expandable visa card. `sg` (optional) is a suggestion entry — adds the
+// One expandable visa card. `sg` (optional) is a suggestion entry. Adds the
 // "why this fits you" line under the summary.
 function visaCardHtml(v, sg, badge){
   var html = '';
@@ -8961,7 +8961,7 @@ function renderHomeVisaRow(){
       if(sub && visa.sub && visa.sub[lang]) sub.textContent = visa.sub[lang];
       el.onclick = function(){ openVisaPath = pathId; openVisaPaths(false); };
     } else {
-      // hasGC user — citizenship path
+      // hasGC user. Citizenship path
       if(ico){
         ico.style.background = 'rgba(255, 200, 61, .22)';
         ico.innerHTML = iconSVG('flag', '#ffc83d', 22);
@@ -8989,7 +8989,7 @@ function renderHomeVisaRow(){
         : 'Student · work · family · asylum · DV');
     }
   } else {
-    // No personalized path from onboarding — hide the "Your path" row entirely so
+    // No personalized path from onboarding. Hide the "Your path" row entirely so
     // we don't duplicate the explore CTA, and let the additional-paths row be the
     // single discovery entry. This row's label adjusts since it's now standalone.
     el.style.display = 'none';
@@ -9019,8 +9019,8 @@ var N400_SECTIONS = [
     asked:{en:'Which rule are you applying under?', es:'¿Bajo qué regla estás aplicando?'},
     body:{en:'Choose: the 5-year rule (most LPRs), the 3-year rule (3+ years married to a U.S. citizen), or a military basis. The form changes based on your answer.',
           es:'Elige: regla de 5 años (la mayoría), regla de 3 años (3+ años casado/a con ciudadano), o base militar. El formulario cambia según tu respuesta.'},
-    tip:{en:'You must have been a permanent resident for the FULL required time before filing. Your green-card date — not your filing date — is what counts.',
-         es:'Debes haber sido residente permanente por el tiempo completo antes de presentar. Tu fecha de residencia — no la de presentación — es lo que cuenta.'},
+    tip:{en:'You must have been a permanent resident for the FULL required time before filing. Your green-card date. Not your filing date. Is what counts.',
+         es:'Debes haber sido residente permanente por el tiempo completo antes de presentar. Tu fecha de residencia. No la de presentación. Es lo que cuenta.'},
     docs:{en:['Green card (front and back)','Marriage certificate (3-year rule)','Spouse\'s proof of citizenship (3-year rule)','Military discharge papers (military basis)'],
           es:['Residencia (frente y reverso)','Acta de matrimonio (regla de 3 años)','Prueba de ciudadanía del cónyuge (regla de 3 años)','Documentos de baja militar (base militar)']}
   },
@@ -9028,8 +9028,8 @@ var N400_SECTIONS = [
     id:'about-you', part:'Part 2', icon:'person',
     title:{en:'About you', es:'Sobre ti'},
     asked:{en:'Your legal names, date and place of birth, country of citizenship, SSN, A-Number.', es:'Tus nombres legales, fecha y lugar de nacimiento, ciudadanía, SSN, número A.'},
-    body:{en:'USCIS needs every name you have ever used — including names from prior marriages, names from childhood, and any aliases on official documents.',
-          es:'USCIS necesita cada nombre que hayas usado — incluyendo nombres de matrimonios anteriores, nombres de la infancia y cualquier alias en documentos oficiales.'},
+    body:{en:'USCIS needs every name you have ever used. Including names from prior marriages, names from childhood, and any aliases on official documents.',
+          es:'USCIS necesita cada nombre que hayas usado. Incluyendo nombres de matrimonios anteriores, nombres de la infancia y cualquier alias en documentos oficiales.'},
     tip:{en:'List ALL names ever used. Forgetting an alias or maiden name can flag your application as inconsistent with your other records.',
          es:'Lista TODOS los nombres usados. Olvidar un alias o nombre de soltera puede marcar tu aplicación como inconsistente con tus otros registros.'},
     docs:{en:['Birth certificate','Current passport','Social Security card','Green card','Documentation of any name changes (court order, marriage cert)'],
@@ -9050,8 +9050,8 @@ var N400_SECTIONS = [
     id:'employment', part:'Part 8', icon:'briefcase',
     title:{en:'Employment history', es:'Historial laboral'},
     asked:{en:'Every employer, school, or unemployment period in the past 5 years.', es:'Cada empleador, escuela o período de desempleo en los últimos 5 años.'},
-    body:{en:'Include employer name, address, your job title, and exact start and end dates. Periods of unemployment, school, or self-employment must be listed too — leave no gaps.',
-          es:'Incluye nombre del empleador, dirección, tu puesto, y fechas exactas de inicio y fin. Períodos de desempleo, escuela o trabajo propio también deben listarse — no dejes lagunas.'},
+    body:{en:'Include employer name, address, your job title, and exact start and end dates. Periods of unemployment, school, or self-employment must be listed too. Leave no gaps.',
+          es:'Incluye nombre del empleador, dirección, tu puesto, y fechas exactas de inicio y fin. Períodos de desempleo, escuela o trabajo propio también deben listarse. No dejes lagunas.'},
     tip:{en:'If unemployed for any stretch, write "Unemployed" with the dates. A gap reads as concealment, not as nothing.',
          es:'Si estuviste desempleado por un período, escribe "Desempleado" con las fechas. Una laguna parece encubrimiento, no nada.'},
     docs:{en:['W-2s and 1099s from each year','Pay stubs','School transcripts (if you were a student)','Self-employment tax records'],
@@ -9063,15 +9063,15 @@ var N400_SECTIONS = [
     asked:{en:'Every trip outside the U.S. lasting 24 hours or more in the past 5 years.', es:'Cada viaje fuera de EE.UU. de 24 horas o más en los últimos 5 años.'},
     body:{en:'Even short cross-border runs to Mexico or Canada count. Departure date, return date, and country. Trips longer than 6 months can break your continuous residence.',
           es:'Incluso viajes cortos a México o Canadá cuentan. Fecha de salida, fecha de regreso, y país. Viajes de más de 6 meses pueden romper tu residencia continua.'},
-    tip:{en:'Your passport stamps reveal trips you forgot. USCIS pulls your I-94 history at the interview — match it exactly.',
-         es:'Los sellos de tu pasaporte revelan viajes que olvidaste. USCIS revisa tu historial I-94 en la entrevista — debe coincidir exactamente.'},
+    tip:{en:'Your passport stamps reveal trips you forgot. USCIS pulls your I-94 history at the interview. Match it exactly.',
+         es:'Los sellos de tu pasaporte revelan viajes que olvidaste. USCIS revisa tu historial I-94 en la entrevista. Debe coincidir exactamente.'},
     docs:{en:['ALL passports (current and expired) for the past 5 years','I-94 travel record (i94.cbp.dhs.gov)','Airline records or itineraries','CBP border-crossing records'],
           es:['TODOS los pasaportes (vigentes y vencidos) de los últimos 5 años','Registro I-94 de viajes (i94.cbp.dhs.gov)','Registros o itinerarios de vuelos','Registros de cruce de CBP']}
   },
   {
     id:'marital', part:'Part 10', icon:'ring',
     title:{en:'Marital history', es:'Historial matrimonial'},
-    asked:{en:'Current marriage AND every prior marriage — yours and your current spouse\'s.', es:'Matrimonio actual Y todos los matrimonios anteriores — tuyos y de tu cónyuge actual.'},
+    asked:{en:'Current marriage AND every prior marriage. Yours and your current spouse\'s.', es:'Matrimonio actual Y todos los matrimonios anteriores. Tuyos y de tu cónyuge actual.'},
     body:{en:'For each marriage: spouse\'s full name, date of marriage, how it ended (divorce, death, annulment), and the date it ended.',
           es:'Para cada matrimonio: nombre completo del cónyuge, fecha de matrimonio, cómo terminó (divorcio, muerte, anulación), y la fecha en que terminó.'},
     tip:{en:'USCIS cross-checks state vital records. A hidden prior marriage that surfaces later can lead to denaturalization, even years after you become a citizen.',
@@ -9082,7 +9082,7 @@ var N400_SECTIONS = [
   {
     id:'children', part:'Part 11', icon:'people',
     title:{en:'Children', es:'Hijos'},
-    asked:{en:'ALL children — biological, adopted, step-children — living or deceased, regardless of where they live.', es:'TODOS los hijos — biológicos, adoptados, hijastros — vivos o fallecidos, sin importar dónde vivan.'},
+    asked:{en:'ALL children. Biological, adopted, step-children. Living or deceased, regardless of where they live.', es:'TODOS los hijos. Biológicos, adoptados, hijastros. Vivos o fallecidos, sin importar dónde vivan.'},
     body:{en:'Include children from prior relationships, children you don\'t have custody of, and children born outside the U.S. Provide each child\'s name, date of birth, and country of birth.',
           es:'Incluye hijos de relaciones anteriores, hijos de los que no tienes custodia, e hijos nacidos fuera de EE.UU. Provee el nombre, fecha de nacimiento y país de nacimiento de cada uno.'},
     tip:{en:'Once you naturalize, your U.S.-citizen status can pass to certain children automatically (N-600). Listing them now keeps that path open.',
@@ -9095,10 +9095,10 @@ var N400_SECTIONS = [
     title:{en:'"Have you ever..." questions', es:'Preguntas "¿Alguna vez...?"'},
     asked:{en:'50+ yes/no questions about criminal history, immigration violations, party memberships, drug use, lying to immigration officers, and more.',
            es:'50+ preguntas de sí/no sobre historial penal, violaciones migratorias, membresías políticas, uso de drogas, mentir a oficiales de inmigración, y más.'},
-    body:{en:'Even arrests with no charges, dismissed cases, expunged records, juvenile incidents, and traffic incidents over a fine threshold must be disclosed. "Have you ever" means EVER — there is no time limit.',
-          es:'Incluso arrestos sin cargos, casos desestimados, registros eliminados, incidentes juveniles, y multas de tráfico por encima del umbral deben revelarse. "Alguna vez" significa NUNCA — no hay límite de tiempo.'},
-    tip:{en:'If you answer "yes" to ANY question in Part 12, stop and talk to an immigration lawyer BEFORE filing. A surprise "yes" at the interview can result in denial, denaturalization, or deportation. Free consults are available — check the Find Help section.',
-         es:'Si respondes "sí" a CUALQUIER pregunta de la Parte 12, detente y habla con un abogado de inmigración ANTES de presentar. Un "sí" sorpresa en la entrevista puede resultar en negación, desnaturalización o deportación. Hay consultas gratuitas — revisa la sección de Ayuda Legal.'},
+    body:{en:'Even arrests with no charges, dismissed cases, expunged records, juvenile incidents, and traffic incidents over a fine threshold must be disclosed. "Have you ever" means EVER. There is no time limit.',
+          es:'Incluso arrestos sin cargos, casos desestimados, registros eliminados, incidentes juveniles, y multas de tráfico por encima del umbral deben revelarse. "Alguna vez" significa NUNCA. No hay límite de tiempo.'},
+    tip:{en:'If you answer "yes" to ANY question in Part 12, stop and talk to an immigration lawyer BEFORE filing. A surprise "yes" at the interview can result in denial, denaturalization, or deportation. Free consults are available. Check the Find Help section.',
+         es:'Si respondes "sí" a CUALQUIER pregunta de la Parte 12, detente y habla con un abogado de inmigración ANTES de presentar. Un "sí" sorpresa en la entrevista puede resultar en negación, desnaturalización o deportación. Hay consultas gratuitas. Revisa la sección de Ayuda Legal.'},
     docs:{en:['Court records and dispositions for ANY arrest or charge (even if dismissed)','Police reports','FBI background check (highly recommended)','Records of any immigration violations or removals'],
           es:['Registros judiciales y resoluciones de CUALQUIER arresto o cargo (incluso si fue desestimado)','Reportes policiales','Verificación de antecedentes del FBI (muy recomendado)','Registros de violaciones migratorias o remociones']}
   }
@@ -9225,8 +9225,8 @@ var PROVIDERS = [
     name:{en:'CLINIC Affiliate Network',es:'Red CLINIC'},
     type:'nonprofit', trust:'uscis-recognized', cost:'free',
     services:['naturalization','family','asylum'], languages:['en','es'],
-    desc:{en:'Catholic Legal Immigration Network — 380+ affiliate offices nationwide. Free or low-cost help.',
-          es:'Red Católica de Inmigración Legal — 380+ oficinas afiliadas. Ayuda gratis o de bajo costo.'},
+    desc:{en:'Catholic Legal Immigration Network. 380+ affiliate offices nationwide. Free or low-cost help.',
+          es:'Red Católica de Inmigración Legal. 380+ oficinas afiliadas. Ayuda gratis o de bajo costo.'},
     phone:'+1 301-565-4800', web:'cliniclegal.org'
   },
   {
@@ -9446,16 +9446,16 @@ function esc(s){
 }
 
 var N400_FLAG_NOTE = {
-  en: 'Worth reviewing with a licensed immigration attorney or BIA-accredited representative before you file. It does not necessarily disqualify you — but get advice for your specific situation.',
-  es: 'Vale la pena revisarlo con un abogado de inmigración o un representante acreditado por la BIA antes de presentar. No necesariamente te descalifica — pero busca asesoría para tu situación.'
+  en: 'Worth reviewing with a licensed immigration attorney or BIA-accredited representative before you file. It does not necessarily disqualify you. But get advice for your specific situation.',
+  es: 'Vale la pena revisarlo con un abogado de inmigración o un representante acreditado por la BIA antes de presentar. No necesariamente te descalifica. Pero busca asesoría para tu situación.'
 };
 
 var N400_SCHEMA = [
   {
     id:'basis', iconName:'stamp', color:'#5e5ce6', partRef:'Part 1',
     title:{en:'Eligibility basis', es:'Base de elegibilidad'},
-    intro:{en:'The first question on the N-400: under which rule you are applying. Camino does not determine which applies to you — check the official instructions or ask a professional if unsure.',
-           es:'La primera pregunta del N-400: bajo qué regla presentas. Camino no determina cuál aplica a ti — consulta las instrucciones oficiales o a un profesional si tienes duda.'},
+    intro:{en:'The first question on the N-400: under which rule you are applying. Camino does not determine which applies to you. Check the official instructions or ask a professional if unsure.',
+           es:'La primera pregunta del N-400: bajo qué regla presentas. Camino no determina cuál aplica a ti. Consulta las instrucciones oficiales o a un profesional si tienes duda.'},
     questions:[
       {id:'basis_type', type:'select', required:true,
        label:{en:'Basis for applying', es:'Base para aplicar'},
@@ -9497,7 +9497,7 @@ var N400_SCHEMA = [
        help:{en:'On your green card; starts with "A".', es:'En tu green card; empieza con "A".'}},
       {id:'p_ssn', type:'text', required:false,
        label:{en:'Social Security number', es:'Número de Seguro Social'},
-       help:{en:'Optional to save here — you can add it directly on the official form if you prefer.', es:'Opcional guardarlo aquí — puedes ponerlo directamente en el formulario oficial si prefieres.'}}
+       help:{en:'Optional to save here. You can add it directly on the official form if you prefer.', es:'Opcional guardarlo aquí. Puedes ponerlo directamente en el formulario oficial si prefieres.'}}
     ]
   },
   {
@@ -9596,7 +9596,7 @@ var N400_SCHEMA = [
   {
     id:'children', iconName:'people', color:'#12b981', partRef:'Part 6',
     title:{en:'Children', es:'Hijos'},
-    intro:{en:'All of your children — any age, living anywhere, including stepchildren and adopted children.', es:'Todos tus hijos — de cualquier edad, vivan donde vivan, incluyendo hijastros e hijos adoptados.'},
+    intro:{en:'All of your children. Any age, living anywhere, including stepchildren and adopted children.', es:'Todos tus hijos. De cualquier edad, vivan donde vivan, incluyendo hijastros e hijos adoptados.'},
     questions:[
       {id:'c_count', type:'text', required:true,
        label:{en:'Total number of children under 18 years of age', es:'Número total de hijos menores de 18 años'},
@@ -9614,7 +9614,7 @@ var N400_SCHEMA = [
   {
     id:'additional', iconName:'scales', color:'#84807a', partRef:'Part 9',
     title:{en:'Additional questions', es:'Preguntas adicionales'},
-    intro:{en:'USCIS asks these of every applicant. Answer honestly — a truthful "yes" with context is handled far better than an omission discovered later.', es:'USCIS le pregunta esto a cada solicitante. Responde con honestidad — un "sí" veraz con contexto se maneja mucho mejor que una omisión descubierta después.'},
+    intro:{en:'USCIS asks these of every applicant. Answer honestly. A truthful "yes" with context is handled far better than an omission discovered later.', es:'USCIS le pregunta esto a cada solicitante. Responde con honestidad. Un "sí" veraz con contexto se maneja mucho mejor que una omisión descubierta después.'},
     questions:[
       {id:'a_arrest', type:'yesno', required:true, flagOn:'yes', flagId:'arrest-history',
        label:{en:'Have you EVER been arrested, cited, detained, or charged by any law enforcement officer, anywhere in the world?', es:'¿ALGUNA VEZ has sido arrestado, citado, detenido o acusado por cualquier autoridad, en cualquier país?'},
@@ -9659,13 +9659,13 @@ function n400FH_persist(){
   var st = n400FH_state();
   st.lastSavedAt = new Date().toISOString();
   saveUser();
-  // Surface storage failures once — the UI says "auto-saved" and must not lie
+  // Surface storage failures once. The UI says "auto-saved" and must not lie
   try {
     var back = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     if(!back.n400 || back.n400.lastSavedAt !== st.lastSavedAt){
       if(!n400FH_persist._warned){
         n400FH_persist._warned = true;
-        toast(lang==='es' ? 'No se pudo guardar — espacio lleno. Exporta un respaldo.' : 'Could not save — storage full. Export a backup.', 'warning');
+        toast(lang==='es' ? 'No se pudo guardar. Espacio lleno. Exporta un respaldo.' : 'Could not save. Storage full. Export a backup.', 'warning');
       }
     }
   } catch(e){}
@@ -9681,7 +9681,7 @@ document.addEventListener('visibilitychange', function(){ if(document.visibility
 function n400FH_set(qid, value){
   n400FH_state().answers[qid] = value;
   // aggregates (flag count, section pills) must be correct the moment any
-  // screen renders — recompute synchronously, debounce only the disk write
+  // screen renders. Recompute synchronously, debounce only the disk write
   n400FH_recomputeFlags();
   n400FH_recomputeStatus();
   n400FH_save();
@@ -9730,7 +9730,7 @@ function n400FH_recomputeFlags(){
 function n400FH_answered(q){
   var a = n400FH_state().answers[q.id];
   if(q.type === 'group'){
-    // an empty added row doesn't count — at least one field must have content
+    // an empty added row doesn't count. At least one field must have content
     return Array.isArray(a) && a.some(function(row){
       return row && Object.keys(row).some(function(k){ return row[k] && String(row[k]).trim() !== ''; });
     });
@@ -9917,7 +9917,7 @@ function n400FH_inputHtml(q, val){
     return '<input type="date" class="n400Input" value="'+v+'" onchange="n400FH_set(\''+q.id+'\', this.value)" />';
   }
   if(q.type === 'select'){
-    var opts = '<option value="">'+(lang==='es'?'— Elegir —':'— Choose —')+'</option>';
+    var opts = '<option value="">'+(lang==='es'?'. Elegir':'. Choose')+'</option>';
     (q.options||[]).forEach(function(o){
       opts += '<option value="'+o.v+'"'+(val===o.v?' selected':'')+'>'+o.label[lang]+'</option>';
     });
@@ -9935,7 +9935,7 @@ function n400FH_inputHtml(q, val){
 }
 
 // Official-form capacity per repeatable group (edition 01/20/25). Extra rows
-// stay in the summary but can't be placed on the PDF — the form says to use
+// stay in the summary but can't be placed on the PDF. The form says to use
 // Part 14 (Additional Information) for overflow.
 var N400_GROUP_META = {
   r_addresses: { cap: 4, current: true },   // 1 current + 3 prior-table rows
@@ -10027,7 +10027,7 @@ function n400FH_valueLabel(q, val){
     return o ? o.label[lang] : esc(val);
   }
   if(q.type === 'yesno') return val === 'yes' ? (lang==='es'?'Sí':'Yes') : 'No';
-  if(q.type === 'date') return esc(n400FH_usDate(val));   // show mm/dd/yyyy — what the official form wants
+  if(q.type === 'date') return esc(n400FH_usDate(val));   // show mm/dd/yyyy. What the official form wants
   return esc(val);
 }
 
@@ -10042,8 +10042,8 @@ function n400FH_renderSummary(){
     + '<div class="n400FormKick">'+(lang==='es'?'RESUMEN':'SUMMARY')+'</div>'
     + '<div class="n400FormTitle">'+(lang==='es'?'Para el formulario oficial':'For the official form')+'</div>'
     + '<div class="n400FormIntro">'+(lang==='es'
-        ? 'Transfiere estas respuestas al Formulario N-400 oficial de USCIS tú mismo, revísalas, y fírmalo. Los números de sección pueden variar según la edición del formulario — sigue el formulario oficial.'
-        : 'Transfer these answers to the official USCIS Form N-400 yourself, review them, and sign it. Item numbers vary by form edition — follow the official form.')+'</div>'
+        ? 'Transfiere estas respuestas al Formulario N-400 oficial de USCIS tú mismo, revísalas, y fírmalo. Los números de sección pueden variar según la edición del formulario. Sigue el formulario oficial.'
+        : 'Transfer these answers to the official USCIS Form N-400 yourself, review them, and sign it. Item numbers vary by form edition. Follow the official form.')+'</div>'
     + '</div>';
 
   if(st.flags.length){
@@ -10101,13 +10101,13 @@ function n400FH_renderSummary(){
 function n400FH_summaryText(){
   var st = n400FH_state();
   var lines = [
-    lang==='es' ? 'CAMINO — RESUMEN DE RESPUESTAS N-400 (solo uso personal)' : 'CAMINO — N-400 ANSWER SUMMARY (personal use only)',
+    lang==='es' ? 'CAMINO. RESUMEN DE RESPUESTAS N-400 (solo uso personal)' : 'CAMINO. N-400 ANSWER SUMMARY (personal use only)',
     (lang==='es' ? 'Generado: ' : 'Generated: ') + new Date().toISOString().slice(0,10),
     lang==='es' ? 'Transfiere al Formulario N-400 oficial de USCIS tú mismo (edición '+N400_PDF_EDITION+').' : 'Transfer to the official USCIS Form N-400 yourself (edition '+N400_PDF_EDITION+').',
     ''];
-  if(st.flags.length) lines.push((lang==='es' ? 'RESPUESTAS MARCADAS: ' : 'FLAGGED ANSWERS: ')+st.flags.join(', ')+(lang==='es' ? ' — considera consultar a un abogado de inmigración.' : ' — consider consulting an immigration attorney.'), '');
+  if(st.flags.length) lines.push((lang==='es' ? 'RESPUESTAS MARCADAS: ' : 'FLAGGED ANSWERS: ')+st.flags.join(', ')+(lang==='es' ? '. Considera consultar a un abogado de inmigración.' : '. Consider consulting an immigration attorney.'), '');
   N400_SCHEMA.forEach(function(sec){
-    lines.push('=== N-400 '+sec.partRef+' — '+sec.title[lang]+' ===');
+    lines.push('=== N-400 '+sec.partRef+'. '+sec.title[lang]+' ===');
     sec.questions.forEach(function(q){
       if(q.type === 'group'){
         n400FH_groupRows(q.id).forEach(function(row, ri){
@@ -10133,7 +10133,7 @@ function n400FH_summaryText(){
 
 function n400FH_print(){
   if(Store.isNative()){
-    // WKWebView has no reliable window.print — share the summary as a text file.
+    // WKWebView has no reliable window.print. Share the summary as a text file.
     var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
     if(fs && share && fs.writeFile){
       fs.writeFile({ path: 'camino-n400-summary.txt', data: n400FH_summaryText(), directory: (dir && dir.Cache) || 'CACHE', encoding: (enc && enc.UTF8) || 'utf8' })
@@ -10253,7 +10253,7 @@ function renderHomeN400FormRow(){
 // official N-400 (edition 01/20/25, bundled). Judgment questions (Part 1 basis,
 // Part 9 additional questions) and any checkbox whose index order is scrambled
 // in the XFA-generated AcroForm are ALWAYS left blank for the user to complete
-// by hand. Never suggests an answer. Generated locally — never leaves the device.
+// by hand. Never suggests an answer. Generated locally. Never leaves the device.
 var N400_PDF_EDITION = '01/20/25';
 
 function n400FH_usDate(iso){
@@ -10280,7 +10280,7 @@ async function n400FH_buildPdf(){
   var form = doc.getForm();
   var a = n400FH_state().answers;
   var F = 'form1[0].';
-  var skipped = [];   // answers that couldn't be placed — reported to the user afterward
+  var skipped = [];   // answers that couldn't be placed. Reported to the user afterward
 
   function text(name, val){
     if(val == null || String(val).trim() === '') return;
@@ -10306,7 +10306,7 @@ async function n400FH_buildPdf(){
     });
   }
 
-  // Part 2 — identity
+  // Part 2. Identity
   text('#subform[0].P2_Line1_FamilyName[0]', a.p_familyName);
   text('#subform[12].P2_Line1_FamilyName[1]', a.p_familyName);
   text('#subform[0].P2_Line1_GivenName[0]', a.p_givenName);
@@ -10318,11 +10318,11 @@ async function n400FH_buildPdf(){
   text('#subform[1].P2_Line10_CountryOfBirth[0]', a.p_birthCountry);
   text('#subform[1].P2_Line11_CountryOfNationality[0]', a.p_citCountry);
   text('#subform[1].Line12b_SSN[0]', (a.p_ssn || '').replace(/[^0-9]/g, ''));
-  // Name change — verified: [0]=No, [1]=Yes
+  // Name change. Verified: [0]=No, [1]=Yes
   if(a.p_nameChange === 'yes') checkBox('#subform[1].P2_Line34_NameChange[1]');
   if(a.p_nameChange === 'no')  checkBox('#subform[1].P2_Line34_NameChange[0]');
 
-  // Part 3 — biographic (height/weight only; eye/hair checkbox order is scrambled)
+  // Part 3. Biographic (height/weight only; eye/hair checkbox order is scrambled)
   var hm = /([2-8])\D+(\d{1,2})/.exec(a.b_height || '');
   if(hm && +hm[2] <= 11){
     dropdown('#subform[2].P7_Line3_HeightFeet[0]', hm[1]);
@@ -10340,8 +10340,8 @@ async function n400FH_buildPdf(){
     skipped.push((lang==='es'?'Peso (usa libras, solo números)':'Weight (use pounds, numbers only)'));
   }
 
-  // Part 4 — addresses. The form's "current physical address" block has a
-  // pre-printed PRESENT "To" — so the CURRENT address is the first row whose
+  // Part 4. Addresses. The form's "current physical address" block has a
+  // pre-printed PRESENT "To". So the CURRENT address is the first row whose
   // "To" is blank (not blindly row 0; users may enter oldest-first). All other
   // rows go to the prior-address table. Rows beyond capacity are counted so
   // the user is told to add them in Part 14 by hand.
@@ -10367,13 +10367,13 @@ async function n400FH_buildPdf(){
     text('#subform[2].P4_Line3_State' + i + '[0]', (pa.state || '').toUpperCase());
     text('#subform[2].P4_Line3_ZipCode' + i + '[0]', pa.zip);
     text('#subform[2].P4_Line3_From' + i + '[0]', n400FH_usDate(pa.from));
-    // "To" column: row 1's field is (mis)named From1[1] in the official file — verified visually
+    // "To" column: row 1's field is (mis)named From1[1] in the official file. Verified visually
     if(i === 1) text('#subform[2].P4_Line3_From1[1]', n400FH_usDate(pa.to));
     else        text('#subform[2].P4_Line3_To' + i + '[0]', n400FH_usDate(pa.to));
   }
   if(priorAddrs.length > 3) skipped.push((lang==='es'?'Direcciones extra: ':'Extra addresses: ') + (priorAddrs.length - 3));
 
-  // Part 5 — marital. Checkbox indices verified: divorced=0, single=1, widowed=2,
+  // Part 5. Marital. Checkbox indices verified: divorced=0, single=1, widowed=2,
   // married=3, annulled=4, separated=5
   var MAR_IDX = { divorced:0, single:1, widowed:2, married:3, annulled:4, separated:5 };
   if(a.m_status in MAR_IDX) checkBox('#subform[3].P10_Line1_MaritalStatus[' + MAR_IDX[a.m_status] + ']');
@@ -10382,7 +10382,7 @@ async function n400FH_buildPdf(){
   text('#subform[3].P10_Line4a_GivenName[0]', a.m_spouseGiven);
   text('#subform[3].P10_Line4e_DateEnterMarriage[0]', n400FH_usDate(a.m_marriageDate));
 
-  // Part 6 — children (grid fields carry misleading P7_Employer* names — verified visually)
+  // Part 6. Children (grid fields carry misleading P7_Employer* names. Verified visually)
   text('#subform[4].P11_Line1_TotalChildren[0]', a.c_count);
   text('#subform[10].P11_Line1_TotalChildren[1]', a.c_count);
   var kids = Array.isArray(a.c_children) ? a.c_children : [];
@@ -10394,7 +10394,7 @@ async function n400FH_buildPdf(){
   }
   if(kids.length > 3) skipped.push((lang==='es'?'Hijos extra: ':'Extra children: ') + (kids.length - 3));
 
-  // Part 7 — employment (Name column is P5_EmployerName*; From is the [1] instance).
+  // Part 7. Employment (Name column is P5_EmployerName*; From is the [1] instance).
   // Row 1's "To" is pre-printed PRESENT, so the CURRENT job (first row with a
   // blank "To") goes in row 1; rows with end dates fill rows 2-3.
   var jobsAll = (Array.isArray(a.r_employers) ? a.r_employers : []).filter(function(r){ return r && (r.employer || r.occupation); });
@@ -10416,7 +10416,7 @@ async function n400FH_buildPdf(){
     // row 1 "To" is pre-printed PRESENT on the form
   }
 
-  // Part 8 — trips
+  // Part 8. Trips
   var trips = Array.isArray(a.t_trips) ? a.t_trips : [];
   for(var t = 0; t < 6 && trips[t]; t++){
     var r = t + 1;
@@ -10430,7 +10430,7 @@ async function n400FH_buildPdf(){
 
   // Part 1 basis, ethnicity/race, eye/hair, spouse-citizen, and ALL Part 9
   // additional questions are intentionally left blank (judgment fields or
-  // scrambled checkbox indices) — the user completes them by hand.
+  // scrambled checkbox indices). The user completes them by hand.
 
   var bytes = await doc.save();
   return { bytes: bytes, skipped: skipped };
@@ -10450,11 +10450,11 @@ function n400FH_pdfEntry(){
   modal.className = 'disclaimerOverlay';
   var pts = lang==='es'
     ? ['El PDF se genera <strong>en tu dispositivo</strong> y nunca sale de él.',
-       'Contiene <strong>solo tus respuestas, tal como las escribiste</strong> — nada se sugiere ni se completa por ti.',
+       'Contiene <strong>solo tus respuestas, tal como las escribiste</strong>. Nada se sugiere ni se completa por ti.',
        'Las preguntas de criterio (Parte 1, preguntas adicionales, color de ojos/cabello) quedan <strong>en blanco</strong> para que las completes a mano.',
        '<strong>Revisa cada página</strong> contra el formulario oficial (edición '+N400_PDF_EDITION+'), complétalo, fírmalo y preséntalo tú mismo.']
     : ['The PDF is generated <strong>on your device</strong> and never leaves it.',
-       'It contains <strong>only your answers, exactly as you typed them</strong> — nothing is suggested or completed for you.',
+       'It contains <strong>only your answers, exactly as you typed them</strong>. Nothing is suggested or completed for you.',
        'Judgment questions (Part 1 basis, additional questions, eye/hair color) are left <strong>blank</strong> for you to complete by hand.',
        '<strong>Review every page</strong> against the official form (edition '+N400_PDF_EDITION+'), complete it, sign it, and file it yourself.'];
   // Warn up front if any repeatable group exceeds the official form's capacity
@@ -10466,8 +10466,8 @@ function n400FH_pdfEntry(){
   });
   if(overflow.length){
     pts.push(lang==='es'
-      ? '<strong>Tienes más filas de las que caben</strong> en el formulario — las extras deberás añadirlas a mano en la <strong>Parte 14</strong>.'
-      : '<strong>You have more rows than fit</strong> on the form — the extras must be added by hand in <strong>Part 14</strong>.');
+      ? '<strong>Tienes más filas de las que caben</strong> en el formulario. Las extras deberás añadirlas a mano en la <strong>Parte 14</strong>.'
+      : '<strong>You have more rows than fit</strong> on the form. The extras must be added by hand in <strong>Part 14</strong>.');
   }
   modal.innerHTML = ''
     + '<div class="disclaimerCard">'
@@ -10500,8 +10500,8 @@ async function n400FH_generatePDF(){
   if(result.skipped && result.skipped.length){
     setTimeout(function(){
       toast((lang==='es'
-        ? 'No cupo en el PDF — añádelo a mano (Parte 14): '
-        : 'Didn\'t fit on the PDF — add by hand (Part 14): ') + result.skipped.join(' · '));
+        ? 'No cupo en el PDF. Añádelo a mano (Parte 14): '
+        : 'Didn\'t fit on the PDF. Add by hand (Part 14): ') + result.skipped.join(' · '));
     }, 2500);
   }
   if(Store.isNative()){
@@ -10591,14 +10591,14 @@ function renderHomeStrip(){
     timeHtml;
 }
 
-// Path-specific "next action" — the single most important next thing for this user's situation.
+// Path-specific "next action". The single most important next thing for this user's situation.
 // Each returns {title, sub, ctaLabel, ctaAction, urgent (bool)}
 function pathNextAction(){
   var phase = user.phase;
   if(!phase) return null;
   var goal = user.immigrationGoal;
 
-  // Once a green-card filing is under way, that is THE next thing — regardless
+  // Once a green-card filing is under way, that is THE next thing. Regardless
   // of the visa the person is standing on.
   var gp = user.gcPetition;
   if(gp && phase !== 'hasGC' && phase !== 'preGC'){
@@ -10606,15 +10606,15 @@ function pathNextAction(){
       return {
         title: lang==='es' ? 'Sigue tu fecha de prioridad' : 'Track your priority date',
         sub: lang==='es'
-          ? 'Tu petición está en marcha. Cada mes, compara tu fecha de prioridad con el Boletín de Visas — cuando esté vigente, puedes presentar el I-485.'
-          : 'Your petition is under way. Each month, compare your priority date with the Visa Bulletin — when it is current you can file Form I-485.',
+          ? 'Tu petición está en marcha. Cada mes, compara tu fecha de prioridad con el Boletín de Visas. Cuando esté vigente, puedes presentar el I-485.'
+          : 'Your petition is under way. Each month, compare your priority date with the Visa Bulletin. When it is current you can file Form I-485.',
         ctaLabel: lang==='es' ? 'Abrir Boletín de Visas' : 'Open Visa Bulletin',
         ctaAction: visaBulletinAction()
       };
     }
     if(gp.stage === 'priority'){
       return {
-        title: lang==='es' ? 'Fecha vigente — presenta el I-485' : 'Your date is current — file Form I-485',
+        title: lang==='es' ? 'Fecha vigente. Presenta el I-485' : 'Your date is current. File Form I-485',
         sub: lang==='es'
           ? 'Adjusta tu estatus ahora: I-485 con I-765 (permiso de trabajo) e I-131 (viaje). Reúne el examen médico (I-693) y tus documentos.'
           : 'Adjust status now: Form I-485 with I-765 (work permit) and I-131 (travel). Line up the medical exam (I-693) and your documents.',
@@ -10625,7 +10625,7 @@ function pathNextAction(){
     }
     if(gp.stage === 'i485'){
       return {
-        title: lang==='es' ? 'I-485 pendiente — biométricos y entrevista' : 'I-485 pending — biometrics and interview',
+        title: lang==='es' ? 'I-485 pendiente. Biométricos y entrevista' : 'I-485 pending. Biometrics and interview',
         sub: lang==='es'
           ? 'Espera la cita de biométricos (6-10 semanas), luego el EAD/AP y una posible entrevista. Marca "Residencia" aquí cuando llegue la tarjeta.'
           : 'Expect biometrics (6-10 weeks), then your EAD/AP card and possibly an interview. Mark "Green card" here when the card arrives.',
@@ -10705,8 +10705,8 @@ function pathNextAction(){
     return {
       title: lang==='es' ? 'Inicia la conversación I-140' : 'Start the I-140 conversation',
       sub: lang==='es'
-        ? 'Tu empleador patrocina la residencia con el I-140. Empieza temprano — tomará años.'
-        : "Your employer files I-140 to sponsor your green card. Start early — it takes years.",
+        ? 'Tu empleador patrocina la residencia con el I-140. Empieza temprano. Tomará años.'
+        : "Your employer files I-140 to sponsor your green card. Start early. It takes years.",
       ctaLabel: lang==='es' ? 'Ver vías de residencia' : 'See green card paths',
       ctaAction: "toggleVisaPath('eb2'); go('visaPaths')"
     };
@@ -10767,7 +10767,7 @@ function pathNextAction(){
     return null;
   }
   if(phase === 'hasGC'){
-    // Stage-based next-step card handles this — but if they haven't started N-400 yet, surface it
+    // Stage-based next-step card handles this. But if they haven't started N-400 yet, surface it
     if(user.currentStageId !== 'file-n400' && user.currentStageId !== 'interview' && user.currentStageId !== 'oath'){
       return {
         title: lang==='es' ? 'Prepárate para el N-400' : 'Prep for your N-400',
@@ -10806,7 +10806,7 @@ function renderHomeSituationCard(){
   var visaId = visaLookup[user.phase];
   var next = pathNextAction();
 
-  // Where exactly on the path — with a one-tap way to move forward.
+  // Where exactly on the path. With a one-tap way to move forward.
   var prog = pathProgressSummary();
   var stageLine = prog
     ? '<div class="situationStageRow">'
@@ -10830,7 +10830,7 @@ function renderHomeSituationCard(){
       + '</div>'
     : '';
 
-  // Live doc-readiness progress strip — reactive to toggleDocument
+  // Live doc-readiness progress strip. Reactive to toggleDocument
   var docs = docsReady();
   var docPct = docs.total > 0 ? Math.round((docs.ready / docs.total) * 100) : 0;
   var docsTone = docPct >= 80 ? 'good' : docPct >= 40 ? 'mid' : 'low';
@@ -11084,9 +11084,9 @@ function syncLangButtons(){
 function maybeShowBetaToast(){
   var info = langInfo();
   if(!info.fullyTranslated){
-    toast(info.code === 'zh' ? '部分翻译 — 大部分内容仍是英文' :
-          info.code === 'vi' ? 'Đang dịch — phần lớn nội dung vẫn bằng tiếng Anh' :
-          'Translations in progress — most content still in English');
+    toast(info.code === 'zh' ? '部分翻译，大部分内容仍是英文' :
+          info.code === 'vi' ? 'Đang dịch. Phần lớn nội dung vẫn bằng tiếng Anh' :
+          'Translations in progress. Most content still in English');
   }
 }
 
@@ -11271,7 +11271,7 @@ function renderPathSteps(container){
   container.innerHTML = html + '<div style="height:10px"></div>';
 }
 
-// Render the doc list inline into a custom container (no header — path has its own).
+// Render the doc list inline into a custom container (no header. Path has its own).
 function renderPathDocs(container){
   var apps = applicableDocuments({all: docsViewState.showAll});
   var allCount = applicableDocuments({all: true}).length;
@@ -11329,24 +11329,24 @@ function renderCamiTop(){
   // Reflect coming-soon state in the role text
   if(!CAMI_AVAILABLE){
     var role = document.querySelector('#cami .camiTopRole');
-    if(role) role.textContent = lang==='es' ? 'Próximamente — entrenándome' : 'Coming soon — training up';
+    if(role) role.textContent = lang==='es' ? 'Próximamente. Entrenándome' : 'Coming soon. Training up';
   }
 }
 
 // ===== ONBOARDING WIZARD =====
 var ONB_STEPS = ['lang','about','name','country','phase','goal','familyTies','education','field','jobOffer','achievements','situations','petition','stage','gcDate','married','marriageDate','monthsOutside','criminal','time','summary'];
 
-// Immigration goal — where the user wants to end up. Drives next-action emphasis on home.
+// Immigration goal. Where the user wants to end up. Drives next-action emphasis on home.
 var IMMIGRATION_GOALS = {
   citizenship: {
     iconName:'flag', iconColor:'#ffc83d',
     label:{en:'Become a U.S. citizen',    es:'Volverme ciudadano/a de EE.UU.'},
-    sub:  {en:'Full naturalization — voting, passport, everything', es:'Naturalización completa — voto, pasaporte, todo'}
+    sub:  {en:'Full naturalization. Voting, passport, everything', es:'Naturalización completa. Voto, pasaporte, todo'}
   },
   greenCard: {
     iconName:'id', iconColor:'#00b4a8',
     label:{en:'Get a green card',          es:'Obtener la residencia'},
-    sub:  {en:'Permanent residence — work, live, travel freely', es:'Residencia permanente — vivir y trabajar libremente'}
+    sub:  {en:'Permanent residence. Work, live, travel freely', es:'Residencia permanente. Vivir y trabajar libremente'}
   },
   career: {
     iconName:'briefcase', iconColor:'#5e8eff',
@@ -11438,31 +11438,31 @@ var WORK_FIELDS = {
 };
 var JOB_OFFER_OPTIONS = {
   yes:      {iconName:'briefcase', iconColor:'#00b4a8', label:{en:'Yes, from a U.S. employer',          es:'Sí, de un empleador en EE.UU.'},        sub:{en:'Or I already work for one',                       es:'O ya trabajo para uno'}},
-  looking:  {iconName:'target',    iconColor:'#ff9b21', label:{en:'Not yet — still looking',            es:'Aún no — sigo buscando'},               sub:{en:"We'll show paths that don't need one yet",       es:'Te mostraremos vías que no la requieren aún'}},
+  looking:  {iconName:'target',    iconColor:'#ff9b21', label:{en:'Not yet. Still looking',            es:'Aún no. Sigo buscando'},               sub:{en:"We'll show paths that don't need one yet",       es:'Te mostraremos vías que no la requieren aún'}},
   transfer: {iconName:'plane',     iconColor:'#8c4dd1', label:{en:'My employer could transfer me',      es:'Mi empleador podría transferirme'},     sub:{en:'A company with offices abroad and in the U.S.',    es:'Una empresa con oficinas afuera y en EE.UU.'}},
   founder:  {iconName:'bolt',      iconColor:'#ff4d3a', label:{en:"I'm starting a company",             es:'Estoy creando una empresa'},            sub:{en:'Founder or co-founder of a startup or small business', es:'Fundador/a de una startup o pequeño negocio'}},
   investor: {iconName:'trophy',    iconColor:'#ffc83d', label:{en:'I can invest substantial capital',   es:'Puedo invertir capital sustancial'},    sub:{en:'Roughly $800,000+ for a business or project',     es:'Aprox. $800,000+ en un negocio o proyecto'}},
   self:     {iconName:'star',      iconColor:'#1cb0f6', label:{en:'I work for myself',                  es:'Trabajo por mi cuenta'},                sub:{en:'Freelancer, artist, athlete, researcher',         es:'Freelance, artista, atleta, investigador/a'}}
 };
-// Family in the U.S. is the single most common route — ask everyone who is not
+// Family in the U.S. is the single most common route. Ask everyone who is not
 // already a resident or mid-petition.
 var FAMILY_TIES = {
-  'spouse-usc':   {iconName:'ring',   iconColor:'#ff4d3a', label:{en:'Married to a U.S. citizen',                   es:'Casado/a con ciudadano/a de EE.UU.'},          sub:{en:'Immediate relative — no visa waiting line',          es:'Familiar inmediato — sin fila de visas'}},
+  'spouse-usc':   {iconName:'ring',   iconColor:'#ff4d3a', label:{en:'Married to a U.S. citizen',                   es:'Casado/a con ciudadano/a de EE.UU.'},          sub:{en:'Immediate relative. No visa waiting line',          es:'Familiar inmediato. Sin fila de visas'}},
   'fiance-usc':   {iconName:'ring',   iconColor:'#ec4f93', label:{en:'Engaged to a U.S. citizen',                   es:'Comprometido/a con ciudadano/a de EE.UU.'},    sub:{en:'K-1 fiancé(e) visa, or marry first (CR-1)',          es:'Visa K-1 de prometido/a, o casarse primero (CR-1)'}},
-  'relative-usc': {iconName:'people', iconColor:'#5e8eff', label:{en:'My parent, adult child or sibling is a citizen', es:'Mi padre/madre, hijo/a adulto/a o hermano/a es ciudadano/a'}, sub:{en:'Preference lines F1 / F3 / F4 — or IR if you are under 21', es:'Categorías F1 / F3 / F4 — o IR si tienes menos de 21'}},
+  'relative-usc': {iconName:'people', iconColor:'#5e8eff', label:{en:'My parent, adult child or sibling is a citizen', es:'Mi padre/madre, hijo/a adulto/a o hermano/a es ciudadano/a'}, sub:{en:'Preference lines F1 / F3 / F4. Or IR if you are under 21', es:'Categorías F1 / F3 / F4. O IR si tienes menos de 21'}},
   'relative-lpr': {iconName:'home',   iconColor:'#00b4a8', label:{en:'My spouse or parent has a green card',        es:'Mi cónyuge o padre/madre tiene residencia'},    sub:{en:'F2A / F2B preference lines',                          es:'Categorías F2A / F2B'}},
-  'none':         {iconName:'smile',  iconColor:'#84807a', label:{en:'No close family with U.S. status',            es:'Sin familia cercana con estatus en EE.UU.'},   sub:{en:"That's most people — other paths follow",            es:'Es lo más común — siguen otras vías'}}
+  'none':         {iconName:'smile',  iconColor:'#84807a', label:{en:'No close family with U.S. status',            es:'Sin familia cercana con estatus en EE.UU.'},   sub:{en:"That's most people. Other paths follow",            es:'Es lo más común. Siguen otras vías'}}
 };
 // Circumstances that unlock their own routes. Multi-select, privacy-chipped.
 var SITUATIONS = [
   {id:'military',  iconName:'flag',   iconColor:'#ffc83d', label:{en:'I, or my spouse/parent/child, serve(d) in the U.S. military', es:'Yo, o mi cónyuge/padre/hijo, sirvo o serví en el ejército de EE.UU.'}, sub:{en:'Faster naturalization; parole in place for family',  es:'Naturalización más rápida; permiso de permanencia para familia'}},
   {id:'tps',       iconName:'shield', iconColor:'#00b4a8', label:{en:'I currently have TPS',                     es:'Actualmente tengo TPS'},                               sub:{en:'Temporary Protected Status',                           es:'Estatus de Protección Temporal'}},
   {id:'daca',      iconName:'id',     iconColor:'#1cb0f6', label:{en:'I currently have DACA',                    es:'Actualmente tengo DACA'},                              sub:{en:'Deferred Action for Childhood Arrivals',               es:'Acción Diferida para Llegados en la Infancia'}},
-  {id:'victim',    iconName:'shield', iconColor:'#ec4f93', label:{en:'I survived a serious crime, trafficking or abuse in the U.S.', es:'Sobreviví un delito grave, trata o abuso en EE.UU.'}, sub:{en:'U visa, T visa, VAWA — confidential, no fee',    es:'Visa U, visa T, VAWA — confidencial, sin costo'}},
+  {id:'victim',    iconName:'shield', iconColor:'#ec4f93', label:{en:'I survived a serious crime, trafficking or abuse in the U.S.', es:'Sobreviví un delito grave, trata o abuso en EE.UU.'}, sub:{en:'U visa, T visa, VAWA. Confidential, no fee',    es:'Visa U, visa T, VAWA. Confidencial, sin costo'}},
   {id:'minor',     iconName:'people', iconColor:'#ff9b21', label:{en:"I'm under 21 and can't live with my parents", es:'Tengo menos de 21 y no puedo vivir con mis padres'}, sub:{en:'Special Immigrant Juvenile Status',                es:'Estatus Especial de Inmigrante Juvenil'}},
   {id:'religious', iconName:'home',   iconColor:'#8c4dd1', label:{en:'I work for a religious organization',      es:'Trabajo para una organización religiosa'},             sub:{en:'R-1 visa, EB-4 green card',                            es:'Visa R-1, residencia EB-4'}}
 ];
-function familyTiesLabel(v, l){ return (FAMILY_TIES[v] && FAMILY_TIES[v].label[l]) || '—'; }
+function familyTiesLabel(v, l){ return (FAMILY_TIES[v] && FAMILY_TIES[v].label[l]) || '–'; }
 // Short names for the Home row ("You may qualify: TN · K-1 · …").
 var PATH_SHORT = {'family-spouse':{en:'Spouse of citizen',es:'Cónyuge de ciudadano'}, 'family-pref':{en:'Family preference',es:'Preferencia familiar'}, k1:{en:'K-1',es:'K-1'},
   e2:{en:'E-2',es:'E-2'}, e3h1b1:{en:'E-3/H-1B1',es:'E-3/H-1B1'}, eb5:{en:'EB-5',es:'EB-5'}, iep:{en:'Entrepreneur parole',es:'Permiso emprendedor'}, r1:{en:'R-1',es:'R-1'},
@@ -11478,9 +11478,9 @@ var O1_CRITERIA = [
   {id:'membership',    iconName:'people',    iconColor:'#8c4dd1', label:{en:'Member of a selective association',     es:'Miembro de una asociación selectiva'},                sub:{en:'Admission judged by experts on achievement', es:'Admisión evaluada por expertos según logros'}},
   {id:'contributions', iconName:'bolt',      iconColor:'#ff4d3a', label:{en:'Original contributions of major significance', es:'Contribuciones originales de gran importancia'}, sub:{en:'Patents, methods, work others build on',  es:'Patentes, métodos, trabajo que otros usan'}}
 ];
-function educationLabel(v, l){ return (EDUCATION_LEVELS[v] && EDUCATION_LEVELS[v].label[l]) || '—'; }
-function fieldLabel(v, l){ return (WORK_FIELDS[v] && WORK_FIELDS[v].label[l]) || '—'; }
-function jobOfferLabel(v, l){ return (JOB_OFFER_OPTIONS[v] && JOB_OFFER_OPTIONS[v].label[l]) || '—'; }
+function educationLabel(v, l){ return (EDUCATION_LEVELS[v] && EDUCATION_LEVELS[v].label[l]) || '–'; }
+function fieldLabel(v, l){ return (WORK_FIELDS[v] && WORK_FIELDS[v].label[l]) || '–'; }
+function jobOfferLabel(v, l){ return (JOB_OFFER_OPTIONS[v] && JOB_OFFER_OPTIONS[v].label[l]) || '–'; }
 function hasDegree(edu){ return edu === 'bachelors' || edu === 'masters' || edu === 'doctorate'; }
 function hasAdvancedDegree(edu){ return edu === 'masters' || edu === 'doctorate'; }
 
@@ -11488,7 +11488,7 @@ function hasAdvancedDegree(edu){ return edu === 'masters' || edu === 'doctorate'
 // profile-shaped object (user, or the onboarding state mapped to user keys) so the
 // onboarding summary, the Home row and the Paths screen all agree.
 // Returns [{id, strength:'strong'|'possible', why:{en,es}}], strongest first, max 3.
-// This is an educational pointer from self-reported answers — never a legal verdict.
+// This is an educational pointer from self-reported answers. Never a legal verdict.
 function suggestVisaPaths(p){
   if(!p || p.phase === 'hasGC') return [];
   var out = [];
@@ -11504,97 +11504,97 @@ function suggestVisaPaths(p){
     out.push({id:id, strength:strength, why:{en:en, es:es}});
   }
 
-  // 1. Circumstances with their own statute — decisive when they apply.
+  // 1. Circumstances with their own statute. Decisive when they apply.
   if(has('military')) add('military', 'strong',
-    'Military service (yours or close family) — naturalization without the usual residence wait, N-400 fee waived; parole in place for family who entered without inspection',
-    'Servicio militar (tuyo o de familia cercana) — naturalización sin la espera habitual, sin tarifa del N-400; permiso de permanencia para familia que entró sin inspección');
+    'Military service (yours or close family). Naturalization without the usual residence wait, N-400 fee waived; parole in place for family who entered without inspection',
+    'Servicio militar (tuyo o de familia cercana). Naturalización sin la espera habitual, sin tarifa del N-400; permiso de permanencia para familia que entró sin inspección');
   if(has('victim')) add('uvisa', 'strong',
     'Survivors of serious crime, trafficking or abuse by a citizen/resident family member have confidential, no-fee paths (U visa, T visa, VAWA) with a green card after',
     'Sobrevivientes de delitos graves, trata o abuso por un familiar ciudadano/residente tienen vías confidenciales y sin costo (visa U, visa T, VAWA) con residencia después');
   if(has('minor')) add('sijs', 'strong',
-    'Under 21 and unable to reunify with a parent — Special Immigrant Juvenile Status leads to a green card; the I-360 must be filed before you turn 21',
-    'Menor de 21 sin poder reunificarte con un padre — el Estatus Especial de Inmigrante Juvenil lleva a la residencia; el I-360 debe presentarse antes de los 21');
+    'Under 21 and unable to reunify with a parent. Special Immigrant Juvenile Status leads to a green card; the I-360 must be filed before you turn 21',
+    'Menor de 21 sin poder reunificarte con un padre. El Estatus Especial de Inmigrante Juvenil lleva a la residencia; el I-360 debe presentarse antes de los 21');
   if(c === 'Cuba') add('cuban', 'strong',
-    'Cuban natives and citizens admitted or paroled into the U.S. can apply for a green card after one year — no sponsor, no visa line',
-    'Nacidos o ciudadanos de Cuba admitidos o con parole pueden pedir la residencia tras un año — sin patrocinador ni fila de visas');
+    'Cuban natives and citizens admitted or paroled into the U.S. can apply for a green card after one year. No sponsor, no visa line',
+    'Nacidos o ciudadanos de Cuba admitidos o con parole pueden pedir la residencia tras un año. Sin patrocinador ni fila de visas');
   if(has('tps')) add('tps', 'strong',
-    'You hold TPS — keep it current and pair it with a family or employment petition; TPS alone does not become a green card',
-    'Tienes TPS — mantenlo vigente y combínalo con una petición familiar o laboral; el TPS solo no se convierte en residencia');
+    'You hold TPS. Keep it current and pair it with a family or employment petition; TPS alone does not become a green card',
+    'Tienes TPS. Mantenlo vigente y combínalo con una petición familiar o laboral; el TPS solo no se convierte en residencia');
   if(has('daca')) add('daca', 'strong',
-    'You have DACA — renew on time and build a permanent path alongside it (family petition, employment, or U/VAWA if they apply)',
-    'Tienes DACA — renueva a tiempo y construye una vía permanente en paralelo (petición familiar, empleo, o U/VAWA si aplican)');
+    'You have DACA. Renew on time and build a permanent path alongside it (family petition, employment, or U/VAWA if they apply)',
+    'Tienes DACA. Renueva a tiempo y construye una vía permanente en paralelo (petición familiar, empleo, o U/VAWA si aplican)');
 
-  // 2. Family — the most common route of all.
+  // 2. Family. The most common route of all.
   if(fam === 'spouse-usc') add('family-spouse', 'strong',
-    'Spouse of a U.S. citizen — immediate relative, no visa waiting line; adjust status in the U.S. or CR-1/IR-1 from abroad',
-    'Cónyuge de ciudadano/a — familiar inmediato, sin fila de visas; ajuste de estatus en EE.UU. o CR-1/IR-1 desde el exterior');
+    'Spouse of a U.S. citizen. Immediate relative, no visa waiting line; adjust status in the U.S. or CR-1/IR-1 from abroad',
+    'Cónyuge de ciudadano/a. Familiar inmediato, sin fila de visas; ajuste de estatus en EE.UU. o CR-1/IR-1 desde el exterior');
   if(fam === 'fiance-usc') add('k1', 'strong',
-    'Engaged to a U.S. citizen — K-1 fiancé(e) visa to enter and marry within 90 days, or marry first and use CR-1',
-    'Comprometido/a con ciudadano/a — visa K-1 para entrar y casarte en 90 días, o casarte primero y usar CR-1');
+    'Engaged to a U.S. citizen. K-1 fiancé(e) visa to enter and marry within 90 days, or marry first and use CR-1',
+    'Comprometido/a con ciudadano/a. Visa K-1 para entrar y casarte en 90 días, o casarte primero y usar CR-1');
   if(fam === 'relative-usc') add('family-pref', 'possible',
-    'A citizen parent, adult child or sibling can petition for you — preference lines F1/F3/F4 (immediate relative if you are an unmarried child under 21)',
-    'Un padre, hijo adulto o hermano ciudadano puede pedirte — categorías F1/F3/F4 (familiar inmediato si eres hijo soltero menor de 21)');
+    'A citizen parent, adult child or sibling can petition for you. Preference lines F1/F3/F4 (immediate relative if you are an unmarried child under 21)',
+    'Un padre, hijo adulto o hermano ciudadano puede pedirte. Categorías F1/F3/F4 (familiar inmediato si eres hijo soltero menor de 21)');
   if(fam === 'relative-lpr') add('family-pref', 'possible',
-    'A green-card-holder spouse or parent can petition for you — F2A (spouse, child under 21) or F2B (unmarried 21+)',
-    'Un cónyuge o padre residente puede pedirte — F2A (cónyuge, hijo menor de 21) o F2B (soltero mayor de 21)');
+    'A green-card-holder spouse or parent can petition for you. F2A (spouse, child under 21) or F2B (unmarried 21+)',
+    'Un cónyuge o padre residente puede pedirte. F2A (cónyuge, hijo menor de 21) o F2B (soltero mayor de 21)');
 
-  // 3. Country-specific work visas — no lottery.
+  // 3. Country-specific work visas. No lottery.
   if(usmca && hasDegree(edu)){
     add('tn', job === 'yes' ? 'strong' : 'possible',
-      (c==='Canada'?'Canadian':'Mexican')+' citizen with a university degree — TN covers 60+ USMCA professions, no lottery'+(job==='yes'?'':' (needs a job offer in a listed profession)'),
-      'Ciudadano/a '+(c==='Canada'?'canadiense':'mexicano/a')+' con título universitario — la TN cubre 60+ profesiones del T-MEC, sin lotería'+(job==='yes'?'':' (requiere oferta en una profesión listada)'));
+      (c==='Canada'?'Canadian':'Mexican')+' citizen with a university degree. TN covers 60+ USMCA professions, no lottery'+(job==='yes'?'':' (needs a job offer in a listed profession)'),
+      'Ciudadano/a '+(c==='Canada'?'canadiense':'mexicano/a')+' con título universitario. La TN cubre 60+ profesiones del T-MEC, sin lotería'+(job==='yes'?'':' (requiere oferta en una profesión listada)'));
   }
   if((c === 'Australia' || c === 'Chile' || c === 'Singapore') && hasDegree(edu)){
     add('e3h1b1', job === 'yes' ? 'strong' : 'possible',
-      cName+' citizen with a degree — '+(c==='Australia'?'E-3':'H-1B1')+' is a treaty work visa for degree-level jobs with no lottery; caps are rarely reached',
-      'Ciudadano/a de '+cNameEs+' con título — la '+(c==='Australia'?'E-3':'H-1B1')+' es una visa de trabajo por tratado para empleos con título, sin lotería; los cupos rara vez se agotan');
+      cName+' citizen with a degree. '+(c==='Australia'?'E-3':'H-1B1')+' is a treaty work visa for degree-level jobs with no lottery; caps are rarely reached',
+      'Ciudadano/a de '+cNameEs+' con título. La '+(c==='Australia'?'E-3':'H-1B1')+' es una visa de trabajo por tratado para empleos con título, sin lotería; los cupos rara vez se agotan');
   }
 
   // 4. Business, investment, transfers.
   if(job === 'investor'){
     add('eb5', 'strong',
-      'Substantial capital — EB-5 gives a green card for an $800,000 investment in a rural/high-unemployment project that creates 10 jobs; rural visas have been current even for India and China',
-      'Capital sustancial — la EB-5 da residencia por invertir $800,000 en un proyecto rural o de alto desempleo que cree 10 empleos; las visas rurales han estado vigentes incluso para India y China');
+      'Substantial capital. EB-5 gives a green card for an $800,000 investment in a rural/high-unemployment project that creates 10 jobs; rural visas have been current even for India and China',
+      'Capital sustancial. La EB-5 da residencia por invertir $800,000 en un proyecto rural o de alto desempleo que cree 10 empleos; las visas rurales han estado vigentes incluso para India y China');
     if(treaty) add('e2', 'strong',
-      cName+' is an E-2 treaty country — invest in and run your own U.S. business, renewable indefinitely, spouse can work',
-      cNameEs+' es país con tratado E-2 — invierte y dirige tu propio negocio en EE.UU., renovable indefinidamente, tu cónyuge puede trabajar');
+      cName+' is an E-2 treaty country. Invest in and run your own U.S. business, renewable indefinitely, spouse can work',
+      cNameEs+' es país con tratado E-2. Invierte y dirige tu propio negocio en EE.UU., renovable indefinidamente, tu cónyuge puede trabajar');
   }
   if(job === 'founder'){
     if(treaty) add('e2', 'possible',
-      'Founder from an E-2 treaty country ('+cName+') — a substantial, at-risk investment in your own operating business can qualify; no fixed minimum',
-      'Fundador/a de un país con tratado E-2 ('+cNameEs+') — una inversión sustancial y en riesgo en tu propio negocio operativo puede calificar; sin mínimo fijo');
+      'Founder from an E-2 treaty country ('+cName+'). A substantial, at-risk investment in your own operating business can qualify; no fixed minimum',
+      'Fundador/a de un país con tratado E-2 ('+cNameEs+'). Una inversión sustancial y en riesgo en tu propio negocio operativo puede calificar; sin mínimo fijo');
     add('iep', 'possible',
-      'Founder with U.S. investors or grants — International Entrepreneur Parole allows up to 5 years to grow the startup (confirm the program is open)',
-      'Fundador/a con inversionistas o subvenciones de EE.UU. — el permiso para emprendedores internacionales da hasta 5 años para crecer la startup (confirma que el programa esté abierto)');
+      'Founder with U.S. investors or grants. International Entrepreneur Parole allows up to 5 years to grow the startup (confirm the program is open)',
+      'Fundador/a con inversionistas o subvenciones de EE.UU. El permiso para emprendedores internacionales da hasta 5 años para crecer la startup (confirma que el programa esté abierto)');
   }
   if(job === 'transfer') add('l1', 'strong',
-    'Employer with offices abroad and in the U.S. — L-1 transfer for managers (L-1A, fast lane to an EB-1C green card) or specialized knowledge (L-1B); no lottery',
-    'Empleador con oficinas afuera y en EE.UU. — transferencia L-1 para gerentes (L-1A, vía rápida a residencia EB-1C) o conocimiento especializado (L-1B); sin lotería');
+    'Employer with offices abroad and in the U.S. L-1 transfer for managers (L-1A, fast lane to an EB-1C green card) or specialized knowledge (L-1B); no lottery',
+    'Empleador con oficinas afuera y en EE.UU. Transferencia L-1 para gerentes (L-1A, vía rápida a residencia EB-1C) o conocimiento especializado (L-1B); sin lotería');
   if(has('religious')) add('r1', 'possible',
-    'Work for a religious organization — R-1 for ministers and religious occupations, up to 5 years, with an EB-4 green card path',
-    'Trabajo en organización religiosa — R-1 para ministros y ocupaciones religiosas, hasta 5 años, con vía a residencia EB-4');
+    'Work for a religious organization. R-1 for ministers and religious occupations, up to 5 years, with an EB-4 green card path',
+    'Trabajo en organización religiosa. R-1 para ministros y ocupaciones religiosas, hasta 5 años, con vía a residencia EB-4');
 
   // 5. Talent and degrees.
   if(ach >= 2){
     add('o1', ach >= 3 ? 'strong' : 'possible',
-      'You checked '+ach+' of the 8 O-1 evidence categories'+(ach>=3?' — 3 is the threshold':' — one more reaches the 3 needed')+'. No lottery, no cap'+(job==='self'||job==='founder'?'; an agent or your own company can petition':''),
-      'Marcaste '+ach+' de las 8 categorías de evidencia O-1'+(ach>=3?' — 3 es el umbral':' — una más alcanza las 3 necesarias')+'. Sin lotería, sin tope'+(job==='self'||job==='founder'?'; un agente o tu propia empresa puede peticionar':''));
+      'You checked '+ach+' of the 8 O-1 evidence categories'+(ach>=3?'. 3 is the threshold':'. One more reaches the 3 needed')+'. No lottery, no cap'+(job==='self'||job==='founder'?'; an agent or your own company can petition':''),
+      'Marcaste '+ach+' de las 8 categorías de evidencia O-1'+(ach>=3?'. 3 es el umbral':'. Una más alcanza las 3 necesarias')+'. Sin lotería, sin tope'+(job==='self'||job==='founder'?'; un agente o tu propia empresa puede peticionar':''));
   }
   if(hasAdvancedDegree(edu) || (edu === 'bachelors' && ach >= 2)){
     var niwStrong = (edu === 'doctorate') || (edu === 'masters' && (fld === 'stem' || fld === 'health' || fld === 'academia'));
     add('eb2', niwStrong ? 'strong' : 'possible',
-      'Advanced degree → EB-2 National Interest Waiver: self-petition for a green card, no employer or PERM needed'+(job==='self'||job==='founder'?' — fits working for yourself':''),
-      'Posgrado → EB-2 con exención por interés nacional (NIW): auto-petición de residencia, sin empleador ni PERM'+(job==='self'||job==='founder'?' — encaja con trabajar por tu cuenta':''));
+      'Advanced degree → EB-2 National Interest Waiver: self-petition for a green card, no employer or PERM needed'+(job==='self'||job==='founder'?'. Fits working for yourself':''),
+      'Posgrado → EB-2 con exención por interés nacional (NIW): auto-petición de residencia, sin empleador ni PERM'+(job==='self'||job==='founder'?'. Encaja con trabajar por tu cuenta':''));
   }
   if(ach >= 4) add('eb1', 'possible',
-    'With '+ach+' evidence categories, EB-1A (extraordinary ability green card) may be in reach — same criteria as O-1, higher bar, self-petition',
-    'Con '+ach+' categorías de evidencia, la EB-1A (residencia por habilidad extraordinaria) podría estar a tu alcance — mismos criterios que O-1, listón más alto');
+    'With '+ach+' evidence categories, EB-1A (extraordinary ability green card) may be in reach. Same criteria as O-1, higher bar, self-petition',
+    'Con '+ach+' categorías de evidencia, la EB-1A (residencia por habilidad extraordinaria) podría estar a tu alcance. Mismos criterios que O-1, listón más alto');
   if(hasDegree(edu) && job === 'yes' && p.phase !== 'workvisa') add('h1b', 'possible',
     'Degree + U.S. job offer = the classic H-1B route (lottery each March; cap-exempt employers skip it)',
     'Título + oferta en EE.UU. = la ruta clásica H-1B (lotería cada marzo; empleadores exentos la evitan)');
   if((p.phase === 'student' || p.phase === 'opt') && fld === 'stem') add('opt', 'possible',
-    'STEM degree → OPT can stretch to 36 months with the STEM extension — more lottery attempts',
-    'Título STEM → la OPT puede extenderse a 36 meses con la extensión STEM — más intentos de lotería');
+    'STEM degree → OPT can stretch to 36 months with the STEM extension. More lottery attempts',
+    'Título STEM → la OPT puede extenderse a 36 meses con la extensión STEM. Más intentos de lotería');
 
   // Stable sort: strong first, insertion order otherwise. Show at most 4.
   var strong = out.filter(function(o){ return o.strength === 'strong'; });
@@ -11711,7 +11711,7 @@ function onbKey(){ return ONB_STEPS[onbState.step]; }
 
 function onbShouldSkip(key){
   if(key === 'petition') return onbState.phase !== 'preGC';
-  // Profile questions that unlock TN / O-1 / NIW suggestions — pointless once
+  // Profile questions that unlock TN / O-1 / NIW suggestions. Pointless once
   // someone already holds a green card, and job-offer / evidence questions don't
   // apply to a pending petition or an asylum case.
   if(key === 'education' || key === 'field') return onbState.phase === 'hasGC';
@@ -11808,7 +11808,7 @@ function multiCardsHtml(items, selected, onclickFor, noneLabel, noneSub){
 function achievementCardsHtml(selected, onclickFor){
   return multiCardsHtml(O1_CRITERIA, selected, onclickFor,
     (lang==='es'?'Ninguna de estas (todavía)':'None of these (yet)'),
-    (lang==='es'?'Totalmente normal — la mayoría empieza aquí':'Totally normal — most people start here'));
+    (lang==='es'?'Totalmente normal. La mayoría empieza aquí':'Totally normal. Most people start here'));
 }
 function situationCardsHtml(selected, onclickFor){
   return multiCardsHtml(SITUATIONS, selected, onclickFor,
@@ -11860,7 +11860,7 @@ function renderOnboarding(){
   var footerHtml = '';
 
   if(k === 'lang'){
-    // Companion framing, not a citizenship promise — no app can guarantee an
+    // Companion framing, not a citizenship promise. No app can guarantee an
     // outcome, and over-claiming erodes the trust everything else depends on.
     // Bilingual because this screen renders before a language is chosen.
     html = '<div class="onbCamiTop">'+camiSVG('wave')+'</div>'
@@ -11876,12 +11876,12 @@ function renderOnboarding(){
       + privacyChipHTML('firstrun');
   }
   else if(k === 'about'){
-    // "What is Camino" — establishes what the app does and, per beta feedback,
+    // "What is Camino". Establishes what the app does and, per beta feedback,
     // answers the trust question BEFORE any personal questions are asked.
     // Renders after the language pick so it reads in the user's language.
     html = '<div class="onbCamiTop">'+camiSVG('happy')+'</div>'
       + '<div class="onbStepTitle">'+(lang==='es'?'¿Qué es Camino?':'What is Camino?')+'</div>'
-      + '<div class="onbStepSub">'+(lang==='es'?'Un acompañante para todo tu proceso — no un abogado, no el gobierno.':'A companion for your whole journey — not a lawyer, not the government.')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'Un acompañante para todo tu proceso. No un abogado, no el gobierno.':'A companion for your whole journey. Not a lawyer, not the government.')+'</div>'
       + '<div class="onbAboutRows">'
       + onbAboutRowHtml(ico('book','#1cb0f6'),
           lang==='es'?'Aprende el examen de cívica':'Learn the civics test',
@@ -11891,7 +11891,7 @@ function renderOnboarding(){
           lang==='es'?'Cada etapa mapeada, con los formularios oficiales de USCIS':'Every stage mapped, with the official USCIS forms')
       + onbAboutRowHtml(ico('question','#ff9b21'),
           lang==='es'?'Practica la entrevista':'Practice the interview',
-          lang==='es'?'Un oficial realista pregunta — respondes por voz o texto':'A realistic officer asks — you answer by voice or text')
+          lang==='es'?'Un oficial realista pregunta. Respondes por voz o texto':'A realistic officer asks. You answer by voice or text')
       + '</div>'
       + privacyChipHTML('about');
     footerHtml = '<button class="cta" onclick="onbContinue()">'+(lang==='es'?'Empezar':'Get started')+' →</button>';
@@ -11929,7 +11929,7 @@ function renderOnboarding(){
   }
   else if(k === 'goal'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Cuál es tu meta?':"What's your goal?")+'</div>'
-      + '<div class="onbStepSub">'+(lang==='es'?'A dónde quieres llegar — no tiene que ser para siempre.':"Where you're headed — doesn't have to be forever.")+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'A dónde quieres llegar. No tiene que ser para siempre.':"Where you're headed. Doesn't have to be forever.")+'</div>'
       + '<div class="onbCards">';
     for(var gid in IMMIGRATION_GOALS){
       var g = IMMIGRATION_GOALS[gid];
@@ -11959,7 +11959,7 @@ function renderOnboarding(){
   }
   else if(k === 'education'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Cuál es tu nivel de estudios?':"What's your highest education?")+'</div>'
-      + '<div class="onbStepSub">'+(lang==='es'?'Varias visas dependen del título — y un posgrado abre vías de auto-petición.':'Several visas hinge on a degree — and a graduate degree opens self-petition paths.')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'Varias visas dependen del título. Y un posgrado abre vías de auto-petición.':'Several visas hinge on a degree. And a graduate degree opens self-petition paths.')+'</div>'
       + '<div class="onbCards">';
     for(var eid in EDUCATION_LEVELS){
       var e = EDUCATION_LEVELS[eid];
@@ -11990,7 +11990,7 @@ function renderOnboarding(){
   else if(k === 'achievements'){
     var selA = onbState.achievements || [];
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Alguno de estos te describe?':'Do any of these describe you?')+'</div>'
-      + '<div class="onbStepSub">'+(lang==='es'?'Elige todos los que apliquen. Tres de estos son la base de la visa O-1 — sin lotería.':'Pick all that apply. Three of these are the basis of the O-1 visa — no lottery.')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'Elige todos los que apliquen. Tres de estos son la base de la visa O-1. Sin lotería.':'Pick all that apply. Three of these are the basis of the O-1 visa. No lottery.')+'</div>'
       + '<div class="onbCards">'
       + achievementCardsHtml(selA, function(id){ return "onbToggleAchievement('"+id+"')"; })
       + '</div>'
@@ -12023,7 +12023,7 @@ function renderOnboarding(){
   }
   else if(k === 'gcDate'){
     html = '<div class="onbStepTitle">'+(lang==='es'?'¿Cuándo te hiciste residente?':'When did you become a permanent resident?')+'</div>'
-      + '<div class="onbStepSub">'+(lang==='es'?'Una fecha aproximada está bien — la usamos para tus 5 años.':'A rough date is fine — we use it for your 5-year math.')+'</div>'
+      + '<div class="onbStepSub">'+(lang==='es'?'Una fecha aproximada está bien. La usamos para tus 5 años.':'A rough date is fine. We use it for your 5-year math.')+'</div>'
       + '<div class="onbBig"><input class="onbDateBig" type="date" id="onbDateInput" value="'+onbState.gcDate+'" /></div>'
       + privacyChipHTML();
     footerHtml = '<button class="cta" onclick="onbContinue()">'+(lang==='es'?'Continuar':'Continue')+' →</button>';
@@ -12048,14 +12048,14 @@ function renderOnboarding(){
       + '<div class="onbStepSub">'+(lang==='es'?'Necesitas estar físicamente presente al menos la mitad del tiempo (30 meses).':'You need to be physically present at least half the time (30 months).')+'</div>'
       + '<div class="onbCards">'
       + onbCardHtml(ico('check','#00b4a8'), (lang==='es'?'Menos de 6 meses':'Less than 6 months'),     (lang==='es'?'Sin problemas':'No issue'),                  onbState.monthsOutside==='lt6',    "onbPick('monthsOutside','lt6')")
-      + onbCardHtml(ico('clock','#ff9b21'), (lang==='es'?'Entre 6 y 18 meses':'6 to 18 months'),       (lang==='es'?'Cerca del límite — verifica tu pasaporte':'Close to the limit — check your passport'), onbState.monthsOutside==='6-18',   "onbPick('monthsOutside','6-18')")
+      + onbCardHtml(ico('clock','#ff9b21'), (lang==='es'?'Entre 6 y 18 meses':'6 to 18 months'),       (lang==='es'?'Cerca del límite. Verifica tu pasaporte':'Close to the limit. Check your passport'), onbState.monthsOutside==='6-18',   "onbPick('monthsOutside','6-18')")
       + onbCardHtml(ico('warning','#ff4d3a'), (lang==='es'?'Más de 18 meses':'More than 18 months'),     (lang==='es'?'Posible problema de presencia física':'Possible physical presence issue'),               onbState.monthsOutside==='gt18',   "onbPick('monthsOutside','gt18')")
       + onbCardHtml(ico('question','#84807a'), (lang==='es'?'No estoy seguro':'Not sure'),                (lang==='es'?'Lo revisaremos en la evaluación':"We'll check during eligibility"),                       onbState.monthsOutside==='unsure', "onbPick('monthsOutside','unsure')")
       + '</div>'
       + privacyChipHTML();
   }
   else if(k === 'criminal'){
-    html = '<div class="onbStepTitle">'+(lang==='es'?'¿Algún arresto, cargo o condena alguna vez?':'Any arrest, charge, or conviction — ever?')+'</div>'
+    html = '<div class="onbStepTitle">'+(lang==='es'?'¿Algún arresto, cargo o condena alguna vez?':'Any arrest, charge, or conviction. Ever?')+'</div>'
       + '<div class="onbStepSub">'+(lang==='es'?'Incluso si los cargos fueron retirados. Es importante saberlo desde el inicio.':"Even if charges were dropped. It's important to know upfront.")+'</div>'
       + '<div class="onbCards">'
       + onbCardHtml(ico('check','#00b4a8'), (lang==='es'?'No, nunca':'No, never'),               '',                                                                              onbState.criminalHistory===false, "onbPick('criminalHistory',false)")
@@ -12126,7 +12126,7 @@ function renderOnboarding(){
       if(oath) oathRow = '<div class="onbSummaryRow"><div class="onbSummaryK">'+(lang==='es'?'Juramento':'Oath est.')+'</div><div class="onbSummaryV">'+fmtMonthRange(oath.endLow, oath.endHigh, lang)+'</div></div>';
     }
 
-    // Paths this profile may qualify for (TN / O-1 / NIW / …) — the payoff for
+    // Paths this profile may qualify for (TN / O-1 / NIW / …). The payoff for
     // answering the education, field, job-offer and evidence questions.
     var suggHtml = '';
     var sugg = suggestVisaPaths({
@@ -12148,7 +12148,7 @@ function renderOnboarding(){
       suggHtml = '<div class="onbSuggCard">'
         + '<div class="onbSuggKick">'+(lang==='es'?'Vías que podrías calificar':'Paths you may qualify for')+'</div>'
         + suggRows
-        + '<div class="onbSuggNote">'+(lang==='es'?'Estimación educativa a partir de tus respuestas — no es asesoría legal. Las guías completas están en Vías.':'An educational estimate from your answers — not legal advice. Full guides live under Paths.')+'</div>'
+        + '<div class="onbSuggNote">'+(lang==='es'?'Estimación educativa a partir de tus respuestas. No es asesoría legal. Las guías completas están en Vías.':'An educational estimate from your answers. Not legal advice. Full guides live under Paths.')+'</div>'
         + '</div>';
     }
 
@@ -12204,7 +12204,7 @@ function finishOnboarding(){
   user.familyTies = onbState.familyTies || null;
   user.situations = (onbState.situations || []).slice();
   user.onboarded = true;
-  // Fully initialize progress — every field that any render function reads.
+  // Fully initialize progress. Every field that any render function reads.
   user.progress = {
     completedLessons: [],
     xp: 0,
@@ -12613,8 +12613,8 @@ function renderLessonFailed(){
     + '<div class="failedCami">'+camiSVG('sad')+'</div>'
     + '<div class="failedTitle">'+(lang==='es' ? 'Sin corazones' : 'Out of hearts')+'</div>'
     + '<div class="failedSub">'+(lang==='es'
-        ? 'No te preocupes — las preguntas que fallaste están en tu lista de repaso. Inténtalo cuando estés listo.'
-        : "Don't worry — the questions you missed are in your review queue. Try again when you're ready.")+'</div>'
+        ? 'No te preocupes. Las preguntas que fallaste están en tu lista de repaso. Inténtalo cuando estés listo.'
+        : "Don't worry. The questions you missed are in your review queue. Try again when you're ready.")+'</div>'
     + '<div class="failedStats">'
     +   '<div class="failedStat"><div class="failedStatVal">'+correct+'</div><div class="failedStatLbl">'+(lang==='es'?'correctas':'correct')+'</div></div>'
     +   '<div class="failedStat"><div class="failedStatVal">'+attempted+' / '+total+'</div><div class="failedStatLbl">'+(lang==='es'?'intentadas':'attempted')+'</div></div>'
@@ -12684,7 +12684,7 @@ function completeLesson(){
     p.lastLessonDate = today;
   }
   saveUser();
-  // Don't clear lessonState yet — celebration screen reads it
+  // Don't clear lessonState yet. Celebration screen reads it
   var l = findLesson(lid);
   if(l && l.isChest){
     renderUnitComplete(l.unit);
@@ -12743,20 +12743,20 @@ function iconSVG(name, color, size){
     stamp:'<rect x="4" y="13" width="16" height="6" rx="1" fill="'+color+'" stroke="'+ink+'" stroke-width="2"/><path d="M8 13 v-3 a4 4 0 0 1 8 0 v3" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="19" x2="21" y2="19" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/>',
     mountain:'<path d="M3 20 l6-12 4 7 3-4 5 9 z" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linejoin="round"/><polygon points="9,8 11,12 7,12" fill="#fff"/>',
     person:'<circle cx="12" cy="8" r="4" fill="'+color+'" stroke="'+ink+'" stroke-width="2"/><path d="M4 21 c0-5 4-8 8-8 s8 3 8 8" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    // Download tray — replaces the inbox emoji on "get the form" labels
+    // Download tray. Replaces the inbox emoji on "get the form" labels
     download:'<path d="M4 15 v3 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2 -2 v-3" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><path d="M12 3 v10" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><path d="M8 9.5 l4 4 4-4" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="15" width="16" height="5" rx="1.5" fill="'+color+'" opacity=".35"/>',
-    // Clipboard — replaces the clipboard emoji on section/document labels
+    // Clipboard. Replaces the clipboard emoji on section/document labels
     clipboard:'<rect x="5" y="4" width="14" height="17" rx="2" fill="'+color+'" stroke="'+ink+'" stroke-width="2"/><rect x="9" y="2.5" width="6" height="3.5" rx="1" fill="#fff" stroke="'+ink+'" stroke-width="1.6"/><line x1="8.5" y1="11" x2="15.5" y2="11" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><line x1="8.5" y1="14.5" x2="14" y2="14.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>',
-    // Graduation cap — replaces the mortarboard emoji on the first-lesson achievement
+    // Graduation cap. Replaces the mortarboard emoji on the first-lesson achievement
     graduation:'<path d="M2.5 9.5 L12 5 l9.5 4.5 L12 14 z" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linejoin="round"/><path d="M6.5 11.8 v4.2 c0 1.5 2.5 3 5.5 3 s5.5-1.5 5.5-3 v-4.2" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><line x1="21" y1="9.8" x2="21" y2="15" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/>',
-    // Lightbulb — replaces the lightbulb emoji used throughout for tips
+    // Lightbulb. Replaces the lightbulb emoji used throughout for tips
     lightbulb:'<path d="M9 18 v1 a3 3 0 0 0 6 0 v-1 z" fill="'+ink+'"/><path d="M12 2 a6 6 0 0 0 -4 10.5 c1 1 1.5 2 1.5 3.5 h5 c0-1.5 .5-2.5 1.5-3.5 a6 6 0 0 0 -4-10.5z" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linejoin="round"/><line x1="9" y1="18" x2="15" y2="18" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/>',
-    // Snowflake — replaces the snowflake emoji used for streak freeze
+    // Snowflake. Replaces the snowflake emoji used for streak freeze
     snowflake:'<line x1="12" y1="3" x2="12" y2="21" stroke="'+color+'" stroke-width="2.4" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="'+color+'" stroke-width="2.4" stroke-linecap="round"/><line x1="5" y1="5" x2="19" y2="19" stroke="'+color+'" stroke-width="2.4" stroke-linecap="round"/><line x1="19" y1="5" x2="5" y2="19" stroke="'+color+'" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="12" r="1.5" fill="'+color+'"/>',
-    // Padlock — matches the rest of the icon library (color fill + ink outline)
+    // Padlock. Matches the rest of the icon library (color fill + ink outline)
     lock:'<rect x="5" y="11" width="14" height="10" rx="2" fill="'+color+'" stroke="'+ink+'" stroke-width="2" stroke-linejoin="round"/><path d="M8 11 V8 a4 4 0 0 1 8 0 v3" fill="none" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="'+ink+'"/>'
   };
-  // SVG flag icons (24x16 rect centered in viewBox) — replace flag emojis everywhere
+  // SVG flag icons (24x16 rect centered in viewBox). Replace flag emojis everywhere
   var flags = {
     flagUS: ''
       + '<rect x="2" y="6" width="20" height="12" rx="1.5" fill="#fff" stroke="'+ink+'" stroke-width="1.2"/>'
@@ -12803,13 +12803,13 @@ function iconSVG(name, color, size){
     flagVN: ''
       + '<rect x="2" y="6" width="20" height="12" rx="1.5" fill="#da251d" stroke="'+ink+'" stroke-width="1.2"/>'
       + '<polygon points="12,8.5 13,11 15.6,11 13.4,12.6 14.2,15 12,13.5 9.8,15 10.6,12.6 8.4,11 11,11" fill="#ff0"/>',
-    // Haiti — blue top half + red bottom half + small white center panel
+    // Haiti. Blue top half + red bottom half + small white center panel
     flagHT: ''
       + '<rect x="2" y="6"  width="20" height="6" fill="#00209f" stroke="'+ink+'" stroke-width="1.2" stroke-linejoin="round"/>'
       + '<rect x="2" y="12" width="20" height="6" fill="#d21034" stroke="'+ink+'" stroke-width="1.2" stroke-linejoin="round"/>'
       + '<rect x="2" y="6"  width="20" height="12" rx="1.5" fill="none" stroke="'+ink+'" stroke-width="1.2"/>'
       + '<rect x="10" y="10.5" width="4" height="3" fill="#fff" stroke="'+ink+'" stroke-width=".7"/>',
-    // Arabic — green background (Saudi-inspired) with stylized white crescent + script suggestion
+    // Arabic. Green background (Saudi-inspired) with stylized white crescent + script suggestion
     flagAR: ''
       + '<rect x="2" y="6" width="20" height="12" rx="1.5" fill="#0f7c3a" stroke="'+ink+'" stroke-width="1.2"/>'
       + '<path d="M7 9 q-2 3 0 6 q4 -1 3 -3 q-1 -2 -3 -3" fill="#fff"/>'
@@ -13174,7 +13174,7 @@ function renderMockResults(correct, total, passed){
     var q = findQ(a.qId);
     var correctOpt = null;
     for(var ci=0;ci<q.options.length;ci++) if(q.options[ci].correct){ correctOpt = q.options[ci]; break; }
-    var pickedTxt = a.correct ? correctOpt[lang] : (a.pickedEn ? findOpt(q, a.pickedEn, lang) : '—');
+    var pickedTxt = a.correct ? correctOpt[lang] : (a.pickedEn ? findOpt(q, a.pickedEn, lang) : '–');
     var exp = EXPLAIN[a.qId];
     var expText = (exp && exp[lang]) || (exp && exp.en) || '';
 
@@ -13377,7 +13377,7 @@ function renderDates(){
       + '<button class="cta emptyStateCta" onclick="showAddCustomDate()">'+(lang==='es'?'Agregar primera fecha':'Add your first date')+' →</button>'
       + '</div>';
   }
-  // Action bar — add custom date, expiration tracker, calendar export
+  // Action bar. Add custom date, expiration tracker, calendar export
   html += '<div class="datesActions">'
     + '<button class="datesActionBtn" onclick="showAddCustomDate()">'+iconSVG('plus','#1d1d22',14)+' '+(lang==='es'?'Agregar fecha':'Add date')+'</button>'
     + '<button class="datesActionBtn" onclick="showExpirationTracker()">'+iconSVG('clock','#1d1d22',14)+' '+(lang==='es'?'Vencimientos':'Expirations')+'</button>'
@@ -13493,8 +13493,8 @@ function showExpirationTracker(){
     + '  </div>'
     + '  <div class="expRows">'+rows+'</div>'
     + '  <div class="expNote">'+(lang==='es'
-        ? 'Solo se guardan las fechas — no almacenamos copias de tus documentos.'
-        : 'Only dates are stored — we never store copies of your documents.')+'</div>'
+        ? 'Solo se guardan las fechas. No almacenamos copias de tus documentos.'
+        : 'Only dates are stored. We never store copies of your documents.')+'</div>'
     + '  <button class="cta expDoneBtn" onclick="closeExpirationTracker()">'+(lang==='es'?'Listo':'Done')+'</button>'
     + '</div>';
   document.body.appendChild(overlay);
@@ -13553,7 +13553,7 @@ function exportDatesToICS(){
   var content = ics.join('\r\n');
 
   if(Store.isNative()){
-    // WKWebView has no download manager — the blob/download path silently no-ops.
+    // WKWebView has no download manager. The blob/download path silently no-ops.
     // Write to the app cache and hand the file to the iOS share sheet ("Add to Calendar").
     var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
     if(fs && share && fs.writeFile){
@@ -13603,7 +13603,7 @@ function isUnitUnlocked(unitId){
   // Plus gate: Unit 3 (Symbols & Geography) requires Camino Plus
   if(unitId === 3 && !isPlus()) return false;
   // Unit N unlocks when all non-chest lessons of unit N-1 are done.
-  // Free users skip the Plus-gated Unit 3 as a prerequisite — Unit 4 must not
+  // Free users skip the Plus-gated Unit 3 as a prerequisite. Unit 4 must not
   // silently dead-end for them; it unlocks off Unit 2 instead.
   var prevUnit = unitId - 1;
   if(prevUnit === 3 && !isPlus()) prevUnit = 2;
@@ -13804,7 +13804,7 @@ var ME_FIELDS = {
   situations:       {label:{en:'Special situations',   es:'Situaciones especiales'},  type:'situations'}
 };
 
-// Multi-select editors (O-1 evidence, situations) — saved with the footer button.
+// Multi-select editors (O-1 evidence, situations). Saved with the footer button.
 function editToggleAchievement(id){
   if(!editFieldState) return;
   editFieldState.value = toggleInList(editFieldState.value, id);
@@ -14033,8 +14033,8 @@ function renderMe(){
 
   html += '<div class="sec">'+(lang==='es'?'Tu camino · toca para editar':'Your path · tap to edit')+'</div>';
   html += '<div class="mini">';
-  html += '<div class="row" onclick="openEditField(\'name\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Nombre':'Name')+'</div><div class="rSub">'+(user.name||'—')+'</div></div><div class="chev">›</div></div>';
-  html += '<div class="row" onclick="openEditField(\'currentStageId\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Etapa actual':'Current stage')+'</div><div class="rSub">'+(curStage ? curStage.name[lang] : '—')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'name\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Nombre':'Name')+'</div><div class="rSub">'+(user.name||'–')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'currentStageId\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Etapa actual':'Current stage')+'</div><div class="rSub">'+(curStage ? curStage.name[lang] : '–')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'countryOfBirth\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'País de nacimiento':'Country of birth')+'</div><div class="rSub">'+countryLabel(user.countryOfBirth, lang)+'</div></div><div class="chev">›</div></div>';
   if(user.phase !== 'hasGC'){
     var achN = (user.achievements || []).length;
@@ -14046,10 +14046,10 @@ function renderMe(){
     html += '<div class="row" onclick="openEditField(\'achievements\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Evidencia O-1 / EB-1':'O-1 / EB-1 evidence')+'</div><div class="rSub">'+(achN ? achN+' '+(lang==='es'?'de 8 categorías':'of 8 categories') : (lang==='es'?'Ninguna marcada':'None checked'))+'</div></div><div class="chev">›</div></div>';
     html += '<div class="row" onclick="openEditField(\'situations\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Situaciones especiales':'Special situations')+'</div><div class="rSub">'+(sitN ? sitN+' '+(lang==='es'?'marcada(s)':'checked') : (lang==='es'?'Ninguna':'None'))+'</div></div><div class="chev">›</div></div>';
   }
-  html += '<div class="row" onclick="openEditField(\'petitionType\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Vía de patrocinio':'Sponsorship path')+'</div><div class="rSub">'+(user.petitionType ? petitionLabel(user.petitionType, lang) : '—')+'</div></div><div class="chev">›</div></div>';
-  html += '<div class="row" onclick="openEditField(\'greenCardDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Fecha de residencia':'Green card date')+'</div><div class="rSub">'+(user.greenCardDate ? fmtDate(user.greenCardDate, lang) : '—')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'petitionType\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Vía de patrocinio':'Sponsorship path')+'</div><div class="rSub">'+(user.petitionType ? petitionLabel(user.petitionType, lang) : '–')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'greenCardDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Fecha de residencia':'Green card date')+'</div><div class="rSub">'+(user.greenCardDate ? fmtDate(user.greenCardDate, lang) : '–')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'marriedToCitizen\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Casado/a con ciudadano':'Married to citizen')+'</div><div class="rSub">'+(user.marriedToCitizen ? (lang==='es'?'Sí · regla de 3 años':'Yes · 3-year rule') : (lang==='es'?'No · regla de 5 años':'No · 5-year rule'))+'</div></div><div class="chev">›</div></div>';
-  if(user.marriedToCitizen) html += '<div class="row" onclick="openEditField(\'marriageDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Casado/a desde':'Married since')+'</div><div class="rSub">'+(user.marriageDate ? fmtDate(user.marriageDate, lang) : '—')+'</div></div><div class="chev">›</div></div>';
+  if(user.marriedToCitizen) html += '<div class="row" onclick="openEditField(\'marriageDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Casado/a desde':'Married since')+'</div><div class="rSub">'+(user.marriageDate ? fmtDate(user.marriageDate, lang) : '–')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'monthsOutside\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tiempo fuera de EE.UU.':'Time outside U.S.')+'</div><div class="rSub">'+monthsOutsideLabel(user.monthsOutside, lang)+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'criminalHistory\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Antecedentes penales':'Criminal history')+'</div><div class="rSub">'+(user.criminalHistory ? (lang==='es'?'Sí · consulta legal':'Yes · legal consult') : (lang==='es'?'No':'No'))+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'dailyMinutes\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Compromiso diario':'Daily commitment')+'</div><div class="rSub">'+(user.dailyMinutes||5)+' '+(lang==='es'?'min':'min')+'</div></div><div class="chev">›</div></div>';
@@ -14057,7 +14057,7 @@ function renderMe(){
   if(user.criminalHistory) html += '<div class="row"><div class="rIco" style="background:rgba(255,159,10,.16);">'+iconSVG('warning','#ff9b21',20)+'</div><div class="rMain"><div class="rTitle" style="color:var(--orange)">'+(lang==='es'?'Marcado para revisión':'Flagged for review')+'</div><div class="rSub">'+(lang==='es'?'Consulta con un abogado de inmigración antes de presentar':'Talk to an immigration lawyer before filing')+'</div></div></div>';
   html += '</div>';
 
-  // Web Notification API doesn't exist in the iOS webview — don't offer a dead
+  // Web Notification API doesn't exist in the iOS webview. Don't offer a dead
   // "Enable" button there. (Native reminders return via local-notifications in v1.1.)
   if(notifSupported()){
     var notif = user.notifications || {enabled:false, time:'09:00'};
@@ -14077,7 +14077,7 @@ function renderMe(){
   }
 
   // N-400 organizer + PDF, findable on the profile (regenerated on demand from
-  // saved answers — the file itself is never stored)
+  // saved answers. The file itself is never stored)
   if(user.n400 && Object.keys(user.n400.answers||{}).length > 0){
     html += '<div class="sec">'+(lang==='es'?'Tu N-400':'Your N-400')+'</div>';
     html += '<div class="mini">';
@@ -14107,7 +14107,7 @@ function renderMe(){
   for(var ai=0; ai<ACHIEVEMENTS.length; ai++){
     var a = ACHIEVEMENTS[ai];
     var got = a.check(user);
-    html += '<div class="achBadge'+(got?' achUnlocked':'')+'" role="img" aria-label="'+a.name[lang]+(got?' — unlocked':' — locked')+'">'
+    html += '<div class="achBadge'+(got?' achUnlocked':'')+'" role="img" aria-label="'+a.name[lang]+(got?'. Unlocked':'. Locked')+'">'
       +    '<div class="achIcon">'+(got ? iconSVG(a.icon, a.color, 30) : '<span class="achLockSvg">'+iconSVG('shield','#84807a',24)+'</span>')+'</div>'
       +    '<div class="achName">'+a.name[lang]+'</div>'
       +  '</div>';
@@ -14127,7 +14127,7 @@ function renderMe(){
   });
   html += '</div>';
 
-  // Test-version toggle — 2008 (100q) vs 2025 (128q)
+  // Test-version toggle. 2008 (100q) vs 2025 (128q)
   var tv = currentTestVersion();
   html += '<div class="sec">'+(lang==='es'?'Versión del examen de cívica':'Civics test version')+'</div>';
   html += '<div class="testVerBox">'
@@ -14163,7 +14163,7 @@ function renderMe(){
   html += '<div class="sec">'+(lang==='es'?'Cuenta':'Account')+'</div>';
   html += '<div class="mini">';
   var sfxOn = sfxEnabled();
-  html += '<div class="row" onclick="toggleSoundEffects()"><div class="rIco" style="background:rgba(0,180,168,.14);">'+iconSVG('bell','#00b4a8',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Efectos de sonido':'Sound effects')+'</div><div class="rSub">'+(sfxOn?(lang==='es'?'Activados — toca para silenciar':'On — tap to mute'):(lang==='es'?'Silenciados — toca para activar':'Muted — tap to turn on'))+'</div></div><div class="chev">'+(sfxOn?'✓':'·')+'</div></div>';
+  html += '<div class="row" onclick="toggleSoundEffects()"><div class="rIco" style="background:rgba(0,180,168,.14);">'+iconSVG('bell','#00b4a8',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Efectos de sonido':'Sound effects')+'</div><div class="rSub">'+(sfxOn?(lang==='es'?'Activados. Toca para silenciar':'On. Tap to mute'):(lang==='es'?'Silenciados. Toca para activar':'Muted. Tap to turn on'))+'</div></div><div class="chev">'+(sfxOn?'✓':'·')+'</div></div>';
   html += '<div class="row" onclick="startTutorial()"><div class="rIco" style="background:rgba(255,200,61,.18);">'+iconSVG('star','#ffc83d',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Repasar el tutorial':'Replay the tutorial')+'</div><div class="rSub">'+(lang==='es'?'Recorrido guiado por Cami':"Cami's guided walkthrough")+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="go(\'help\')"><div class="rIco" style="background:rgba(28,176,246,.14);">'+iconSVG('question','#1cb0f6',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Ayuda y preguntas':'Help & FAQ')+'</div><div class="rSub">'+(lang==='es'?'Respuestas comunes + comentarios':'Common answers + feedback')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="showDisclaimerModal(true)"><div class="rIco" style="background:rgba(132,128,122,.16);">'+iconSVG('scales','#84807a',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Términos y descargo legal':'Terms & legal disclaimer')+'</div><div class="rSub">'+(lang==='es'?'Lo que esta app es y no es':'What this app is and isn\'t')+'</div></div><div class="chev">›</div></div>';
@@ -14287,7 +14287,7 @@ function confirmRestartOnboarding(){
   var msg = lang==='es' ? '¿Volver a hacer el onboarding? Tu perfil actual se reemplazará.' : 'Restart onboarding? Your current profile will be replaced.';
   if(!window.confirm(msg)) return;
   user.onboarded = false;
-  // Re-show tutorial on restart — fresh start gets the full intro again
+  // Re-show tutorial on restart. Fresh start gets the full intro again
   user.tutorialCompleted = false;
   saveUser();
   onbState = {
@@ -14489,8 +14489,8 @@ function renderEligibility(){
           ? 'Desde que recibiste tu residencia ('+fmtDate(user.greenCardDate,'es')+'), ¿has hecho algún viaje fuera de EE.UU. de más de 6 meses?'
           : 'Since you became a permanent resident on '+fmtDate(user.greenCardDate,'en')+', have you taken any trip outside the U.S. longer than 6 months?')+'</div>'
       + '<div class="onbCards">'
-      + eligCardHtml(ico('smile','#84807a'), (lang==='es'?'No, ningún viaje largo':'No, no long trips'), (lang==='es'?'Bien — cumples este requisito':'Good — you meet this requirement'), eligState.continuous===true, "eligPick('continuous',true)")
-      + eligCardHtml(ico('warning','#ff4d3a'), (lang==='es'?'Sí, uno o más':'Yes, one or more'), (lang==='es'?'Puede romper la continuidad — pide consejo legal':'May break continuity — get legal advice'), eligState.continuous===false, "eligPick('continuous',false)")
+      + eligCardHtml(ico('smile','#84807a'), (lang==='es'?'No, ningún viaje largo':'No, no long trips'), (lang==='es'?'Bien. Cumples este requisito':'Good. You meet this requirement'), eligState.continuous===true, "eligPick('continuous',true)")
+      + eligCardHtml(ico('warning','#ff4d3a'), (lang==='es'?'Sí, uno o más':'Yes, one or more'), (lang==='es'?'Puede romper la continuidad. Pide consejo legal':'May break continuity. Get legal advice'), eligState.continuous===false, "eligPick('continuous',false)")
       + '</div>';
   }
   else if(k === 'physical'){
@@ -14559,8 +14559,8 @@ function renderEligibility(){
       for(var i=0;i<reasons.length;i++) rHtml += '<div class="onbSummaryRow"><div class="onbSummaryK">'+(i+1)+'</div><div class="onbSummaryV">'+reasons[i]+'</div></div>';
       html = '<div class="onbStepTitle">'+(lang==='es'?'Necesitas revisar algunas cosas':'A few things to check first')+'</div>'
         + '<div class="onbStepSub">'+(lang==='es'
-            ? 'No es un "no" definitivo — algunos casos sí proceden con ayuda legal. Te recomendamos hablar con un abogado de inmigración o organización sin fines de lucro.'
-            : 'This isn\'t a definite "no" — many cases still go forward with legal help. We recommend talking to an immigration lawyer or a nonprofit.')+'</div>'
+            ? 'No es un "no" definitivo. Algunos casos sí proceden con ayuda legal. Te recomendamos hablar con un abogado de inmigración o organización sin fines de lucro.'
+            : 'This isn\'t a definite "no". Many cases still go forward with legal help. We recommend talking to an immigration lawyer or a nonprofit.')+'</div>'
         + '<div class="onbSummary">'
         +   '<div class="onbSummaryCard">'+rHtml+'</div>'
         +   '<div class="onbSummaryNext" style="background:linear-gradient(150deg,#c44d2b,#ff8a3a);box-shadow:0 6px 18px rgba(255,138,58,.25);">'
@@ -14691,7 +14691,7 @@ function toast(msg, icon){
     user.micPermission = stored.micPermission || null;
     user.soundEffects = stored.soundEffects !== false;   // default ON
     // v1 cleanup migration: the removed N-400 filler's drafts (names, criminal-history
-    // answers) and Cami's key/chat history are sensitive — stop persisting them.
+    // answers) and Cami's key/chat history are sensitive. Stop persisting them.
     user.n400Form = null;
     user.n400 = stored.n400 || null;   // N-400 organizer state (answers stay local-only)
     user.immigrationGoal = stored.immigrationGoal || null;

@@ -1,11 +1,11 @@
-# Camino — iOS build (Capacitor)
+# Camino: iOS build (Capacitor)
 
 Camino is a plain web app (`index.html` + `app.js` + `styles.css`) wrapped with
-[Capacitor](https://capacitorjs.com/) for the App Store. No bundler — `scripts/build-web.js`
+[Capacitor](https://capacitorjs.com/) for the App Store. No bundler; `scripts/build-web.js`
 just stages the web files into `www/`, which Capacitor copies into the native iOS project.
 
 ## Prerequisites
-- **A Mac** (or cloud Mac) with **Xcode** + **CocoaPods** — required by Apple to build/submit.
+- **A Mac** (or cloud Mac) with **Xcode** + **CocoaPods**. Required by Apple to build/submit.
 - **Node 18+** (to run Capacitor CLI).
 - Apple Developer Program membership (you have this).
 
@@ -13,7 +13,7 @@ just stages the web files into `www/`, which Capacitor copies into the native iO
 ```bash
 npm install
 npm run build              # stages web files into www/ + bundles revenuecat.js (fails loudly if missing)
-npx cap add ios            # generates the native ios/ project (Mac only — needs CocoaPods)
+npx cap add ios            # generates the native ios/ project (Mac only, needs CocoaPods)
 npm run assets             # generates all icon + splash sizes from resources/icon.png & splash.png
 npx cap sync ios           # copies web assets + installs native plugins into the ios/ project
 npm run open:ios           # opens ios/App/App.xcworkspace in Xcode
@@ -27,7 +27,7 @@ From the repo root on the Mac:
 /usr/libexec/PlistBuddy -c "Add :NSMicrophoneUsageDescription string Camino uses the microphone so you can practice answering interview questions out loud." ios/App/App/Info.plist
 ```
 Note: remote Macs (MacinCloud) have no mic device, so the simulator will always
-show "mic blocked" there — that's environmental. Test voice input on a real iPhone.
+show "mic blocked" there. That's environmental. Test voice input on a real iPhone.
 
 ## In Xcode
 1. Select the **App** target → **Signing & Capabilities** → set your Team (Apple Developer account).
@@ -49,7 +49,7 @@ npm run sync    # full build + cap sync ios  (then re-run in Xcode)
 - `pdflib.js` is the vendored pdf-lib UMD build (MIT) that fills it on-device.
 - **When USCIS ships a new edition:** re-download from uscis.gov/n-400, strip XFA
   (`pikepdf`: delete `Root.AcroForm.XFA`, set `NeedAppearances`), and RE-VERIFY the
-  field mapping in `n400FH_buildPdf()` visually — field names/checkbox indices are
+  field mapping in `n400FH_buildPdf()` visually. Field names/checkbox indices are
   XFA-generated and scrambled (e.g. marital idx: divorced=0, single=1, widowed=2,
   married=3, annulled=4, separated=5). Judgment fields (Part 1 basis, Part 9
   questions, eye/hair) are intentionally never filled.
@@ -57,11 +57,11 @@ npm run sync    # full build + cap sync ios  (then re-run in Xcode)
 ## Notes
 - `www/` and the generated `ios/` are gitignored (rebuilt from source).
 - `config.local.js` (dev Anthropic key) and `sw.js` (service worker) are intentionally
-  excluded from the bundle — Cami is disabled in v1 and service workers aren't used natively.
+  excluded from the bundle. Cami is disabled in v1 and service workers aren't used natively.
 - Icon/splash sources live in `resources/` (`icon.png` 1024², `splash.png` 2732²).
   Re-render them from `resources/icon.html` / `splash.html` if you change the art.
 
-## In-App Purchases (RevenueCat) — already wired in code
+## In-App Purchases (RevenueCat): already wired in code
 The purchase layer is built in `app.js` (`Store` + `STORE_CONFIG`). The web build uses a local
 mock (so the browser preview works); the native build uses RevenueCat/StoreKit. To go live:
 
@@ -77,7 +77,7 @@ mock (so the browser preview works); the native build uses RevenueCat/StoreKit. 
    Restore works, and the localized price shows on the paywall.
 
 ### "The App Store sheet shows the full price, not the free trial"
-The app never decides the trial — StoreKit does, at the moment Apple's own purchase sheet
+The app never decides the trial. StoreKit does, at the moment Apple's own purchase sheet
 appears. The app only *asks* StoreKit (`Store.trialAvailable`) whether a trial will apply and
 adjusts its copy; if that check says no, the paywall says "Subscribe" instead of "Start free
 trial". Two causes cover almost every case:
@@ -86,7 +86,7 @@ trial". Two causes cover almost every case:
    Monetization → Subscriptions → *group* → each product → **Introductory Offers** → "+":
    type **Free**, duration **1 week**, all territories, no end date. It must exist on BOTH
    `camino_plus_annual` and `camino_plus_monthly`. The subscription itself must be at least
-   "Ready to Submit". RevenueCat needs nothing extra — StoreKit applies the offer automatically.
+   "Ready to Submit". RevenueCat needs nothing extra. StoreKit applies the offer automatically.
 2. **The Apple ID testing has already used its intro offer.** Apple grants one intro offer per
    subscription group per Apple ID. In sandbox / TestFlight that is consumed on the first test
    purchase. Reset it: App Store Connect → Users and Access → **Sandbox** → Testers → the
@@ -95,7 +95,7 @@ trial". Two causes cover almost every case:
 
 Diagnose in one glance: on the paywall, if the CTA says **"Start 7-day free trial"** the app
 has confirmed eligibility and the Apple sheet will show "7 days free, then …". If it says
-**"Subscribe to Plus"**, StoreKit reported no offer / not eligible / unknown — fix (1) or (2).
+**"Subscribe to Plus"**, StoreKit reported no offer / not eligible / unknown. Fix (1) or (2).
 
 ## Decide before submission
 - **Voice interview claim:** iOS `WKWebView` has no Web Speech API, so the simulator falls back to

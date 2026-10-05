@@ -1,4 +1,4 @@
-# Camino — Support
+# Camino: Support
 
 Need help with Camino? We're here.
 
@@ -10,7 +10,7 @@ _We usually reply within 2 business days._
 ## Frequently asked questions
 
 **What is Camino?**
-An educational study and preparation app for the U.S. immigration journey —
+An educational study and preparation app for the U.S. immigration journey. 
 civics test prep, your legal path, interview practice, and document organization,
 in English and Spanish. Camino is not a law firm and does not give legal advice.
 
@@ -42,4 +42,4 @@ any government agency.
 - **Request a refund:** https://reportaproblem.apple.com
 
 ## Contact
-Anything else — reach us at **cruiz@rumostrategies.com**.
+Anything else? Reach us at **cruiz@rumostrategies.com**.
