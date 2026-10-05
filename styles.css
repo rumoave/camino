@@ -4091,3 +4091,8 @@ select:focus-visible,
 .completeRemind{display:inline-flex;align-items:center;gap:6px;margin:10px auto 0;background:#fff;border:1.5px solid var(--hair);border-radius:12px;
   padding:10px 14px;font-family:inherit;font-size:13px;font-weight:800;color:var(--ink);}
 .completeRemind svg{display:block;}
+
+/* Paywall: why no free trial applies (native only) */
+.trialDiag{display:flex;align-items:flex-start;gap:7px;margin:10px 18px 0;padding:10px 12px;border-radius:12px;background:var(--marigoldSoft);color:#7a4a00;font-size:12.5px;line-height:1.4;font-weight:700;text-align:left;}
+.trialDiag svg{flex:none;margin-top:2px;}
+.trialHero .trialDiag{background:rgba(255,255,255,.9);}

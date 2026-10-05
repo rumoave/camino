@@ -134,6 +134,13 @@ Diagnose in one glance: on the paywall, if the CTA says **"Start 7-day free tria
 has confirmed eligibility and the Apple sheet will show "7 days free, then …". If it says
 **"Subscribe to Plus"**, StoreKit reported no offer / not eligible / unknown. Fix (1) or (2).
 
+From build 8 the paywall itself says why, in an orange line under the headline:
+"This Apple ID has already used its free trial" (sandbox: Settings › App Store ›
+Sandbox Account › Manage › Reset Eligibility, then relaunch), "No free trial is
+attached to this subscription in App Store Connect", "introductory price, not a free
+trial" (you created a paid intro offer), or "not in the current RevenueCat offering".
+Builds before 8 cannot tell; they always promise the trial.
+
 ## Decide before submission
 - **Voice interview claim:** iOS `WKWebView` has no Web Speech API, so the simulator falls back to
   typed answers. Either soften the paywall "real voice simulation" copy, or add a native speech

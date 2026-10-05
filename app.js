@@ -6732,6 +6732,23 @@ var Store = {
     return !!e && e.status === 2;   // INTRO_ELIGIBILITY_STATUS_ELIGIBLE
   },
 
+  // Why a free trial will NOT apply right now, in plain words. Null when it will.
+  // Each case maps to one fix on the Apple side; the app cannot force a trial.
+  trialDiagnostic: function(planCode){
+    if(!this.isNative() || this.trialAvailable(planCode)) return null;
+    if(!this._offerings) return {code:'loading', en:'Checking App Store prices…', es:'Consultando precios de App Store…'};
+    var pkg = this._packageFor(planCode);
+    if(!pkg || !pkg.product) return {code:'no-package', en:'This plan is not in the current RevenueCat offering, so the App Store price is shown.', es:'Este plan no está en la oferta actual de RevenueCat, así que se muestra el precio de App Store.'};
+    var ip = pkg.product.introPrice;
+    if(!ip) return {code:'no-intro', en:'No free trial is attached to this subscription in App Store Connect. You will be charged the full price.', es:'Esta suscripción no tiene prueba gratis configurada en App Store Connect. Se cobrará el precio completo.'};
+    if(ip.price !== 0) return {code:'paid-intro', en:'This subscription has an introductory price, not a free trial.', es:'Esta suscripción tiene un precio introductorio, no una prueba gratis.'};
+    var e = this._introElig ? this._introElig[STORE_CONFIG.products[planCode]] : null;
+    if(!e) return {code:'check-failed', en:'Apple could not confirm trial eligibility. The App Store sheet shows the real price.', es:'Apple no pudo confirmar la elegibilidad. La hoja de App Store muestra el precio real.'};
+    if(e.status === 1) return {code:'used', en:'This Apple ID has already used its free trial, so the full price applies. (Sandbox testers: Settings › App Store › Sandbox Account › Manage › Reset Eligibility.)', es:'Este Apple ID ya usó su prueba gratis, así que aplica el precio completo. (Cuentas sandbox: Ajustes › App Store › Cuenta Sandbox › Gestionar › Restablecer elegibilidad.)'};
+    if(e.status === 3) return {code:'no-intro', en:'No free trial is attached to this subscription in App Store Connect. You will be charged the full price.', es:'Esta suscripción no tiene prueba gratis configurada en App Store Connect. Se cobrará el precio completo.'};
+    return {code:'unknown', en:'Apple could not confirm trial eligibility on this device. The App Store sheet shows the real price.', es:'Apple no pudo confirmar la elegibilidad en este dispositivo. La hoja de App Store muestra el precio real.'};
+  },
+
   // Length of the free trial in days, read from the StoreKit intro offer
   // (falls back to the 7 configured in App Store Connect).
   trialDays: function(planCode){
@@ -8118,6 +8135,13 @@ function sendFeedback(){
 // ===== TRIAL OFFER (post-onboarding iOS-style paywall) =====
 var trialOfferSelectedPlan = 'annual';
 
+// Small explanatory line under the paywall headline when no trial applies.
+function trialDiagHtml(hasTrial, planCode){
+  if(hasTrial) return '';
+  var d = Store.trialDiagnostic(planCode);
+  return d ? '<div class="trialDiag">'+iconSVG('warning','#ff9b21',13)+'<span>'+d[lang]+'</span></div>' : '';
+}
+
 function renderTrialOffer(){
   var body = document.getElementById('trialOfferBody');
   if(!body) return;
@@ -8196,6 +8220,7 @@ function renderTrialOffer(){
     +   '<div class="trialSubhead">'+(hasTrial
           ? (lang==='es' ? 'Empieza tu prueba gratis de '+trialDays+' días · cancela cuando quieras' : 'Start your '+trialDays+'-day free trial · cancel anytime')
           : (lang==='es' ? 'Suscríbete · cancela cuando quieras' : 'Subscribe · cancel anytime'))+'</div>'
+    +   trialDiagHtml(hasTrial, trialOfferSelectedPlan)
     + '</div>'
     + '<div class="trialPad">'
     +   '<div class="trialFeatures">'+featuresHtml+'</div>'
@@ -8512,7 +8537,8 @@ function renderUpgrade(){
       + '</button>'
       + '<div class="upgTermsLine">'+(upgHasTrial
           ? (lang==='es'?'Cancela cuando quieras antes del final del periodo.':'Cancel anytime before the trial ends.')
-          : (lang==='es'?'Cancela cuando quieras en los Ajustes de App Store.':'Cancel anytime in App Store settings.'))+'</div>';
+          : (lang==='es'?'Cancela cuando quieras en los Ajustes de App Store.':'Cancel anytime in App Store settings.'))+'</div>'
+      + trialDiagHtml(upgHasTrial, upgradeSelected);
   } else {
     ctaHtml = '<button class="cta upgCtaBig" disabled style="opacity:.6;background:var(--muted);box-shadow:0 5px 0 #6e6862;">'
       + (lang==='es' ? '✓ Ya estás en Plus' : '✓ You\'re on Plus')
