@@ -4081,3 +4081,7 @@ select:focus-visible,
 .progName{font-size:14px;font-weight:750;}
 .progMeta{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;}
 .progRow.cur .progMeta{color:var(--tealDark);}
+
+/* Interview: typed answer box shown under the mic as a secondary path */
+.intvFallbackSecondary{margin-top:14px;padding-top:14px;border-top:1px dashed var(--hair);}
+.intvFallbackSecondary .intvFallbackLbl{color:var(--muted);font-size:12.5px;}

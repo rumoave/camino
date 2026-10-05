@@ -3173,14 +3173,96 @@ var IntvVoice = {
   }
 };
 
-function isWebSpeechSupported(){
-  return typeof window !== 'undefined' &&
-    ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+// Which speech recognizer to use. In the iOS app WKWebView has no working
+// Web Speech API (and may expose a non-functional webkitSpeechRecognition), so
+// we only trust the native plugin there; on the web, the browser's API.
+function nativeSpeechPlugin(){
+  return window.CapSpeech || (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SpeechRecognition) || null;
+}
+function speechRecognitionCtor(){
+  if(Store.isNative()){
+    var plug = nativeSpeechPlugin();
+    IntvVoice.nativeSpeech = !!plug;
+    return plug ? nativeSpeechCtor(plug) : null;
+  }
+  IntvVoice.nativeSpeech = false;
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+function voiceInputAvailable(){ return !!speechRecognitionCtor(); }
+function isWebSpeechSupported(){ return voiceInputAvailable(); }
+
+// Wraps @capacitor-community/speech-recognition in the Web Speech API shape the
+// interview already drives: start/stop/abort, onresult(event.results) with
+// isFinal + alternatives, onerror(event.error), onend. There is no VAD on the
+// native side, so a pause of ~2s (or 15s total) ends the turn.
+var _nativeSpeechCtor = null;
+function nativeSpeechCtor(plug){
+  if(_nativeSpeechCtor) return _nativeSpeechCtor;
+  function NativeRec(){ this._listening = false; this._alts = []; this._handles = []; }
+  NativeRec.prototype._emit = function(isFinal){
+    if(!this.onresult) return;
+    var alts = this._alts.length ? this._alts : [''];
+    var result = alts.map(function(t){ return {transcript: t, confidence: isFinal ? 0.8 : 0.6}; });
+    result.isFinal = isFinal;
+    this.onresult({results: [result]});
+  };
+  NativeRec.prototype._clearTimers = function(){
+    if(this._silence) clearTimeout(this._silence);
+    if(this._max) clearTimeout(this._max);
+    this._silence = this._max = null;
+  };
+  NativeRec.prototype._finish = function(){
+    if(!this._listening) return;
+    this._listening = false;
+    this._clearTimers();
+    try { plug.stop(); } catch(e){}
+    try { plug.removeAllListeners && plug.removeAllListeners(); } catch(e){}
+    if(this._alts.length) this._emit(true);
+    if(this.onend) this.onend();
+  };
+  NativeRec.prototype.start = function(){
+    var self = this;
+    self._listening = true; self._alts = [];
+    try { plug.removeAllListeners && plug.removeAllListeners(); } catch(e){}
+    plug.addListener('partialResults', function(d){
+      if(!self._listening) return;
+      var m = (d && d.matches) || [];
+      if(!m.length) return;
+      self._alts = m.slice(0, 5);
+      self._emit(false);
+      if(self._silence) clearTimeout(self._silence);
+      self._silence = setTimeout(function(){ self._finish(); }, 2000);
+    });
+    plug.addListener('listeningState', function(d){
+      if(d && d.status === 'stopped' && self._listening) self._finish();
+    });
+    plug.requestPermissions().then(function(p){
+      var st = p && (p.speechRecognition || p.microphone || 'granted');
+      if(st === 'denied'){
+        self._listening = false;
+        if(self.onerror) self.onerror({error:'not-allowed'});
+        if(self.onend) self.onend();
+        return;
+      }
+      return plug.start({language: self.lang || 'en-US', maxResults: 5, partialResults: true, popup: false});
+    }).then(function(){
+      if(!self._listening) return;
+      self._max = setTimeout(function(){ self._finish(); }, 15000);
+    }).catch(function(e){
+      self._listening = false;
+      if(self.onerror) self.onerror({error: (e && /denied|permission/i.test(String(e.message||e))) ? 'not-allowed' : 'audio-capture'});
+      if(self.onend) self.onend();
+    });
+  };
+  NativeRec.prototype.stop = function(){ this._finish(); };
+  NativeRec.prototype.abort = function(){ this._finish(); };
+  _nativeSpeechCtor = NativeRec;
+  return NativeRec;
 }
 
 function initIntvVoice(){
   if(IntvVoice.initialized) return;
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var SR = speechRecognitionCtor();
   if(SR){
     var rec = new SR();
     rec.continuous = false;
@@ -3485,8 +3567,11 @@ var INTV_SYNONYMS = [
 
 function normalizeIntvAnswer(s){
   if(!s) return '';
-  var t = String(s).toLowerCase()
-    .replace(/[^\w\s'.-]/g, ' ')
+  var t = String(s).toLowerCase();
+  // Fold accents so "México" and "Mexico" compare equal; a bare Spanish "sí" is a yes.
+  try { t = t.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch(e){}
+  if(/^\s*(si|si si)\s*$/.test(t)) t = 'yes';
+  t = t.replace(/[^\w\s'.-]/g, ' ')
     .replace(/\b(um|uh|er|ah|hmm|like|i think|i mean|so|well|i would say|you know)\b/g, ' ');
   // Synonym expansion first (canonicalize multi-word phrases)
   for(var i=0;i<INTV_SYNONYMS.length;i++) t = t.replace(INTV_SYNONYMS[i][0], INTV_SYNONYMS[i][1]);
@@ -3566,6 +3651,16 @@ function levenshteinIntv(a, b){
   return prev[b.length];
 }
 
+function intvEscapeRe(x){ return String(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+// Whole-word phrase containment: "the" is not inside "the constitution", "4" is not inside "435".
+function intvPhraseContains(hay, needle){
+  if(!needle) return false;
+  return new RegExp('(^|\\s)' + intvEscapeRe(needle).replace(/\s+/g, '\\s+') + '(\\s|$)').test(hay);
+}
+function intvKeywordCount(t){
+  return t.split(/\s+/).filter(function(w){ return w && !INTV_STOPWORDS[w] && (w.length > 1 || /\d/.test(w)); }).length;
+}
+
 function intvKeywordScore(transcript, expected){
   // Keep digit-only keys (like "6", "27", "1776"). They're meaningful, just short.
   var keys = expected.split(/\s+/).filter(function(w){
@@ -3579,7 +3674,8 @@ function intvKeywordScore(transcript, expected){
   var tPhonetics = tWords.map(phoneticCode);
   var hits = 0;
   keys.forEach(function(k){
-    if(transcript.indexOf(k) !== -1){ hits++; return; }
+    if(new RegExp('(^|\\s)' + intvEscapeRe(k) + '(\\s|$)').test(transcript)){ hits++; return; }
+    if(/\d/.test(k)) return;            // numbers and dates must match exactly: 2023 is not 2020, 13 is not 3
     if(k.length < 4) return;
     var tol = Math.max(1, Math.floor(k.length / 4));
     // Fuzzy single-word match (accent-driven typos)
@@ -3592,10 +3688,9 @@ function intvKeywordScore(transcript, expected){
     if(kPhon.length >= 3){
       for(var p=0;p<tPhonetics.length;p++){
         if(tPhonetics[p] && tPhonetics[p].length >= 3
-           && (tPhonetics[p] === kPhon
-               || tPhonetics[p].indexOf(kPhon) !== -1
-               || kPhon.indexOf(tPhonetics[p]) !== -1
-               || levenshteinIntv(tPhonetics[p], kPhon) <= 1)){
+           // equal codes or one edit apart (plurals, small mishears). No containment:
+           // "president" must not ride along inside "vicepresident".
+           && (tPhonetics[p] === kPhon || levenshteinIntv(tPhonetics[p], kPhon) <= 1)){
           hits += 0.85; // weight slightly below exact match to avoid over-crediting
           return;
         }
@@ -3619,8 +3714,10 @@ function evaluateIntvAnswer(transcript, expectedVariants){
     var v = normalizeIntvAnswer(expectedVariants[i]);
     if(!v) continue;
     var s;
-    if(t === v || t.indexOf(v) !== -1 || v.indexOf(t) !== -1){
-      s = 1;
+    if(t === v || intvPhraseContains(t, v)){
+      s = 1;                                   // the expected answer appears whole in what was said
+    } else if(intvPhraseContains(v, t) && intvKeywordCount(t) >= Math.max(1, Math.ceil(intvKeywordCount(v) * 0.6))){
+      s = 1;                                   // said most of a longer expected phrase ("Constitution" for "the Constitution")
     } else {
       s = intvKeywordScore(t, v);
     }
@@ -3759,7 +3856,7 @@ function expectedN400AnswerEn(q){
     var d = user.greenCardDate ? fmtDate(user.greenCardDate, 'en') : '–';
     return [d];
   }
-  if(k === 'married') return user.marriedToCitizen ? ['yes','I am','I am married'] : ['no','I am not','I am not married','single'];
+  if(k === 'married') return isUserMarried() ? ['yes','I am','I am married'] : ['no','I am not','I am not married','single'];
   if(k === 'marriageDate'){
     var md = user.marriageDate ? fmtDate(user.marriageDate, 'en') : '–';
     return [md];
@@ -3938,7 +4035,7 @@ function adaptiveCivicsQIds(n){
   var practicing = civicsByMasteryState('practicing');
   var newQ = civicsByMasteryState('new');
   var mastered = civicsByMasteryState('mastered');
-  shuffleArr(weak); shuffleArr(practicing); shuffleArr(newQ); shuffleArr(mastered);
+  weak = shuffleArr(weak); practicing = shuffleArr(practicing); newQ = shuffleArr(newQ); mastered = shuffleArr(mastered);
   var out = [];
   // 60% from weak, 20% from practicing, 15% new, 5% mastered (refresh)
   function take(arr, count){
@@ -3979,8 +4076,16 @@ function getAcceptedVariants(q){
     var cq = findQ(q.qId);
     if(!cq) return [];
     var v = [];
+    // State-specific questions: the user's saved answer is the expected one
+    // (each senator's name on its own counts).
+    var sa = stateAnswerFor(q.qId);
+    if(sa){
+      v.push(sa);
+      sa.split(/\s*(?:,|&| and | y )\s*/i).forEach(function(part){ if(part && part.trim().length > 2) v.push(part.trim()); });
+      return v;
+    }
     for(var i=0;i<cq.options.length;i++) if(cq.options[i].correct) v.push(cq.options[i].en);
-    var extra = INTERVIEW_VARIANTS[q.qId];
+    var extra = ACCEPT_2025[q.qId] || INTERVIEW_VARIANTS[q.qId];
     if(extra) v = v.concat(extra);
     return v;
   } else {
@@ -4006,20 +4111,30 @@ function getQuestionTextLocal(q){
 
 var intvState = null;
 
+// Session shape: 6 civics questions from the user's test-version pool (weak
+// spots first) plus 3 N-400 review questions, so the pass mark reflects civics.
+var INTERVIEW_CIVICS_N = 6, INTERVIEW_N400_N = 3;
+function interviewQuestionCount(){ return INTERVIEW_CIVICS_N + INTERVIEW_N400_N; }
+// Married for N-400 purposes: the organizer's answer wins, then the profile.
+function isUserMarried(){
+  try { var a = n400FH_state().answers; if(a && a.m_status) return a.m_status === 'married' || a.m_status === 'separated'; } catch(e){}
+  return !!user.marriedToCitizen || user.familyTies === 'spouse-usc';
+}
 function buildInterviewQuestions(){
-  // Adaptive: weight weak/practicing questions heaviest so the user drills weak spots
-  var civicsIds = adaptiveCivicsQIds(6);
+  var civicsIds = adaptiveCivicsQIds(INTERVIEW_CIVICS_N);
   var civicsQs = civicsIds.map(function(id){return {type:'civics', qId:id};});
   var applicableN400 = N400_REVIEW_QUESTIONS.filter(function(q){
-    if(q.conditional === 'married') return user.marriedToCitizen;
+    if(q.conditional === 'married') return isUserMarried();
     return true;
   });
-  var sample = applicableN400.slice();
+  // Always open with the name question (that is how the real interview starts), then sample the rest.
+  var first = applicableN400.filter(function(q){ return q.key === 'name'; });
+  var rest = shuffleArr(applicableN400.filter(function(q){ return q.key !== 'name'; })).slice(0, Math.max(0, INTERVIEW_N400_N - first.length));
+  var sample = first.concat(rest);
   var ordered = [];
   if(sample[0]) ordered.push({type:'n400', n400Q: sample[0]});
-  if(sample[1]) ordered.push({type:'n400', n400Q: sample[1]});
   ordered = ordered.concat(civicsQs.slice(0,3));
-  for(var k=2;k<sample.length;k++) ordered.push({type:'n400', n400Q: sample[k]});
+  for(var k=1;k<sample.length;k++) ordered.push({type:'n400', n400Q: sample[k]});
   ordered = ordered.concat(civicsQs.slice(3));
   return ordered;
 }
@@ -4261,7 +4376,8 @@ function userPressMic(){
   }
   // Kick off audio stream + recording in parallel (best-effort) but don't await. The
   // SpeechRecognition start() must happen in the same synchronous tick as the click.
-  ensureMicPermission().catch(function(){});
+  // (Native speech owns the microphone itself; a parallel getUserMedia would fight it.)
+  if(!IntvVoice.nativeSpeech) ensureMicPermission().catch(function(){});
   startListeningToUser();
 }
 
@@ -4277,14 +4393,17 @@ function startListeningToUser(){
   intvState.currentTranscript = '';
   intvState.finalAlternatives = [];
   intvState.liveConfidence = 0;
+  intvState.lastWasTyped = false;
   intvState.lastAudioUrl = null;
   renderInterview();
-  startAudioRecording();
-  // Kick the audio level meter after a tick so the bars exist in DOM
-  setTimeout(startMicLevelMeter, 100);
+  if(!IntvVoice.nativeSpeech){
+    startAudioRecording();
+    // Kick the audio level meter after a tick so the bars exist in DOM
+    setTimeout(startMicLevelMeter, 100);
+  }
 
   // Always use a fresh recognizer to avoid stale-state bugs after multiple Qs
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var SR = speechRecognitionCtor();
   try { if(IntvVoice.recognizer) IntvVoice.recognizer.abort(); } catch(e){}
   var rec = new SR();
   rec.continuous = false;
@@ -4327,7 +4446,9 @@ function startListeningToUser(){
     if(err === 'not-allowed' || err === 'service-not-allowed'){
       user.micPermission = 'denied';
       saveUser();
-      toast(lang==='es' ? 'Permiso del micrófono bloqueado. Actívalo en el navegador' : 'Mic blocked. Enable it in browser settings');
+      toast(Store.isNative()
+        ? (lang==='es' ? 'Micrófono o voz bloqueados. Actívalos en Ajustes › Camino' : 'Microphone or speech access is off. Turn it on in Settings › Camino')
+        : (lang==='es' ? 'Permiso del micrófono bloqueado. Actívalo en el navegador' : 'Mic blocked. Enable it in browser settings'));
     } else if(err === 'no-speech'){
       toast(lang==='es' ? 'No te oí. Toca el micrófono y habla' : "I didn't hear you. Tap mic and speak");
     } else if(err === 'audio-capture'){
@@ -4369,10 +4490,22 @@ function startListeningToUser(){
 function submitFallbackAnswer(){
   if(!intvState) return;
   var inp = document.getElementById('intvFallbackInput');
-  if(inp){
-    intvState.currentTranscript = inp.value || '';
-    processIntvAnswer();
-  }
+  if(!inp) return;
+  var v = (inp.value || '').trim();
+  if(!v){ toast(lang==='es' ? 'Escribe una respuesta primero' : 'Type an answer first'); try { inp.focus(); } catch(e){} return; }
+  intvState.currentTranscript = v;
+  intvState.finalAlternatives = [];
+  intvState.liveConfidence = 1;           // typed = we know exactly what they said
+  intvState.lastWasTyped = true;
+  processIntvAnswer();
+}
+// "Try again" from the didn't-catch-that screen: voice if we have it, else back to typing.
+function retryIntvAnswer(){
+  if(!intvState) return;
+  if(IntvVoice.recognizer) return userPressMic();
+  intvState.phase = 'ready';
+  intvState.currentTranscript = '';
+  renderInterview();
 }
 
 // Detect short, command-shaped utterances ("skip", "repeat", "stop"). Only fires
@@ -4458,7 +4591,7 @@ function processIntvAnswer(){
   // Smart-retry: very-low recognizer confidence + nothing matched → don't punish.
   // Surface a "Didn't catch that. Try again?" path instead of marking wrong.
   // User can override via forceGradeIntvAnswer() ("Grade anyway") to skip this gate.
-  if(!intvState._forceGrade
+  if(!intvState._forceGrade && !intvState.lastWasTyped
      && result.verdict === 'wrong' && result.score < 0.15
      && (result.confidence || 0) < 0.5 && transcript.length < 40){
     intvState.phase = 'lowConfidence';
@@ -4616,16 +4749,24 @@ function finishInterview(){
   var close = r.filter(function(x){return x.verdict==='close';}).length;
   var wrong = r.filter(function(x){return x.verdict==='wrong';}).length;
   var total = r.length;
-  // Real USCIS test: 6/10 correct to pass. With our mix (civics + N-400), use 60%.
-  var passed = total > 0 && correct >= Math.ceil(total * 0.6);
+  // Pass mark follows the real civics test for the user's version (12/20 or
+  // 6/10 = 60%), judged on the civics questions only. N-400 answers are
+  // practice, not points.
+  var rules = currentTestRules();
+  var civ = r.filter(function(x){ return x.type === 'civics'; });
+  var civicsCorrect = civ.filter(function(x){ return x.verdict === 'correct'; }).length;
+  var civicsTotal = civ.length;
+  var passed = civicsTotal > 0 && (civicsCorrect / civicsTotal) >= (rules.mockPass / rules.mockSize);
   var score = total > 0 ? Math.round((correct + close * 0.5) / total * 100) : 0;
   if(!user.progress.interviewAttempts) user.progress.interviewAttempts = [];
   markActiveToday();
   syncMasteredCount();
   user.progress.interviewAttempts.push({
     score: score, correct: correct, close: close, wrong: wrong, total: total,
+    civicsCorrect: civicsCorrect, civicsTotal: civicsTotal, version: currentTestVersion(),
     passed: passed, takenAt: todayISO()
   });
+  if(user.progress.interviewAttempts.length > 50) user.progress.interviewAttempts = user.progress.interviewAttempts.slice(-50);
   saveUser();
   if(passed) sfxComplete(); else sfxFail();
   intvState.phase = 'done';
@@ -4714,21 +4855,21 @@ function renderInterview(){
       + (lang==='es' ? 'El oficial te está hablando…' : 'Officer is speaking…')
       + '</div>';
   } else if(intvState.phase === 'ready'){
-    if(IntvVoice.recognizer){
+    var hasMic = !!IntvVoice.recognizer;
+    if(hasMic){
       html += '<div class="intvMicArea">'
         + '<button class="intvMicBtn" onclick="userPressMic()">'
         +   '<div class="intvMicIco">'+iconSVG('mic','#fff',38)+'</div>'
         + '</button>'
         + '<div class="intvMicHint">'+(lang==='es'?'Toca y responde en voz alta':'Tap, then answer out loud')+'</div>'
         + '</div>';
-    } else {
-      // No SpeechRecognition (iOS WKWebView): typed answers ARE the flow. No dead mic button.
-      html += '<div class="intvFallback">'
-        + '<div class="intvFallbackLbl">'+(lang==='es'?'Escribe tu respuesta:':'Type your answer:')+'</div>'
-        + '<input type="text" id="intvFallbackInput" class="intvFallbackInput" placeholder="'+(lang==='es'?'Tu respuesta…':'Your answer…')+'" />'
-        + '<button class="cta" onclick="submitFallbackAnswer()">'+(lang==='es'?'Enviar':'Submit')+'</button>'
-        + '</div>';
     }
+    // Typing is always available (listing: "answer by voice or by typing").
+    html += '<div class="intvFallback'+(hasMic?' intvFallbackSecondary':'')+'">'
+      + '<div class="intvFallbackLbl">'+(hasMic ? (lang==='es'?'O escribe tu respuesta:':'Or type your answer:') : (lang==='es'?'Escribe tu respuesta:':'Type your answer:'))+'</div>'
+      + '<input type="text" id="intvFallbackInput" class="intvFallbackInput" placeholder="'+(lang==='es'?'Tu respuesta…':'Your answer…')+'" autocomplete="off" autocapitalize="sentences" '+(hasMic?'':'autofocus ')+'onkeydown="if(event.key===\'Enter\'){event.preventDefault();submitFallbackAnswer();}" />'
+      + '<button class="cta" onclick="submitFallbackAnswer()">'+(lang==='es'?'Enviar':'Submit')+'</button>'
+      + '</div>';
   } else if(intvState.phase === 'listening'){
     html += '<div class="intvMicArea">'
       + '<button class="intvMicBtn intvMicActive" onclick="userPressMic()">'
@@ -4750,10 +4891,10 @@ function renderInterview(){
       + '<div class="intvLowConfIco">'+iconSVG('question','#84807a',32)+'</div>'
       + '<div class="intvLowConfTitle">'+(lang==='es'?"No te oí bien":"I didn't catch that")+'</div>'
       + (intvState.lowConfHeard
-          ? '<div class="intvLowConfHeard">'+(lang==='es'?'Te oí: ':'I heard: ')+'"<em>'+intvState.lowConfHeard+'</em>"</div>'
+          ? '<div class="intvLowConfHeard">'+(lang==='es'?'Te oí: ':'I heard: ')+'"<em>'+esc(intvState.lowConfHeard)+'</em>"</div>'
           : '<div class="intvLowConfHeard">'+(lang==='es'?'No oí nada. Habla más cerca del micrófono':'I heard silence. Speak closer to the mic')+'</div>')
       + '<div class="intvLowConfRow">'
-      +   '<button class="cta intvLowConfRetry" onclick="userPressMic()">'+iconSVG('mic','#fff',16)+' '+(lang==='es'?'Reintentar':'Try again')+'</button>'
+      +   '<button class="cta intvLowConfRetry" onclick="retryIntvAnswer()">'+(IntvVoice.recognizer ? iconSVG('mic','#fff',16)+' ' : '')+(lang==='es'?'Reintentar':'Try again')+'</button>'
       +   '<button class="intvLowConfShow" onclick="forceGradeIntvAnswer()">'+(lang==='es'?'Calificar de todos modos':'Grade anyway')+'</button>'
       + '</div>'
       + '</div>';
@@ -4845,9 +4986,12 @@ function renderInterviewResults(){
   var verdictTxt = passed
     ? (lang==='es' ? '¡Pasarías la entrevista!' : 'You would pass!')
     : (lang==='es' ? 'Más práctica recomendada' : 'More practice needed');
+  var rules = currentTestRules();
+  var civ = r.filter(function(x){ return x.type === 'civics'; });
+  var civicsCorrect = civ.filter(function(x){ return x.verdict === 'correct'; }).length;
   var verdictSub = passed
-    ? (lang==='es' ? 'Acertaste '+correct+'/'+total+'. USCIS requiere 6/10 en cívica.' : 'You got '+correct+'/'+total+'. USCIS requires 6/10 on civics.')
-    : (lang==='es' ? 'Acertaste '+correct+'/'+total+'. Practica los temas marcados abajo.' : 'You got '+correct+'/'+total+'. Practice the topics flagged below.');
+    ? (lang==='es' ? 'Cívica: '+civicsCorrect+'/'+civ.length+' correctas. USCIS exige '+rules.mockPass+' de '+rules.mockSize+' ('+Math.round(rules.mockPass/rules.mockSize*100)+'%).' : 'Civics: '+civicsCorrect+'/'+civ.length+' correct. USCIS requires '+rules.mockPass+' of '+rules.mockSize+' ('+Math.round(rules.mockPass/rules.mockSize*100)+'%).')
+    : (lang==='es' ? 'Cívica: '+civicsCorrect+'/'+civ.length+' correctas. Practica los temas marcados abajo.' : 'Civics: '+civicsCorrect+'/'+civ.length+' correct. Practice the topics flagged below.');
 
   // Per-question breakdown with audio playback if recorded
   var breakHtml = '';
@@ -4862,7 +5006,7 @@ function renderInterviewResults(){
       + '<div class="intvBVIco">'+ico+'</div>'
       + '<div class="intvBVMain">'
       +   '<div class="intvBVQ">'+(x.questionTextLocal || x.questionText)+'</div>'
-      +   '<div class="intvBVA"><strong>'+(lang==='es'?'Tú:':'You:')+'</strong> '+(x.heard ? '"'+x.heard+'"' : (lang==='es'?'(saltada)':'(skipped)'))+' '+playBtnRow+'</div>'
+      +   '<div class="intvBVA"><strong>'+(lang==='es'?'Tú:':'You:')+'</strong> '+(x.heard ? '"'+esc(x.heard)+'"' : (lang==='es'?'(saltada)':'(skipped)'))+' '+playBtnRow+'</div>'
       +   (x.verdict !== 'correct' ? '<div class="intvBVA"><strong>'+(lang==='es'?'Oficial:':'Officer:')+'</strong> '+x.expected+'</div>' : '')
       + '</div>'
       + '</div>';
@@ -4920,50 +5064,6 @@ function renderInterviewResults(){
       + '<button class="intvBackBtn" onclick="exitInterview()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>';
   }
 }
-
-function renderInterviewResults(score, got, hesitated, unsure, total){
-  var counter = document.getElementById('intvCounter');
-  if(counter) counter.textContent = lang==='es' ? 'Resultado' : 'Result';
-  var fill = document.getElementById('intvProgressFill');
-  if(fill) fill.style.width = '100%';
-
-  var body = document.getElementById('intvBody');
-  var footer = document.getElementById('intvFooter');
-  if(!body) return;
-
-  var verdict, verdictClass, sub;
-  if(score >= 80){
-    verdict = lang==='es' ? '¡Listo para la entrevista!' : "You're ready!";
-    verdictClass = 'intvGood';
-    sub = lang==='es' ? 'Tu autoevaluación muestra una preparación sólida.' : 'Your self-rating shows solid preparation.';
-  } else if(score >= 60){
-    verdict = lang==='es' ? 'Casi listo' : 'Almost ready';
-    verdictClass = 'intvOk';
-    sub = lang==='es' ? 'Sigue practicando los puntos donde dudaste.' : 'Keep practicing the ones you hesitated on.';
-  } else {
-    verdict = lang==='es' ? 'Más práctica recomendada' : 'More practice recommended';
-    verdictClass = 'intvWeak';
-    sub = lang==='es' ? 'Vuelve a la sección de Aprender para reforzar los conceptos básicos.' : 'Head back to Learn to reinforce the basics.';
-  }
-
-  body.innerHTML = ''
-    + '<div class="intvResultsHead">'
-    +   '<div class="intvResultBadge '+verdictClass+'">'+verdict+'</div>'
-    +   '<div class="intvScoreNum">'+score+'%</div>'
-    +   '<div class="intvScoreSub">'+sub+'</div>'
-    + '</div>'
-    + '<div class="intvBreakdown">'
-    +   '<div class="intvBreakRow"><div class="intvBreakDot intvBVGood"></div><div class="intvBreakLbl">'+(lang==='es'?'Lo tuve':'Got it')+'</div><div class="intvBreakVal">'+got+'</div></div>'
-    +   '<div class="intvBreakRow"><div class="intvBreakDot intvBVMid"></div><div class="intvBreakLbl">'+(lang==='es'?'Dudé':'Hesitated')+'</div><div class="intvBreakVal">'+hesitated+'</div></div>'
-    +   '<div class="intvBreakRow"><div class="intvBreakDot intvBVBad"></div><div class="intvBreakLbl">'+(lang==='es'?'No sabía':"Didn't know")+'</div><div class="intvBreakVal">'+unsure+'</div></div>'
-    + '</div>';
-
-  if(footer){
-    footer.innerHTML = '<button class="cta" onclick="startInterview()">'+inlineIcon('refresh','#fff',16)+(lang==='es' ? 'Practicar de nuevo' : 'Practice again')+'</button>'
-      + '<button class="intvBackBtn" onclick="exitInterview()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>';
-  }
-}
-
 function renderHomeInterviewCard(){
   var el = document.getElementById('homeInterviewCard');
   if(!el) return;
@@ -4986,7 +5086,9 @@ function renderHomeInterviewCard(){
 
   var subTxt;
   if(attempts.length === 0){
-    subTxt = lang==='es' ? 'Voz real · 10 preguntas · cívica + N-400' : 'Voice-driven · 10 questions · civics + N-400';
+    subTxt = (voiceInputAvailable()
+      ? (lang==='es' ? 'Responde por voz o escribiendo' : 'Answer by voice or by typing')
+      : (lang==='es' ? 'Escribe tus respuestas' : 'Type your answers')) + ' · ' + interviewQuestionCount() + (lang==='es' ? ' preguntas · cívica + N-400' : ' questions · civics + N-400');
   } else if(needWork > 0){
     subTxt = lang==='es'
       ? 'La sesión prioriza tus puntos débiles'
@@ -5000,7 +5102,7 @@ function renderHomeInterviewCard(){
     metaLeft = (lang==='es'?'Mejor: ':'Best: ')+best+'% · '+masteredTotal+'/'+CIVICS.length+' '+(lang==='es'?'dominadas':'mastered');
     metaRight = (lang==='es'?'Practicar':'Practice');
   } else {
-    metaLeft = '~5 '+(lang==='es'?'min':'min')+' · 10 '+(lang==='es'?'preguntas':'questions');
+    metaLeft = '~5 '+(lang==='es'?'min':'min')+' · '+interviewQuestionCount()+' '+(lang==='es'?'preguntas':'questions');
     metaRight = (lang==='es'?'Empezar':'Start');
   }
 
