@@ -1759,34 +1759,36 @@ select:focus-visible,
 .cta.ctaCoral:active{box-shadow:0 1px 0 var(--coralDark);}
 
 /* lesson card */
-/* ===== Home action cards — paper, ink outline, one accent per card =====
-   Shared anatomy (built by homeCardHtml): icon tile + kicker, serif title,
-   sub, optional accent progress bar, meta + "Start" chip. The accent lives in
-   --acc / --accDark / --accSoft so each card differs by colour only. */
+/* ===== Home action cards: same recipe as the "Next action" card =====
+   Warm tinted surface, 1.5px accent border with a 2px accent base, small icon
+   kicker, Fraunces title, muted body, black pill button. Built by homeCardHtml.
+   --acc is the kicker/progress colour, --accLine the border tint, --accTint
+   the top-left wash. */
 .lesson, .mockCard, .flashcardCard, .interviewCard, .reviewCard{
-  --acc:var(--teal); --accDark:var(--tealDark); --accSoft:var(--greenSoft);
-  background:var(--card);color:var(--ink);border:1px solid var(--hair);border-radius:20px;padding:16px 16px 14px;
-  box-shadow:0 1px 3px rgba(0,0,0,.06);cursor:pointer;margin-top:10px;
+  --acc:var(--tealDark); --accLine:#9fe3dc; --accTint:#eefaf8;
+  background:linear-gradient(150deg, var(--accTint) 0%, #fff 70%);color:var(--ink);
+  border:1.5px solid var(--accLine);border-radius:14px;padding:14px 16px;
+  box-shadow:0 2px 0 var(--accLine);cursor:pointer;margin-top:12px;
   transition:transform .08s, box-shadow .08s;
 }
 .lesson, .mockCard{margin-top:0;}
-.mockCard{--acc:var(--plum); --accDark:var(--plumDark); --accSoft:rgba(140,77,209,.13);}
-.flashcardCard{--acc:var(--rose); --accDark:var(--roseDark); --accSoft:rgba(236,79,147,.13);}
-.interviewCard{--acc:var(--sky); --accDark:var(--skyDark); --accSoft:var(--skySoft);}
-.reviewCard{--acc:var(--coral); --accDark:var(--coralDark); --accSoft:var(--coralSoft);}
-.lesson:active, .mockCard:active, .flashcardCard:active, .interviewCard:active, .reviewCard:active{transform:translateY(1px);box-shadow:0 0 0 rgba(0,0,0,0);background:var(--cardWarm);}
-.actHead{display:flex;align-items:center;gap:10px;}
-.actIco{flex:none;width:38px;height:38px;border-radius:12px;background:var(--accSoft);display:flex;align-items:center;justify-content:center;}
-.actIco svg{display:block;}
-.actKick{font-size:11px;font-weight:850;letter-spacing:.6px;text-transform:uppercase;color:var(--accDark);}
-.actTitle{font-family:'Fraunces','Nunito',Georgia,serif;font-weight:700;font-size:21px;letter-spacing:-.3px;line-height:1.2;color:var(--ink);margin:12px 0 4px;}
-.actSub{font-size:14px;color:var(--ink2);font-weight:600;line-height:1.4;}
-.actBar{height:6px;background:var(--hair);border-radius:6px;margin-top:14px;overflow:hidden;}
+.mockCard{--acc:var(--plumDark); --accLine:#cdb3ee; --accTint:#f5effc;}
+.flashcardCard{--acc:var(--roseDark); --accLine:#f4b4cf; --accTint:#fdeef4;}
+.interviewCard{--acc:var(--skyDark); --accLine:#a9ddf8; --accTint:#edf7fd;}
+.reviewCard{--acc:var(--coralDark); --accLine:#ffc1b8; --accTint:#fff0ed;}
+.lesson:active, .mockCard:active, .flashcardCard:active, .interviewCard:active, .reviewCard:active{transform:translateY(1px);box-shadow:0 1px 0 var(--accLine);}
+.actKick{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:6px;}
+.actKick svg{display:block;}
+.actTitle{font-family:'Fraunces','Nunito',Georgia,serif;font-weight:700;font-size:17px;letter-spacing:-.2px;line-height:1.25;color:var(--ink);}
+.actSub{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.45;font-weight:600;}
+.actBar{height:5px;background:var(--hair);border-radius:6px;margin-top:12px;overflow:hidden;}
 .actFill{height:100%;background:var(--acc);border-radius:6px;}
-.actFoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;}
-.actMeta{font-size:12.5px;font-weight:700;color:var(--muted);min-width:0;}
+.actFoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;}
+.actBtn{flex:none;display:inline-block;background:#1d1d22;color:#fff;border-radius:11px;padding:10px 15px;
+  font-family:'Nunito',sans-serif;font-weight:850;font-size:12.5px;letter-spacing:.3px;box-shadow:0 2px 0 #0a0a0d;}
+.lesson:active .actBtn, .mockCard:active .actBtn, .flashcardCard:active .actBtn, .interviewCard:active .actBtn, .reviewCard:active .actBtn{transform:translateY(1px);box-shadow:0 1px 0 #0a0a0d;}
+.actMeta{font-size:12px;font-weight:700;color:var(--muted);text-align:right;min-width:0;}
 .actMeta .inlIco{vertical-align:-2px;}
-.actGo{flex:none;font-size:12.5px;font-weight:850;color:var(--accDark);background:var(--accSoft);padding:7px 12px;border-radius:999px;white-space:nowrap;}
 .lessonTitle{font-size:20px;font-weight:850;margin:12px 0 4px;letter-spacing:-.3px;}
 .lessonSub{font-size:14px;opacity:.96;font-weight:600;}
 .xpbar{height:8px;background:rgba(255,255,255,.28);border-radius:6px;margin-top:14px;overflow:hidden;}

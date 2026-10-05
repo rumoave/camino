@@ -13728,16 +13728,13 @@ function renderLearnPath(){
 // interview, review). The card's accent colour comes from its CSS class;
 // o = {icon, color, kicker, title, sub, meta, go, progress (0-100 | undefined)}
 function homeCardHtml(o){
-  return '<div class="actHead">'
-    +   '<span class="actIco">'+iconSVG(o.icon, o.color, 22)+'</span>'
-    +   '<span class="actKick">'+o.kicker+'</span>'
-    + '</div>'
+  return '<div class="actKick">'+iconSVG(o.icon, o.color, 13)+'<span>'+o.kicker+'</span></div>'
     + '<div class="actTitle">'+o.title+'</div>'
     + (o.sub ? '<div class="actSub">'+o.sub+'</div>' : '')
     + (typeof o.progress === 'number' ? '<div class="actBar"><div class="actFill" style="width:'+Math.max(0, Math.min(100, o.progress))+'%"></div></div>' : '')
     + '<div class="actFoot">'
+    +   '<span class="actBtn">'+o.go+' →</span>'
     +   '<span class="actMeta">'+(o.meta || '')+'</span>'
-    +   '<span class="actGo">'+o.go+' →</span>'
     + '</div>';
 }
 
