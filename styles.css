@@ -4085,3 +4085,9 @@ select:focus-visible,
 /* Interview: typed answer box shown under the mic as a secondary path */
 .intvFallbackSecondary{margin-top:14px;padding-top:14px;border-top:1px dashed var(--hair);}
 .intvFallbackSecondary .intvFallbackLbl{color:var(--muted);font-size:12.5px;}
+
+/* Hearts / reminders */
+.failedNoHearts{font-size:13px;color:var(--muted);line-height:1.45;margin:6px 0 10px;text-align:center;font-weight:600;}
+.completeRemind{display:inline-flex;align-items:center;gap:6px;margin:10px auto 0;background:#fff;border:1.5px solid var(--hair);border-radius:12px;
+  padding:10px 14px;font-family:inherit;font-size:13px;font-weight:800;color:var(--ink);}
+.completeRemind svg{display:block;}

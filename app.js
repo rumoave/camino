@@ -370,6 +370,10 @@ var user = {
   officialSenators: '',      // user-saved answers for n23 / n29 / n61 (officials change; we never hardcode them)
   officialRep: '',
   officialGovernor: '',
+  hearts: null,              // {date, left}: free-plan daily heart pool (5/day, +1 per review session)
+  badges: null,              // {achievementId: ISO date unlocked}; never revoked
+  reminderIds: [],           // local-notification ids we scheduled (so we can cancel/replace)
+  planLapsedAt: null,        // set when a trial/plus entitlement ends; drives the one-time "Plus ended" modal
   soundEffects: true,        // feedback chimes (right/wrong/complete). Me tab toggle
   testVersion: '2025',       // '2008' (legacy 100q test) or '2025' (current 128q, 12-of-20 to pass)
   plan: 'free',              // 'free' | 'trial' | 'plus' | 'expired'
@@ -5099,10 +5103,10 @@ function renderHomeInterviewCard(){
 
   var metaLeft, metaRight;
   if(best != null){
-    metaLeft = (lang==='es'?'Mejor: ':'Best: ')+best+'% · '+masteredTotal+'/'+CIVICS.length+' '+(lang==='es'?'dominadas':'mastered');
+    metaLeft = (lang==='es'?'Mejor: ':'Best: ')+best+'%' + limitHint(todayInterviewsAvailable());
     metaRight = (lang==='es'?'Practicar':'Practice');
   } else {
-    metaLeft = '~5 '+(lang==='es'?'min':'min')+' · '+interviewQuestionCount()+' '+(lang==='es'?'preguntas':'questions');
+    metaLeft = '~5 '+(lang==='es'?'min':'min')+' · '+interviewQuestionCount()+' '+(lang==='es'?'preguntas':'questions') + limitHint(todayInterviewsAvailable());
     metaRight = (lang==='es'?'Empezar':'Start');
   }
 
@@ -5155,7 +5159,9 @@ function acceptDisclaimer(){
   user.disclaimerAcceptedAt = todayISO();
   saveUser();
   closeDisclaimerModal();
-  // If we got here right after onboarding, chain to the trial offer
+  // If we got here right after onboarding, chain to the trial offer (the flag
+  // is restored across relaunches, so closing the app on the disclaimer no
+  // longer loses the offer and the tutorial).
   if(user.pendingTrialOffer){
     user.pendingTrialOffer = false;
     saveUser();
@@ -5166,6 +5172,7 @@ function acceptDisclaimer(){
     }
     go('home');
     toast(lang==='es' ? '¡Listo! Empecemos.' : "You're set! Let's go.");
+    setTimeout(maybeOfferTutorial, 1200);
   }
 }
 
@@ -6432,6 +6439,9 @@ var Store = {
       }
       this.ready = true;
       try { renderAll(); } catch(e){}
+      // Paywall copy depends on offerings (trial eligibility, prices): refresh it.
+      try { if(document.getElementById('trialOfferBody')) renderTrialOffer(); } catch(e){}
+      try { if(typeof renderUpgrade === 'function') renderUpgrade(); } catch(e){}
     } catch(e){ /* stay not-ready; local fallback applies */ }
   },
 
@@ -6485,13 +6495,23 @@ var Store = {
     if(!ci || !user) return;
     var active = ci.entitlements && ci.entitlements.active ? ci.entitlements.active[STORE_CONFIG.entitlementId] : null;
     this._entitled = !!active;
+    var prevPlan = user.plan;
     if(active){
       var pt = active.periodType;
-      if(pt === 'TRIAL' || pt === 'INTRO'){ user.plan = 'trial'; user.trialEndsAt = active.expirationDate || null; }
-      else { user.plan = 'plus'; }
+      if(pt === 'TRIAL' || pt === 'INTRO'){
+        user.plan = 'trial'; user.trialEndsAt = active.expirationDate || null;
+        if(user.trialEndsAt && !user.trialReminderScheduledFor){ user.trialReminderScheduledFor = user.trialEndsAt; try { Reminders.scheduleTrialReminder(user.trialEndsAt); } catch(e){} }
+      } else { user.plan = 'plus'; }
+      user.planRenewsAt = active.expirationDate || null;
+      user.planLapsedAt = null;
     } else {
       user.plan = 'free';
+      if(prevPlan === 'trial' || prevPlan === 'plus'){
+        user.planLapsedAt = todayISO();
+        setTimeout(showPlanLapsedModal, 800);
+      }
     }
+    try { refreshStreakFreezes(); } catch(e){}
     saveUser();
   },
 
@@ -6581,6 +6601,13 @@ document.addEventListener('click', function(ev){
 function isPlus(){
   if(!user) return false;
   if(Store.isNative() && Store.ready) return Store.entitled() === true;  // native: RevenueCat is source of truth
+  if(Store.isNative()){
+    // RevenueCat not up yet (offline, slow start): honour the cached plan only
+    // through its last known expiry plus a 3-day grace, never forever.
+    if(user.plan === 'plus') return !user.planRenewsAt || (new Date(user.planRenewsAt).getTime() + 3*86400000) > Date.now();
+    if(user.plan === 'trial') return !!user.trialEndsAt && Date.now() < new Date(user.trialEndsAt).getTime();
+    return false;
+  }
   if(user.plan === 'plus') return true;
   if(user.plan === 'trial' && user.trialEndsAt){
     return Date.now() < new Date(user.trialEndsAt).getTime();
@@ -6778,6 +6805,27 @@ function checkTrialReminders(){
   }
 }
 
+// Shown once when a trial or subscription has ended (native entitlement lapsed).
+function showPlanLapsedModal(){
+  if(!user || !user.planLapsedAt || user.planLapsedShown === user.planLapsedAt) return;
+  user.planLapsedShown = user.planLapsedAt; saveUser();
+  closeTrialModal();
+  var overlay = document.createElement('div');
+  overlay.id = 'trialModal';
+  overlay.className = 'disclaimerOverlay';
+  overlay.innerHTML = ''
+    + '<div class="trialReminderCard">'
+    + '  <div class="trialReminderCami">'+camiSVG('sad')+'</div>'
+    + '  <div class="trialReminderTitle">'+(lang==='es' ? 'Tu Camino Plus terminó' : 'Your Camino Plus has ended')+'</div>'
+    + '  <div class="trialReminderBody">'+(lang==='es'
+        ? 'Sigues con el plan gratis: lecciones, tarjetas diarias, 3 exámenes y 3 entrevistas al día. Plus vuelve a abrir el organizador N-400, la práctica ilimitada, la unidad extra y los congeladores de racha.'
+        : 'You are on the free plan: lessons, daily flashcards, 3 mock tests and 3 interviews a day. Plus reopens the N-400 organizer, unlimited practice, the extra unit and streak freezes.')+'</div>'
+    + '  <button class="cta" onclick="closeTrialModal(); go(\'upgrade\')">'+(lang==='es' ? 'Volver a Plus' : 'Rejoin Plus')+'</button>'
+    + '  <button class="camiSetupCancel" style="margin-top:8px;" onclick="closeTrialModal()">'+(lang==='es' ? 'Seguir gratis' : 'Continue free')+'</button>'
+    + '</div>';
+  document.body.appendChild(overlay);
+}
+
 function showTrialReminderModal(daysLeft){
   closeTrialModal();
   var pricing = PLUS_PRICING[user.planSelected || 'annual'];
@@ -6897,7 +6945,14 @@ function markActiveToday(){
   p.streak = (p.lastLessonDate === yesterdayISO()) ? (p.streak || 0) + 1 : 1;
   p.lastLessonDate = today;
   p.streakLostAt = null;
+  try { Reminders.onActivity(); } catch(e){}
   return true;
+}
+
+// " · 2 of 3 left today" for free users; nothing for Plus.
+function limitHint(avail){
+  if(avail === Infinity) return '';
+  return ' · ' + (lang==='es' ? avail+' de 3 hoy' : avail+' of 3 left today');
 }
 
 function todayMockTestsAvailable(){
@@ -7894,6 +7949,9 @@ function skipTrialOffer(){
 
 // ===== iOS-STYLE PURCHASE CONFIRMATION SHEET =====
 function openPurchaseSheet(){
+  // On iOS, StoreKit shows Apple's real confirmation sheet; drawing a look-alike
+  // first is a double confirmation and an App Review risk.
+  if(Store.isNative()){ confirmTrialPurchase(); return; }
   var sheet = document.getElementById('purchaseSheet');
   var card = document.getElementById('purchaseSheetCard');
   if(!sheet || !card) return;
@@ -10752,6 +10810,55 @@ function n400FH_print(){
   window.print();
 }
 
+// Whole-profile backup: everything the app keeps on this device, as one JSON
+// file the user owns. Works on iOS through the share sheet.
+function shareOrDownloadJSON(filename, data, title){
+  if(Store.isNative()){
+    var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
+    if(fs && share && fs.writeFile){
+      fs.writeFile({ path: filename, data: data, directory: (dir && dir.Cache) || 'CACHE', encoding: (enc && enc.UTF8) || 'utf8' })
+        .then(function(res){ return share.share({ title: title, url: res.uri }); })
+        .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es'?'No se pudo exportar':'Could not export'); });
+      return;
+    }
+    toast(lang==='es'?'Exportar no disponible':'Export unavailable');
+    return;
+  }
+  var blob = new Blob([data], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  toast(lang==='es'?'Respaldo descargado':'Backup downloaded');
+}
+function exportAllData(){
+  var snapshot = JSON.parse(JSON.stringify(Object.assign({}, user, {lang: lang})));
+  delete snapshot.anthropicApiKey; delete snapshot.camiChatHistory;
+  var data = JSON.stringify({ caminoBackup: 1, exportedAt: new Date().toISOString(), user: snapshot }, null, 2);
+  shareOrDownloadJSON('camino-backup.json', data, 'Camino backup');
+}
+function importAllData(input){
+  var file = input.files && input.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onerror = function(){ toast(lang==='es'?'No se pudo leer el archivo':'Could not read the file'); };
+  reader.onload = function(){
+    try {
+      var data = JSON.parse(reader.result);
+      if(!data || data.caminoBackup !== 1 || !data.user || typeof data.user !== 'object') throw new Error('not a camino backup');
+      var msg = lang==='es' ? '¿Reemplazar los datos de este dispositivo con el respaldo? Esto no se puede deshacer.' : 'Replace the data on this device with the backup? This cannot be undone.';
+      if(!window.confirm(msg)) return;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user)); } catch(e){ toast(lang==='es'?'No se pudo guardar':'Could not save'); return; }
+      location.reload();
+    } catch(e){
+      toast(lang==='es' ? 'Ese archivo no es un respaldo de Camino' : 'That file is not a Camino backup');
+    }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
 function n400FH_exportJSON(){
   var st = n400FH_state();
   var data = JSON.stringify({ caminoN400Backup: 1, exportedAt: new Date().toISOString(), n400: st }, null, 2);
@@ -11586,6 +11693,7 @@ function populateIcons(){
 }
 
 function renderAll(){
+  try { checkBadges(false); } catch(e){}
   renderHomeStrip();
   renderHomeNext();
   renderJourney();
@@ -12885,6 +12993,31 @@ function resetOnboarding(){
 var picked = null;
 var lessonState = null;
 
+// ===== HEARTS: a real daily pool ===============================================
+// Free plan: 5 hearts a day, one lost per wrong answer in lessons, refilled at
+// midnight, +1 for finishing a review of missed questions. Plus: unlimited.
+// (Hearts used to reset to 5 on every retry, which made "unlimited hearts" meaningless.)
+var HEARTS_MAX = 5;
+function heartsLeft(){
+  if(isPlus()) return Infinity;
+  var h = user.hearts;
+  if(!h || h.date !== todayISO()){ user.hearts = {date: todayISO(), left: HEARTS_MAX}; h = user.hearts; }
+  return Math.max(0, h.left);
+}
+function spendHeart(){
+  if(isPlus()) return Infinity;
+  heartsLeft();
+  user.hearts.left = Math.max(0, user.hearts.left - 1);
+  saveUser();
+  return user.hearts.left;
+}
+function earnHeart(){
+  if(isPlus()) return;
+  heartsLeft();
+  if(user.hearts.left < HEARTS_MAX){ user.hearts.left++; saveUser(); }
+}
+function heartsLabel(){ var h = heartsLeft(); return h === Infinity ? '∞' : String(h); }
+
 function getCurrentLessonId(){
   for(var i=0;i<LESSONS.length;i++){
     if(user.progress.completedLessons.indexOf(LESSONS[i].id) !== -1) continue;
@@ -12931,6 +13064,7 @@ function startLesson(lessonId, skipIntro){
   }
   var qIds = lesson.qIds.filter(mcAskable);
   if(!qIds.length) qIds = lesson.qIds.slice();
+  if(heartsLeft() === 0){ renderOutOfHearts(lesson); return; }
   lessonState = {
     lessonId: lessonId,
     qIds: qIds,
@@ -12940,7 +13074,7 @@ function startLesson(lessonId, skipIntro){
     correct: 0,
     correctQIds: [],
     wrongQIds: [],
-    hearts: 5,
+    hearts: heartsLeft(),
     inARow: 0,
     answered: false,
     failed: false,
@@ -12983,10 +13117,17 @@ function renderLessonIntro(){
     + '<div class="introUnit">'+unitName+'</div>'
     + '<div class="introTitle">'+l.title[lang]+'</div>'
     + (introText ? '<div class="introBody">'+introText+'</div>' : '')
-    + '<div class="introMeta">'+lessonState.qIds.length+' '+(lang==='es' ? 'preguntas' : 'questions')+' · ♥ '+(isPlus() ? '∞' : '5')+' '+(lang==='es' ? 'corazones' : 'hearts')+'</div>'
+    + '<div class="introMeta">'+lessonState.qIds.length+' '+(lang==='es' ? 'preguntas' : 'questions')+' · ♥ '+heartsLabel()+' '+(lang==='es' ? 'corazones' : 'hearts')+'</div>'
     + '<button class="cta introBegin" onclick="beginLessonQuestions()">'+(lang==='es' ? 'Empezar' : 'Begin')+' →</button>'
     + '<button class="failedExit" onclick="exitLesson()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>'
     + '</div>';
+}
+
+// Starting a lesson with an empty pool: same panel, before any question.
+function renderOutOfHearts(lesson){
+  lessonState = {lessonId: lesson.id, qIds: [], qIdx: -1, correct: 0, correctQIds: [], wrongQIds: [], hearts: 0, failed: true, isReview: false};
+  go('lesson');
+  failLesson();
 }
 
 function restartLesson(){
@@ -13011,7 +13152,7 @@ function startReviewSession(){
     correct: 0,
     correctQIds: [],
     wrongQIds: [],
-    hearts: 5,
+    hearts: Infinity,       // reviews never cost hearts
     inARow: 0,
     answered: false,
     failed: false,
@@ -13073,7 +13214,7 @@ function renderQuestion(){
   if(fill) fill.style.width = fillPct + '%';
 
   var heartsN = document.getElementById('heartsN');
-  if(heartsN) heartsN.textContent = isPlus() ? '∞' : lessonState.hearts;
+  if(heartsN) heartsN.textContent = lessonState.isReview ? '∞' : heartsLabel();
 
   picked = null;
   var fb = document.getElementById('fb');
@@ -13131,8 +13272,8 @@ function check(){
       lessonState.requeue = lessonState.requeue || []; lessonState.requeuedOnce = lessonState.requeuedOnce || {};
       if(!lessonState.requeuedOnce[qId]){ lessonState.requeuedOnce[qId] = true; lessonState.requeue.push(qId); }
     }
-    if(!isPlus()){                      // Plus: unlimited hearts (as advertised on the paywall)
-      lessonState.hearts = Math.max(0, lessonState.hearts - 1);
+    if(!isPlus() && !lessonState.isReview){   // Plus: unlimited hearts (as advertised on the paywall)
+      lessonState.hearts = spendHeart();
       var heartsN = document.getElementById('heartsN');
       if(heartsN) heartsN.textContent = lessonState.hearts;
       var heartsBox = document.querySelector('#lesson .hearts');
@@ -13267,7 +13408,10 @@ function renderLessonFailed(){
     +   '<div class="failedStat"><div class="failedStatVal">'+attempted+' / '+total+'</div><div class="failedStatLbl">'+(lang==='es'?'intentadas':'attempted')+'</div></div>'
     + '</div>'
     + (lessonTitle ? '<div class="failedLessonName">'+lessonTitle+'</div>' : '')
-    + '<button class="cta failedRetry" onclick="restartLesson()">'+inlineIcon('refresh','#fff',16)+(lang==='es' ? 'Intentar de nuevo' : 'Try again')+'</button>'
+    + (heartsLeft() > 0
+        ? '<button class="cta failedRetry" onclick="restartLesson()">'+inlineIcon('refresh','#fff',16)+(lang==='es' ? 'Intentar de nuevo' : 'Try again')+'</button>'
+        : '<div class="failedNoHearts">'+(lang==='es' ? 'Los corazones se recargan a medianoche. Repasa tus preguntas falladas para ganar uno ahora.' : 'Hearts refill at midnight. Review your missed questions to earn one now.')+'</div>'
+          + ((user.progress.missedQs || []).length ? '<button class="cta failedRetry" onclick="startReviewSession()">'+inlineIcon('refresh','#fff',16)+(lang==='es' ? 'Repasar y ganar un corazón' : 'Review and earn a heart')+'</button>' : ''))
     + (!isPlus() ? '<button class="failedExit" onclick="go(\'upgrade\')">'+(lang==='es' ? '♥ Corazones ilimitados con Plus' : '♥ Unlimited hearts with Plus')+'</button>' : '')
     + '<button class="failedExit" onclick="exitLesson()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>'
     + '</div>';
@@ -13294,6 +13438,7 @@ function completeLesson(){
     addXP(5);
     syncMasteredCount();
     markActiveToday();
+    earnHeart();
     saveUser();
     var earned = lessonState.correct;
     var totalR = lessonState.qIds.length;
@@ -13519,6 +13664,9 @@ function renderLessonComplete(){
     +   (tdy >= goal ? '<div class="completeDailyDoneTxt">'+inlineIcon('star','#ffc83d',13)+(lang==='es'?'¡Meta cumplida!':'Goal met today!')+'</div>' : '')
     + '</div>'
     + (nextL ? '<button class="cta completeNext" onclick="startLesson(\''+nextL.id+'\')">'+(lang==='es'?'Siguiente':'Next')+': '+nextL.title[lang]+' →</button>' : '<button class="cta completeNext" onclick="exitLesson()">'+(lang==='es'?'¡Has terminado todo!':'You\'ve finished everything!')+'</button>')
+    + ((Reminders.available() && !Reminders.enabled() && (p.completedLessons||[]).length <= 2)
+        ? '<button class="completeRemind" onclick="requestNotifications()">'+iconSVG('bell','#ff6b35',16)+' '+(lang==='es'?'Recuérdame cada día':'Remind me every day')+'</button>'
+        : '')
     + '<button class="completeExit" onclick="exitLesson()">'+(lang==='es'?'Volver a Hoy':'Back to Today')+'</button>'
     + '</div>';
 }
@@ -13885,7 +14033,7 @@ function startReviewFromMock(){
     correct: 0,
     correctQIds: [],
     wrongQIds: [],
-    hearts: 5,
+    hearts: Infinity,       // reviews never cost hearts
     inARow: 0,
     answered: false,
     failed: false,
@@ -14168,6 +14316,7 @@ function saveExpiration(key, date, label){
     delete user.expirationDates[key];
   }
   saveUser();
+  try { Reminders.scheduleDateAlerts(); } catch(e){}
   // Re-render the tracker to update badges
   showExpirationTracker();
   // Also re-render the dates list so it picks up new expirations
@@ -14242,7 +14391,7 @@ function renderHomeMockCard(){
     el.innerHTML = homeCardHtml({icon:'target', color:'#8c4dd1', kicker: head,
       title: lang==='es' ? 'Toma tu primer examen' : 'Take your first test',
       sub: lang==='es' ? rules.mockSize+' preguntas al azar · USCIS aprueba con '+rules.mockPass+'/'+rules.mockSize : rules.mockSize+' random questions · USCIS passes at '+rules.mockPass+'/'+rules.mockSize,
-      meta: lang==='es' ? 'Sin tiempo límite' : 'No time limit', go: lang==='es' ? 'Empezar' : 'Start'});
+      meta: (lang==='es' ? 'Sin tiempo límite' : 'No time limit') + limitHint(todayMockTestsAvailable()), go: lang==='es' ? 'Empezar' : 'Start'});
   } else {
     var best = scores.reduce(function(m, sc){ return sc.score > m ? sc.score : m; }, 0);
     var last = scores[scores.length - 1];
@@ -14250,7 +14399,7 @@ function renderHomeMockCard(){
       title: (lang==='es' ? 'Mejor: ' : 'Best: ') + best + ' / ' + rules.mockSize,
       sub: (lang==='es' ? 'Último: ' : 'Last: ') + last.score + '/' + (last.total || rules.mockSize) + ' · ' + last.takenAt + (last.passed ? (lang==='es' ? ' · ✓ Aprobado' : ' · ✓ Pass') : (lang==='es' ? ' · Sigue' : ' · Keep going')),
       progress: Math.round(best / rules.mockSize * 100),
-      meta: (lang==='es' ? 'Intentos: ' : 'Attempts: ') + scores.length, go: lang==='es' ? 'Intentar de nuevo' : 'Try again'});
+      meta: (lang==='es' ? 'Intentos: ' : 'Attempts: ') + scores.length + limitHint(todayMockTestsAvailable()), go: lang==='es' ? 'Intentar de nuevo' : 'Try again'});
   }
 }
 
@@ -14647,6 +14796,31 @@ var ACHIEVEMENTS = [
   {id:'eligibility',  icon:'check', color:'#00b4a8', name:{en:'Eligibility passed',     es:'Elegibilidad aprobada'},check:function(u){ return u.eligibility && u.eligibility.passed; }}
 ];
 
+// Badges are earned once and kept (a broken streak does not take "7-day streak" away).
+function badgeUnlocked(a){ return !!(user.badges && user.badges[a.id]); }
+function checkBadges(silent){
+  if(!user || !user.progress) return [];
+  var first = !user.badges;
+  if(first) user.badges = {};
+  var fresh = [];
+  ACHIEVEMENTS.forEach(function(a){
+    if(user.badges[a.id]) return;
+    var got = false;
+    try { got = !!a.check(user); } catch(e){}
+    if(got){ user.badges[a.id] = todayISO(); fresh.push(a); }
+  });
+  if(fresh.length){
+    saveUser();
+    // First run just records what was already earned; after that, celebrate each unlock.
+    if(!silent && !first){
+      fresh.forEach(function(a, i){
+        setTimeout(function(){ sfxComplete(); toast((lang==='es' ? 'Logro desbloqueado: ' : 'Badge unlocked: ') + a.name[lang], 'trophy'); }, 900 + i * 2100);
+      });
+    }
+  }
+  return fresh;
+}
+
 function renderMe(){
   var avatar = document.getElementById('meAvatar');
   var nameEl = document.getElementById('meName');
@@ -14723,11 +14897,10 @@ function renderMe(){
   if(user.criminalHistory) html += '<div class="row"><div class="rIco" style="background:rgba(255,159,10,.16);">'+iconSVG('warning','#ff9b21',20)+'</div><div class="rMain"><div class="rTitle" style="color:var(--orange)">'+(lang==='es'?'Marcado para revisión':'Flagged for review')+'</div><div class="rSub">'+(lang==='es'?'Consulta con un abogado de inmigración antes de presentar':'Talk to an immigration lawyer before filing')+'</div></div></div>';
   html += '</div>';
 
-  // Web Notification API doesn't exist in the iOS webview. Don't offer a dead
-  // "Enable" button there. (Native reminders return via local-notifications in v1.1.)
-  if(notifSupported()){
+  // iOS: local notifications via the Capacitor plugin. Web: the Notification API.
+  if(Reminders.available()){
     var notif = user.notifications || {enabled:false, time:'09:00'};
-    var notifEnabled = notif.enabled && (Notification.permission === 'granted');
+    var notifEnabled = Store.isNative() ? !!notif.enabled : (notif.enabled && (Notification.permission === 'granted'));
     html += '<div class="sec">'+(lang==='es'?'Recordatorios':'Reminders')+'</div>';
     html += '<div class="mini">';
     html += '<div class="row"><div class="rIco" style="background:rgba(255,107,53,.16);">'+iconSVG('bell','#ff6b35',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Recordatorios diarios':'Daily reminders')+'</div><div class="rSub">'+(notifEnabled ? (lang==='es'?'Activado · navegador':'On · browser') : (lang==='es'?'Desactivado':'Off'))+'</div></div>'
@@ -14763,7 +14936,8 @@ function renderMe(){
   html += '<div class="row"><div class="rIco" style="background:rgba(140,77,209,.14);">'+iconSVG('folder','#8c4dd1',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Documentos':'Documents')+'</div><div class="rSub">'+docs.ready+' / '+docs.total+' '+(lang==='es'?'listos':'ready')+'</div></div></div>';
   html += '</div>';
 
-  var unlockedCount = ACHIEVEMENTS.filter(function(a){return a.check(user);}).length;
+  checkBadges(true);
+  var unlockedCount = ACHIEVEMENTS.filter(function(a){ return badgeUnlocked(a); }).length;
   html += '<div class="sec">'+(lang==='es'?'Logros':'Achievements')
        + ' <span class="secCount">'+unlockedCount+'/'+ACHIEVEMENTS.length+'</span></div>';
   if(unlockedCount === 0){
@@ -14772,7 +14946,7 @@ function renderMe(){
   html += '<div class="achGrid">';
   for(var ai=0; ai<ACHIEVEMENTS.length; ai++){
     var a = ACHIEVEMENTS[ai];
-    var got = a.check(user);
+    var got = badgeUnlocked(a);
     html += '<div class="achBadge'+(got?' achUnlocked':'')+'" role="img" aria-label="'+a.name[lang]+(got?'. Unlocked':'. Locked')+'">'
       +    '<div class="achIcon">'+(got ? iconSVG(a.icon, a.color, 30) : '<span class="achLockSvg">'+iconSVG('shield','#84807a',24)+'</span>')+'</div>'
       +    '<div class="achName">'+a.name[lang]+'</div>'
@@ -14847,6 +15021,9 @@ function renderMe(){
   html += '<div class="row" onclick="go(\'help\')"><div class="rIco" style="background:rgba(28,176,246,.14);">'+iconSVG('question','#1cb0f6',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Ayuda y preguntas':'Help & FAQ')+'</div><div class="rSub">'+(lang==='es'?'Respuestas comunes + comentarios':'Common answers + feedback')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="showDisclaimerModal(true)"><div class="rIco" style="background:rgba(132,128,122,.16);">'+iconSVG('scales','#84807a',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Términos y descargo legal':'Terms & legal disclaimer')+'</div><div class="rSub">'+(lang==='es'?'Lo que esta app es y no es':'What this app is and isn\'t')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="confirmRestartOnboarding()"><div class="rIco" style="background:rgba(10,132,255,.14);">'+iconSVG('refresh','#0a84ff',20)+'</div><div class="rMain"><div class="rTitle" style="color:var(--blue)">'+(lang==='es'?'Volver a configurar perfil':'Restart onboarding')+'</div><div class="rSub">'+(lang==='es'?'Repasa las preguntas iniciales':'Re-enter your profile answers')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="exportAllData()"><div class="rIco" style="background:rgba(0,180,168,.14);">'+iconSVG('download','#0f6b62',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Exportar todos mis datos':'Export all my data')+'</div><div class="rSub">'+(lang==='es'?'Progreso, documentos, fechas, perfil y N-400 (JSON)':'Progress, documents, dates, profile and N-400 (JSON)')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="document.getElementById(\'allImportFile\').click()"><div class="rIco" style="background:rgba(28,176,246,.14);">'+iconSVG('folder','#1cb0f6',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Importar datos':'Import data')+'</div><div class="rSub">'+(lang==='es'?'Desde un archivo exportado de Camino':'From a Camino export file')+'</div></div><div class="chev">›</div></div>';
+  if(user.n400 && Object.keys(user.n400.answers||{}).length > 0) html += '<div class="row" onclick="n400FH_exportJSON()"><div class="rIco" style="background:rgba(94,92,230,.14);">'+iconSVG('doc','#5e5ce6',20)+'</div><div class="rMain"><div class="rTitle">'+(lang==='es'?'Exportar mis respuestas N-400':'Export my N-400 answers')+'</div><div class="rSub">'+(lang==='es'?'Siempre disponible, con o sin Plus':'Always available, with or without Plus')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="confirmClearData()"><div class="rIco" style="background:rgba(255,59,48,.12);">'+iconSVG('x','#ff3b30',20)+'</div><div class="rMain"><div class="rTitle" style="color:var(--red)">'+(lang==='es'?'Borrar todos los datos':'Clear all data')+'</div><div class="rSub">'+(lang==='es'?'Borra perfil, progreso y documentos':'Wipes profile, progress, and documents')+'</div></div><div class="chev">›</div></div>';
   html += '</div>';
 
@@ -14896,10 +15073,118 @@ function cancelDailyNotification(){
   postToServiceWorker({type:'cancel-daily'});
 }
 
+// ===== REMINDERS ================================================================
+// iOS: @capacitor/local-notifications (daily nudge, streak-at-risk the evening
+// after a missed day, trial-ends-in-2-days, document expirations at 90/30/7).
+// Web: the browser Notification API while the app is open.
+var Reminders = {
+  IDS: {daily: 1001, streak: 1002, trial: 1003, dateBase: 2000},
+  plugin: function(){ return window.CapLocalNotifications || (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) || null; },
+  available: function(){ return Store.isNative() ? !!this.plugin() : (typeof Notification !== 'undefined'); },
+  enabled: function(){ return !!(user && user.notifications && user.notifications.enabled); },
+  requestPermission: function(){
+    var p = this.plugin();
+    if(!p) return Promise.resolve(false);
+    return p.requestPermissions().then(function(r){ return !!(r && r.display === 'granted'); }).catch(function(){ return false; });
+  },
+  _schedule: function(list){
+    var p = this.plugin(); if(!p || !list.length) return Promise.resolve();
+    return p.schedule({notifications: list}).catch(function(){});
+  },
+  _cancel: function(ids){
+    var p = this.plugin(); if(!p || !ids.length) return Promise.resolve();
+    return p.cancel({notifications: ids.map(function(id){ return {id:id}; })}).catch(function(){});
+  },
+  _at: function(dateISO, hour, minute){
+    var parts = dateISO.split('-');
+    return new Date(+parts[0], +parts[1]-1, +parts[2], hour || 9, minute || 0, 0, 0);
+  },
+  scheduleDaily: function(timeStr){
+    if(!Store.isNative() || !this.enabled()) return;
+    var parts = (timeStr || '09:00').split(':'); var h = parseInt(parts[0],10), m = parseInt(parts[1],10);
+    if(isNaN(h) || isNaN(m)) return;
+    var self = this;
+    this._cancel([this.IDS.daily]).then(function(){
+      self._schedule([{ id: self.IDS.daily, title: 'Camino',
+        body: lang==='es' ? 'Cinco minutos de cívica hoy. Tu racha te espera.' : 'Five minutes of civics today. Your streak is waiting.',
+        schedule: { on: { hour: h, minute: m }, repeats: true, allowWhileIdle: true }, sound: null, smallIcon: 'ic_stat_icon' }]);
+    });
+  },
+  // Re-armed on every activity: fires at 20:00 tomorrow only if no activity happens first.
+  scheduleStreakRisk: function(){
+    if(!Store.isNative() || !this.enabled()) return;
+    var p = user.progress || {}; var self = this;
+    this._cancel([this.IDS.streak]).then(function(){
+      if(!p.streak) return;
+      self._schedule([{ id: self.IDS.streak, title: 'Camino',
+        body: lang==='es' ? 'Tu racha de '+p.streak+' días termina esta noche. Una lección corta la salva.' : 'Your '+p.streak+'-day streak ends tonight. One short lesson saves it.',
+        schedule: { at: self._at(isoDaysAgo(-1), 20, 0), allowWhileIdle: true }, sound: null }]);
+    });
+  },
+  scheduleTrialReminder: function(endsAtISO){
+    if(!Store.isNative() || !endsAtISO) return;
+    var at = new Date(new Date(endsAtISO).getTime() - 2*86400000); at.setHours(10, 0, 0, 0);
+    if(at.getTime() < Date.now()) return;
+    var self = this;
+    this.requestPermission().then(function(okp){
+      if(!okp) return;
+      self._schedule([{ id: self.IDS.trial, title: 'Camino Plus',
+        body: lang==='es' ? 'Tu prueba gratis termina en 2 días. Cancela cuando quieras en Ajustes › App Store.' : 'Your free trial ends in 2 days. Cancel anytime in Settings › App Store.',
+        schedule: { at: at, allowWhileIdle: true }, sound: null }]);
+    });
+  },
+  // 90 / 30 / 7 days before each tracked expiration date.
+  scheduleDateAlerts: function(){
+    if(!Store.isNative() || !this.enabled()) return;
+    var self = this; var old = user.reminderIds || [];
+    this._cancel(old).then(function(){
+      var list = []; var ids = []; var n = 0;
+      var entries = user.expirationDates || {};
+      Object.keys(entries).forEach(function(key){
+        var e = entries[key]; if(!e || !e.date) return;
+        [90, 30, 7].forEach(function(days){
+          var at = self._at(e.date, 9, 0); at.setDate(at.getDate() - days);
+          if(at.getTime() < Date.now()) return;
+          var id = self.IDS.dateBase + (n++);
+          ids.push(id);
+          list.push({ id: id, title: 'Camino', body: (e.label || key) + (lang==='es' ? ' vence en '+days+' días' : ' expires in '+days+' days'),
+            schedule: { at: at, allowWhileIdle: true }, sound: null });
+        });
+      });
+      user.reminderIds = ids; saveUser();
+      self._schedule(list);
+    });
+  },
+  onActivity: function(){ try { this.scheduleStreakRisk(); } catch(e){} },
+  cancelAll: function(){
+    var ids = [this.IDS.daily, this.IDS.streak].concat(user.reminderIds || []);
+    user.reminderIds = []; saveUser();
+    return this._cancel(ids);
+  }
+};
+
 // ===== BROWSER NOTIFICATIONS =====
 function notifSupported(){ return typeof Notification !== 'undefined'; }
 
 function requestNotifications(){
+  if(Store.isNative()){
+    if(!Reminders.plugin()){ toast(lang==='es' ? 'Recordatorios no disponibles en esta versión' : 'Reminders are not available in this build'); return; }
+    Reminders.requestPermission().then(function(okp){
+      user.notifications = user.notifications || {time:'09:00'};
+      user.notifications.enabled = okp;
+      saveUser();
+      renderMe();
+      if(okp){
+        Reminders.scheduleDaily(user.notifications.time || '09:00');
+        Reminders.scheduleStreakRisk();
+        Reminders.scheduleDateAlerts();
+        toast(lang==='es' ? 'Listo. Te recordaremos a las '+(user.notifications.time||'09:00') : 'Done. We will remind you at '+(user.notifications.time||'09:00'), 'check');
+      } else {
+        toast(lang==='es' ? 'Permiso denegado. Actívalo en Ajustes › Camino › Notificaciones' : 'Permission denied. Turn it on in Settings › Camino › Notifications');
+      }
+    });
+    return;
+  }
   if(!notifSupported()){
     toast(lang==='es' ? 'Notificaciones no soportadas en este navegador' : 'Notifications not supported in this browser');
     return;
@@ -14925,7 +15210,7 @@ function requestNotifications(){
 function disableNotifications(){
   user.notifications = user.notifications || {time:'09:00'};
   user.notifications.enabled = false;
-  cancelDailyNotification();
+  if(Store.isNative()) Reminders.cancelAll(); else cancelDailyNotification();
   saveUser();
   renderMe();
 }
@@ -14959,6 +15244,7 @@ function setNotifTime(timeStr){
   user.notifications = user.notifications || {enabled:false};
   user.notifications.time = timeStr;
   saveUser();
+  if(Store.isNative()){ Reminders.scheduleDaily(timeStr); return; }
   if(user.notifications.enabled) scheduleDailyNotification(timeStr);
 }
 
@@ -15371,6 +15657,10 @@ function toast(msg, icon){
     user.officialGovernor = stored.officialGovernor || '';
     user.intvHandsFree = !!stored.intvHandsFree;
     user.pendingTrialOffer = !!stored.pendingTrialOffer;
+    user.hearts = stored.hearts || null;
+    user.badges = stored.badges || null;
+    user.reminderIds = Array.isArray(stored.reminderIds) ? stored.reminderIds : [];
+    user.planLapsedAt = stored.planLapsedAt || null;
     user.plan = stored.plan || 'free';
     user.trialStartedAt = stored.trialStartedAt || null;
     user.trialEndsAt = stored.trialEndsAt || null;
