@@ -736,6 +736,9 @@ function getImportantDates(u){
   var dates = [];
   var now = today();
   var yrs = residencyYears(u);
+  // Green-card and N-400 milestones only make sense for permanent residents;
+  // everyone else gets custom dates and expirations only.
+  if(u.phase && u.phase !== 'hasGC') return dates;
 
   if(u.greenCardDate){
     var gcD = parseISO(u.greenCardDate);
@@ -2266,14 +2269,14 @@ var DOC_CATS = [
 ];
 
 var DOCUMENTS = [
-  {id:'gc', cat:'identity', uscisForms:['I-90'], paths:['n400','family-ir','family-pref','family-lpr','employment'],
+  {id:'gc', cat:'identity', uscisForms:['I-90'], paths:['n400'],
     name:{en:'Green card (front + back)', es:'Residencia (frente y reverso)'},
     sub:{en:'Copy your Permanent Resident Card', es:'Copia tu tarjeta de residente permanente'},
     howTo:{en:'You already have this. It came in the mail when you became a permanent resident. Make clear color copies of BOTH sides of the most recent version of your I-551 card.',
            es:'Ya la tienes. Llegó por correo cuando te hiciste residente. Haz copias a color claras de AMBOS lados de la versión más reciente de tu tarjeta I-551.'},
     tips:{en:['If lost or stolen, file Form I-90 to replace it.','If expired, it remains valid for naturalization. But USCIS may ask why you didn\'t renew.','Bring the ORIGINAL card to your interview, plus your copy.'],
           es:['Si se perdió o robó, presenta el Formulario I-90 para reemplazo.','Si vencida, aún es válida para naturalización. Pero USCIS puede preguntar por qué no la renovaste.','Lleva la tarjeta ORIGINAL a tu entrevista, más tu copia.']},
-    cost:{en:'$465 online ($415 paper) to replace via I-90', es:'$465 en línea ($415 en papel) con I-90'},
+    cost:{en:'$415 online ($465 paper) to replace via I-90', es:'$415 en línea ($465 en papel) con I-90'},
     time:{en:'Have it now; ~10–12 months for I-90 replacement', es:'La tienes ahora; ~10–12 meses para reemplazo I-90'}},
 
   {id:'stateId', cat:'identity', paths:['n400','family-ir','employment'],
@@ -2286,7 +2289,7 @@ var DOCUMENTS = [
     cost:{en:'$30–$60 depending on state', es:'$30–$60 según el estado'},
     time:{en:'Same day to 4 weeks', es:'Mismo día a 4 semanas'}},
 
-  {id:'passports', cat:'identity', paths:['n400','student','opt','workvisa','family-ir','family-pref','family-lpr','employment','asylum'],
+  {id:'passports', cat:'identity', paths:['n400','student','opt','workvisa','family-ir','family-pref','family-lpr','employment','asylum','k1','dv','eb5','e2','tn','o1','l1','r1','e3h1b1','tps','daca','uvisa','sijs','cuban','military','explore'],
     name:{en:'All passports', es:'Todos los pasaportes'},
     sub:{en:'Current and expired, every country', es:'Vigentes y vencidos, todos los países'},
     howTo:{en:'Collect every passport you\'ve ever held. From every country of citizenship. Including expired ones. Pull them from old document storage, parents\' files, or safe-deposit boxes.',
@@ -2296,7 +2299,7 @@ var DOCUMENTS = [
     cost:{en:'Free if you have them; $130+ to replace via consulate', es:'Gratis si los tienes; $130+ para reemplazo en consulado'},
     time:{en:'Pull from records; up to 8 weeks for replacements', es:'Búscalos en tus archivos; hasta 8 semanas para reemplazos'}},
 
-  {id:'photos', cat:'identity', paths:['n400','family-ir','employment','asylum'],
+  {id:'photos', cat:'identity', paths:['n400','family-ir','family-pref','family-lpr','employment','asylum','k1','dv','eb5','tps','daca','uvisa','sijs','cuban','military'],
     name:{en:'Two passport-style photos', es:'Dos fotos tipo pasaporte'},
     sub:{en:'2 x 2 in, white background', es:'2 x 2 pulg, fondo blanco'},
     howTo:{en:'Get them at Walgreens, CVS, Costco, AAA, or any photo printing service. Just ask for "passport photos." They handle the spec automatically.',
@@ -2371,16 +2374,16 @@ var DOCUMENTS = [
     sub:{en:'Form I-912 if you qualify for a waiver', es:'Formulario I-912 si calificas para exención'},
     howTo:{en:'Pay by check or money order to "U.S. Department of Homeland Security," or by credit card with Form G-1450. To request a waiver, file Form I-912 with proof of income or means-tested benefits.',
            es:'Paga con cheque o money order a "U.S. Department of Homeland Security," o con tarjeta usando el Formulario G-1450. Para pedir exención, presenta el Formulario I-912 con prueba de ingresos o beneficios.'},
-    tips:{en:['Fee waiver: receiving Medicaid, SNAP, SSI, or TANF auto-qualifies you.','Income below 150% of federal poverty also qualifies (~$22,500/year for one person).','Many people qualify and don\'t know it. Check before paying.'],
-          es:['Exención: recibir Medicaid, SNAP, SSI o TANF te califica automáticamente.','Ingreso por debajo del 150% del nivel federal de pobreza también califica (~$22,500/año para una persona).','Muchas personas califican y no lo saben. Verifica antes de pagar.']},
-    cost:{en:'$760 paper, $710 online. Or $0 with approved I-912', es:'$760 papel, $710 en línea. O $0 con I-912 aprobado'},
+    tips:{en:['Fee waiver: receiving Medicaid, SNAP, SSI, or TANF auto-qualifies you.','Income below 150% of federal poverty also qualifies (about $23,475/year for one person under the 2025 guidelines).','Between 150% and 400% of poverty you can request the $380 reduced fee in Part 10 of the N-400.','Many people qualify and don\'t know it. Check before paying.'],
+          es:['Exención: recibir Medicaid, SNAP, SSI o TANF te califica automáticamente.','Ingreso por debajo del 150% del nivel federal de pobreza también califica (unos $23,475/año para una persona según las guías de 2025).','Entre 150% y 400% del nivel de pobreza puedes pedir la tarifa reducida de $380 en la Parte 10 del N-400.','Muchas personas califican y no lo saben. Verifica antes de pagar.']},
+    cost:{en:'$760 paper, $710 online. $380 reduced fee (income under 400% of poverty). $0 with approved I-912', es:'$760 papel, $710 en línea. $380 tarifa reducida (ingreso bajo 400% del nivel de pobreza). $0 con I-912 aprobado'},
     time:{en:'Immediate', es:'Inmediato'}},
 
   {id:'n400', cat:'fees', uscisForms:['N-400'], paths:['n400'],
     name:{en:'Completed Form N-400', es:'Formulario N-400 completo'},
     sub:{en:'Filled, signed, and dated', es:'Completo, firmado y fechado'},
-    howTo:{en:'Download the current version from uscis.gov/n-400. It\'s 20 pages. Fill it out in black ink (or type and print). Use the "N-400 walkthrough" in this app for a section-by-section guide.',
-           es:'Descarga la versión actual de uscis.gov/n-400. Son 20 páginas. Llénala con tinta negra (o escribe y imprime). Usa la "Guía del N-400" de esta app como ayuda.'},
+    howTo:{en:'Download the current version from uscis.gov/n-400. It\'s 14 pages. Fill it out in black ink (or type and print). Use the "N-400 walkthrough" in this app for a section-by-section guide.',
+           es:'Descarga la versión actual de uscis.gov/n-400. Son 14 páginas. Llénala con tinta negra (o escribe y imprime). Usa la "Guía del N-400" de esta app como ayuda.'},
     tips:{en:['Always use the LATEST version. Outdated versions are rejected.','Sign and date every page that asks for a signature.','Make a copy of EVERYTHING you mail to USCIS before sending.','You can also file online via my.uscis.gov.'],
           es:['Siempre usa la versión MÁS RECIENTE. Las viejas se rechazan.','Firma y fecha cada página que pida firma.','Haz copia de TODO antes de enviar a USCIS.','También puedes presentar en línea en my.uscis.gov.']},
     cost:{en:'Free to download', es:'Gratis descargar'},
@@ -2397,7 +2400,7 @@ var DOCUMENTS = [
     cost:{en:'Free from your school', es:'Gratis de tu escuela'},
     time:{en:'Have it now', es:'Ya la tienes'}},
 
-  {id:'i94', cat:'identity', paths:['student','opt','workvisa','asylum'],
+  {id:'i94', cat:'identity', paths:['student','opt','workvisa','asylum','tps','daca','uvisa','cuban','sijs','tn','o1','l1','e2','r1','e3h1b1','explore'],
     name:{en:'I-94 Arrival/Departure Record', es:'I-94 Registro de Entrada/Salida'},
     sub:{en:'Proof of legal entry. Pull every 6 months', es:'Prueba de entrada legal. Descarga cada 6 meses'},
     howTo:{en:'Download the latest from i94.cbp.dhs.gov. Enter your passport number + country of citizenship. Save the PDF. It logs every U.S. arrival.',
@@ -2424,10 +2427,10 @@ var DOCUMENTS = [
            es:'Presenta el Formulario I-765 con USCIS. Solicitantes de asilo: gratis después de 150 días. Solicitantes OPT: $470 en línea ($520 en papel) + tu I-20 endosado para OPT. Una vez aprobado, la tarjeta EAD llega por correo.'},
     tips:{en:['You CANNOT work until you have the EAD card in hand.','OPT card lists a specific start date. Don\'t start work until then.','If expired or lost, you stop being authorized to work immediately.'],
           es:['NO PUEDES trabajar hasta tener la tarjeta EAD en mano.','La tarjeta OPT lista una fecha de inicio específica. No empieces a trabajar antes.','Si expira o se pierde, dejas de estar autorizado a trabajar inmediatamente.']},
-    cost:{en:'$470 online, $520 paper (OPT) or $0 (asylum)', es:'$470 en línea, $520 papel (OPT) o $0 (asilo)'},
+    cost:{en:'$470 online, $520 paper (OPT). Asylum applicants: $550 for the first EAD, $275 renewals (since July 2025)', es:'$470 en línea, $520 papel (OPT). Solicitantes de asilo: $550 el primer EAD, $275 renovaciones (desde julio de 2025)'},
     time:{en:'2–6 months', es:'2–6 meses'}},
 
-  {id:'i797', cat:'work', paths:['workvisa','family-ir','employment'],
+  {id:'i797', cat:'work', paths:['workvisa','family-ir','employment','l1','o1','r1'],
     name:{en:'I-797 Approval Notice', es:'Aviso de Aprobación I-797'},
     sub:{en:'Proof your petition was approved', es:'Prueba de que tu petición fue aprobada'},
     howTo:{en:'USCIS mails the I-797 to your employer (workvisa) or sponsor (family/employment GC) once your petition is approved. Get a copy. You\'ll need it for visa applications, GC adjustment, and travel.',
@@ -2452,9 +2455,9 @@ var DOCUMENTS = [
     sub:{en:'Filed within 1 year of arrival', es:'Presentada dentro de 1 año de llegar'},
     howTo:{en:'Download Form I-589 from uscis.gov/i-589. The form asks for your story of persecution. Include corroborating evidence. Affidavits, news reports, country conditions, medical records, etc.',
            es:'Descarga el Formulario I-589 de uscis.gov/i-589. El formulario pide tu historia de persecución. Incluye evidencia. Declaraciones juradas, reportes, condiciones del país, registros médicos, etc.'},
-    tips:{en:['MUST be filed within 1 year of entering the U.S. (with rare exceptions).','No filing fee.','Bring at least 3 copies to your interview.','An attorney is highly recommended. Even pro bono.'],
-          es:['DEBE presentarse dentro de 1 año de entrar a EE.UU. (con raras excepciones).','Sin tarifa.','Lleva al menos 3 copias a la entrevista.','Un abogado es muy recomendado. Incluso pro bono.']},
-    cost:{en:'Free', es:'Gratis'},
+    tips:{en:['MUST be filed within 1 year of entering the U.S. (with rare exceptions).','Since July 22, 2025 there is a $100 filing fee, plus $100 for each year the case stays pending (fee waivers do not apply).','Bring at least 3 copies to your interview.','An attorney is highly recommended. Even pro bono.'],
+          es:['DEBE presentarse dentro de 1 año de entrar a EE.UU. (con raras excepciones).','Desde el 22 de julio de 2025 hay una tarifa de $100, más $100 por cada año que el caso siga pendiente (no aplican exenciones).','Lleva al menos 3 copias a la entrevista.','Un abogado es muy recomendado. Incluso pro bono.']},
+    cost:{en:'$100 (since July 2025) + $100 per year while pending', es:'$100 (desde julio de 2025) + $100 por año mientras esté pendiente'},
     time:{en:'Days to weeks to prepare', es:'Días o semanas para preparar'}},
 
   {id:'persecutionEvidence', cat:'records', paths:['asylum'], optional:false,
@@ -2465,42 +2468,295 @@ var DOCUMENTS = [
     tips:{en:['Translate every non-English document with a certified translator.','Country-condition reports (State Dept, HRW, Amnesty) are powerful evidence.','Keep originals safe; submit copies.','Specific facts beat general claims.'],
           es:['Traduce cada documento no inglés con traductor certificado.','Reportes de condiciones del país (Dept de Estado, HRW, Amnistía) son evidencia poderosa.','Guarda originales; entrega copias.','Hechos específicos son mejor que afirmaciones generales.']},
     cost:{en:'Varies. Translation $25–$50/page', es:'Varía. Traducción $25–$50/página'},
-    time:{en:'Weeks to months', es:'Semanas a meses'}}
+    time:{en:'Weeks to months', es:'Semanas a meses'}},
+
+  // ---- Shared immigrant-visa / adjustment documents ----
+  {id:'birthCert', cat:'identity', paths:['family-ir','family-pref','family-lpr','employment','k1','eb5','e2','tn','o1','l1','r1','dv','sijs','uvisa','tps','daca','cuban','military','explore'],
+    name:{en:'Birth certificate (+ certified translation)', es:'Acta de nacimiento (+ traducción certificada)'},
+    sub:{en:'Long-form, issued by the civil registry', es:'Versión completa, emitida por el registro civil'},
+    howTo:{en:'Request a certified copy from the civil registry of the place you were born. If it is not in English, add a word-for-word translation with the translator\'s signed certification of competence.',
+           es:'Pide una copia certificada al registro civil del lugar donde naciste. Si no está en inglés, agrega una traducción palabra por palabra con la certificación firmada del traductor.'},
+    tips:{en:['USCIS wants the long form with both parents\' names.','If no certificate exists, you need a "non-availability" letter plus secondary evidence (baptismal record, school records, affidavits).','Keep the original; submit copies unless USCIS asks for the original.'],
+          es:['USCIS quiere la versión completa con los nombres de ambos padres.','Si no existe acta, necesitas una carta de "no disponibilidad" más evidencia secundaria (fe de bautismo, registros escolares, declaraciones).','Guarda el original; entrega copias salvo que USCIS pida el original.']},
+    cost:{en:'Varies by country; translation $25–$50/page', es:'Varía por país; traducción $25–$50/página'},
+    time:{en:'Days to months, depending on the country', es:'Días a meses, según el país'}},
+  {id:'i130receipt', cat:'records', paths:['family-ir','family-pref','family-lpr'], uscisForms:['I-130'],
+    name:{en:'Form I-130 and receipt (I-797C)', es:'Formulario I-130 y recibo (I-797C)'},
+    sub:{en:'Your relative\'s petition for you', es:'La petición de tu familiar por ti'},
+    howTo:{en:'Your U.S. citizen or resident relative files Form I-130 (online at my.uscis.gov or by mail) with proof of the relationship and of their status. Keep the I-797C receipt: its date is your priority date.',
+           es:'Tu familiar ciudadano o residente presenta el Formulario I-130 (en línea en my.uscis.gov o por correo) con prueba del parentesco y de su estatus. Guarda el recibo I-797C: su fecha es tu fecha de prioridad.'},
+    tips:{en:['Immediate relatives of citizens can file I-130 and I-485 together.','The receipt number (IOE/MSC…) lets you track the case on uscis.gov.','Save every notice; USCIS sometimes asks for the originals at the interview.'],
+          es:['Familiares inmediatos de ciudadanos pueden presentar I-130 e I-485 juntos.','El número de recibo (IOE/MSC…) permite seguir el caso en uscis.gov.','Guarda cada aviso; USCIS a veces pide los originales en la entrevista.']},
+    cost:{en:'$625 online, $675 paper', es:'$625 en línea, $675 en papel'},
+    time:{en:'Receipt in 2–4 weeks; decision months to years by category', es:'Recibo en 2–4 semanas; decisión en meses o años según la categoría'}},
+  {id:'i140receipt', cat:'records', paths:['employment'], uscisForms:['I-140'],
+    name:{en:'Form I-140 approval or receipt', es:'Aprobación o recibo del Formulario I-140'},
+    sub:{en:'The employer\'s (or your own NIW) petition', es:'La petición del empleador (o tu propia NIW)'},
+    howTo:{en:'For EB-2/EB-3 your employer files I-140 after the PERM labor certification; for EB-1A and EB-2 NIW you file it yourself. Keep the I-797 receipt and the approval notice. The priority date is the PERM filing date (or the I-140 date for self-petitions).',
+           es:'Para EB-2/EB-3 tu empleador presenta el I-140 tras la certificación laboral PERM; para EB-1A y EB-2 NIW lo presentas tú. Guarda el recibo I-797 y la aprobación. La fecha de prioridad es la del PERM (o la del I-140 si es auto-petición).'},
+    tips:{en:['An approved I-140 lets you extend H-1B past six years and keep your priority date if you change employers after 180 days.','Premium processing is available for most I-140 categories.','Track the date against the Visa Bulletin every month.'],
+          es:['Un I-140 aprobado permite extender la H-1B más allá de seis años y conservar la fecha de prioridad si cambias de empleador tras 180 días.','Hay procesamiento premium para la mayoría de categorías I-140.','Compara la fecha con el Boletín de Visas cada mes.']},
+    cost:{en:'$715 + $600 Asylum Program Fee (employer; reduced for small employers)', es:'$715 + $600 de tarifa del programa de asilo (empleador; reducida para empresas pequeñas)'},
+    time:{en:'6–12 months standard; 15 business days premium', es:'6–12 meses estándar; 15 días hábiles premium'}},
+  {id:'i864', cat:'records', paths:['family-ir','family-pref','family-lpr','k1'], uscisForms:['I-864'],
+    name:{en:'Affidavit of Support (Form I-864) + sponsor\'s tax returns', es:'Declaración de sostenimiento (I-864) + impuestos del patrocinador'},
+    sub:{en:'Signed by your petitioning relative', es:'Firmada por tu familiar peticionario'},
+    howTo:{en:'Your sponsor completes Form I-864 and attaches their most recent federal tax return (or IRS transcript), W-2s, and proof of current income. Income must reach 125% of the poverty guidelines for the household size (100% for active-duty military sponsoring a spouse or child).',
+           es:'Tu patrocinador completa el Formulario I-864 y adjunta su declaración federal más reciente (o transcripción del IRS), W-2 y prueba de ingreso actual. El ingreso debe llegar al 125% de las guías de pobreza para el tamaño del hogar (100% para militares activos que patrocinan cónyuge o hijo).'},
+    tips:{en:['If income is short, add a joint sponsor (Form I-864 from another person) or count assets.','The obligation lasts until you naturalize or have 40 quarters of work.','Use the current poverty guidelines (Form I-864P).'],
+          es:['Si falta ingreso, agrega un co-patrocinador (otro I-864) o cuenta activos.','La obligación dura hasta que te naturalices o tengas 40 trimestres de trabajo.','Usa las guías de pobreza vigentes (Formulario I-864P).']},
+    cost:{en:'Free to file with I-485; $120 if submitted through NVC', es:'Gratis con el I-485; $120 si se entrega por el NVC'},
+    time:{en:'A few days to gather', es:'Unos días para reunir'}},
+  {id:'i693', cat:'records', paths:['family-ir','family-pref','family-lpr','employment','asylum','cuban','sijs','uvisa','eb5','k1','dv'], uscisForms:['I-693'],
+    name:{en:'Medical exam (Form I-693)', es:'Examen médico (Formulario I-693)'},
+    sub:{en:'By a USCIS civil surgeon, in a sealed envelope', es:'Con un cirujano civil de USCIS, en sobre sellado'},
+    howTo:{en:'Find a USCIS-designated civil surgeon at my.uscis.gov/findadoctor. Bring vaccination records and ID. The doctor completes Form I-693 and seals it; do not open it. Since 2024 a properly completed I-693 does not expire while the I-485 is pending.',
+           es:'Busca un cirujano civil designado por USCIS en my.uscis.gov/findadoctor. Lleva tus vacunas e identificación. El médico completa el I-693 y lo sella; no lo abras. Desde 2024 un I-693 bien completado no vence mientras el I-485 esté pendiente.'},
+    tips:{en:['Prices vary a lot ($200–$600); call several offices.','Missing vaccines can be given at the exam.','Consular applicants use a panel physician abroad instead.'],
+          es:['Los precios varían mucho ($200–$600); llama a varias oficinas.','Las vacunas que falten se pueden poner en el examen.','Los solicitantes consulares usan un médico del panel en el exterior.']},
+    cost:{en:'$200–$600 (set by the doctor)', es:'$200–$600 (lo fija el médico)'},
+    time:{en:'1–2 weeks including lab results', es:'1–2 semanas con resultados de laboratorio'}},
+  {id:'i485', cat:'fees', paths:['family-ir','family-pref','family-lpr','employment','cuban','sijs','uvisa','eb5','k1','asylum'], uscisForms:['I-485','I-765','I-131'],
+    name:{en:'Adjustment packet: I-485 (+ I-765, I-131)', es:'Paquete de ajuste: I-485 (+ I-765, I-131)'},
+    sub:{en:'The green-card application itself', es:'La solicitud de residencia en sí'},
+    howTo:{en:'File Form I-485 when your category is current (immediate relatives: any time). Add Form I-765 for a work permit and Form I-131 for travel permission while you wait. Include the fee, photos, birth certificate, proof of lawful entry (I-94), and the medical exam.',
+           es:'Presenta el Formulario I-485 cuando tu categoría esté vigente (familiares inmediatos: en cualquier momento). Agrega el I-765 para permiso de trabajo y el I-131 para permiso de viaje mientras esperas. Incluye la tarifa, fotos, acta de nacimiento, prueba de entrada legal (I-94) y el examen médico.'},
+    tips:{en:['Do not travel abroad until Advance Parole is approved; leaving abandons the application for most people.','Biometrics come 4–8 weeks after filing.','Asylees file one year after the grant; Cubans one year after admission or parole.'],
+          es:['No viajes al exterior hasta que aprueben el permiso adelantado; salir abandona la solicitud para la mayoría.','Los biométricos llegan 4–8 semanas después de presentar.','Los asilados presentan un año después de la aprobación; los cubanos un año después de la admisión o el parole.']},
+    cost:{en:'$1,440 (I-485); I-765 $260 and I-131 $630 when filed with it', es:'$1,440 (I-485); I-765 $260 e I-131 $630 si van juntos'},
+    time:{en:'8–24 months to decision', es:'8–24 meses hasta la decisión'}},
+  {id:'policeCerts', cat:'records', paths:['dv','k1','family-pref','family-lpr','eb5'],
+    name:{en:'Police certificates (consular cases)', es:'Certificados de antecedentes policiales (casos consulares)'},
+    sub:{en:'From every country you lived in 12+ months after age 16', es:'De cada país donde viviste 12+ meses después de los 16'},
+    howTo:{en:'Check the State Department\'s reciprocity table for how each country issues certificates. Order them early; some take months. Not needed for the United States itself.',
+           es:'Revisa la tabla de reciprocidad del Departamento de Estado para saber cómo emite cada país el certificado. Pídelos con tiempo; algunos tardan meses. No se necesita para Estados Unidos.'},
+    tips:{en:['Also needed for any country where you were arrested, regardless of time lived there.','Certificates usually expire after 1–2 years; time them for your interview.','Translate anything not in English.'],
+          es:['También para cualquier país donde te arrestaron, sin importar cuánto viviste allí.','Suelen vencer en 1–2 años; calcula el tiempo para la entrevista.','Traduce lo que no esté en inglés.']},
+    cost:{en:'Free to ~$50 per country', es:'Gratis a ~$50 por país'},
+    time:{en:'Days to several months', es:'Días a varios meses'}},
+  {id:'ds260', cat:'fees', paths:['dv','family-pref','family-lpr','eb5'],
+    name:{en:'DS-260 and NVC fees', es:'DS-260 y tarifas del NVC'},
+    sub:{en:'Immigrant visa application, filed online', es:'Solicitud de visa de inmigrante, en línea'},
+    howTo:{en:'After the petition is approved and your date is current, the National Visa Center asks for the immigrant visa fee, the DS-260 online application, civil documents and the affidavit of support. Then the consulate schedules the interview and medical.',
+           es:'Cuando la petición está aprobada y tu fecha vigente, el Centro Nacional de Visas pide la tarifa de visa de inmigrante, el DS-260 en línea, documentos civiles y la declaración de sostenimiento. Luego el consulado programa la entrevista y el examen médico.'},
+    tips:{en:['DV winners file DS-260 right after selection; everything must finish by September 30 of the program year.','Answer every question consistently with your petition.','Print the confirmation page for the interview.'],
+          es:['Los ganadores de la DV presentan el DS-260 apenas los seleccionan; todo debe terminar antes del 30 de septiembre del año del programa.','Responde todo de forma coherente con la petición.','Imprime la confirmación para la entrevista.']},
+    cost:{en:'$325 visa fee (DV: $330) + $120 affidavit review; $235 USCIS immigrant fee after entry', es:'$325 de visa (DV: $330) + $120 revisión de la declaración; $235 tarifa de inmigrante de USCIS tras entrar'},
+    time:{en:'NVC 2–6 months, then the consulate\'s queue', es:'NVC 2–6 meses, luego la fila del consulado'}},
+  {id:'i751', cat:'fees', paths:['n400'], optional:true, uscisForms:['I-751'],
+    name:{en:'Form I-751 (conditional residents only)', es:'Formulario I-751 (solo residentes condicionales)'},
+    sub:{en:'If your green card is the 2-year kind', es:'Si tu residencia es la de 2 años'},
+    howTo:{en:'If you got a 2-year conditional card through marriage, file Form I-751 jointly with your spouse in the 90 days before it expires (or alone with a waiver). You can file N-400 while the I-751 is pending once you qualify; USCIS decides both.',
+           es:'Si recibiste una tarjeta condicional de 2 años por matrimonio, presenta el I-751 junto con tu cónyuge en los 90 días antes de que venza (o solo, con exención). Puedes presentar el N-400 con el I-751 pendiente cuando califiques; USCIS decide ambos.'},
+    tips:{en:['The receipt notice extends your card for 48 months.','Bring joint evidence: taxes, lease, accounts, children\'s records, photos.','Missing the window can end your status; set the 90/30/7-day reminders.'],
+          es:['El recibo extiende tu tarjeta por 48 meses.','Lleva evidencia conjunta: impuestos, contrato, cuentas, registros de hijos, fotos.','Perder la ventana puede terminar tu estatus; activa los recordatorios de 90/30/7 días.']},
+    cost:{en:'$750', es:'$750'},
+    time:{en:'12–24 months', es:'12–24 meses'}},
+  // ---- Fiancé(e) ----
+  {id:'i129f', cat:'fees', paths:['k1'], uscisForms:['I-129F'],
+    name:{en:'Form I-129F packet', es:'Paquete del Formulario I-129F'},
+    sub:{en:'Filed by your U.S. citizen fiancé(e)', es:'Lo presenta tu prometido/a ciudadano/a'},
+    howTo:{en:'Your fiancé(e) files Form I-129F with proof of citizenship, proof you met in person in the last 2 years (photos, tickets, stamps), signed statements of intent to marry within 90 days, and passport photos of both.',
+           es:'Tu prometido/a presenta el I-129F con prueba de ciudadanía, prueba de que se vieron en persona en los últimos 2 años (fotos, boletos, sellos), declaraciones firmadas de intención de casarse en 90 días y fotos tipo pasaporte de ambos.'},
+    tips:{en:['After approval the case goes to the NVC and then your consulate: DS-160, medical, interview, $265 visa fee.','Marry within 90 days of entry, then file I-485.','Compare with marrying abroad first (CR-1): often cheaper overall and you arrive as a resident.'],
+          es:['Tras la aprobación el caso pasa al NVC y luego a tu consulado: DS-160, examen médico, entrevista, $265 de visa.','Cásate dentro de los 90 días de entrar y luego presenta el I-485.','Compara con casarse primero afuera (CR-1): suele ser más barato en total y llegas como residente.']},
+    cost:{en:'$675 (I-129F) + $265 visa fee', es:'$675 (I-129F) + $265 de visa'},
+    time:{en:'6–12 months to approval, then 2–4 months at the consulate', es:'6–12 meses hasta la aprobación, luego 2–4 meses en el consulado'}},
+  {id:'relationshipEvidence', cat:'family', paths:['k1','family-ir'],
+    name:{en:'Evidence of a real relationship', es:'Evidencia de una relación real'},
+    sub:{en:'Photos, messages, trips, joint finances', es:'Fotos, mensajes, viajes, finanzas conjuntas'},
+    howTo:{en:'Build a folder over time: photos together with family and friends (dated), travel records, chat and call logs, joint lease or bills, joint accounts or insurance, and affidavits from people who know you as a couple.',
+           es:'Arma una carpeta con el tiempo: fotos juntos con familia y amigos (con fecha), viajes, registros de chats y llamadas, contrato o cuentas conjuntas, seguros compartidos y declaraciones de personas que los conocen como pareja.'},
+    tips:{en:['Quality beats quantity: a few strong joint documents outweigh 200 selfies.','Officers may interview you separately (Stokes interview) if the file is thin.','Keep everything organized by date.'],
+          es:['Calidad sobre cantidad: unos pocos documentos conjuntos pesan más que 200 selfies.','Pueden entrevistarlos por separado (entrevista Stokes) si el expediente es débil.','Mantén todo ordenado por fecha.']},
+    cost:{en:'Free', es:'Gratis'},
+    time:{en:'Ongoing', es:'Continuo'}},
+  // ---- Work and talent visas ----
+  {id:'employerLetter', cat:'work', paths:['tn','o1','workvisa','l1','r1','e3h1b1'],
+    name:{en:'Employer support letter', es:'Carta de apoyo del empleador'},
+    sub:{en:'Job title, duties, dates, salary, your credentials', es:'Puesto, funciones, fechas, salario, tus credenciales'},
+    howTo:{en:'Ask the employer for a signed letter on letterhead: the position and why it needs your profession or expertise, start and end dates (TN: up to 3 years), salary, and a summary of your degree and experience. For TN it must match a USMCA profession; for O-1 it anchors the petition.',
+           es:'Pide al empleador una carta firmada en papel membretado: el puesto y por qué requiere tu profesión o pericia, fechas de inicio y fin (TN: hasta 3 años), salario y un resumen de tu título y experiencia. Para la TN debe coincidir con una profesión del T-MEC; para la O-1 es la base de la petición.'},
+    tips:{en:['Match the wording of the visa category: "temporary," the exact profession name, the degree required.','Keep a copy at the border or interview, plus the original.','Each new employer or renewal needs a fresh letter.'],
+          es:['Usa el lenguaje de la categoría: "temporal", el nombre exacto de la profesión, el título requerido.','Lleva copia en la frontera o entrevista, más el original.','Cada nuevo empleador o renovación necesita una carta nueva.']},
+    cost:{en:'Free', es:'Gratis'},
+    time:{en:'1–2 weeks with HR', es:'1–2 semanas con RR. HH.'}},
+  {id:'degreeCredentials', cat:'records', paths:['tn','workvisa','employment','o1','e3h1b1','l1'],
+    name:{en:'Degree, transcripts and credential evaluation', es:'Título, historial académico y evaluación de credenciales'},
+    sub:{en:'Foreign degrees need a U.S. equivalency evaluation', es:'Títulos extranjeros necesitan evaluación de equivalencia'},
+    howTo:{en:'Gather your diploma and official transcripts. If the degree is from outside the U.S., order a credential evaluation from a NACES member (WES, ECE, etc.) showing the U.S. equivalent. Some professions also need a license (nurses: state license and VisaScreen).',
+           es:'Reúne tu diploma y el historial académico oficial. Si el título es de fuera de EE.UU., pide una evaluación de credenciales a un miembro de NACES (WES, ECE, etc.) que muestre la equivalencia. Algunas profesiones también requieren licencia (enfermería: licencia estatal y VisaScreen).'},
+    tips:{en:['A course-by-course evaluation covers more cases than a document-only one.','Three years of experience can substitute for one year of university in H-1B equivalency.','Keep sealed transcripts for the evaluator and copies for you.'],
+          es:['La evaluación curso por curso cubre más casos que la de solo documentos.','Tres años de experiencia pueden sustituir un año de universidad en la equivalencia H-1B.','Guarda historiales sellados para el evaluador y copias para ti.']},
+    cost:{en:'$100–$250 for the evaluation', es:'$100–$250 la evaluación'},
+    time:{en:'1–4 weeks', es:'1–4 semanas'}},
+  {id:'evidencePortfolio', cat:'records', paths:['o1'],
+    name:{en:'O-1 evidence portfolio', es:'Portafolio de evidencia O-1'},
+    sub:{en:'Proof for at least 3 of the 8 criteria', es:'Prueba de al menos 3 de los 8 criterios'},
+    howTo:{en:'Organize one tab per criterion: awards (certificates, press about the award), press about you (full articles with circulation data), judging (invitations, panels), original contributions (patents, citations, expert letters), publications, critical roles (org charts, letters), high salary (contracts, industry surveys), memberships (bylaws showing selectivity).',
+           es:'Organiza una pestaña por criterio: premios (certificados, prensa sobre el premio), prensa sobre ti (artículos completos con datos de circulación), jurado (invitaciones, paneles), contribuciones originales (patentes, citas, cartas de expertos), publicaciones, roles clave (organigramas, cartas), salario alto (contratos, encuestas del sector), membresías (estatutos que muestren la selectividad).'},
+    tips:{en:['Six to eight expert recommendation letters from people who know your work carry the file.','Translate and date everything; explain context (what the award is, who reads the publication).','The same portfolio becomes the base of an EB-1A later.'],
+          es:['Seis a ocho cartas de expertos que conocen tu trabajo sostienen el expediente.','Traduce y fecha todo; explica el contexto (qué es el premio, quién lee la publicación).','El mismo portafolio es la base de una EB-1A después.']},
+    cost:{en:'Mostly time; translations as needed', es:'Sobre todo tiempo; traducciones si hacen falta'},
+    time:{en:'4–12 weeks to assemble', es:'4–12 semanas para armarlo'}},
+  {id:'advisoryOpinion', cat:'records', paths:['o1'],
+    name:{en:'Peer group advisory opinion (O-1)', es:'Opinión consultiva del grupo de pares (O-1)'},
+    sub:{en:'Letter from a union or peer organization in your field', es:'Carta de un sindicato u organización de pares de tu campo'},
+    howTo:{en:'Your petitioner requests a written advisory opinion from the relevant labor organization or peer group (for example a guild in film, or a professional association in science) before filing Form I-129. If none exists, the petition explains that.',
+           es:'Tu peticionario solicita una opinión consultiva por escrito de la organización laboral o grupo de pares correspondiente (por ejemplo un gremio en cine o una asociación profesional en ciencia) antes de presentar el I-129. Si no existe ninguna, la petición lo explica.'},
+    tips:{en:['Some organizations charge a fee and take 1–3 weeks.','A "no objection" letter is enough.','Artists: unions like SAG-AFTRA or AGMA; most sciences: a professional association or an expert letter.'],
+          es:['Algunas organizaciones cobran una tarifa y tardan 1–3 semanas.','Basta una carta de "no objeción".','Artistas: sindicatos como SAG-AFTRA o AGMA; ciencias: una asociación profesional o carta de experto.']},
+    cost:{en:'$0–$500 depending on the organization', es:'$0–$500 según la organización'},
+    time:{en:'1–3 weeks', es:'1–3 semanas'}},
+  // ---- Investment ----
+  {id:'businessPlan', cat:'records', paths:['e2','eb5'],
+    name:{en:'Business plan with 5-year projections', es:'Plan de negocio con proyecciones a 5 años'},
+    sub:{en:'Jobs, revenue, your role, how the money is used', es:'Empleos, ingresos, tu rol, uso del dinero'},
+    howTo:{en:'Prepare a plan an officer can follow: what the business does, market, staffing plan with hiring dates, five-year financial projections, your ownership and role, and how the investment is spent. EB-5 plans must show the 10 jobs; E-2 plans must show the business is more than marginal.',
+           es:'Prepara un plan que un oficial pueda seguir: qué hace el negocio, mercado, plan de personal con fechas de contratación, proyecciones financieras a cinco años, tu participación y rol, y cómo se gasta la inversión. Los planes EB-5 deben mostrar los 10 empleos; los E-2 deben mostrar que el negocio es más que marginal.'},
+    tips:{en:['Immigration-specific plan writers exist; a generic bank plan usually falls short.','Attach leases, contracts, licenses and payroll as proof the plan is real.','Keep it consistent with the source-of-funds documents.'],
+          es:['Hay redactores de planes especializados en inmigración; un plan bancario genérico suele quedarse corto.','Adjunta contratos, licencias y nómina como prueba de que el plan es real.','Que sea coherente con los documentos del origen de fondos.']},
+    cost:{en:'$1,500–$5,000 if professionally written', es:'$1,500–$5,000 si lo escribe un profesional'},
+    time:{en:'2–6 weeks', es:'2–6 semanas'}},
+  {id:'sourceOfFunds', cat:'records', paths:['e2','eb5'],
+    name:{en:'Source and path of funds', es:'Origen y ruta de los fondos'},
+    sub:{en:'Every dollar traced to a lawful source', es:'Cada dólar rastreado a un origen legal'},
+    howTo:{en:'Document where the money came from (salary, business income, sale of property, inheritance, gift, loan) with tax returns, bank statements, sale contracts and gift letters, and then the transfers from that source into the U.S. business or escrow. Translate and explain gaps.',
+           es:'Documenta de dónde salió el dinero (salario, ingresos del negocio, venta de propiedad, herencia, regalo, préstamo) con declaraciones de impuestos, estados de cuenta, contratos de venta y cartas de regalo, y luego las transferencias desde esa fuente al negocio o la cuenta de depósito en EE.UU. Traduce y explica los vacíos.'},
+    tips:{en:['This is the most common reason EB-5 and E-2 cases stall; start here.','Loans must be secured by your own assets, not the business.','Keep the chain unbroken: source → your account → U.S. account.'],
+          es:['Es la razón más común por la que se estancan casos EB-5 y E-2; empieza por aquí.','Los préstamos deben estar garantizados con tus propios activos, no con el negocio.','Mantén la cadena sin cortes: origen → tu cuenta → cuenta en EE.UU.']},
+    cost:{en:'Mostly time; bank letters may cost a fee', es:'Sobre todo tiempo; las cartas bancarias pueden tener costo'},
+    time:{en:'4–8 weeks', es:'4–8 semanas'}},
+  // ---- Protective statuses ----
+  {id:'i821', cat:'fees', paths:['tps'], uscisForms:['I-821','I-765'],
+    name:{en:'TPS application (I-821) + proof of residence', es:'Solicitud de TPS (I-821) + prueba de residencia'},
+    sub:{en:'Nationality, entry date, continuous residence', es:'Nacionalidad, fecha de entrada, residencia continua'},
+    howTo:{en:'File Form I-821 (and I-765 for a work permit) during your country\'s registration or re-registration window with proof of nationality (passport, birth certificate), proof of the date you entered, and proof you have lived here continuously since the required date (leases, bills, school and medical records, pay stubs).',
+           es:'Presenta el Formulario I-821 (y el I-765 para permiso de trabajo) durante la ventana de registro o re-registro de tu país con prueba de nacionalidad (pasaporte, acta de nacimiento), prueba de la fecha de entrada y prueba de residencia continua desde la fecha requerida (contratos, recibos, registros escolares y médicos, talones de pago).'},
+    tips:{en:['Designations change; check the Federal Register notice for your country\'s dates.','Re-register every extension even if your card looks valid.','Ask a lawyer before any travel; TPS travel authorization has specific effects on adjustment.'],
+          es:['Las designaciones cambian; revisa el aviso del Registro Federal con las fechas de tu país.','Vuelve a registrarte en cada extensión aunque tu tarjeta parezca vigente.','Consulta a un abogado antes de viajar; la autorización de viaje TPS tiene efectos específicos sobre el ajuste.']},
+    cost:{en:'$500 (I-821, since July 2025) + I-765 $470 online / $520 paper', es:'$500 (I-821, desde julio de 2025) + I-765 $470 en línea / $520 en papel'},
+    time:{en:'Work permit in 3–8 months', es:'Permiso de trabajo en 3–8 meses'}},
+  {id:'i821d', cat:'fees', paths:['daca'], uscisForms:['I-821D','I-765'],
+    name:{en:'DACA renewal (I-821D + I-765) + proof of presence', es:'Renovación de DACA (I-821D + I-765) + prueba de presencia'},
+    sub:{en:'File 120–150 days before expiry', es:'Presenta 120–150 días antes del vencimiento'},
+    howTo:{en:'File Forms I-821D, I-765 and I-765WS together with copies of your current EAD. Keep a running file of proof of continuous presence (school, work, leases, medical) and of every prior approval notice.',
+           es:'Presenta los Formularios I-821D, I-765 e I-765WS juntos con copias de tu EAD actual. Mantén un archivo continuo de prueba de presencia (escuela, trabajo, contratos, médicos) y de cada aviso de aprobación anterior.'},
+    tips:{en:['Initial requests are not being processed under court orders; renewals are.','Advance parole for humanitarian, educational or work reasons may create a lawful entry; get advice before using it.','Never let it lapse by more than a year.'],
+          es:['Las solicitudes iniciales no se procesan por órdenes judiciales; las renovaciones sí.','El permiso adelantado por razones humanitarias, educativas o laborales puede crear una entrada legal; busca asesoría antes de usarlo.','Nunca lo dejes vencer por más de un año.']},
+    cost:{en:'$555 total ($85 I-821D + $470 I-765)', es:'$555 en total ($85 I-821D + $470 I-765)'},
+    time:{en:'2–5 months', es:'2–5 meses'}},
+  {id:'i918b', cat:'records', paths:['uvisa'], uscisForms:['I-918'],
+    name:{en:'Law enforcement certification (Form I-918B)', es:'Certificación de la autoridad (Formulario I-918B)'},
+    sub:{en:'Signed by police, prosecutor or judge', es:'Firmada por policía, fiscal o juez'},
+    howTo:{en:'Ask the agency that handled the crime (police, district attorney, family court, EEOC, labor department) to sign Form I-918 Supplement B confirming you were a victim of a qualifying crime and were, are, or are likely to be helpful. It must be filed within 6 months of signature.',
+           es:'Pide a la agencia que manejó el delito (policía, fiscalía, tribunal de familia, EEOC, departamento de trabajo) que firme el Suplemento B del I-918 confirmando que fuiste víctima de un delito calificado y que cooperaste, cooperas o es probable que cooperes. Debe presentarse dentro de los 6 meses de la firma.'},
+    tips:{en:['Many agencies have a U-visa certification policy and a designated signer; legal aid knows who.','Police reports, protective orders and medical records support the harm requirement.','Trafficking victims use Form I-914 and its Supplement B instead.'],
+          es:['Muchas agencias tienen una política de certificación de visa U y un firmante designado; la asistencia legal sabe quién es.','Reportes policiales, órdenes de protección y registros médicos apoyan el requisito de daño.','Las víctimas de trata usan el Formulario I-914 y su Suplemento B.']},
+    cost:{en:'Free (no fee for I-918 either)', es:'Gratis (el I-918 tampoco tiene tarifa)'},
+    time:{en:'Weeks to months to obtain the signature', es:'Semanas a meses para conseguir la firma'}},
+  {id:'courtOrder', cat:'records', paths:['sijs'], uscisForms:['I-360'],
+    name:{en:'State court order with SIJ findings', es:'Orden de tribunal estatal con determinaciones SIJ'},
+    sub:{en:'Guardianship, custody or dependency case', es:'Caso de tutela, custodia o dependencia'},
+    howTo:{en:'A state juvenile, family or probate court must find that you are dependent on the court or placed with a guardian, that reunification with one or both parents is not viable because of abuse, neglect or abandonment, and that return to your country is not in your best interest. Then file Form I-360 before you turn 21.',
+           es:'Un tribunal estatal de menores, familia o sucesiones debe determinar que dependes del tribunal o estás bajo un tutor, que la reunificación con uno o ambos padres no es viable por abuso, negligencia o abandono, y que regresar a tu país no es en tu mejor interés. Luego presenta el Formulario I-360 antes de cumplir 21.'},
+    tips:{en:['Age limits for the state case vary (18 in some states, 21 in others); act early.','Free help: legal aid, law school clinics, KIND.','Approved SIJ applicants get deferred action and a work permit while the visa number is pending.'],
+          es:['Los límites de edad para el caso estatal varían (18 en algunos estados, 21 en otros); actúa pronto.','Ayuda gratuita: asistencia legal, clínicas universitarias, KIND.','Los aprobados reciben acción diferida y permiso de trabajo mientras esperan el número de visa.']},
+    cost:{en:'Court fees vary; I-360 is free', es:'Las tarifas del tribunal varían; el I-360 es gratis'},
+    time:{en:'2–9 months for the court case; I-360 decided within 180 days', es:'2–9 meses el caso judicial; el I-360 se decide en 180 días'}},
+  {id:'cubanProof', cat:'records', paths:['cuban'], uscisForms:['I-485'],
+    name:{en:'Cuban nationality + admission/parole + 1 year of presence', es:'Nacionalidad cubana + admisión/parole + 1 año de presencia'},
+    sub:{en:'The three things the Cuban Adjustment Act needs', es:'Las tres cosas que exige la Ley de Ajuste Cubano'},
+    howTo:{en:'Gather your Cuban passport or birth certificate (nationality), your I-94 or parole document (how you entered), and proof you have been physically present for at least one year (leases, pay stubs, school or medical records, bills).',
+           es:'Reúne tu pasaporte o acta de nacimiento cubana (nacionalidad), tu I-94 o documento de parole (cómo entraste) y prueba de presencia física de al menos un año (contratos, talones de pago, registros escolares o médicos, recibos).'},
+    tips:{en:['If you entered without inspection, get legal advice before filing.','Spouse and children of any nationality can adjust with you if they live with you.','Keep every immigration document you were ever given.'],
+          es:['Si entraste sin inspección, busca asesoría legal antes de presentar.','Tu cónyuge e hijos de cualquier nacionalidad pueden ajustar contigo si viven contigo.','Guarda todo documento migratorio que te hayan dado.']},
+    cost:{en:'Free to gather; I-485 $1,440', es:'Gratis reunirlo; I-485 $1,440'},
+    time:{en:'A few weeks', es:'Unas semanas'}},
+  {id:'dd214', cat:'records', paths:['military'], uscisForms:['N-426','N-400'],
+    name:{en:'Military service records (N-426 or DD-214)', es:'Registros de servicio militar (N-426 o DD-214)'},
+    sub:{en:'Certified by your unit, or discharge papers', es:'Certificados por tu unidad, o papeles de baja'},
+    howTo:{en:'If you are serving: have your unit\'s personnel office complete and sign Form N-426 (Request for Certification of Military or Naval Service). If you are a veteran: your DD-214 (or NGB-22 for the National Guard) shows the dates and character of service. Family members seeking parole in place need the service member\'s proof of service too.',
+           es:'Si estás en servicio: que la oficina de personal de tu unidad complete y firme el Formulario N-426. Si eres veterano: tu DD-214 (o NGB-22 para la Guardia Nacional) muestra las fechas y el carácter del servicio. Los familiares que buscan permiso de permanencia también necesitan la prueba de servicio del militar.'},
+    tips:{en:['No N-400 fee for military applicants; USCIS military helpline 877-247-4645.','Request a replacement DD-214 at archives.gov if lost.','Your base legal office can help with N-426 and the N-400.'],
+          es:['Sin tarifa del N-400 para militares; línea militar de USCIS 877-247-4645.','Pide un reemplazo del DD-214 en archives.gov si lo perdiste.','La oficina legal de tu base puede ayudar con el N-426 y el N-400.']},
+    cost:{en:'Free', es:'Gratis'},
+    time:{en:'Days for N-426; 2–6 weeks for a replacement DD-214', es:'Días para el N-426; 2–6 semanas para reemplazar el DD-214'}},
+  {id:'denominationLetter', cat:'records', paths:['r1'], uscisForms:['I-129'],
+    name:{en:'Religious organization letter + membership proof', es:'Carta de la organización religiosa + prueba de membresía'},
+    sub:{en:'Job offer, 501(c)(3) status, 2 years of membership', es:'Oferta, estatus 501(c)(3), 2 años de membresía'},
+    howTo:{en:'The organization provides its IRS 501(c)(3) determination letter, a job offer describing the religious duties, hours and pay, and proof it can support you. You provide proof of at least two years of membership in the denomination (letters from clergy, membership records) and of your qualifications for the role.',
+           es:'La organización entrega su carta de determinación 501(c)(3) del IRS, una oferta que describe las funciones religiosas, horas y pago, y prueba de que puede sostenerte. Tú aportas prueba de al menos dos años de membresía en la denominación (cartas del clero, registros) y de tus calificaciones para el puesto.'},
+    tips:{en:['USCIS may inspect the site before approving; make sure the address is right.','Volunteer or part-time work under 20 hours a week does not qualify.','After two years of R-1 work the organization can file Form I-360 for an EB-4 green card.'],
+          es:['USCIS puede inspeccionar el lugar antes de aprobar; verifica la dirección.','Trabajo voluntario o de menos de 20 horas semanales no califica.','Tras dos años de trabajo R-1 la organización puede presentar el I-360 para residencia EB-4.']},
+    cost:{en:'Free to gather; I-129 fee paid by the organization', es:'Gratis reunirlo; la tarifa del I-129 la paga la organización'},
+    time:{en:'2–4 weeks', es:'2–4 semanas'}},
+  {id:'dvConfirmation', cat:'records', paths:['dv'],
+    name:{en:'DV entry confirmation + education or work proof', es:'Confirmación de entrada DV + prueba de educación o trabajo'},
+    sub:{en:'Your confirmation number is the only way to check results', es:'Tu número de confirmación es la única forma de ver resultados'},
+    howTo:{en:'Save the confirmation page from dvprogram.state.gov (one entry only). If selected, you will need your high school diploma or transcript, or proof of two years of qualifying work experience, plus the civil documents for the DS-260.',
+           es:'Guarda la página de confirmación de dvprogram.state.gov (una sola entrada). Si te seleccionan, necesitarás tu diploma o historial de secundaria, o prueba de dos años de experiencia laboral calificada, más los documentos civiles para el DS-260.'},
+    tips:{en:['Results are checked in May at the same site; no email is ever sent.','Everything, including the visa, must finish by September 30 of the program year.','The country list changes each year; check travel.state.gov before entering.'],
+          es:['Los resultados se consultan en mayo en el mismo sitio; nunca se envía correo.','Todo, incluida la visa, debe terminar antes del 30 de septiembre del año del programa.','La lista de países cambia cada año; revísala en travel.state.gov antes de inscribirte.']},
+    cost:{en:'Free to enter; $330 visa fee if selected', es:'Inscripción gratis; $330 de visa si te seleccionan'},
+    time:{en:'October entry → May results → visa by September 30', es:'Inscripción en octubre → resultados en mayo → visa antes del 30 de septiembre'}}
+
 ];
 
 // Returns the doc set tagged for this user's primary immigration path.
 // Falls back to N-400 docs when no path matches.
-function userDocPathKey(){
-  var phase = user.phase;
-  if(phase === 'student')  return 'student';
-  if(phase === 'opt')      return 'opt';
-  if(phase === 'workvisa') return 'workvisa';
-  if(phase === 'asylum')   return 'asylum';
-  if(phase === 'preGC'){
-    var p = user.petitionType;
-    if(p === 'family-ir')   return 'family-ir';
-    if(p === 'family-pref') return 'family-pref';
-    if(p === 'family-lpr')  return 'family-lpr';
-    if(p === 'employment')  return 'employment';
-    if(p === 'asylum')      return 'asylum';
+// Every checklist key that applies to this person: their status, plus the
+// routes their profile points at (family ties, business, nationality,
+// situations). "Other" users no longer get the naturalization list.
+function userDocPathKeys(){
+  var keys = [];
+  function add(k){ if(k && keys.indexOf(k) === -1) keys.push(k); }
+  var ph = user.phase, pt = user.petitionType, sit = user.situations || [], fam = user.familyTies, job = user.jobOffer, c = user.countryOfBirth;
+  if(ph === 'hasGC') add('n400');
+  if(ph === 'student') add('student');
+  if(ph === 'opt') add('opt');
+  if(ph === 'workvisa') add('workvisa');
+  if(ph === 'asylum') add('asylum');
+  if(ph === 'preGC' && ['family-ir','family-pref','family-lpr','employment','asylum'].indexOf(pt) !== -1) add(pt);
+  if(user.gcPetition && user.gcPetition.type === 'employment') add('employment');
+  if(ph !== 'hasGC'){
+    if(fam === 'spouse-usc') add('family-ir');
+    if(fam === 'fiance-usc') add('k1');
+    if(fam === 'relative-usc' || fam === 'relative-lpr') add('family-pref');
+    if(job === 'investor') add('eb5');
+    if(job === 'founder' && E2_TREATY_COUNTRIES.indexOf(c) !== -1) add('e2');
+    if(job === 'transfer') add('l1');
+    if((c === 'Canada' || c === 'Mexico') && hasDegree(user.education) && ph !== 'workvisa') add('tn');
+    if((c === 'Australia' || c === 'Chile' || c === 'Singapore') && hasDegree(user.education)) add('e3h1b1');
+    if((user.achievements || []).length >= 3) add('o1');
+    if(c === 'Cuba') add('cuban');
   }
-  // hasGC + other → naturalization docs
-  return 'n400';
+  if(sit.indexOf('military') !== -1) add('military');
+  if(sit.indexOf('tps') !== -1) add('tps');
+  if(sit.indexOf('daca') !== -1) add('daca');
+  if(sit.indexOf('victim') !== -1) add('uvisa');
+  if(sit.indexOf('minor') !== -1) add('sijs');
+  if(sit.indexOf('religious') !== -1) add('r1');
+  if(!keys.length) add('explore');
+  return keys;
 }
+function userDocPathKey(){ return userDocPathKeys()[0]; }
 
-function docMatchesPath(d, pathKey){
-  if(!d.paths || !d.paths.length) return pathKey === 'n400'; // legacy un-tagged docs default to N-400
-  return d.paths.indexOf(pathKey) !== -1;
+function docMatchesPath(d, pathKeys){
+  var keys = Array.isArray(pathKeys) ? pathKeys : [pathKeys];
+  if(!d.paths || !d.paths.length) return keys.indexOf('n400') !== -1; // legacy un-tagged docs default to N-400
+  return d.paths.some(function(k){ return keys.indexOf(k) !== -1; });
 }
 
 // Default returns the user's path docs. Pass {all:true} to return everything (for "Show all").
 function applicableDocuments(opts){
   opts = opts || {};
-  var pathKey = userDocPathKey();
+  var keys = userDocPathKeys();
+  var married = !!user.marriedToCitizen || user.familyTies === 'spouse-usc' || user.petitionType === 'family-ir' || (typeof isUserMarried === 'function' && isUserMarried());
   return DOCUMENTS.filter(function(d){
-    if(d.conditional === 'married' && !user.marriedToCitizen) return false;
+    if(d.conditional === 'married' && !married) return false;
     if(opts.all) return true;
-    return docMatchesPath(d, pathKey);
+    return docMatchesPath(d, keys);
   });
 }
 
@@ -6983,6 +7239,8 @@ function plusBadge(size){
 var VISA_BULLETIN = {
   month: 'June 2026',
   monthEs: 'Junio 2026',
+  asOf: '2026-06-09',        // date the snapshot was taken; the screen warns when it is older than 45 days
+  approximate: true,
   link: 'https://travel.state.gov/content/travel/en/legal/visa-law0/visa-bulletin.html',
   employment: {
     'EB-1': { 'India': '2022-02-15', 'China': '2022-11-08', 'Other': null /* current */ },
@@ -6998,6 +7256,29 @@ var VISA_BULLETIN = {
   }
 };
 
+// Refresh the snapshot from a small static JSON (no user data is sent; a plain
+// GET like the audio manifest). Shape: {month, monthEs, asOf, employment, family}.
+var VISA_BULLETIN_URL = 'https://rumoave.github.io/camino/visa-bulletin.json';
+function loadVisaBulletinRemote(){
+  if(typeof fetch !== 'function') return;
+  try {
+    fetch(VISA_BULLETIN_URL, {cache: 'no-store'}).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
+      if(!j || !j.month || !j.employment || !j.family) return;
+      VISA_BULLETIN.month = j.month; VISA_BULLETIN.monthEs = j.monthEs || j.month;
+      VISA_BULLETIN.asOf = j.asOf || todayISO(); VISA_BULLETIN.approximate = !!j.approximate;
+      VISA_BULLETIN.employment = j.employment; VISA_BULLETIN.family = j.family;
+      try { renderVisaBulletin(); renderHomeVisaRow(); } catch(e){}
+    }).catch(function(){});
+  } catch(e){}
+}
+function visaBulletinFreshness(){
+  var days = VISA_BULLETIN.asOf ? daysBetweenISO(VISA_BULLETIN.asOf, todayISO()) : 999;
+  var label = (lang==='es' ? 'Datos al ' : 'Data as of ') + (VISA_BULLETIN.asOf ? fmtDate(VISA_BULLETIN.asOf, lang) : '–');
+  if(VISA_BULLETIN.approximate) label += lang==='es' ? ' (aproximados)' : ' (approximate)';
+  if(days > 45) label += lang==='es' ? ' · puede estar desactualizado, confirma en travel.state.gov' : ' · may be out of date, confirm at travel.state.gov';
+  return {days: days, stale: days > 45, label: label};
+}
+
 function getVisaBulletinCutoff(category, country){
   var src = (category === 'EB-1' || category === 'EB-2' || category === 'EB-3') ? VISA_BULLETIN.employment : VISA_BULLETIN.family;
   if(!src[category]) return null;
@@ -7007,7 +7288,7 @@ function getVisaBulletinCutoff(category, country){
 function renderVisaBulletin(){
   var body = document.getElementById('visaBulletinBody');
   if(!body) return;
-  var monthLabel = lang==='es' ? VISA_BULLETIN.monthEs : VISA_BULLETIN.month;
+  var monthLabel = (lang==='es' ? VISA_BULLETIN.monthEs : VISA_BULLETIN.month) + ' · ' + visaBulletinFreshness().label;
 
   // Recommend a category based on user.petitionType + country
   var suggestedCat = null;
@@ -7172,12 +7453,12 @@ var ELIGIBILITY_WIZARDS = {
       return {verdict: 'unsure', reasons: [{en: 'You may be eligible but there are factors a lawyer should review.', es: 'Puedes ser elegible pero hay factores que un abogado debe revisar.'}], flags: flags};
     },
     nextSteps: {
-      en: ['File Form I-589 (no fee) within 1 year of arrival.',
+      en: ['File Form I-589 ($100 fee since July 2025) within 1 year of arrival.',
            'Gather corroborating evidence: country reports, witness affidavits, medical/police records, photos.',
-           'Find a free pro-bono attorney. Search "asylum legal aid" + your city, or check Catholic Charities, IRCA, KIND, or your local Bar Association.'],
-      es: ['Presenta el Formulario I-589 (sin tarifa) dentro de 1 año de llegar.',
+           'Find a free pro-bono attorney. Search "asylum legal aid" + your city, or check Catholic Charities, the IRC, KIND, or your local Bar Association.'],
+      es: ['Presenta el Formulario I-589 (tarifa de $100 desde julio de 2025) dentro de 1 año de llegar.',
            'Reúne evidencia: reportes del país, declaraciones de testigos, registros médicos/policiales, fotos.',
-           'Busca un abogado pro-bono. "Asylum legal aid" + tu ciudad, o Catholic Charities, IRCA, KIND, o el Colegio de Abogados local.']
+           'Busca un abogado pro-bono. "Asylum legal aid" + tu ciudad, o Catholic Charities, el IRC, KIND, o el Colegio de Abogados local.']
     }
   },
 
@@ -7228,6 +7509,7 @@ var ELIGIBILITY_WIZARDS = {
       if(a.crimes === 'yes') flags.push({en: 'Your criminal record needs lawyer review for inadmissibility.', es: 'Tu récord penal necesita revisión legal para inadmisibilidad.'});
       if(a['how-met'] === 'no') flags.push({en: 'Limited documentation of relationship may trigger Stokes interview (separate interviews). Build your file now.', es: 'Documentación limitada puede causar entrevista Stokes (separados). Arma el expediente ya.'});
       if(a['prior-marriages'] === 'yes') flags.push({en: 'You\'ll need certified divorce decrees or death certificates for every prior marriage.', es: 'Necesitas decretos de divorcio o actas de defunción certificadas.'});
+      if(a['in-us'] === 'no') flags.push({en: 'If you are in the U.S. without lawful status or entered without inspection, adjustment of status may not be available even as a spouse of a citizen; a lawyer should review options such as consular processing with a waiver (I-601A) or parole.', es: 'Si estás en EE.UU. sin estatus legal o entraste sin inspección, el ajuste de estatus puede no estar disponible aun como cónyuge de ciudadano; un abogado debe revisar opciones como el proceso consular con perdón (I-601A) o parole.'});
       if(flags.length === 0){
         return {verdict: 'likely', reasons: [{en: 'You appear to meet the basic eligibility for a marriage-based green card.', es: 'Pareces cumplir con los criterios básicos para residencia por matrimonio.'}], flags: []};
       }
@@ -7256,7 +7538,7 @@ var ELIGIBILITY_WIZARDS = {
        q: {en: 'Are you currently on standard 12-month OPT?', es: '¿Estás en OPT estándar de 12 meses?'},
        help: {en: 'You can only apply for STEM extension while on active OPT.', es: 'Solo puedes pedir extensión durante OPT activo.'}},
       {id: 'stem-degree', type: 'yesno',
-       q: {en: 'Was your most recent U.S. degree in a STEM field (per DHS STEM list)?', es: '¿Tu título de EE.UU. más reciente es STEM (lista DHS)?'},
+       q: {en: 'Is the degree you\'re basing this on a U.S. STEM degree (per the DHS list), either your most recent one or an earlier one earned in the last 10 years?', es: '¿El título en que te basas es un título STEM de EE.UU. (lista DHS), el más reciente o uno anterior obtenido en los últimos 10 años?'},
        help: {en: 'Check the DHS STEM Designated Degree Program List at ICE.gov. Many CS, engineering, math, science programs qualify.', es: 'Revisa la lista DHS en ICE.gov. Muchos programas CS, ingeniería, matemáticas, ciencias califican.'}},
       {id: 'sevp-school', type: 'yesno',
        q: {en: 'Was the school SEVP-certified and accredited?', es: '¿La escuela era certificada SEVP y acreditada?'},
@@ -7277,7 +7559,7 @@ var ELIGIBILITY_WIZARDS = {
         return {verdict: 'not_eligible', reasons: [{en: 'You must currently be on active 12-month OPT to apply for the STEM extension.', es: 'Debes estar en OPT activo para pedir extensión.'}], flags: []};
       }
       if(a['stem-degree'] === 'no'){
-        return {verdict: 'not_eligible', reasons: [{en: 'Your most recent U.S. degree must be on the DHS STEM Designated Degree Program List.', es: 'Tu título debe estar en la lista DHS STEM.'}], flags: []};
+        return {verdict: 'not_eligible', reasons: [{en: 'The STEM extension needs a U.S. degree on the DHS STEM Designated Degree Program List: your current one, or a prior U.S. STEM degree earned within the last 10 years from an accredited, SEVP-certified school.', es: 'La extensión STEM requiere un título de EE.UU. en la lista DHS STEM: el actual, o uno anterior de EE.UU. obtenido en los últimos 10 años en una escuela acreditada y certificada por SEVP.'}], flags: []};
       }
       if(a['employer-everify'] === 'no'){
         return {verdict: 'not_eligible', reasons: [{en: 'Your employer must be enrolled in E-Verify before you can be approved for STEM OPT.', es: 'Tu empleador debe estar en E-Verify.'}], flags: [{en: 'If they\'re not, ask HR. Enrollment takes ~1 week.', es: 'Si no, pregunta a RRHH. Inscripción toma ~1 semana.'}]};
@@ -7299,11 +7581,11 @@ var ELIGIBILITY_WIZARDS = {
     },
     nextSteps: {
       en: ['Get Form I-983 (Training Plan) signed by you + your employer.',
-           'Apply with Form I-765 (eligibility category c)(3)(C)) at least 90 days before your standard OPT expires.',
+           'File Form I-765 (category (c)(3)(C)) up to 90 days before your current OPT EAD expires, and no later than its expiration date. It must also be within 60 days of your DSO\'s recommendation in SEVIS.',
            'Filing fee: $470 online ($520 paper).',
            'Keep timesheets + training plan documentation throughout the 24 months.'],
       es: ['Obtén el Formulario I-983 (Plan de Entrenamiento) firmado por ti + empleador.',
-           'Aplica con I-765 (categoría (c)(3)(C)) al menos 90 días antes que expire tu OPT.',
+           'Presenta el I-765 (categoría (c)(3)(C)) hasta 90 días antes de que venza tu EAD de OPT, y nunca después de su vencimiento. También dentro de los 60 días de la recomendación de tu DSO en SEVIS.',
            'Tarifa: $470 en línea ($520 en papel).',
            'Guarda registros de horas + documentación durante 24 meses.']
     }
@@ -7318,7 +7600,7 @@ var ELIGIBILITY_WIZARDS = {
     steps: [
       {id: 'country', type: 'yesno',
        q: {en: 'Is your country of birth eligible for the DV lottery?', es: '¿Tu país de nacimiento es elegible para la lotería DV?'},
-       help: {en: 'Excluded: Mexico, China, India, Philippines, Vietnam, Dominican Republic, El Salvador, Honduras, Brazil, Pakistan, Bangladesh, Canada, U.K., South Korea, Colombia, Jamaica, Haiti, Nigeria. If excluded, you may still qualify via a spouse or parent born elsewhere.',
+       help: {en: 'Excluded for DV-2026: Mexico, China (incl. Hong Kong), India, Philippines, Vietnam, Dominican Republic, El Salvador, Honduras, Brazil, Pakistan, Bangladesh, Canada, U.K., South Korea, Colombia, Jamaica, Haiti, Nigeria, Venezuela. The list changes every year; check travel.state.gov. If excluded, you may still qualify via a spouse or parent born elsewhere.',
               es: 'Excluidos: México, China, India, Filipinas, Vietnam, RD, El Salvador, Honduras, Brasil, Pakistán, Bangladesh, Canadá, RU, Corea, Colombia, Jamaica, Haití, Nigeria. Si tu país está excluido, puedes calificar por cónyuge o padre nacido en otro lugar.'}},
       {id: 'education-or-work', type: 'multi',
        q: {en: 'Your education / work background?', es: '¿Tu educación o experiencia?'},
@@ -7355,11 +7637,11 @@ var ELIGIBILITY_WIZARDS = {
       en: ['Entry is free at dvprogram.state.gov during the annual registration window (typically October).',
            'Submit only ONE entry. Duplicates disqualify you.',
            'Save your confirmation number. It\'s the ONLY way to check selection status.',
-           'Selection results are published in May. If selected, you have 1 year to complete the visa process.'],
+           'Selection results are published in May. If selected, everything (DS-260, interview, visa issuance) must finish by September 30 of that program year; there is no extension.'],
       es: ['Inscripción gratis en dvprogram.state.gov durante la ventana anual (octubre típico).',
            'Solo UNA entrada. Duplicados te descalifican.',
            'Guarda tu número de confirmación. Única forma de verificar.',
-           'Resultados en mayo. Si te seleccionan, 1 año para completar el proceso.']
+           'Resultados en mayo. Si te seleccionan, todo (DS-260, entrevista, emisión de la visa) debe terminar antes del 30 de septiembre de ese año del programa; no hay prórroga.']
     }
   },
 
@@ -9253,8 +9535,8 @@ var VISA_PATHS = [
                  es:['Nacional de un país actualmente designado (o apátrida que vivió allí por última vez)','Residencia continua y presencia física desde las fechas de la designación','Sin ciertas condenas penales ni causales de persecución que lo impidan','Presentar durante el período de registro. La presentación tardía solo es posible en casos limitados']},
     tips:{en:['TPS is not a green card and does not lead to one by itself. Pair it with a family or employment petition.','If you entered without inspection, ask a lawyer about TPS travel authorization (Form I-131) before trying to adjust status.','Re-register every time your country is extended, even if your card still looks valid.','Read the Federal Register notice for your country. Dates and deadlines are specific.'],
           es:['El TPS no es residencia y no lleva a ella por sí solo. Combínalo con una petición familiar o laboral.','Si entraste sin inspección, consulta a un abogado sobre la autorización de viaje TPS (Formulario I-131) antes de intentar ajustar estatus.','Vuelve a registrarte cada vez que extiendan tu país, aunque tu tarjeta parezca vigente.','Lee el aviso del Registro Federal de tu país. Fechas y plazos son específicos.']},
-    howItWorks:{en:['File Form I-821 ($50) and, for a work permit, Form I-765 during the registration period.','Biometrics appointment; USCIS decides.','Re-register during each extension period to keep TPS and the work permit.'],
-                es:['Presenta el Formulario I-821 ($50) y, para permiso de trabajo, el Formulario I-765 durante el período de registro.','Cita de biométricos; USCIS decide.','Vuelve a registrarte en cada período de extensión para mantener el TPS y el permiso de trabajo.']}},
+    howItWorks:{en:['File Form I-821 ($500 since July 2025) and, for a work permit, Form I-765 during the registration period.','Biometrics appointment; USCIS decides.','Re-register during each extension period to keep TPS and the work permit.'],
+                es:['Presenta el Formulario I-821 ($500 desde julio de 2025) y, para permiso de trabajo, el Formulario I-765 durante el período de registro.','Cita de biométricos; USCIS decide.','Vuelve a registrarte en cada período de extensión para mantener el TPS y el permiso de trabajo.']}},
   {id:'daca', iconName:'id', color:'#1cb0f6', cat:'special', forms:['I-821D','I-765'],
     title:{en:'DACA (Deferred Action for Childhood Arrivals)', es:'DACA (Acción Diferida para Llegados en la Infancia)'},
     summary:{en:'Two-year renewable protection from removal and a work permit for people who arrived as children before 2007. Renewals continue; new initial requests have not been processed since 2021 under court orders, and the program is still being litigated.',
@@ -9699,7 +9981,7 @@ var N400_SECTIONS = [
           es:['Acta de nacimiento','Pasaporte vigente','Tarjeta de Seguro Social','Residencia','Documentación de cambios de nombre (orden judicial, acta de matrimonio)']}
   },
   {
-    id:'addresses', part:'Part 5', icon:'home',
+    id:'addresses', part:'Part 4', icon:'home',
     title:{en:'5-year address history', es:'Direcciones de 5 años'},
     asked:{en:'Every physical address where you have lived in the past 5 years, with start and end dates.', es:'Cada dirección física donde has vivido en los últimos 5 años, con fechas de inicio y fin.'},
     body:{en:'No gaps allowed. If you split your time between two places, list both. PO boxes don\'t count as residences.',
@@ -9710,7 +9992,7 @@ var N400_SECTIONS = [
           es:['Contratos de arrendamiento o hipoteca','Facturas de servicios','Declaraciones de impuestos (los W-2 muestran tu dirección)','Confirmaciones de cambio de dirección de USPS']}
   },
   {
-    id:'employment', part:'Part 8', icon:'briefcase',
+    id:'employment', part:'Part 7', icon:'briefcase',
     title:{en:'Employment history', es:'Historial laboral'},
     asked:{en:'Every employer, school, or unemployment period in the past 5 years.', es:'Cada empleador, escuela o período de desempleo en los últimos 5 años.'},
     body:{en:'Include employer name, address, your job title, and exact start and end dates. Periods of unemployment, school, or self-employment must be listed too. Leave no gaps.',
@@ -9721,7 +10003,7 @@ var N400_SECTIONS = [
           es:['W-2 y 1099 de cada año','Talones de pago','Transcripciones escolares (si fuiste estudiante)','Registros de impuestos de trabajo propio']}
   },
   {
-    id:'trips', part:'Part 9', icon:'plane',
+    id:'trips', part:'Part 8', icon:'plane',
     title:{en:'Time outside the U.S.', es:'Tiempo fuera de EE.UU.'},
     asked:{en:'Every trip outside the U.S. lasting 24 hours or more in the past 5 years.', es:'Cada viaje fuera de EE.UU. de 24 horas o más en los últimos 5 años.'},
     body:{en:'Even short cross-border runs to Mexico or Canada count. Departure date, return date, and country. Trips longer than 6 months can break your continuous residence.',
@@ -9732,7 +10014,7 @@ var N400_SECTIONS = [
           es:['TODOS los pasaportes (vigentes y vencidos) de los últimos 5 años','Registro I-94 de viajes (i94.cbp.dhs.gov)','Registros o itinerarios de vuelos','Registros de cruce de CBP']}
   },
   {
-    id:'marital', part:'Part 10', icon:'ring',
+    id:'marital', part:'Part 5', icon:'ring',
     title:{en:'Marital history', es:'Historial matrimonial'},
     asked:{en:'Current marriage AND every prior marriage. Yours and your current spouse\'s.', es:'Matrimonio actual Y todos los matrimonios anteriores. Tuyos y de tu cónyuge actual.'},
     body:{en:'For each marriage: spouse\'s full name, date of marriage, how it ended (divorce, death, annulment), and the date it ended.',
@@ -9743,7 +10025,7 @@ var N400_SECTIONS = [
           es:['Acta de matrimonio actual','Decretos de divorcio de matrimonios anteriores (tuyos y del cónyuge)','Actas de defunción si un cónyuge anterior falleció','Documentos de anulación si aplica']}
   },
   {
-    id:'children', part:'Part 11', icon:'people',
+    id:'children', part:'Part 6', icon:'people',
     title:{en:'Children', es:'Hijos'},
     asked:{en:'ALL children. Biological, adopted, step-children. Living or deceased, regardless of where they live.', es:'TODOS los hijos. Biológicos, adoptados, hijastros. Vivos o fallecidos, sin importar dónde vivan.'},
     body:{en:'Include children from prior relationships, children you don\'t have custody of, and children born outside the U.S. Provide each child\'s name, date of birth, and country of birth.',
@@ -9754,7 +10036,7 @@ var N400_SECTIONS = [
           es:['Acta de nacimiento de cada hijo','Decretos de adopción (si aplica)','Órdenes judiciales de custodia/manutención','Pasaportes de los hijos si nacieron en el extranjero']}
   },
   {
-    id:'have-you-ever', part:'Part 12', icon:'warning', forms:['N-400','N-648'],
+    id:'have-you-ever', part:'Part 9', icon:'warning', forms:['N-400','N-648'],
     title:{en:'"Have you ever..." questions', es:'Preguntas "¿Alguna vez...?"'},
     asked:{en:'50+ yes/no questions about criminal history, immigration violations, party memberships, drug use, lying to immigration officers, and more.',
            es:'50+ preguntas de sí/no sobre historial penal, violaciones migratorias, membresías políticas, uso de drogas, mentir a oficiales de inmigración, y más.'},
@@ -10087,7 +10369,8 @@ function renderHomeN400Row(){
       sub.textContent = lang==='es' ? '✓ Completado · revisar las 8 secciones' : '✓ Complete · review the 8 sections';
     } else if(typeof p.lastSection === 'number' && p.lastSection > 0){
       var part = p.lastSection + 1;
-      sub.textContent = lang==='es' ? 'Continuar desde la Parte '+part+' de '+N400_SECTIONS.length : 'Resume from Part '+part+' of '+N400_SECTIONS.length;
+      var secLbl = (N400_SECTIONS[p.lastSection] && N400_SECTIONS[p.lastSection].part) || ('Part ' + part);
+      sub.textContent = lang==='es' ? 'Continuar en la '+secLbl.replace('Part','Parte')+' · sección '+part+' de '+N400_SECTIONS.length : 'Resume at '+secLbl+' · section '+part+' of '+N400_SECTIONS.length;
     } else {
       sub.textContent = lang==='es' ? '8 secciones · evita errores comunes' : '8 sections · avoid common mistakes';
     }
@@ -10994,18 +11277,20 @@ async function n400FH_buildPdf(){
   var F = 'form1[0].';
   var skipped = [];   // answers that couldn't be placed. Reported to the user afterward
 
+  var fieldMisses = [];   // field names that do not exist on this PDF edition
+  var fieldPlaced = 0;
   function text(name, val){
     if(val == null || String(val).trim() === '') return;
-    try { form.getTextField(F + name).setText(String(val)); } catch(e){}
+    try { form.getTextField(F + name).setText(String(val)); fieldPlaced++; } catch(e){ fieldMisses.push(name); }
   }
   function checkBox(name){
-    try { form.getCheckBox(F + name).check(); } catch(e){}
+    try { form.getCheckBox(F + name).check(); fieldPlaced++; } catch(e){ fieldMisses.push(name); }
   }
   function dropdown(name, val){
     if(!val) return;
-    var dd; try { dd = form.getDropdown(F + name); } catch(e){ return; }
-    try { dd.select(val); return; } catch(e){}
-    try { dd.select(' ' + val); } catch(e){}
+    var dd; try { dd = form.getDropdown(F + name); } catch(e){ fieldMisses.push(name); return; }
+    try { dd.select(val); fieldPlaced++; return; } catch(e){}
+    try { dd.select(' ' + val); fieldPlaced++; } catch(e){ fieldMisses.push(name); }
   }
 
   // A-Number on every page header
@@ -11145,7 +11430,15 @@ async function n400FH_buildPdf(){
   // scrambled checkbox indices). The user completes them by hand.
 
   var bytes = await doc.save();
-  return { bytes: bytes, skipped: skipped };
+  if(fieldMisses.length){
+    skipped.push((lang==='es'
+      ? fieldMisses.length + ' campo(s) no existen en esta edición del formulario; revisa el PDF con cuidado'
+      : fieldMisses.length + ' field(s) do not exist on this form edition; check the PDF carefully'));
+  }
+  if(fieldPlaced === 0){
+    skipped.push(lang==='es' ? 'Ningún campo se pudo rellenar. La edición del formulario puede haber cambiado' : 'No field could be filled. The form edition may have changed');
+  }
+  return { bytes: bytes, skipped: skipped, placed: fieldPlaced, misses: fieldMisses.length };
 }
 
 function n400FH_pdfEntry(){
@@ -11164,10 +11457,12 @@ function n400FH_pdfEntry(){
     ? ['El PDF se genera <strong>en tu dispositivo</strong> y nunca sale de él.',
        'Contiene <strong>solo tus respuestas, tal como las escribiste</strong>. Nada se sugiere ni se completa por ti.',
        'Las preguntas de criterio (Parte 1, preguntas adicionales, color de ojos/cabello) quedan <strong>en blanco</strong> para que las completes a mano.',
+       'Camino <strong>no recoge</strong> estas secciones; complétalas tú: sexo, dirección postal, datos de tus padres, raza/etnia, datos del cónyuge y matrimonios anteriores, la mayoría de las preguntas de sí/no de la Parte 9, la reducción de tarifa y las firmas.',
        '<strong>Revisa cada página</strong> contra el formulario oficial (edición '+N400_PDF_EDITION+'), complétalo, fírmalo y preséntalo tú mismo.']
     : ['The PDF is generated <strong>on your device</strong> and never leaves it.',
        'It contains <strong>only your answers, exactly as you typed them</strong>. Nothing is suggested or completed for you.',
        'Judgment questions (Part 1 basis, additional questions, eye/hair color) are left <strong>blank</strong> for you to complete by hand.',
+       'Camino <strong>does not collect</strong> these sections; fill them yourself: sex, mailing address, your parents, race/ethnicity, spouse details and prior marriages, most of the Part 9 yes/no questions, the fee reduction request, and signatures.',
        '<strong>Review every page</strong> against the official form (edition '+N400_PDF_EDITION+'), complete it, sign it, and file it yourself.'];
   // Warn up front if any repeatable group exceeds the official form's capacity
   var aAll = n400FH_state().answers;
@@ -11428,7 +11723,7 @@ function pathNextAction(){
       title: lang==='es' ? 'Solicita tu EAD (I-765)' : 'Apply for your EAD (I-765)',
       sub: lang==='es'
         ? 'Después de 150 días con tu I-589 pendiente puedes pedir permiso de trabajo. Es gratis.'
-        : '150 days after filing I-589, you can apply for a work permit. Filing fee is $0 for asylum applicants.',
+        : '150 days after filing I-589, you can apply for a work permit. Since July 2025 the first asylum EAD costs $550.',
       ctaLabel: lang==='es' ? 'Ver asilo en detalle' : 'See asylum details',
       ctaAction: "toggleVisaPath('asylum'); go('visaPaths')",
       urgent: true
@@ -14118,7 +14413,10 @@ function renderDates(){
       title: ed.label,
       date: ed.date,
       status: urgent ? 'estimated' : st,
-      note: lang==='es' ? 'Vence: ' + daysLeft + ' días' : 'Expires in ' + daysLeft + ' days',
+      note: daysLeft < 0
+        ? (lang==='es' ? 'Venció hace ' + (-daysLeft) + ' días' : 'Expired ' + (-daysLeft) + ' days ago')
+        : daysLeft === 0 ? (lang==='es' ? 'Vence hoy' : 'Expires today')
+        : (lang==='es' ? 'Vence en ' + daysLeft + ' días' : 'Expires in ' + daysLeft + ' days'),
       urgent: urgent,
       expiry: true,
       id: 'exp-'+key
@@ -14338,7 +14636,11 @@ function exportDatesToICS(){
     return;
   }
   var ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Camino//Immigration App//EN', 'CALSCALE:GREGORIAN'];
-  function fmt(d){ return d.replace(/-/g, ''); }
+  function fmt(d){
+    // Dates arrive either as 'YYYY-MM-DD' strings or as Date objects (getImportantDates).
+    if(d instanceof Date) d = d.toISOString().slice(0, 10);
+    return String(d).replace(/-/g, '');
+  }
   function uid(d, i){ return 'camino-'+fmt(d)+'-'+i+'@camino.app'; }
   dates.forEach(function(d, i){
     var title = (typeof d.title === 'object') ? d.title.en : d.title;
@@ -15421,7 +15723,8 @@ function eligOk(){
   return eligState.continuous === true
     && eligState.physical === true
     && eligState.state === true
-    && eligState.crime === false;
+    && eligState.crime === false
+    && eligibleNow(user);
 }
 
 function eligCardHtml(icon, title, sub, sel, onclick){
@@ -15516,6 +15819,9 @@ function renderEligibility(){
       footerHtml = '<button class="cta" onclick="finishEligibility(true)">'+(lang==='es'?"Marqué que lo presenté":'I filed my N-400')+' →</button>';
     } else {
       var reasons = [];
+      if(!eligibleNow(user)) reasons.push(lang==='es'
+        ? 'Aún no cumples el tiempo de residencia ('+residencyYears(user)+' años). Puedes presentar desde el '+fmtDate(earliestFiling(user), 'es')+' (90 días antes)'
+        : 'Not yet '+residencyYears(user)+' years as a resident. You can file from '+fmtDate(earliestFiling(user), 'en')+' (90 days early)');
       if(eligState.continuous === false) reasons.push(lang==='es'?'Viaje largo puede romper continuidad':'Long trip may break continuity');
       if(eligState.physical === false) reasons.push(lang==='es'?'Tiempo físico en EE.UU. dudoso':'Physical presence may be short');
       if(eligState.state === false) reasons.push(lang==='es'?'Menos de 3 meses en tu estado':'Less than 3 months in your state');
@@ -15525,7 +15831,8 @@ function renderEligibility(){
       html = '<div class="onbStepTitle">'+(lang==='es'?'Necesitas revisar algunas cosas':'A few things to check first')+'</div>'
         + '<div class="onbStepSub">'+(lang==='es'
             ? 'No es un "no" definitivo. Algunos casos sí proceden con ayuda legal. Te recomendamos hablar con un abogado de inmigración o organización sin fines de lucro.'
-            : 'This isn\'t a definite "no". Many cases still go forward with legal help. We recommend talking to an immigration lawyer or a nonprofit.')+'</div>'
+            : 'This isn\'t a definite "no". Many cases still go forward with legal help. We recommend talking to an immigration lawyer or a nonprofit.')
+        + (!eligibleNow(user) ? ' ' + (lang==='es' ? 'Si la única razón es la fecha, simplemente espera a la ventana de 90 días. Camino te avisa.' : 'If the date is the only reason, just wait for the 90-day window. Camino will tell you.') : '')+'</div>'
         + '<div class="onbSummary">'
         +   '<div class="onbSummaryCard">'+rHtml+'</div>'
         +   '<div class="onbSummaryNext" style="background:linear-gradient(150deg,#c44d2b,#ff8a3a);box-shadow:0 6px 18px rgba(255,138,58,.25);">'
@@ -15713,6 +16020,7 @@ function toast(msg, icon){
     applyHeroName();
     camiBoot();
     Store.init();
+    loadVisaBulletinRemote();
     refreshStreakFreezes();
     normalizeStreak();
     syncMasteredCount();
