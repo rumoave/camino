@@ -18,16 +18,19 @@ Thank you for the review. Here is the requested information.
 Attached: `[camino-review-demo.mp4]`, recorded on a physical iPhone running the
 latest iOS. It starts at app launch and walks through onboarding, the Today tab,
 a civics lesson, the Journey (visa path) map, the interview simulator (which
-triggers the microphone permission prompt), the Documents checklist, the Camino
-Plus paywall and the 7-day free-trial purchase flow (sandbox), Restore Purchases,
-and the English ⇄ Spanish toggle.
+triggers the microphone and speech recognition permission prompts), the Documents
+checklist, the Camino Plus paywall and the 7-day free-trial purchase flow
+(sandbox), Restore Purchases, the optional reminders permission, and the
+English ⇄ Spanish toggle.
 
 Camino has no account registration, login, or account deletion. There are no
 accounts. There is no user-generated content shared with other users, so there
-are no reporting or blocking mechanisms. The only system permission the app
-requests is the microphone (optional, for practicing interview answers out loud).
-The app does not use App Tracking Transparency, location, contacts, camera, or
-photos.
+are no reporting or blocking mechanisms. The app requests three optional system
+permissions, each only when the user chooses the feature: microphone and speech
+recognition (to answer interview questions out loud; typing is always available
+instead), and notifications (daily study reminders and date alerts, off by
+default). The app does not use App Tracking Transparency, location, contacts,
+camera, or photos.
 
 **2. Devices and OS tested**
 `[e.g. iPhone 15 Pro, iOS 18.x (physical); iPhone 13, iOS 18.x (physical);
@@ -64,9 +67,10 @@ No login or credentials are needed. Nothing needs to be downloaded or imported.
   plain-English guide and the USCIS forms involved.
 - **Learn** tab: the full civics path, flashcards, and mock tests (free plan:
   3 mock tests per day).
-- **Interview** (from Today or Learn): the simulator reads a question aloud; tap
-  the mic to answer by voice (this triggers the microphone prompt) or type an
-  answer. Free plan: 3 practice sessions per day.
+- **Interview** (from the Today tab): the simulator reads a question aloud; tap
+  the mic to answer by voice (this triggers the microphone prompt, then the speech
+  recognition prompt) or type an answer in the box below the mic. Nine questions:
+  six civics, three N-400 review. Free plan: 3 practice sessions per day.
 - **Docs** tab: document checklist for the selected path, key dates, the
   educational N-400 walkthrough, and the N-400 organizer (Plus).
 - **Camino Plus**: any locked feature, or Profile → Upgrade, opens the paywall.

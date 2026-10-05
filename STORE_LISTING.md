@@ -47,6 +47,7 @@ KNOW YOUR PATH
 PRACTICE THE INTERVIEW
 • A realistic USCIS interview simulator that asks questions and scores your answers
 • Hear questions read aloud; answer by voice or by typing
+• Optional daily reminders and streak alerts so practice becomes a habit
 
 GET ORGANIZED
 • A document checklist tailored to your path

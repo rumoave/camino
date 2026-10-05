@@ -29,6 +29,43 @@ From the repo root on the Mac:
 Note: remote Macs (MacinCloud) have no mic device, so the simulator will always
 show "mic blocked" there. That's environmental. Test voice input on a real iPhone.
 
+## Speech recognition + reminders (added Oct 2026)
+Two native plugins were added to `package.json` and exposed through `revenuecat-shim.js`
+(`window.CapSpeech`, `window.CapLocalNotifications`). After pulling, run `npm install`
+on the Mac, then `npm run sync` (never a bare `npx cap sync ios`: that ships the stale
+`www/` folder without the shim bundle).
+
+- `@capacitor-community/speech-recognition` 6.0.1 drives voice answers in the interview
+  on iOS (WKWebView has no working Web Speech API; the app ignores it there). It needs a
+  second usage string:
+  ```bash
+  /usr/libexec/PlistBuddy -c "Add :NSSpeechRecognitionUsageDescription string Camino turns your spoken interview answers into text so it can grade them. Speech is processed by Apple's Speech framework." ios/App/App/Info.plist
+  ```
+  Without it, iOS terminates the app the first time the recognizer starts.
+- `@capacitor/local-notifications` 6.1.3 schedules the daily nudge, the streak-at-risk
+  alert, the trial-ends-in-2-days notice and the 90/30/7-day expiration alerts. No plist
+  key is needed; the app asks for notification permission when the user turns reminders
+  on (Me → Reminders, or the button on the first lesson-complete screen).
+
+Smoke-test on device: start an interview, tap the mic (two prompts: microphone, then
+speech recognition), say an answer, pause two seconds, and the verdict should appear.
+Then Me → Reminders → Enable, and confirm a notification is listed under Settings ›
+Notifications › Camino (schedule a test by setting the time a few minutes ahead).
+
+## Visa Bulletin data
+The app ships an approximate snapshot (`VISA_BULLETIN.asOf`) and warns when it is older
+than 45 days. To update without an app release, publish a JSON file on the gh-pages
+branch at `https://rumoave.github.io/camino/visa-bulletin.json`:
+```json
+{ "month": "October 2026", "monthEs": "Octubre 2026", "asOf": "2026-10-09", "approximate": false,
+  "employment": { "EB-1": {"India": "2022-02-15", "China": "2022-11-08", "Other": null},
+                  "EB-2": {"India": "2013-01-01", "China": "2020-03-22", "Other": "2023-04-22"},
+                  "EB-3": {"India": "2013-04-15", "China": "2020-11-01", "Other": "2023-01-01"} },
+  "family":     { "F1": {}, "F2A": {}, "F2B": {}, "F3": {}, "F4": {} } }
+```
+Use the same category/country keys as `VISA_BULLETIN` in `app.js`; `null` means current.
+The app fetches it at launch (plain GET, no user data) and falls back to the bundled copy.
+
 ## In Xcode
 1. Select the **App** target → **Signing & Capabilities** → set your Team (Apple Developer account).
    The bundle identifier is `com.rumoave.camino` (change in `capacitor.config.json` if needed).
