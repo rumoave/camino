@@ -366,6 +366,10 @@ var user = {
   familyTies: null,          // FAMILY_TIES key
   situations: [],            // SITUATIONS ids (military, tps, daca, victim, minor, religious)
   gcPetition: null,          // {type:'employment'|'family'|'asylum', stage:'perm'|'i140'|'i130'|'approved'|'priority'|'i485', at:ISO} once a green-card filing is under way
+  state: null,               // US_STATES code; drives the state-specific civics questions
+  officialSenators: '',      // user-saved answers for n23 / n29 / n61 (officials change; we never hardcode them)
+  officialRep: '',
+  officialGovernor: '',
   soundEffects: true,        // feedback chimes (right/wrong/complete). Me tab toggle
   testVersion: '2025',       // '2008' (legacy 100q test) or '2025' (current 128q, 12-of-20 to pass)
   plan: 'free',              // 'free' | 'trial' | 'plus' | 'expired'
@@ -547,8 +551,8 @@ var STAGES = [
       pill: {en:'Prep time', es:'A prepararse'},
       title: {en:'Practice 5 civics questions today', es:'Practica 5 preguntas hoy'},
       sub: function(u,l){ return l==='es'
-        ? 'Mantén tu racha. El repaso diario te lleva a las 100 dominadas antes de tu cita.'
-        : 'Keep your streak. Daily review gets you to 100 mastered before your appointment.'; },
+        ? 'Mantén tu racha. El repaso diario te lleva a dominar todas las preguntas antes de tu cita.'
+        : 'Keep your streak. Daily review gets every question mastered before your appointment.'; },
       cta: {en:'I finished my interview', es:'Terminé mi entrevista'}
     },
     upcomingTag: {en:'Up next', es:'Sigue'}
@@ -1603,14 +1607,14 @@ var CIVICS_2025 = [
     O('A holiday to honor people in the (U.S.) military','Feriado para honrar a quienes sirven en el ejército',true), O("Country's birthday","El cumpleaños del país"), O("Election day","Día de elecciones"), O("Thanksgiving","Acción de Gracias")])
 ];
 
-var UNITS = [
+var UNITS_2008 = [
   {id:1, banner:'u1', title:{en:'American Government',       es:'Gobierno americano'},        kicker:{en:'Unit 1', es:'Unidad 1'}},
   {id:2, banner:'u2', title:{en:'American History',          es:'Historia americana'},        kicker:{en:'Unit 2', es:'Unidad 2'}},
   {id:3, banner:'u3', title:{en:'Symbols & Geography',       es:'Símbolos y geografía'},      kicker:{en:'Unit 3', es:'Unidad 3'}},
   {id:4, banner:'u4', title:{en:'Rights & Responsibilities', es:'Derechos y responsabilidades'}, kicker:{en:'Unit 4', es:'Unidad 4'}}
 ];
 
-var LESSONS = [
+var LESSONS_2008 = [
   {id:'principles', unit:1, pos:'c', title:{en:'Principles', es:'Principios'},
    intro:{en:'The foundation of U.S. government: the Constitution as supreme law, individual rights, and self-government. Expect 2–3 questions from this section on the real test.',
           es:'La base del gobierno: la Constitución como ley suprema, derechos individuales y autogobierno. Espera 2–3 preguntas de esta sección en el examen real.'},
@@ -1703,6 +1707,129 @@ var LESSONS = [
   {id:'unit-4-review', unit:4, pos:'l1', isChest:true, title:{en:'Unit 4 review', es:'Repaso Unidad 4'},
    qIds:['ci1','vo1','fs3','ce5','tx2']}
 ];
+
+// ===== 2025 TEST: units + lessons over the official 128 questions (n1-n128) =====
+// Grouped the way USCIS groups them (government, rights, history, symbols) and
+// cut into 5-8 question lessons. Every one of the 128 appears in exactly one
+// lesson; review chests re-use six. The legacy 100-question set stays under
+// *_2008 for people grandfathered into the 2008 test.
+var UNITS_2025 = [
+  {id:1, banner:'u1', title:{en:'American Government',           es:'Gobierno americano'},               kicker:{en:'Unit 1', es:'Unidad 1'}},
+  {id:2, banner:'u2', title:{en:'President, Courts & Rights',    es:'Presidente, cortes y derechos'},     kicker:{en:'Unit 2', es:'Unidad 2'}},
+  {id:3, banner:'u3', title:{en:'American History',              es:'Historia americana'},               kicker:{en:'Unit 3', es:'Unidad 3'}},
+  {id:4, banner:'u4', title:{en:'Modern History & Symbols',      es:'Historia moderna y símbolos'},       kicker:{en:'Unit 4', es:'Unidad 4'}}
+];
+
+var LESSONS_2025 = [
+  {id:'principles', unit:1, pos:'c', title:{en:'Principles of government', es:'Principios del gobierno'},
+   intro:{en:'What kind of country this is: a republic under the rule of law, with the Constitution as supreme law, "We the People," and a free-market economy. Officers like these as openers.',
+          es:'Qué tipo de país es: una república bajo el estado de derecho, con la Constitución como ley suprema, "Nosotros el Pueblo" y una economía de libre mercado. Los oficiales suelen abrir con estas.'},
+   qIds:['n1','n2','n3','n4','n12','n13','n14']},
+  {id:'founding-documents', unit:1, pos:'r1', title:{en:'Founding documents', es:'Documentos fundacionales'},
+   intro:{en:'The Declaration of Independence and the Constitution: what each says, how amendments work, the Bill of Rights, and the 27 amendments. Expect the numbers.',
+          es:'La Declaración de Independencia y la Constitución: qué dice cada una, cómo funcionan las enmiendas, la Carta de Derechos y las 27 enmiendas. Espera los números.'},
+   qIds:['n5','n6','n7','n8','n9','n10','n11']},
+  {id:'three-branches', unit:1, pos:'r2', title:{en:'Three branches', es:'Tres ramas'},
+   intro:{en:'Why power is split in three, who writes the laws, the two parts of Congress, and what Congress can do. The structure the rest of the test hangs on.',
+          es:'Por qué el poder se divide en tres, quién escribe las leyes, las dos partes del Congreso y qué puede hacer. La estructura de la que cuelga el resto del examen.'},
+   qIds:['n15','n16','n17','n18','n19','n20','n21']},
+  {id:'congress', unit:1, pos:'r1', title:{en:'Senate & House', es:'Senado y Cámara'},
+   intro:{en:'100 senators, 435 representatives, 6-year and 2-year terms, and why every state gets two senators. Memorize the numbers; they come up word for word.',
+          es:'100 senadores, 435 representantes, mandatos de 6 y 2 años, y por qué cada estado tiene dos senadores. Memoriza los números; aparecen literalmente.'},
+   qIds:['n22','n23','n24','n25','n26','n27','n28']},
+  {id:'your-representatives', unit:1, pos:'c', title:{en:'Who represents you', es:'Quién te representa'},
+   intro:{en:'Your own representative, the Speaker of the House, who senators and representatives answer to, and why some states have more seats. Save your officials under Me so the interview can quiz you on them.',
+          es:'Tu representante, el Presidente de la Cámara, a quién responden senadores y representantes, y por qué algunos estados tienen más escaños. Guarda tus funcionarios en Yo para que la entrevista te los pregunte.'},
+   qIds:['n29','n30','n31','n32','n33','n34','n35']},
+  {id:'unit-1-review', unit:1, pos:'l1', isChest:true, title:{en:'Unit 1 review', es:'Repaso Unidad 1'},
+   qIds:['n2','n7','n16','n21','n24','n30']},
+
+  {id:'the-president', unit:2, pos:'c', title:{en:'The President', es:'El presidente'},
+   intro:{en:'Four-year terms, the two-term limit, who the President and Vice President are now, who takes over, and the President as Commander in Chief.',
+          es:'Mandatos de cuatro años, el límite de dos mandatos, quiénes son el presidente y el vicepresidente ahora, quién lo sustituye, y el presidente como comandante en jefe.'},
+   qIds:['n36','n37','n38','n39','n40','n41','n42']},
+  {id:'presidential-powers', unit:2, pos:'l1', title:{en:'Bills, vetoes & the Cabinet', es:'Leyes, vetos y el Gabinete'},
+   intro:{en:'Who signs and vetoes bills, who appoints federal judges, the executive departments, what the Cabinet does, and why the Electoral College matters.',
+          es:'Quién firma y veta leyes, quién nombra jueces federales, los departamentos ejecutivos, qué hace el Gabinete y por qué importa el Colegio Electoral.'},
+   qIds:['n43','n44','n45','n46','n47','n48','n49']},
+  {id:'courts', unit:2, pos:'l2', title:{en:'The courts', es:'Las cortes'},
+   intro:{en:'The judicial branch, the Supreme Court\'s nine seats, five votes to decide a case, lifetime appointments and why, and the Chief Justice now.',
+          es:'La rama judicial, los nueve asientos de la Corte Suprema, cinco votos para decidir un caso, nombramientos vitalicios y por qué, y el presidente de la Corte ahora.'},
+   qIds:['n50','n51','n52','n53','n54','n55','n56','n57']},
+  {id:'federal-states', unit:2, pos:'l1', title:{en:'Federal & state', es:'Federal y estatal'},
+   intro:{en:'Powers only the federal government has, powers only states have, the 10th Amendment, and your own governor and state capital.',
+          es:'Poderes exclusivos del gobierno federal, poderes exclusivos de los estados, la 10ª Enmienda, y tu gobernador y capital estatal.'},
+   qIds:['n58','n59','n60','n61','n62']},
+  {id:'rights-freedoms', unit:2, pos:'c', title:{en:'Rights & freedoms', es:'Derechos y libertades'},
+   intro:{en:'The four voting amendments, who can vote and serve on a jury, rights of everyone living here, the Pledge of Allegiance, and the promises in the Oath.',
+          es:'Las cuatro enmiendas sobre el voto, quién puede votar y ser jurado, los derechos de todos los que viven aquí, el Juramento a la Bandera y las promesas del Juramento de Lealtad.'},
+   qIds:['n63','n64','n65','n66','n67']},
+  {id:'civic-engagement', unit:2, pos:'l1', title:{en:'Citizenship & duties', es:'Ciudadanía y deberes'},
+   intro:{en:'How people become citizens, ways to take part in civic life, serving the country, federal taxes, and Selective Service.',
+          es:'Cómo se obtiene la ciudadanía, formas de participar en la vida cívica, servir al país, los impuestos federales y el Servicio Selectivo.'},
+   qIds:['n68','n69','n70','n71','n72']},
+  {id:'unit-2-review', unit:2, pos:'r1', isChest:true, title:{en:'Unit 2 review', es:'Repaso Unidad 2'},
+   qIds:['n36','n42','n53','n57','n64','n67']},
+
+  {id:'colonial-era', unit:3, pos:'c', title:{en:'Colonial era', es:'Era colonial'},
+   intro:{en:'Why the colonists came, who lived here first, who was enslaved, the war for independence, and why the colonies broke with Britain.',
+          es:'Por qué vinieron los colonos, quién vivía aquí primero, quiénes fueron esclavizados, la guerra de independencia y por qué las colonias rompieron con Gran Bretaña.'},
+   qIds:['n73','n74','n75','n76','n77']},
+  {id:'independence', unit:3, pos:'r1', title:{en:'Independence', es:'Independencia'},
+   intro:{en:'Jefferson, July 4, 1776, the big events of the Revolution, the 13 original states, and the Constitution of 1787.',
+          es:'Jefferson, el 4 de julio de 1776, los grandes eventos de la Revolución, los 13 estados originales y la Constitución de 1787.'},
+   qIds:['n78','n79','n80','n81','n82']},
+  {id:'founding-era', unit:3, pos:'r2', title:{en:'The founders', es:'Los fundadores'},
+   intro:{en:'The Federalist Papers and the people behind the founding: Franklin, Washington, Jefferson, Madison, and Hamilton. These are "name one thing" questions; one solid fact each is enough.',
+          es:'Los Documentos Federalistas y las personas detrás de la fundación: Franklin, Washington, Jefferson, Madison y Hamilton. Son preguntas de "nombra una cosa"; basta un dato sólido de cada uno.'},
+   qIds:['n83','n84','n85','n86','n87','n88','n89']},
+  {id:'expansion-1800s', unit:3, pos:'r1', title:{en:'The 1800s', es:'El siglo XIX'},
+   intro:{en:'The Louisiana Purchase, the wars of the 1800s, the war between North and South, and the Civil War\'s key events.',
+          es:'La Compra de Luisiana, las guerras del siglo XIX, la guerra entre el Norte y el Sur, y los eventos clave de la Guerra Civil.'},
+   qIds:['n90','n91','n92','n93']},
+  {id:'civil-war-era', unit:3, pos:'c', title:{en:'Lincoln & the Civil War', es:'Lincoln y la Guerra Civil'},
+   intro:{en:'Lincoln, the Emancipation Proclamation, the war that ended slavery, the 14th Amendment, and when all men got the vote.',
+          es:'Lincoln, la Proclamación de Emancipación, la guerra que terminó la esclavitud, la 14ª Enmienda y cuándo todos los hombres obtuvieron el voto.'},
+   qIds:['n94','n95','n96','n97','n98']},
+  {id:'unit-3-review', unit:3, pos:'l1', isChest:true, title:{en:'Unit 3 review', es:'Repaso Unidad 3'},
+   qIds:['n74','n78','n79','n86','n92','n97']},
+
+  {id:'modern-era', unit:4, pos:'c', title:{en:'Early 1900s', es:'Principios del siglo XX'},
+   intro:{en:'The women\'s rights leaders, World War I, women winning the vote in 1920, and the Great Depression.',
+          es:'Las líderes por los derechos de la mujer, la Primera Guerra Mundial, el voto femenino en 1920 y la Gran Depresión.'},
+   qIds:['n99','n100','n101','n102','n103','n104']},
+  {id:'wwii-cold-war', unit:4, pos:'l1', title:{en:'WWII & the Cold War', es:'SGM y Guerra Fría'},
+   intro:{en:'Franklin Roosevelt, Pearl Harbor, Eisenhower, the Soviet rival, and the fear of communism.',
+          es:'Franklin Roosevelt, Pearl Harbor, Eisenhower, el rival soviético y el temor al comunismo.'},
+   qIds:['n105','n106','n107','n108','n109']},
+  {id:'recent-history', unit:4, pos:'l2', title:{en:'Civil rights to the Gulf War', es:'Derechos civiles a la Guerra del Golfo'},
+   intro:{en:'Korea, Vietnam, the civil rights movement, Dr. Martin Luther King Jr., and the Persian Gulf War.',
+          es:'Corea, Vietnam, el movimiento por los derechos civiles, el Dr. Martin Luther King Jr. y la Guerra del Golfo Pérsico.'},
+   qIds:['n110','n111','n112','n113','n114']},
+  {id:'twenty-first-century', unit:4, pos:'l1', title:{en:'9/11 & today', es:'11-S y hoy'},
+   intro:{en:'September 11, the conflicts that followed, American Indian tribes, and American innovations.',
+          es:'El 11 de septiembre, los conflictos que siguieron, las tribus indígenas americanas y las innovaciones estadounidenses.'},
+   qIds:['n115','n116','n117','n118']},
+  {id:'national-symbols', unit:4, pos:'c', title:{en:'National symbols', es:'Símbolos nacionales'},
+   intro:{en:'The capital, the Statue of Liberty, the stripes and the stars, the national anthem, and E Pluribus Unum.',
+          es:'La capital, la Estatua de la Libertad, las franjas y las estrellas, el himno nacional y E Pluribus Unum.'},
+   qIds:['n119','n120','n121','n122','n123','n124']},
+  {id:'holidays', unit:4, pos:'l1', title:{en:'Holidays', es:'Feriados'},
+   intro:{en:'Independence Day, the national holidays, Memorial Day, and Veterans Day. Short and factual.',
+          es:'El Día de la Independencia, los feriados nacionales, el Día de los Caídos y el Día de los Veteranos. Corto y factual.'},
+   qIds:['n125','n126','n127','n128']},
+  {id:'unit-4-review', unit:4, pos:'r1', isChest:true, title:{en:'Unit 4 review', es:'Repaso Unidad 4'},
+   qIds:['n102','n105','n113','n115','n119','n123']}
+];
+
+// Active content follows the test version the user is preparing for.
+var UNITS = UNITS_2025, LESSONS = LESSONS_2025;
+function applyTestVersionContent(){
+  var v = (user && user.testVersion === '2008') ? '2008' : '2025';
+  UNITS = (v === '2008') ? UNITS_2008 : UNITS_2025;
+  LESSONS = (v === '2008') ? LESSONS_2008 : LESSONS_2025;
+  _civicsLessonMap = null;
+}
 
 var EXPLAIN = {
   p1: {en:'The Constitution is the highest law in the U.S. Every other law must agree with it.', es:'La Constitución es la ley más alta. Todas las demás leyes deben estar de acuerdo con ella.'},
@@ -1809,6 +1936,272 @@ var EXPLAIN = {
   tx4: {en:'Common citizen responsibilities: pay taxes, obey laws, serve on jury, register for Selective Service.', es:'Responsabilidades comunes: pagar impuestos, obedecer leyes, servir en jurado, registrarse en el Servicio Selectivo.'},
   tx5: {en:'Federal income tax applies to anyone earning above the IRS threshold, citizen or not.', es:'El impuesto federal aplica a cualquiera que gana más del límite del IRS, ciudadano o no.'}
 };
+
+// Why-panel text for every 2025 question. One idea each, both languages.
+var EXPLAIN_2025 = {
+  n1:{en:'The U.S. is a republic: a constitution-based federal republic and a representative democracy.', es:'EE.UU. es una república: una república federal basada en una constitución y una democracia representativa.'},
+  n2:{en:'The Constitution is the supreme law. Every other law must agree with it.', es:'La Constitución es la ley suprema. Toda otra ley debe estar de acuerdo con ella.'},
+  n3:{en:'It forms the government, defines its parts and powers, and protects the rights of the people.', es:'Forma el gobierno, define sus partes y poderes, y protege los derechos del pueblo.'},
+  n4:{en:'"We the People" means self-government: the people, not a king, are the source of power.', es:'"Nosotros el Pueblo" significa autogobierno: el pueblo, no un rey, es la fuente del poder.'},
+  n5:{en:'Changes are made through amendments, using the amendment process in Article V.', es:'Los cambios se hacen mediante enmiendas, con el proceso del Artículo V.'},
+  n6:{en:'The Bill of Rights protects the basic rights of Americans and of people living in the United States.', es:'La Carta de Derechos protege los derechos básicos de los estadounidenses y de quienes viven en EE.UU.'},
+  n7:{en:'There are 27 amendments. The first ten are the Bill of Rights.', es:'Hay 27 enmiendas. Las primeras diez son la Carta de Derechos.'},
+  n8:{en:'It declared America free from British control and said all people are created equal with inherent rights.', es:'Declaró a América libre del control británico y dijo que todas las personas son creadas iguales con derechos inherentes.'},
+  n9:{en:'The Declaration of Independence, adopted July 4, 1776.', es:'La Declaración de Independencia, adoptada el 4 de julio de 1776.'},
+  n10:{en:'Any two of: equality, liberty, social contract, natural rights, limited government, self-government.', es:'Dos de: igualdad, libertad, contrato social, derechos naturales, gobierno limitado, autogobierno.'},
+  n11:{en:'That phrase is in the Declaration of Independence.', es:'Esa frase está en la Declaración de Independencia.'},
+  n12:{en:'Capitalism, also called a free-market economy.', es:'El capitalismo, también llamado economía de libre mercado.'},
+  n13:{en:'Everyone must follow the law: leaders, the government, every person. No one is above it.', es:'Todos deben obedecer la ley: líderes, gobierno, cada persona. Nadie está por encima de ella.'},
+  n14:{en:'For example the Declaration of Independence, the Articles of Confederation, the Federalist Papers, the Virginia Declaration of Rights, the Mayflower Compact, or the Iroquois Great Law of Peace.', es:'Por ejemplo la Declaración de Independencia, los Artículos de la Confederación, los Documentos Federalistas, la Declaración de Derechos de Virginia, el Pacto del Mayflower o la Gran Ley de Paz iroquesa.'},
+  n15:{en:'So no part becomes too powerful: separation of powers with checks and balances.', es:'Para que ninguna parte sea demasiado poderosa: separación de poderes con controles y equilibrios.'},
+  n16:{en:'Legislative (Congress), executive (the President), and judicial (the courts).', es:'Legislativa (Congreso), ejecutiva (el presidente) y judicial (las cortes).'},
+  n17:{en:'The President heads the executive branch.', es:'El presidente encabeza la rama ejecutiva.'},
+  n18:{en:'Congress, the national legislature, writes federal laws.', es:'El Congreso, la legislatura nacional, escribe las leyes federales.'},
+  n19:{en:'The Senate and the House of Representatives.', es:'El Senado y la Cámara de Representantes.'},
+  n20:{en:'Congress writes laws, declares war, and makes the federal budget.', es:'El Congreso escribe leyes, declara la guerra y hace el presupuesto federal.'},
+  n21:{en:'100 senators: two for each of the 50 states.', es:'100 senadores: dos por cada uno de los 50 estados.'},
+  n22:{en:'A Senate term is six years.', es:'Un mandato en el Senado dura seis años.'},
+  n23:{en:'The answer depends on your state. Save your senators under Me so Camino can quiz you.', es:'Depende de tu estado. Guarda tus senadores en Yo para que Camino te los pregunte.'},
+  n24:{en:'435 voting members in the House, divided among the states by population.', es:'435 miembros con voto en la Cámara, repartidos entre los estados según población.'},
+  n25:{en:'A House term is two years.', es:'Un mandato en la Cámara dura dos años.'},
+  n26:{en:'Shorter terms keep representatives closer to public opinion.', es:'Mandatos más cortos mantienen a los representantes más cerca de la opinión pública.'},
+  n27:{en:'Each state has two senators, no matter its size.', es:'Cada estado tiene dos senadores, sin importar su tamaño.'},
+  n28:{en:'Equal representation for small states, agreed in the Great (Connecticut) Compromise.', es:'Representación igual para los estados pequeños, acordada en el Gran Compromiso (de Connecticut).'},
+  n29:{en:'The answer depends on your congressional district. Save it under Me.', es:'Depende de tu distrito congresional. Guárdalo en Yo.'},
+  n30:{en:'Mike Johnson is Speaker of the House. Check uscis.gov/citizenship/testupdates before your interview.', es:'Mike Johnson es el Presidente de la Cámara. Revisa uscis.gov/citizenship/testupdates antes de tu entrevista.'},
+  n31:{en:'A senator represents the people of their whole state.', es:'Un senador representa a la gente de todo su estado.'},
+  n32:{en:'Citizens of the state elect their senators.', es:'Los ciudadanos del estado eligen a sus senadores.'},
+  n33:{en:'A representative serves the people of their congressional district.', es:'Un representante sirve a la gente de su distrito congresional.'},
+  n34:{en:'Citizens of the district elect their representative.', es:'Los ciudadanos del distrito eligen a su representante.'},
+  n35:{en:'Because of population: states with more people get more representatives.', es:'Por la población: los estados con más gente tienen más representantes.'},
+  n36:{en:'The President is elected for four years.', es:'El presidente se elige por cuatro años.'},
+  n37:{en:'The 22nd Amendment limits presidents to two terms, so no one grows too powerful.', es:'La 22ª Enmienda limita a los presidentes a dos mandatos, para que nadie acumule demasiado poder.'},
+  n38:{en:'Donald J. Trump. Check uscis.gov/citizenship/testupdates for the current officeholder.', es:'Donald J. Trump. Revisa uscis.gov/citizenship/testupdates para el titular actual.'},
+  n39:{en:'JD Vance. Check uscis.gov/citizenship/testupdates for the current officeholder.', es:'JD Vance. Revisa uscis.gov/citizenship/testupdates para el titular actual.'},
+  n40:{en:'The Vice President becomes President.', es:'El vicepresidente se convierte en presidente.'},
+  n41:{en:'The President signs bills into law, vetoes bills, enforces laws, commands the military, and is chief diplomat.', es:'El presidente firma leyes, veta proyectos, hace cumplir las leyes, comanda el ejército y es el jefe diplomático.'},
+  n42:{en:'The President is Commander in Chief of the military.', es:'El presidente es el comandante en jefe del ejército.'},
+  n43:{en:'The President signs bills to make them law.', es:'El presidente firma los proyectos para convertirlos en ley.'},
+  n44:{en:'The President can veto bills.', es:'El presidente puede vetar proyectos de ley.'},
+  n45:{en:'The President appoints federal judges; the Senate confirms them.', es:'El presidente nombra a los jueces federales; el Senado los confirma.'},
+  n46:{en:'The President, the Cabinet, and the federal departments and agencies.', es:'El presidente, el Gabinete y los departamentos y agencias federales.'},
+  n47:{en:'The Cabinet advises the President.', es:'El Gabinete asesora al presidente.'},
+  n48:{en:'Any two: Attorney General, Vice President, or the Secretaries of State, Defense, Treasury, Labor, Education, and so on.', es:'Dos de: Procurador General, vicepresidente, o los secretarios de Estado, Defensa, Tesoro, Trabajo, Educación, etc.'},
+  n49:{en:'The Electoral College decides who is elected President, a compromise between a popular vote and selection by Congress.', es:'El Colegio Electoral decide quién es elegido presidente, un compromiso entre el voto popular y la elección por el Congreso.'},
+  n50:{en:'The Supreme Court and the other federal courts.', es:'La Corte Suprema y las demás cortes federales.'},
+  n51:{en:'It reviews and explains laws, resolves disputes, and decides whether a law violates the Constitution.', es:'Revisa y explica las leyes, resuelve disputas y decide si una ley viola la Constitución.'},
+  n52:{en:'The Supreme Court is the highest court.', es:'La Corte Suprema es la corte más alta.'},
+  n53:{en:'Nine seats on the Supreme Court.', es:'Nueve asientos en la Corte Suprema.'},
+  n54:{en:'Five justices, a majority of nine, decide a case.', es:'Cinco jueces, la mayoría de nueve, deciden un caso.'},
+  n55:{en:'Justices serve for life, until they retire.', es:'Los jueces sirven de por vida, hasta que se jubilan.'},
+  n56:{en:'Lifetime service keeps them independent of politics and outside pressure.', es:'El cargo vitalicio los mantiene independientes de la política y de presiones externas.'},
+  n57:{en:'John Roberts is Chief Justice. Check uscis.gov/citizenship/testupdates before your interview.', es:'John Roberts es el presidente de la Corte. Revisa uscis.gov/citizenship/testupdates antes de tu entrevista.'},
+  n58:{en:'Only the federal government prints money, declares war, creates an army, makes treaties, and sets foreign policy.', es:'Solo el gobierno federal imprime dinero, declara la guerra, crea un ejército, hace tratados y fija la política exterior.'},
+  n59:{en:'States run schools, police and fire protection, driver\'s licenses, and zoning.', es:'Los estados manejan escuelas, policía y bomberos, licencias de conducir y zonificación.'},
+  n60:{en:'Powers not given to the federal government belong to the states or to the people.', es:'Los poderes no otorgados al gobierno federal pertenecen a los estados o al pueblo.'},
+  n61:{en:'The answer depends on your state. Save your governor under Me.', es:'Depende de tu estado. Guarda tu gobernador en Yo.'},
+  n62:{en:'The answer depends on your state. Set your state under Me and Camino fills it in.', es:'Depende de tu estado. Define tu estado en Yo y Camino lo completa.'},
+  n63:{en:'Citizens 18 and older can vote (26th); no poll tax (24th); women can vote (19th); men of any race can vote (15th).', es:'Ciudadanos de 18 o más pueden votar (26ª); sin impuesto electoral (24ª); las mujeres pueden votar (19ª); hombres de cualquier raza pueden votar (15ª).'},
+  n64:{en:'Only U.S. citizens can vote in federal elections, run for federal office, and serve on a jury.', es:'Solo los ciudadanos de EE.UU. pueden votar en elecciones federales, postularse a cargos federales y ser jurados.'},
+  n65:{en:'Freedom of expression, speech, assembly, petition, religion, and the right to bear arms belong to everyone here.', es:'Libertad de expresión, de palabra, de reunión, de petición, de religión y el derecho a portar armas son de todos los que viven aquí.'},
+  n66:{en:'We show loyalty to the United States and to the flag.', es:'Mostramos lealtad a los Estados Unidos y a la bandera.'},
+  n67:{en:'Give up loyalty to other countries, defend the Constitution, obey U.S. laws, serve in the military or the nation if needed, and be loyal to the United States.', es:'Renunciar a la lealtad a otros países, defender la Constitución, obedecer las leyes, servir en el ejército o a la nación si es necesario, y ser leal a EE.UU.'},
+  n68:{en:'By naturalizing, by deriving citizenship through parents, or by being born in the United States.', es:'Por naturalización, por derivación a través de los padres, o por nacer en Estados Unidos.'},
+  n69:{en:'Voting, running for office, joining a party or civic group, contacting officials, or writing to a newspaper.', es:'Votar, postularse, unirse a un partido o grupo cívico, contactar funcionarios o escribir a un periódico.'},
+  n70:{en:'Vote, pay taxes, obey the law, serve in the military, run for office, or work for the government.', es:'Votar, pagar impuestos, obedecer la ley, servir en el ejército, postularse o trabajar para el gobierno.'},
+  n71:{en:'The law and the 16th Amendment require it; taxes fund the federal government. It is a civic duty.', es:'La ley y la 16ª Enmienda lo exigen; los impuestos financian al gobierno federal. Es un deber cívico.'},
+  n72:{en:'It is required by law, a civic duty, and keeps a draft fair if one is ever needed.', es:'Lo exige la ley, es un deber cívico y hace justo un reclutamiento si alguna vez se necesita.'},
+  n73:{en:'For freedom: political and religious liberty, economic opportunity, and escape from persecution.', es:'Por libertad: libertad política y religiosa, oportunidad económica y escapar de la persecución.'},
+  n74:{en:'American Indians, also called Native Americans.', es:'Los indígenas americanos, también llamados nativos americanos.'},
+  n75:{en:'Africans were taken from Africa and sold as slaves.', es:'Africanos fueron tomados de África y vendidos como esclavos.'},
+  n76:{en:'The American Revolution, the Revolutionary War.', es:'La Revolución Americana, la Guerra de Independencia.'},
+  n77:{en:'High taxes without representation, British soldiers quartered in homes, no self-government, and acts like the Stamp Act and the Boston Tea Party dispute.', es:'Impuestos altos sin representación, soldados británicos alojados en casas, falta de autogobierno, y leyes como la Ley del Timbre y la disputa del Motín del Té.'},
+  n78:{en:'Thomas Jefferson wrote the Declaration of Independence.', es:'Thomas Jefferson escribió la Declaración de Independencia.'},
+  n79:{en:'July 4, 1776.', es:'El 4 de julio de 1776.'},
+  n80:{en:'Bunker Hill, the Declaration of Independence, Washington crossing the Delaware, Saratoga, Valley Forge, or Yorktown.', es:'Bunker Hill, la Declaración de Independencia, Washington cruzando el Delaware, Saratoga, Valley Forge o Yorktown.'},
+  n81:{en:'New Hampshire, Massachusetts, Rhode Island, Connecticut, New York, New Jersey, Pennsylvania, Delaware, Maryland, Virginia, North Carolina, South Carolina, Georgia.', es:'Nuevo Hampshire, Massachusetts, Rhode Island, Connecticut, Nueva York, Nueva Jersey, Pensilvania, Delaware, Maryland, Virginia, Carolina del Norte, Carolina del Sur, Georgia.'},
+  n82:{en:'The Constitution was written in 1787 at the Constitutional Convention in Philadelphia.', es:'La Constitución se escribió en 1787 en la Convención Constitucional de Filadelfia.'},
+  n83:{en:'James Madison, Alexander Hamilton, or John Jay, writing as "Publius."', es:'James Madison, Alexander Hamilton o John Jay, firmando como "Publius".'},
+  n84:{en:'They explained the Constitution and helped get it ratified.', es:'Explicaron la Constitución y ayudaron a que se ratificara.'},
+  n85:{en:'Franklin was a diplomat, inventor, first Postmaster General, founder of the first free libraries, and helped write the Declaration.', es:'Franklin fue diplomático, inventor, primer director general de correos, fundador de las primeras bibliotecas gratuitas y ayudó a escribir la Declaración.'},
+  n86:{en:'Washington was the first President, general of the Continental Army, and president of the Constitutional Convention: the "Father of Our Country."', es:'Washington fue el primer presidente, general del Ejército Continental y presidente de la Convención Constitucional: el "Padre de la Patria".'},
+  n87:{en:'Jefferson wrote the Declaration, was the third President, doubled the country with the Louisiana Purchase, and founded the University of Virginia.', es:'Jefferson escribió la Declaración, fue el tercer presidente, duplicó el país con la Compra de Luisiana y fundó la Universidad de Virginia.'},
+  n88:{en:'Madison is the "Father of the Constitution," fourth President, and a Federalist Papers author.', es:'Madison es el "Padre de la Constitución", cuarto presidente y autor de los Documentos Federalistas.'},
+  n89:{en:'Hamilton was the first Secretary of the Treasury, a Federalist Papers author, and founded the First Bank of the United States.', es:'Hamilton fue el primer secretario del Tesoro, autor de los Documentos Federalistas y fundador del Primer Banco de EE.UU.'},
+  n90:{en:'The Louisiana Territory, which doubled the size of the country.', es:'El Territorio de Luisiana, que duplicó el tamaño del país.'},
+  n91:{en:'The War of 1812, the Mexican-American War, the Civil War, or the Spanish-American War.', es:'La Guerra de 1812, la Guerra México-Estados Unidos, la Guerra Civil o la Guerra Hispano-Estadounidense.'},
+  n92:{en:'The Civil War, 1861 to 1865.', es:'La Guerra Civil, de 1861 a 1865.'},
+  n93:{en:'Fort Sumter, the Emancipation Proclamation, Vicksburg, Gettysburg, Sherman\'s March, Appomattox, or Lincoln\'s assassination.', es:'Fort Sumter, la Proclamación de Emancipación, Vicksburg, Gettysburg, la Marcha de Sherman, Appomattox o el asesinato de Lincoln.'},
+  n94:{en:'Lincoln freed the slaves, saved the Union, led the country through the Civil War, and gave the Gettysburg Address.', es:'Lincoln liberó a los esclavos, salvó la Unión, dirigió al país en la Guerra Civil y dio el Discurso de Gettysburg.'},
+  n95:{en:'It freed the slaves in the Confederate states.', es:'Liberó a los esclavos en los estados confederados.'},
+  n96:{en:'The Civil War ended slavery; the 13th Amendment made it permanent.', es:'La Guerra Civil terminó la esclavitud; la 13ª Enmienda lo hizo permanente.'},
+  n97:{en:'The 14th Amendment.', es:'La 14ª Enmienda.'},
+  n98:{en:'After the Civil War, during Reconstruction, with the 15th Amendment in 1870.', es:'Después de la Guerra Civil, durante la Reconstrucción, con la 15ª Enmienda en 1870.'},
+  n99:{en:'Susan B. Anthony, Elizabeth Cady Stanton, Sojourner Truth, Harriet Tubman, Lucretia Mott, or Lucy Stone.', es:'Susan B. Anthony, Elizabeth Cady Stanton, Sojourner Truth, Harriet Tubman, Lucretia Mott o Lucy Stone.'},
+  n100:{en:'World War I, World War II, the Korean War, the Vietnam War, or the Persian Gulf War.', es:'La Primera Guerra Mundial, la Segunda, la Guerra de Corea, la de Vietnam o la del Golfo Pérsico.'},
+  n101:{en:'Germany attacked U.S. ships, and the U.S. supported the Allies against the Central Powers.', es:'Alemania atacó barcos estadounidenses, y EE.UU. apoyó a los Aliados contra las Potencias Centrales.'},
+  n102:{en:'In 1920, after World War I, with the 19th Amendment.', es:'En 1920, después de la Primera Guerra Mundial, con la 19ª Enmienda.'},
+  n103:{en:'The longest economic recession in modern history.', es:'La recesión económica más larga de la historia moderna.'},
+  n104:{en:'With the stock market crash of 1929, the Great Crash.', es:'Con la caída de la bolsa de 1929, el Gran Crack.'},
+  n105:{en:'Franklin D. Roosevelt.', es:'Franklin D. Roosevelt.'},
+  n106:{en:'Japan attacked Pearl Harbor; the U.S. joined the Allies against the Axis.', es:'Japón atacó Pearl Harbor; EE.UU. se unió a los Aliados contra el Eje.'},
+  n107:{en:'Eisenhower was a World War II general, 34th President, president during the Korean War, and signed the Interstate Highway Act.', es:'Eisenhower fue general en la Segunda Guerra Mundial, 34º presidente, presidente durante la Guerra de Corea y firmó la ley de autopistas interestatales.'},
+  n108:{en:'The Soviet Union (USSR), and communism.', es:'La Unión Soviética (URSS), y el comunismo.'},
+  n109:{en:'Communism, and the threat of nuclear war.', es:'El comunismo, y la amenaza de una guerra nuclear.'},
+  n110:{en:'To stop the spread of communism.', es:'Para frenar la expansión del comunismo.'},
+  n111:{en:'To stop the spread of communism.', es:'Para frenar la expansión del comunismo.'},
+  n112:{en:'It fought to end racial discrimination.', es:'Luchó para terminar con la discriminación racial.'},
+  n113:{en:'Dr. King fought for civil rights and equality for all Americans.', es:'El Dr. King luchó por los derechos civiles y la igualdad de todos los estadounidenses.'},
+  n114:{en:'To force the Iraqi military out of Kuwait.', es:'Para expulsar al ejército iraquí de Kuwait.'},
+  n115:{en:'Terrorists attacked the United States, crashing planes into the World Trade Center, the Pentagon, and a field in Pennsylvania.', es:'Terroristas atacaron a Estados Unidos, estrellando aviones contra el World Trade Center, el Pentágono y un campo en Pensilvania.'},
+  n116:{en:'The Global War on Terror, the War in Afghanistan, or the War in Iraq.', es:'La Guerra Global contra el Terrorismo, la Guerra de Afganistán o la Guerra de Irak.'},
+  n117:{en:'For example Cherokee, Navajo, Sioux, Apache, Choctaw, Pueblo, Hopi, Seminole, Mohawk, Lakota, Creek, Blackfeet, Inupiat.', es:'Por ejemplo Cherokee, Navajo, Sioux, Apache, Choctaw, Pueblo, Hopi, Seminole, Mohawk, Lakota, Creek, Blackfeet, Inupiat.'},
+  n118:{en:'The light bulb, the automobile, skyscrapers, the airplane, the assembly line, the moon landing, or the integrated circuit.', es:'La bombilla, el automóvil, los rascacielos, el avión, la línea de ensamblaje, la llegada a la Luna o el circuito integrado.'},
+  n119:{en:'Washington, D.C.', es:'Washington, D.C.'},
+  n120:{en:'In New York Harbor, on Liberty Island, near New York City and New Jersey.', es:'En la bahía de Nueva York, en Liberty Island, cerca de la ciudad de Nueva York y Nueva Jersey.'},
+  n121:{en:'The 13 stripes stand for the 13 original colonies.', es:'Las 13 franjas representan las 13 colonias originales.'},
+  n122:{en:'One star for each of the 50 states.', es:'Una estrella por cada uno de los 50 estados.'},
+  n123:{en:'The Star-Spangled Banner.', es:'The Star-Spangled Banner.'},
+  n124:{en:'"Out of many, one": many states and peoples become one nation.', es:'"De muchos, uno": muchos estados y pueblos se vuelven una nación.'},
+  n125:{en:'The holiday that celebrates U.S. independence from Britain, the country\'s birthday.', es:'El feriado que celebra la independencia de EE.UU. de Gran Bretaña, el cumpleaños del país.'},
+  n126:{en:'New Year\'s Day, Martin Luther King Jr. Day, Presidents Day, Memorial Day, Juneteenth, Independence Day, Labor Day, Columbus Day, Veterans Day, Thanksgiving, Christmas.', es:'Año Nuevo, Día de Martin Luther King Jr., Día de los Presidentes, Día de los Caídos, Juneteenth, Día de la Independencia, Día del Trabajo, Día de Colón, Día de los Veteranos, Acción de Gracias, Navidad.'},
+  n127:{en:'A holiday to honor soldiers who died in military service.', es:'Un feriado para honrar a los soldados que murieron en servicio militar.'},
+  n128:{en:'A holiday to honor everyone who has served in the U.S. military.', es:'Un feriado para honrar a todos los que han servido en el ejército de EE.UU.'}
+};
+Object.keys(EXPLAIN_2025).forEach(function(k){ EXPLAIN[k] = EXPLAIN_2025[k]; });
+
+// Alternative answers USCIS accepts for 2025 questions with more than one
+// right answer. The interview grader matches typed or spoken answers against
+// the question's correct option PLUS this list.
+var ACCEPT_2025 = {
+  n1:['republic','constitution-based federal republic','federal republic','representative democracy','democracy'],
+  n3:['forms the government','defines powers of government','defines the parts of government','protects the rights of the people','protects rights'],
+  n4:['self-government','popular sovereignty','consent of the governed','people should govern themselves','social contract'],
+  n5:['amendments','the amendment process','amendment'],
+  n6:['rights of americans','rights of people living in the united states','basic rights'],
+  n8:['america is free from british control','all people are created equal','inherent rights','individual freedoms','independence from britain'],
+  n10:['equality','liberty','social contract','natural rights','limited government','self-government'],
+  n12:['capitalism','free market economy','free market','market economy'],
+  n13:['everyone must follow the law','leaders must obey the law','government must obey the law','no one is above the law'],
+  n14:['declaration of independence','articles of confederation','federalist papers','anti-federalist papers','virginia declaration of rights','fundamental orders of connecticut','mayflower compact','iroquois great law of peace','magna carta'],
+  n15:['so one part does not become too powerful','checks and balances','separation of powers'],
+  n16:['legislative executive judicial','congress president courts','legislative, executive, and judicial'],
+  n18:['congress','legislature','legislative branch','senate and house'],
+  n19:['senate and house','senate and house of representatives','the senate and the house'],
+  n20:['writes laws','declares war','makes the federal budget','make laws','declare war'],
+  n26:['to more closely follow public opinion','closer to the people','follow public opinion'],
+  n28:['equal representation','equal representation for small states','great compromise','connecticut compromise'],
+  n31:['citizens of their state','people of their state','the whole state','all people of the state'],
+  n32:['citizens from their state','citizens of their state','the people of the state','voters in the state'],
+  n33:['citizens in their district','people in their district','the district','congressional district'],
+  n34:['citizens from their district','citizens of their district','people in the district','voters in the district'],
+  n35:['the state\'s population','they have more people','some states have more people','population'],
+  n37:['22nd amendment','twenty-second amendment','to keep the president from becoming too powerful'],
+  n38:['donald trump','trump','donald j. trump'],
+  n39:['jd vance','vance','j.d. vance','james david vance'],
+  n40:['vice president','the vice president'],
+  n41:['signs bills into law','vetoes bills','enforces laws','commander in chief','chief diplomat','signs bills'],
+  n42:['the president','president'],
+  n46:['president','cabinet','federal departments and agencies','departments','agencies'],
+  n47:['advises the president','advise the president'],
+  n48:['attorney general','vice president','secretary of state','secretary of defense','secretary of the treasury','secretary of labor','secretary of education','secretary of energy','secretary of agriculture','secretary of commerce','secretary of health and human services','secretary of homeland security','secretary of housing and urban development','secretary of the interior','secretary of transportation','secretary of veterans affairs'],
+  n49:['it decides who is elected president','compromise between popular election and congressional selection','decides the president','elects the president'],
+  n50:['supreme court','federal courts'],
+  n51:['reviews laws','explains laws','resolves disputes','decides if a law goes against the constitution','interprets laws'],
+  n55:['life','for life','lifetime','lifetime appointment','until retirement'],
+  n56:['to be independent','to be independent of politics','to limit outside influence','to limit political influence','independence'],
+  n57:['john roberts','roberts','john g. roberts'],
+  n58:['print paper money','print money','mint coins','declare war','create an army','make treaties','set foreign policy'],
+  n59:['provide schooling and education','education','schools','provide protection','police','provide safety','fire departments','give a driver\'s license','driver\'s license','approve zoning and land use','zoning'],
+  n60:['powers not given to the federal government belong to the states or to the people','states\' rights','reserved powers'],
+  n63:['citizens 18 and older can vote','you don\'t have to pay to vote','no poll tax','any citizen can vote','women can vote','men of any race can vote','a male citizen of any race can vote','26th amendment','24th amendment','19th amendment','15th amendment'],
+  n64:['citizens','citizens of the united states','u.s. citizens','us citizens'],
+  n65:['freedom of expression','freedom of speech','speech','freedom of assembly','assembly','freedom to petition the government','petition','freedom of religion','religion','the right to bear arms','bear arms'],
+  n66:['the united states','the flag','united states','flag'],
+  n67:['give up loyalty to other countries','defend the constitution','obey the laws of the united states','obey the laws','serve in the military','serve the nation','be loyal to the united states','renounce other allegiances'],
+  n68:['naturalize','naturalization','derive citizenship','be born in the united states','born in the united states','birth'],
+  n69:['vote','run for office','join a political party','help with a campaign','join a civic group','join a community group','give an elected official your opinion','contact elected officials','support or oppose an issue or policy','write to a newspaper'],
+  n70:['vote','pay taxes','obey the law','serve in the military','run for office','work for local, state, or federal government','work for the government'],
+  n71:['required by law','all people pay to fund the federal government','required by the constitution','16th amendment','civic duty','to fund the government'],
+  n72:['required by law','civic duty','makes the draft fair','makes the draft fair if needed'],
+  n73:['freedom','political liberty','religious freedom','economic opportunity','escape persecution','opportunity'],
+  n74:['american indians','native americans','indians','indigenous peoples'],
+  n75:['africans','people from africa','african people'],
+  n76:['american revolution','revolutionary war','war for independence','the revolution'],
+  n77:['high taxes','taxation without representation','british soldiers stayed in americans\' houses','quartering','boarding','they did not have self-government','boston massacre','boston tea party','tea act','stamp act','sugar act','townshend acts','intolerable acts','coercive acts'],
+  n78:['thomas jefferson','jefferson'],
+  n79:['july 4, 1776','july 4 1776','1776','4 july 1776'],
+  n80:['bunker hill','battle of bunker hill','declaration of independence','washington crossing the delaware','battle of trenton','saratoga','battle of saratoga','valley forge','yorktown','battle of yorktown','british surrender at yorktown'],
+  n81:['new hampshire','massachusetts','rhode island','connecticut','new york','new jersey','pennsylvania','delaware','maryland','virginia','north carolina','south carolina','georgia'],
+  n83:['james madison','madison','alexander hamilton','hamilton','john jay','jay','publius'],
+  n84:['they helped people understand the constitution','they supported passing the constitution','explained the constitution','supported ratification'],
+  n85:['founded the first free public libraries','first postmaster general','helped write the declaration of independence','inventor','u.s. diplomat','diplomat','postmaster general','libraries'],
+  n86:['father of our country','first president','first president of the united states','general of the continental army','president of the constitutional convention'],
+  n87:['writer of the declaration of independence','wrote the declaration of independence','third president','doubled the size of the united states','louisiana purchase','first secretary of state','founded the university of virginia','virginia statute on religious freedom'],
+  n88:['father of the constitution','fourth president','president during the war of 1812','one of the writers of the federalist papers','federalist papers'],
+  n89:['first secretary of the treasury','one of the writers of the federalist papers','federalist papers','first bank of the united states','aide to general george washington','member of the continental congress'],
+  n90:['louisiana territory','louisiana','the louisiana purchase'],
+  n91:['war of 1812','mexican-american war','mexican american war','civil war','spanish-american war','spanish american war'],
+  n92:['civil war','the civil war','war between the states'],
+  n93:['fort sumter','battle of fort sumter','emancipation proclamation','vicksburg','battle of vicksburg','gettysburg','battle of gettysburg','sherman\'s march','appomattox','surrender at appomattox','antietam','battle of antietam','sharpsburg','lincoln was assassinated','assassination of lincoln'],
+  n94:['freed the slaves','emancipation proclamation','saved the union','preserved the union','led the united states during the civil war','16th president','sixteenth president','gettysburg address'],
+  n95:['freed the slaves','freed slaves in the confederacy','freed slaves in the confederate states','freed slaves in most southern states'],
+  n96:['civil war','the civil war'],
+  n97:['14th amendment','fourteenth amendment','14th'],
+  n98:['after the civil war','during reconstruction','15th amendment','fifteenth amendment','1870'],
+  n99:['susan b. anthony','susan anthony','elizabeth cady stanton','sojourner truth','harriet tubman','lucretia mott','lucy stone'],
+  n100:['world war i','world war 1','world war one','world war ii','world war 2','world war two','korean war','vietnam war','gulf war','persian gulf war'],
+  n101:['because germany attacked u.s. ships','germany attacked u.s. civilian ships','to support the allied powers','to support the allies','to oppose the central powers'],
+  n102:['1920','after world war i','19th amendment','nineteenth amendment'],
+  n103:['longest economic recession in modern history','economic recession','economic depression','a severe economic downturn'],
+  n104:['the great crash','1929','stock market crash of 1929','stock market crash'],
+  n105:['franklin roosevelt','roosevelt','franklin d. roosevelt','fdr'],
+  n106:['bombing of pearl harbor','pearl harbor','japanese attacked pearl harbor','to support the allied powers','to oppose the axis powers'],
+  n107:['general during world war ii','world war ii general','president at the end of the korean war','president during the korean war','34th president','thirty-fourth president','federal-aid highway act','interstate system','interstate highways'],
+  n108:['soviet union','ussr','russia','communism'],
+  n109:['communism','nuclear war'],
+  n110:['to stop the spread of communism','communism','stop communism'],
+  n111:['to stop the spread of communism','communism','stop communism'],
+  n112:['fought to end racial discrimination','end racial discrimination','end segregation','equal rights'],
+  n113:['fought for civil rights','worked for equality for all americans','civil rights','equality','not be judged by the color of their skin'],
+  n114:['to force the iraqi military from kuwait','to free kuwait','iraq invaded kuwait','kuwait'],
+  n115:['terrorists attacked the united states','terrorist attack','world trade center','pentagon','planes crashed into the world trade center','9/11 attacks'],
+  n116:['global war on terror','war on terror','war in afghanistan','afghanistan','war in iraq','iraq'],
+  n117:['apache','blackfeet','cayuga','cherokee','cheyenne','chippewa','choctaw','creek','crow','hopi','huron','inupiat','lakota','mohawk','mohegan','navajo','oneida','onondaga','pueblo','seminole','seneca','shawnee','sioux','teton','tuscarora'],
+  n118:['light bulb','lightbulb','automobile','cars','internal combustion engine','skyscrapers','airplane','assembly line','landing on the moon','moon landing','integrated circuit'],
+  n119:['washington, d.c.','washington dc','washington d.c.','washington'],
+  n120:['new york harbor','new york','liberty island','new jersey','near new york city','on the hudson river','hudson river'],
+  n121:['because there were 13 original colonies','13 original colonies','they represent the original colonies','the original colonies'],
+  n122:['one star for each state','each star represents a state','50 states','there are 50 states'],
+  n123:['the star-spangled banner','star spangled banner','star-spangled banner'],
+  n124:['out of many, one','out of many one','we all become one','from many, one'],
+  n125:['a holiday to celebrate u.s. independence','independence from britain','the country\'s birthday','celebrates independence','july 4th'],
+  n126:['new year\'s day','martin luther king, jr. day','martin luther king day','mlk day','presidents day','washington\'s birthday','memorial day','juneteenth','independence day','labor day','columbus day','veterans day','thanksgiving','thanksgiving day','christmas','christmas day'],
+  n127:['a holiday to honor soldiers who died in military service','honors soldiers who died','soldiers who died in military service','those who died serving'],
+  n128:['a holiday to honor people in the military','honors veterans','people who have served in the military','those who served']
+};
+
+// State-specific questions (n23 senators, n29 representative, n61 governor,
+// n62 capital) are answered from the user's profile. Capitals are stable and
+// filled in automatically; officials change, so the user saves them under Me.
+var STATE_QUESTION_IDS = {n23:'senators', n29:'representative', n61:'governor', n62:'capital'};
+var US_STATES = [
+  ['AL','Alabama','Montgomery'],['AK','Alaska','Juneau'],['AZ','Arizona','Phoenix'],['AR','Arkansas','Little Rock'],['CA','California','Sacramento'],
+  ['CO','Colorado','Denver'],['CT','Connecticut','Hartford'],['DE','Delaware','Dover'],['FL','Florida','Tallahassee'],['GA','Georgia','Atlanta'],
+  ['HI','Hawaii','Honolulu'],['ID','Idaho','Boise'],['IL','Illinois','Springfield'],['IN','Indiana','Indianapolis'],['IA','Iowa','Des Moines'],
+  ['KS','Kansas','Topeka'],['KY','Kentucky','Frankfort'],['LA','Louisiana','Baton Rouge'],['ME','Maine','Augusta'],['MD','Maryland','Annapolis'],
+  ['MA','Massachusetts','Boston'],['MI','Michigan','Lansing'],['MN','Minnesota','Saint Paul'],['MS','Mississippi','Jackson'],['MO','Missouri','Jefferson City'],
+  ['MT','Montana','Helena'],['NE','Nebraska','Lincoln'],['NV','Nevada','Carson City'],['NH','New Hampshire','Concord'],['NJ','New Jersey','Trenton'],
+  ['NM','New Mexico','Santa Fe'],['NY','New York','Albany'],['NC','North Carolina','Raleigh'],['ND','North Dakota','Bismarck'],['OH','Ohio','Columbus'],
+  ['OK','Oklahoma','Oklahoma City'],['OR','Oregon','Salem'],['PA','Pennsylvania','Harrisburg'],['RI','Rhode Island','Providence'],['SC','South Carolina','Columbia'],
+  ['SD','South Dakota','Pierre'],['TN','Tennessee','Nashville'],['TX','Texas','Austin'],['UT','Utah','Salt Lake City'],['VT','Vermont','Montpelier'],
+  ['VA','Virginia','Richmond'],['WA','Washington','Olympia'],['WV','West Virginia','Charleston'],['WI','Wisconsin','Madison'],['WY','Wyoming','Cheyenne'],
+  ['DC','District of Columbia',null],['PR','Puerto Rico','San Juan'],['GU','Guam','Hagåtña'],['VI','U.S. Virgin Islands','Charlotte Amalie'],['AS','American Samoa','Pago Pago'],['MP','Northern Mariana Islands','Saipan']
+];
+function stateInfo(code){
+  for(var i=0;i<US_STATES.length;i++) if(US_STATES[i][0] === code) return {code:code, name:US_STATES[i][1], capital:US_STATES[i][2]};
+  return null;
+}
 
 function findLesson(id){ for(var i=0;i<LESSONS.length;i++) if(LESSONS[i].id===id) return LESSONS[i]; return null; }
 function findQ(id){
@@ -2234,19 +2627,34 @@ function renderDocDetail(){
 var FLASHCARD_SIZE = 15;
 var flashState = null;
 
-// Deterministic per-day picker. Same calendar date → same 15 questions; different day → different set.
+// Today's set, in priority order: cards that are due (spaced repetition),
+// then weak/practicing, then never-seen, then mastered. Drawn from the pool for
+// the user's test version. A second session the same day continues down the
+// list instead of repeating the first fifteen.
+function flashcardQueue(){
+  var pool = civicsPoolForCurrentVersion().map(function(q){ return q.id; })
+    .filter(function(id){ return !STATE_QUESTION_IDS[id] || stateAnswerFor(id); });
+  var sched = user.progress.flashSched || {};
+  var today = todayISO();
+  function rank(id){
+    var sc = sched[id];
+    var st = effectiveMasteryState(id);
+    if(sc && sc.due && sc.due <= today) return 0;          // due for review
+    if(st === 'weak') return 1;
+    if(st === 'practicing') return 2;
+    if(st === 'new' && !sc) return 3;                       // never seen
+    return 4;                                               // mastered / not yet due
+  }
+  var shuffled = shuffleArr(pool);
+  shuffled.sort(function(a, b){ return rank(a) - rank(b); });
+  return shuffled;
+}
 function dailyFlashcardQIds(){
   var today = todayISO();
-  var seed = 5381;
-  for(var i=0;i<today.length;i++) seed = ((seed * 33) + today.charCodeAt(i)) | 0;
-  seed = Math.abs(seed);
-  var ids = CIVICS.map(function(c){ return c.id; });
-  function rand(){ seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
-  for(var k=ids.length-1; k>0; k--){
-    var j = Math.floor(rand() * (k + 1));
-    var tmp = ids[k]; ids[k] = ids[j]; ids[j] = tmp;
-  }
-  return ids.slice(0, Math.min(FLASHCARD_SIZE, ids.length));
+  var served = (user.progress.flashToday && user.progress.flashToday.date === today) ? user.progress.flashToday.ids : [];
+  var queue = flashcardQueue().filter(function(id){ return served.indexOf(id) === -1; });
+  if(queue.length < FLASHCARD_SIZE) queue = queue.concat(flashcardQueue().filter(function(id){ return queue.indexOf(id) === -1; }));
+  return queue.slice(0, Math.min(FLASHCARD_SIZE, queue.length));
 }
 
 function startFlashcards(){
@@ -2280,6 +2688,18 @@ function rateFlashcard(rating){
   if(!flashState) return;
   var qId = flashState.qIds[flashState.qIdx];
   flashState.ratings.push({qId:qId, rating:rating});
+  // Spaced repetition: hard = tomorrow, good = interval x2, easy = interval x3.
+  var p0 = user.progress;
+  if(!p0.flashSched) p0.flashSched = {};
+  var sc = p0.flashSched[qId] || {interval:0, due:null};
+  if(rating === 'hard') sc.interval = 1;
+  else if(rating === 'good') sc.interval = Math.max(2, (sc.interval || 1) * 2);
+  else sc.interval = Math.max(4, (sc.interval || 1) * 3);
+  sc.due = isoDaysAgo(-sc.interval);
+  p0.flashSched[qId] = sc;
+  updateCivicsMastery(qId, rating === 'hard' ? 'wrong' : 'correct');
+  if(!p0.flashToday || p0.flashToday.date !== todayISO()) p0.flashToday = {date: todayISO(), ids: []};
+  if(p0.flashToday.ids.indexOf(qId) === -1) p0.flashToday.ids.push(qId);
   if(rating === 'hard'){
     var p = user.progress;
     if(!p.missedQs) p.missedQs = [];
@@ -2310,7 +2730,11 @@ function finishFlashcards(){
   var easy = ratings.filter(function(r){return r.rating==='easy';}).length;
   var good = ratings.filter(function(r){return r.rating==='good';}).length;
   var hard = ratings.filter(function(r){return r.rating==='hard';}).length;
-  addXP(8);
+  // First set of the day earns full XP; extra sets a little (no XP farming).
+  var firstToday = !(user.progress.dailyFlashcards && user.progress.dailyFlashcards.lastCompleted === todayISO());
+  addXP(firstToday ? 8 : 3);
+  markActiveToday();
+  syncMasteredCount();
 
   // Daily completion + streak tracking (first completion of the day only)
   if(flashState.isDaily){
@@ -2353,7 +2777,7 @@ function renderFlashcard(){
 
   var correctOpt = null;
   for(var i=0;i<q.options.length;i++) if(q.options[i].correct){ correctOpt = q.options[i]; break; }
-  var answerText = correctOpt ? correctOpt[lang] : '–';
+  var answerText = stateAnswerFor(qId) || (correctOpt ? correctOpt[lang] : '–');
   var exp = EXPLAIN[qId];
   var expText = (exp && exp[lang]) || (exp && exp.en) || '';
 
@@ -3383,21 +3807,74 @@ function updateCivicsMastery(qId, verdict){
   user.progress.civicsMastery[qId] = m;
 }
 
+// The user's personal answer to a state-specific question, if they saved one.
+function stateAnswerFor(qId){
+  var kind = STATE_QUESTION_IDS[qId];
+  if(!kind) return null;
+  if(kind === 'capital'){ var si = user.state ? stateInfo(user.state) : null; return si && si.capital ? si.capital : null; }
+  if(kind === 'senators') return (user.officialSenators || '').trim() || null;
+  if(kind === 'representative') return (user.officialRep || '').trim() || null;
+  if(kind === 'governor') return (user.officialGovernor || '').trim() || null;
+  return null;
+}
+// Multiple-choice surfaces (lessons, mock, flashcards) can only ask a
+// state-specific question when we can build real options for it.
+function mcAskable(qId){
+  if(!STATE_QUESTION_IDS[qId]) return true;
+  if(qId === 'n62') return !!stateAnswerFor('n62');
+  return false;   // officials: interview-only (free recall against the saved answer)
+}
+function mcPoolIds(){
+  return civicsPoolForCurrentVersion().map(function(q){ return q.id; }).filter(mcAskable);
+}
+// Options for a question as it should be shown now: the state capital
+// question gets the user's real capital plus three other capitals.
+function effectiveOptions(q){
+  if(q.id === 'n62'){
+    var cap = stateAnswerFor('n62');
+    if(cap){
+      var others = US_STATES.map(function(x){ return x[2]; }).filter(function(c){ return c && c !== cap; });
+      others = shuffleArr(others).slice(0, 3);
+      return [{en:cap, es:cap, correct:true}].concat(others.map(function(c){ return {en:c, es:c, correct:false}; }));
+    }
+  }
+  return q.options;
+}
+
 function civicsByMasteryState(state){
   var out = [];
-  for(var i=0;i<CIVICS.length;i++){
-    var s = getCivicsMastery(CIVICS[i].id).state;
-    if(s === state) out.push(CIVICS[i].id);
+  var pool = civicsPoolForCurrentVersion();
+  for(var i=0;i<pool.length;i++){
+    var s = effectiveMasteryState(pool[i].id);
+    if(s === state) out.push(pool[i].id);
   }
   return out;
+}
+// Officials questions count as mastered once the user has saved the answer.
+function effectiveMasteryState(qId){
+  if(STATE_QUESTION_IDS[qId] && qId !== 'n62' && stateAnswerFor(qId)) return 'mastered';
+  return getCivicsMastery(qId).state;
 }
 
 function civicsMasteryCounts(){
   var counts = {new:0, weak:0, practicing:0, mastered:0};
-  for(var i=0;i<CIVICS.length;i++){
-    counts[getCivicsMastery(CIVICS[i].id).state]++;
+  var pool = civicsPoolForCurrentVersion();
+  for(var i=0;i<pool.length;i++){
+    counts[effectiveMasteryState(pool[i].id)]++;
   }
   return counts;
+}
+
+// "Civics ready" = questions mastered (two correct in a row, not currently
+// missed) out of the official pool for the user's test version.
+function readinessPct(){
+  var pool = civicsPoolForCurrentVersion();
+  if(!pool.length) return 0;
+  return Math.min(100, Math.round(civicsMasteryCounts().mastered / pool.length * 100));
+}
+// Keep the legacy counter in step with real mastery (several surfaces read it).
+function syncMasteredCount(){
+  user.progress.mastered = civicsMasteryCounts().mastered;
 }
 
 function civicsNeedsWorkCount(){
@@ -4143,6 +4620,8 @@ function finishInterview(){
   var passed = total > 0 && correct >= Math.ceil(total * 0.6);
   var score = total > 0 ? Math.round((correct + close * 0.5) / total * 100) : 0;
   if(!user.progress.interviewAttempts) user.progress.interviewAttempts = [];
+  markActiveToday();
+  syncMasteredCount();
   user.progress.interviewAttempts.push({
     score: score, correct: correct, close: close, wrong: wrong, total: total,
     passed: passed, takenAt: todayISO()
@@ -4798,8 +5277,8 @@ var TUTORIAL_STEPS = [
     id: 'learn',
     title: {en: 'Learn civics, the smart way', es: 'Aprende cívica, de forma inteligente'},
     body: {
-      en: "All 100 USCIS questions in 4 themed units. Tap a lesson to start. The green one is what's next for you.",
-      es: "Las 100 preguntas USCIS en 4 unidades. Toca una lección para empezar. La verde es tu siguiente."
+      en: "Every official USCIS question in 4 themed units. Tap a lesson to start. The green one is what's next for you.",
+      es: "Todas las preguntas oficiales de USCIS en 4 unidades. Toca una lección para empezar. La verde es tu siguiente."
     },
     mood: 'happy',
     tabId: 't-lesson',
@@ -6261,13 +6740,28 @@ function refreshStreakFreezes(){
   }
 }
 
-function applyStreakFreezeIfNeeded(){
-  // Called when the streak would otherwise be broken (we missed a day).
+function isoDaysAgo(n){
+  var d = new Date(); d.setDate(d.getDate() - n);
+  var mm = d.getMonth()+1; if(mm<10) mm='0'+mm;
+  var dd = d.getDate(); if(dd<10) dd='0'+dd;
+  return d.getFullYear()+'-'+mm+'-'+dd;
+}
+function yesterdayISO(){ return isoDaysAgo(1); }
+function daysBetweenISO(a, b){ return Math.round((new Date(b) - new Date(a)) / 86400000); }
+
+// ===== STREAK ENGINE ============================================================
+// lastLessonDate = the last calendar day with ANY civics activity (lesson,
+// review, flashcards, mock test, interview). The streak is normalised whenever
+// the app wakes up, so Home never shows a streak that is already gone.
+function applyStreakFreezeIfNeeded(missedDate){
   if(!isPlus()) return false;
   refreshStreakFreezes();
   if((user.streakFreezes || 0) <= 0) return false;
   user.streakFreezes--;
-  user.progress.lastLessonDate = todayISO(); // freeze keeps the streak alive
+  // The freeze stands in for the missed day, so today's activity still adds +1.
+  user.progress.lastLessonDate = missedDate || yesterdayISO();
+  if(!user.progress.frozenDates) user.progress.frozenDates = [];
+  user.progress.frozenDates.push(missedDate || yesterdayISO());
   if(!user.streakFreezeHistory) user.streakFreezeHistory = [];
   user.streakFreezeHistory.push(todayISO());
   saveUser();
@@ -6277,22 +6771,31 @@ function applyStreakFreezeIfNeeded(){
   return true;
 }
 
-// Hook: when the app boots and the user broke their streak yesterday, try to freeze it.
-function maybeFreezeStreak(){
-  if(!user.progress || !user.progress.streak) return;
-  if(!user.progress.lastLessonDate) return;
-  var last = new Date(user.progress.lastLessonDate);
-  var today = new Date(todayISO());
-  var daysSince = Math.floor((today - last) / (24*3600*1000));
-  if(daysSince === 1){
-    // Last activity was yesterday. No freeze needed
-    return;
-  }
-  if(daysSince === 2){
-    // Missed exactly one day. Try to apply a freeze
-    applyStreakFreezeIfNeeded();
-  }
-  // If daysSince > 2, the streak is gone. Too late for a single freeze
+// Run on boot, on foreground, and before any activity is credited.
+function normalizeStreak(){
+  var p = user.progress;
+  if(!p || !p.streak || !p.lastLessonDate) return;
+  var gap = daysBetweenISO(p.lastLessonDate, todayISO());   // 0 = active today, 1 = yesterday
+  if(gap <= 1) return;
+  if(gap === 2 && applyStreakFreezeIfNeeded(yesterdayISO())) return;   // one missed day, covered
+  // Streak is over. Remember it for the "streak lost" moment on Home.
+  p.lastStreak = p.streak;
+  p.streakLostAt = todayISO();
+  p.streak = 0;
+  saveUser();
+}
+function maybeFreezeStreak(){ normalizeStreak(); }
+
+// Credit today as an active day. Returns true if the streak went up.
+function markActiveToday(){
+  var p = user.progress;
+  var today = todayISO();
+  normalizeStreak();
+  if(p.lastLessonDate === today) return false;
+  p.streak = (p.lastLessonDate === yesterdayISO()) ? (p.streak || 0) + 1 : 1;
+  p.lastLessonDate = today;
+  p.streakLostAt = null;
+  return true;
 }
 
 function todayMockTestsAvailable(){
@@ -7060,8 +7563,8 @@ var FAQ_ENTRIES = [
   },
   {
     q:{en:'How do I prepare for the civics test?', es:'¿Cómo me preparo para el examen de cívica?'},
-    a:{en:'Use the Learn tab to go through all 100 USCIS questions in 4 units. Take daily flashcards. Practice with mock tests. When ready, use the interview simulator to practice the real USCIS officer experience.',
-       es:'Usa Aprender para pasar las 100 preguntas en 4 unidades. Practica con tarjetas diarias. Toma exámenes de práctica. Cuando estés listo, usa el simulador de entrevista para practicar la real.'}
+    a:{en:'Use the Learn tab to go through every official USCIS question in 4 units. Take daily flashcards. Practice with mock tests. When ready, use the interview simulator to practice the real USCIS officer experience.',
+       es:'Usa Aprender para pasar todas las preguntas oficiales en 4 unidades. Practica con tarjetas diarias. Toma exámenes de práctica. Cuando estés listo, usa el simulador de entrevista para practicar la real.'}
   },
   {
     q:{en:'Why are some questions difficult to pass with voice?', es:'¿Por qué algunas preguntas son difíciles con voz?'},
@@ -12282,9 +12785,23 @@ var lessonState = null;
 
 function getCurrentLessonId(){
   for(var i=0;i<LESSONS.length;i++){
-    if(user.progress.completedLessons.indexOf(LESSONS[i].id) === -1) return LESSONS[i].id;
+    if(user.progress.completedLessons.indexOf(LESSONS[i].id) !== -1) continue;
+    // Never point the Home card or the path at a unit the user can't open
+    // (Plus-gated Unit 3 for free users); fall through to the next open unit.
+    if(!isUnitUnlocked(LESSONS[i].unit)) continue;
+    return LESSONS[i].id;
   }
   return null;
+}
+
+// What "do today's practice" should launch: the next lesson, else a review of
+// missed questions, else today's flashcards. Keeps the streak reachable after
+// every lesson is done.
+function startDailyActivity(){
+  var lid = getCurrentLessonId();
+  if(lid) return startLesson(lid);
+  if((user.progress.missedQs || []).length) return startReviewSession();
+  return startFlashcards();
 }
 
 function isLessonUnlocked(lessonId){
@@ -12294,20 +12811,29 @@ function isLessonUnlocked(lessonId){
 
 function startCurrentLesson(){
   var lid = getCurrentLessonId();
-  if(!lid){ toast(lang==='es' ? '¡Unidad completa!' : 'Unit complete!'); return; }
+  if(!lid){ startDailyActivity(); return; }
   startLesson(lid);
 }
 
 function startLesson(lessonId, skipIntro){
+  var lesson = findLesson(lessonId);
+  if(!lesson) return;
+  if(isUnitPlusGated(lesson.unit)){
+    toast(lang==='es' ? 'Esta unidad es parte de Camino Plus' : 'This unit is part of Camino Plus', 'lock');
+    go('upgrade');
+    return;
+  }
   if(!isLessonUnlocked(lessonId)){
     toast(lang==='es' ? 'Termina la lección anterior' : 'Finish the previous lesson', 'lock');
     return;
   }
-  var lesson = findLesson(lessonId);
-  if(!lesson) return;
+  var qIds = lesson.qIds.filter(mcAskable);
+  if(!qIds.length) qIds = lesson.qIds.slice();
   lessonState = {
     lessonId: lessonId,
-    qIds: lesson.qIds.slice(),
+    qIds: qIds,
+    requeue: [],
+    requeuedOnce: {},
     qIdx: 0,
     correct: 0,
     correctQIds: [],
@@ -12355,7 +12881,7 @@ function renderLessonIntro(){
     + '<div class="introUnit">'+unitName+'</div>'
     + '<div class="introTitle">'+l.title[lang]+'</div>'
     + (introText ? '<div class="introBody">'+introText+'</div>' : '')
-    + '<div class="introMeta">'+l.qIds.length+' '+(lang==='es' ? 'preguntas' : 'questions')+' · ♥ '+(isPlus() ? '∞' : '5')+' '+(lang==='es' ? 'corazones' : 'hearts')+'</div>'
+    + '<div class="introMeta">'+lessonState.qIds.length+' '+(lang==='es' ? 'preguntas' : 'questions')+' · ♥ '+(isPlus() ? '∞' : '5')+' '+(lang==='es' ? 'corazones' : 'hearts')+'</div>'
     + '<button class="cta introBegin" onclick="beginLessonQuestions()">'+(lang==='es' ? 'Empezar' : 'Begin')+' →</button>'
     + '<button class="failedExit" onclick="exitLesson()">'+(lang==='es' ? 'Volver a Hoy' : 'Back to Today')+'</button>'
     + '</div>';
@@ -12432,7 +12958,7 @@ function renderQuestion(){
   }
   var opts = document.getElementById('opts');
   if(opts){
-    var shuffled = shuffleArr(q.options);
+    var shuffled = shuffleArr(effectiveOptions(q));
     var html = '';
     for(var i=0;i<shuffled.length;i++){
       var o = shuffled[i];
@@ -12465,7 +12991,18 @@ function check(){
   if(!lessonState || !picked) return;
   if(lessonState.answered){
     if(lessonState.failed) return failLesson();
-    if(lessonState.qIdx >= lessonState.qIds.length - 1) return completeLesson();
+    if(lessonState.qIdx >= lessonState.qIds.length - 1){
+      // Missed questions come back at the end of the lesson, once, so you
+      // leave having answered every one correctly at least once.
+      if(!lessonState.isReview && lessonState.requeue && lessonState.requeue.length){
+        lessonState.qIds = lessonState.qIds.concat(lessonState.requeue);
+        lessonState.requeue = [];
+        lessonState.qIdx++;
+        renderQuestion();
+        return;
+      }
+      return completeLesson();
+    }
     lessonState.qIdx++;
     renderQuestion();
     return;
@@ -12477,13 +13014,21 @@ function check(){
 
   var ok = picked.getAttribute('data-correct') === '1';
   if(ok) sfxCorrect(); else sfxWrong();
+  // Every answer feeds real mastery (two correct in a row = mastered); a
+  // re-asked question only counts toward mastery, not the lesson score.
+  var isReask = lessonState.requeuedOnce && lessonState.requeuedOnce[qId] && lessonState.qIdx >= (lessonState.firstPassLen || Infinity);
+  updateCivicsMastery(qId, ok ? 'correct' : 'wrong');
   if(ok){
-    lessonState.correct++;
-    lessonState.correctQIds.push(qId);
+    if(!isReask){ lessonState.correct++; lessonState.correctQIds.push(qId); }
     lessonState.inARow = (lessonState.inARow || 0) + 1;
   } else {
-    lessonState.wrongQIds.push(qId);
+    if(!isReask) lessonState.wrongQIds.push(qId);
     lessonState.inARow = 0;
+    if(!lessonState.isReview){
+      if(!lessonState.firstPassLen) lessonState.firstPassLen = lessonState.qIds.length;
+      lessonState.requeue = lessonState.requeue || []; lessonState.requeuedOnce = lessonState.requeuedOnce || {};
+      if(!lessonState.requeuedOnce[qId]){ lessonState.requeuedOnce[qId] = true; lessonState.requeue.push(qId); }
+    }
     if(!isPlus()){                      // Plus: unlimited hearts (as advertised on the paywall)
       lessonState.hearts = Math.max(0, lessonState.hearts - 1);
       var heartsN = document.getElementById('heartsN');
@@ -12645,7 +13190,8 @@ function completeLesson(){
     });
     p.missedQs = p.missedQs.filter(function(m){ return (m.reviewedCount||0) < 2; });
     addXP(5);
-    p.mastered += lessonState.correct;
+    syncMasteredCount();
+    markActiveToday();
     saveUser();
     var earned = lessonState.correct;
     var totalR = lessonState.qIds.length;
@@ -12666,23 +13212,8 @@ function completeLesson(){
   var lid = lessonState.lessonId;
   if(p.completedLessons.indexOf(lid) === -1) p.completedLessons.push(lid);
   addXP(15);
-  p.mastered += lessonState.correct;
-
-  var today = todayISO();
-  if(p.lastLessonDate !== today){
-    if(p.lastLessonDate){
-      var d = new Date();
-      var yMs = new Date(d.getFullYear(), d.getMonth(), d.getDate()-1).getTime();
-      var yy = new Date(yMs);
-      var mm = yy.getMonth()+1; if(mm<10) mm='0'+mm;
-      var dd = yy.getDate(); if(dd<10) dd='0'+dd;
-      var yest = yy.getFullYear()+'-'+mm+'-'+dd;
-      p.streak = (p.lastLessonDate === yest) ? (p.streak + 1) : 1;
-    } else {
-      p.streak = 1;
-    }
-    p.lastLessonDate = today;
-  }
+  syncMasteredCount();
+  markActiveToday();
   saveUser();
   // Don't clear lessonState yet. Celebration screen reads it
   var l = findLesson(lid);
@@ -12953,6 +13484,7 @@ function setTestVersion(v){
   if(v !== '2008' && v !== '2025') return;
   if(user.testVersion === v) return;
   user.testVersion = v;
+  applyTestVersionContent();
   saveUser();
   toast(lang==='es'
     ? (v === '2025' ? 'Examen 2025 (128 preguntas)' : 'Examen 2008 (100 preguntas)')
@@ -12962,7 +13494,7 @@ function setTestVersion(v){
 var mockState = null;
 
 function getRandomQIds(n){
-  var allIds = civicsPoolForCurrentVersion().map(function(c){return c.id;});
+  var allIds = mcPoolIds();
   return shuffleArr(allIds).slice(0, Math.min(n, allIds.length));
 }
 
@@ -13015,7 +13547,7 @@ function renderMockQuestion(){
 
   var qwrap = document.getElementById('mtQwrap');
   if(qwrap){
-    var shuffled = shuffleArr(q.options);
+    var shuffled = shuffleArr(effectiveOptions(q));
     var opts = '';
     for(var i=0;i<shuffled.length;i++){
       var o = shuffled[i];
@@ -13052,6 +13584,7 @@ function mockNext(){
   var ok = mockState.picked.getAttribute('data-correct') === '1';
   var pickedEn = mockState.picked.getAttribute('data-pick');
   mockState.answers.push({qId: qId, pickedEn: pickedEn, correct: ok});
+  updateCivicsMastery(qId, ok ? 'correct' : 'wrong');
   if(mockState.qIdx >= mockState.qIds.length - 1) return finishMockTest();
   mockState.qIdx++;
   renderMockQuestion();
@@ -13064,7 +13597,10 @@ function finishMockTest(){
   var total = mockState.qIds.length;
   var passed = correct >= MOCK_PASS_FN();
   if(!user.progress.mockScores) user.progress.mockScores = [];
-  user.progress.mockScores.push({score: correct, total: total, passed: passed, takenAt: todayISO()});
+  user.progress.mockScores.push({score: correct, total: total, passed: passed, takenAt: todayISO(), version: currentTestVersion()});
+  if(user.progress.mockScores.length > 100) user.progress.mockScores = user.progress.mockScores.slice(-100);
+  markActiveToday();
+  syncMasteredCount();
   if(!user.progress.missedQs) user.progress.missedQs = [];
   mockState.answers.filter(function(a){return !a.correct;}).forEach(function(a){
     var ex = null;
@@ -13123,9 +13659,10 @@ function renderMockResults(correct, total, passed){
   var badge = passed
     ? '<div class="mtResultBadge mtPass">'+(lang==='es'?'¡Aprobado!':'Pass!')+'</div>'
     : '<div class="mtResultBadge mtFail">'+(lang==='es'?'Sigue practicando':'Keep practicing')+'</div>';
+  var rules = currentTestRules();
   var verdict = passed
-    ? (lang==='es' ? 'En USCIS, esto sería un examen aprobado (6 de 10).' : 'On the real USCIS test, this would be a passing score (6/10).')
-    : (lang==='es' ? 'USCIS requiere 6 de 10 correctas. Sigue dominando las lecciones.' : 'USCIS requires 6/10 correct. Keep mastering the lessons.');
+    ? (lang==='es' ? 'En USCIS, esto sería un examen aprobado ('+rules.mockPass+' de '+rules.mockSize+').' : 'On the real USCIS test, this would be a passing score ('+rules.mockPass+'/'+rules.mockSize+').')
+    : (lang==='es' ? 'USCIS requiere '+rules.mockPass+' de '+rules.mockSize+' correctas. Sigue dominando las lecciones.' : 'USCIS requires '+rules.mockPass+'/'+rules.mockSize+' correct. Keep mastering the lessons.');
 
   var byUnit = categorizeAnswers(mockState.answers);
   var breakdownRows = '';
@@ -13280,15 +13817,30 @@ function renderHomeStreakRisk(){
   var el = document.getElementById('homeStreakRisk');
   if(!el) return;
   var p = user.progress || {};
+  // Streak just ended: say so once, and show what a freeze would have done.
+  if((!p.streak || p.streak === 0) && p.streakLostAt && (p.lastStreak || 0) >= 3 && daysBetweenISO(p.streakLostAt, todayISO()) <= 1){
+    el.style.display = 'flex';
+    el.innerHTML = '<div class="streakRiskIcon">'+iconSVG('snowflake','#8fd9ff',24)+'</div>'
+      + '<div class="streakRiskMain">'
+      +   '<div class="streakRiskTitle">'+(lang==='es'?'Tu racha de '+p.lastStreak+' días terminó':'Your '+p.lastStreak+'-day streak ended')+'</div>'
+      +   '<div class="streakRiskSub">'+(isPlus()
+            ? (lang==='es'?'Empieza una nueva hoy':'Start a new one today')
+            : (lang==='es'?'Plus congela la racha los días que faltas':'Plus freezes your streak on days you miss'))+'</div>'
+      + '</div>'
+      + (isPlus()
+          ? '<button class="streakRiskBtn" onclick="startDailyActivity()">'+(lang==='es'?'Vamos':'Go')+'</button>'
+          : '<button class="streakRiskBtn" onclick="go(\'upgrade\')">'+(lang==='es'?'Ver Plus':'See Plus')+'</button>');
+    return;
+  }
   if(!p.streak || p.streak === 0){ el.style.display = 'none'; return; }
   if(p.lastLessonDate === todayISO()){ el.style.display = 'none'; return; }
   el.style.display = 'flex';
   el.innerHTML = '<div class="streakRiskIcon">'+iconSVG('flame','#ff4d3a',24)+'</div>'
     + '<div class="streakRiskMain">'
     +   '<div class="streakRiskTitle">'+(lang==='es'?'Asegura tu racha de ':'Lock in your ')+p.streak+(lang==='es'?' días':'-day streak')+'</div>'
-    +   '<div class="streakRiskSub">'+(lang==='es'?'Una lección hoy la mantiene viva':'One lesson today keeps it alive')+'</div>'
+    +   '<div class="streakRiskSub">'+(lang==='es'?'Cualquier práctica hoy la mantiene viva':'Any practice today keeps it alive')+'</div>'
     + '</div>'
-    + '<button class="streakRiskBtn" onclick="startCurrentLesson()">'+(lang==='es'?'Vamos':'Go')+'</button>';
+    + '<button class="streakRiskBtn" onclick="startDailyActivity()">'+(lang==='es'?'Vamos':'Go')+'</button>';
 }
 
 function renderDates(){
@@ -13580,20 +14132,22 @@ function exportDatesToICS(){
 function renderHomeMockCard(){
   var el = document.getElementById('homeMockCard');
   if(!el) return;
-  var scores = (user.progress && user.progress.mockScores) || [];
+  var rules = currentTestRules();
+  // Only runs taken under the current test version are comparable.
+  var scores = ((user.progress && user.progress.mockScores) || []).filter(function(sc){ return (sc.version || '2008') === currentTestVersion() || sc.total === rules.mockSize; });
   var head = (lang==='es' ? 'Examen de práctica' : 'Mock test');
   if(scores.length === 0){
     el.innerHTML = homeCardHtml({icon:'target', color:'#8c4dd1', kicker: head,
       title: lang==='es' ? 'Toma tu primer examen' : 'Take your first test',
-      sub: lang==='es' ? '10 preguntas al azar · USCIS aprueba en 6/10' : '10 random questions · USCIS passes at 6/10',
+      sub: lang==='es' ? rules.mockSize+' preguntas al azar · USCIS aprueba con '+rules.mockPass+'/'+rules.mockSize : rules.mockSize+' random questions · USCIS passes at '+rules.mockPass+'/'+rules.mockSize,
       meta: lang==='es' ? 'Sin tiempo límite' : 'No time limit', go: lang==='es' ? 'Empezar' : 'Start'});
   } else {
-    var best = scores.reduce(function(m, s){ return s.score > m ? s.score : m; }, 0);
+    var best = scores.reduce(function(m, sc){ return sc.score > m ? sc.score : m; }, 0);
     var last = scores[scores.length - 1];
     el.innerHTML = homeCardHtml({icon:'target', color:'#8c4dd1', kicker: head,
-      title: (lang==='es' ? 'Mejor: ' : 'Best: ') + best + ' / 10',
-      sub: (lang==='es' ? 'Último: ' : 'Last: ') + last.score + '/10 · ' + last.takenAt + (last.passed ? (lang==='es' ? ' · ✓ Aprobado' : ' · ✓ Pass') : (lang==='es' ? ' · Sigue' : ' · Keep going')),
-      progress: Math.round(best * 10),
+      title: (lang==='es' ? 'Mejor: ' : 'Best: ') + best + ' / ' + rules.mockSize,
+      sub: (lang==='es' ? 'Último: ' : 'Last: ') + last.score + '/' + (last.total || rules.mockSize) + ' · ' + last.takenAt + (last.passed ? (lang==='es' ? ' · ✓ Aprobado' : ' · ✓ Pass') : (lang==='es' ? ' · Sigue' : ' · Keep going')),
+      progress: Math.round(best / rules.mockSize * 100),
       meta: (lang==='es' ? 'Intentos: ' : 'Attempts: ') + scores.length, go: lang==='es' ? 'Intentar de nuevo' : 'Try again'});
   }
 }
@@ -13617,11 +14171,10 @@ function isUnitPlusGated(unitId){
 }
 
 function UNIT_ICON_SVG(unitId){
-  if(unitId === 1) return iconSVG('shield', '#fff', 26);   // Government
-  if(unitId === 2) return iconSVG('book',   '#fff', 26);   // History
-  if(unitId === 3) return iconSVG('star',   '#fff', 26);   // Symbols & Geography
-  if(unitId === 4) return iconSVG('scales', '#fff', 26);   // Rights & Responsibilities
-  return iconSVG('star','#fff',26);
+  var legacy = (LESSONS === LESSONS_2008);
+  var names = legacy ? {1:'shield', 2:'book', 3:'star', 4:'scales'}      // Government, History, Symbols, Rights
+                     : {1:'shield', 2:'scales', 3:'book', 4:'flag'};     // Government, President/Courts/Rights, History, Modern & Symbols
+  return iconSVG(names[unitId] || 'star', '#fff', 26);
 }
 
 function renderUnitBlock(unit){
@@ -13703,9 +14256,9 @@ function renderLearnPath(){
   }
   el.innerHTML = html + '<div style="height:20px"></div>';
 
-  var totalQs = CIVICS.length;
+  var totalQs = civicsPoolForCurrentVersion().length;
   var head = document.getElementById('learnMastered');
-  if(head) head.innerHTML = inlineIcon('book','#1cb0f6',14) + user.progress.mastered + (lang==='es' ? ' / '+totalQs+' dominadas' : ' / '+totalQs+' mastered');
+  if(head) head.innerHTML = inlineIcon('book','#1cb0f6',14) + civicsMasteryCounts().mastered + (lang==='es' ? ' / '+totalQs+' dominadas' : ' / '+totalQs+' mastered');
   var streakHead = document.getElementById('learnStreak');
   if(streakHead) streakHead.innerHTML = inlineIcon('flame','#ff4d3a',14) + user.progress.streak;
   var xpHead = document.getElementById('learnXp');
@@ -13743,11 +14296,12 @@ function renderHomeLessonCard(){
   if(!el) return;
   var lid = getCurrentLessonId();
   if(!lid){
+    var missedN = (user.progress.missedQs || []).length;
     el.innerHTML = homeCardHtml({icon:'trophy', color:'#00b4a8',
-      kicker: lang==='es' ? 'Cívica · completado' : 'Civics · done',
-      title: lang==='es' ? 'Unidad 1 completa' : 'Unit 1 complete',
-      sub: lang==='es' ? 'Repasa para mantener tu racha' : 'Review to keep your streak',
-      meta: '+15 XP', go: lang==='es' ? 'Repasar' : 'Review'});
+      kicker: lang==='es' ? 'Cívica · todas las lecciones hechas' : 'Civics · all lessons done',
+      title: missedN ? (lang==='es' ? 'Repasa '+missedN+' que fallaste' : 'Review the '+missedN+' you missed') : (lang==='es' ? 'Tarjetas de hoy' : "Today's flashcards"),
+      sub: lang==='es' ? 'Cualquier práctica de hoy mantiene tu racha viva' : 'Any practice today keeps your streak alive',
+      meta: missedN ? '+5 XP' : '+8 XP', go: lang==='es' ? 'Practicar' : 'Practice'});
     return;
   }
   var l = findLesson(lid);
@@ -13758,7 +14312,7 @@ function renderHomeLessonCard(){
     kicker: (lang==='es' ? 'Cívica · Lección ' : 'Civics · Lesson ') + idx,
     title: l.title[lang],
     sub: l.qIds.length + ' ' + (lang==='es' ? 'preguntas · mantén tu racha' : 'questions · keep your streak alive'),
-    progress: Math.min(100, doneCount*16),
+    progress: Math.round(doneCount / LESSONS.length * 100),
     meta: '+15 XP', go: lang==='es' ? 'Empezar' : 'Start'});
 }
 
@@ -13769,8 +14323,7 @@ function renderHomeStats(){
   if(xN) xN.textContent = user.progress.xp;
   var rN = document.getElementById('readyN');
   if(rN){
-    var pct = Math.min(100, Math.round((user.progress.mastered / 128) * 100));
-    rN.textContent = pct + '%';
+    rN.textContent = readinessPct() + '%';
   }
   // Replace emoji icons with custom SVG once on first render
   var streakIco = document.getElementById('streakIco');
@@ -13798,7 +14351,11 @@ var ME_FIELDS = {
   jobOffer:         {label:{en:'U.S. job offer',       es:'Oferta de trabajo en EE.UU.'}, type:'jobOffer'},
   achievements:     {label:{en:'O-1 / EB-1 evidence',  es:'Evidencia O-1 / EB-1'},    type:'achievements'},
   familyTies:       {label:{en:'Family with U.S. status', es:'Familia con estatus en EE.UU.'}, type:'familyTies'},
-  situations:       {label:{en:'Special situations',   es:'Situaciones especiales'},  type:'situations'}
+  situations:       {label:{en:'Special situations',   es:'Situaciones especiales'},  type:'situations'},
+  state:            {label:{en:'Your state',           es:'Tu estado'},               type:'state'},
+  officialSenators: {label:{en:'Your U.S. senators',   es:'Tus senadores'},           type:'text'},
+  officialRep:      {label:{en:'Your U.S. representative', es:'Tu representante'},    type:'text'},
+  officialGovernor: {label:{en:'Your governor',        es:'Tu gobernador/a'},         type:'text'}
 };
 
 // Multi-select editors (O-1 evidence, situations). Saved with the footer button.
@@ -13830,6 +14387,9 @@ function saveEditField(){
     var input = document.getElementById('editFieldText');
     if(input) v = input.value.trim();
     if(!v) v = lang==='es' ? 'Amigo' : 'Friend';
+  } else if(ME_FIELDS[key].type === 'text'){
+    var input2 = document.getElementById('editFieldText');
+    if(input2) v = input2.value.trim();
   } else if(ME_FIELDS[key].type === 'date'){
     var d = document.getElementById('editFieldDate');
     if(d) v = d.value;
@@ -13868,7 +14428,9 @@ function renderEditField(){
   var showFooter = false;
 
   if(field.type === 'text'){
-    html = '<div class="onbBig"><input class="onbInputBig" id="editFieldText" value="'+((current||'').replace(/"/g,'&quot;'))+'" autofocus /></div>';
+    var ph = key === 'officialSenators' ? (lang==='es'?'p. ej. Padilla y Schiff':'e.g. Padilla and Schiff') : key === 'officialRep' ? (lang==='es'?'Nombre de tu representante':'Your representative\'s name') : key === 'officialGovernor' ? (lang==='es'?'Nombre del gobernador/a':'Your governor\'s name') : '';
+    html = '<div class="onbBig"><input class="onbInputBig" id="editFieldText" value="'+((current||'').replace(/"/g,'&quot;'))+'" placeholder="'+ph+'" autofocus /></div>'
+      + (ph ? '<div class="visaSuggNote">'+(lang==='es'?'Búscalo en usa.gov/elected-officials. Lo que guardes aquí es la respuesta que el simulador espera.':'Look it up at usa.gov/elected-officials. What you save here is the answer the interview expects.')+'</div>' : '');
     showFooter = true;
   } else if(field.type === 'date'){
     html = '<div class="onbBig"><input class="onbDateBig" type="date" id="editFieldDate" value="'+(current || '2020-01-01')+'" /></div>';
@@ -13903,6 +14465,11 @@ function renderEditField(){
       + achievementCardsHtml(curA, function(id){ return "editToggleAchievement('"+id+"')"; })
       + '</div>';
     showFooter = true;
+  } else if(field.type === 'state'){
+    var opts = '<option value=""'+(current ? '' : ' selected')+' disabled>'+(lang==='es'?'Elige tu estado…':'Choose your state…')+'</option>';
+    US_STATES.forEach(function(st){ opts += '<option value="'+st[0]+'"'+(current===st[0]?' selected':'')+'>'+st[1]+'</option>'; });
+    html = '<div class="onbSelectWrap"><select class="onbSelect" onchange="if(this.value) pickEditValue(this.value)">'+opts+'</select></div>'
+      + '<div class="visaSuggNote">'+(lang==='es'?'Usamos tu estado para la pregunta de la capital y para tus funcionarios.':'We use your state for the capital question and your officials.')+'</div>';
   } else if(field.type === 'situations'){
     var curS = Array.isArray(current) ? current : [];
     html = '<div class="onbCards">'
@@ -14142,6 +14709,19 @@ function renderMe(){
        +   '</button>'
        + '</div>'
        + '</div>';
+
+  // State-specific civics answers (your senators, representative, governor, capital)
+  var stI = user.state ? stateInfo(user.state) : null;
+  html += '<div class="sec">'+(lang==='es'?'Tus respuestas estatales':'Your state answers')+'</div>';
+  html += '<div class="testVerHelp" style="margin:0 4px 10px">'+(lang==='es'
+    ? 'Cuatro preguntas del examen dependen de dónde vives. Guarda tus respuestas y el simulador te las preguntará; búscalas en usa.gov/elected-officials.'
+    : 'Four test questions depend on where you live. Save your answers and the interview will quiz you on them; look them up at usa.gov/elected-officials.')+'</div>';
+  html += '<div class="mini">';
+  html += '<div class="row" onclick="openEditField(\'state\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Estado':'State')+'</div><div class="rSub">'+(stI ? stI.name + (stI.capital ? ' · '+(lang==='es'?'Capital: ':'Capital: ')+stI.capital : '') : '–')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'officialSenators\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tus senadores':'Your U.S. senators')+'</div><div class="rSub">'+(user.officialSenators || '–')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'officialRep\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tu representante':'Your U.S. representative')+'</div><div class="rSub">'+(user.officialRep || '–')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'officialGovernor\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tu gobernador/a':'Your governor')+'</div><div class="rSub">'+(user.officialGovernor || '–')+'</div></div><div class="chev">›</div></div>';
+  html += '</div>';
 
   // USCIS case-status section
   html += '<div class="sec">'+(lang==='es'?'Caso USCIS':'USCIS case status')+'</div>';
@@ -14663,6 +15243,12 @@ function toast(msg, icon){
       user.progress.mockScores = stored.progress.mockScores || [];
       user.progress.interviewAttempts = stored.progress.interviewAttempts || [];
       user.progress.dailyFlashcards = stored.progress.dailyFlashcards || {lastCompleted:null, streak:0};
+      user.progress.civicsMastery = stored.progress.civicsMastery || {};
+      user.progress.flashSched = stored.progress.flashSched || {};
+      user.progress.flashToday = stored.progress.flashToday || null;
+      user.progress.lastStreak = stored.progress.lastStreak || 0;
+      user.progress.streakLostAt = stored.progress.streakLostAt || null;
+      user.progress.frozenDates = stored.progress.frozenDates || [];
     }
     user.documents = stored.documents || {};
     user.eligibility = stored.eligibility || null;
@@ -14676,6 +15262,13 @@ function toast(msg, icon){
     user.phase = stored.phase || null;
     user.uscisReceipt = stored.uscisReceipt || null;
     user.testVersion = (stored.testVersion === '2008') ? '2008' : '2025';
+    applyTestVersionContent();
+    user.state = stored.state || null;
+    user.officialSenators = stored.officialSenators || '';
+    user.officialRep = stored.officialRep || '';
+    user.officialGovernor = stored.officialGovernor || '';
+    user.intvHandsFree = !!stored.intvHandsFree;
+    user.pendingTrialOffer = !!stored.pendingTrialOffer;
     user.plan = stored.plan || 'free';
     user.trialStartedAt = stored.trialStartedAt || null;
     user.trialEndsAt = stored.trialEndsAt || null;
@@ -14729,7 +15322,8 @@ function toast(msg, icon){
     camiBoot();
     Store.init();
     refreshStreakFreezes();
-    maybeFreezeStreak();
+    normalizeStreak();
+    syncMasteredCount();
     renderAll();
     setTimeout(maybeShowFirstRunDisclaimer, 600);
     setTimeout(checkTrialReminders, 1200);
@@ -14757,7 +15351,7 @@ function toast(msg, icon){
     else { checkTrialReminders(); }
     if(lastSeenDay !== todayISO()){
       lastSeenDay = todayISO();
-      try { renderAll(); } catch(e){}
+      try { refreshStreakFreezes(); normalizeStreak(); renderAll(); } catch(e){}
     }
   });
 })();
