@@ -365,6 +365,7 @@ var user = {
   achievements: [],          // O1_CRITERIA ids the user says apply to them
   familyTies: null,          // FAMILY_TIES key
   situations: [],            // SITUATIONS ids (military, tps, daca, victim, minor, religious)
+  gcPetition: null,          // {type:'employment'|'family'|'asylum', stage:'perm'|'i140'|'i130'|'approved'|'priority'|'i485', at:ISO} once a green-card filing is under way
   soundEffects: true,        // feedback chimes (right/wrong/complete) — Me tab toggle
   testVersion: '2025',       // '2008' (legacy 100q test) or '2025' (current 128q, 12-of-20 to pass)
   plan: 'free',              // 'free' | 'trial' | 'plus' | 'expired'
@@ -7951,10 +7952,206 @@ function userPathJourney(){
   return k ? PATH_JOURNEYS[k] : null;
 }
 
-function setUserPathStage(stageId){
+function setUserPathStage(stageId){ updatePathProgress(stageId); }
+
+// ===== PATH PROGRESSION ========================================================
+// Journey stage ids are "<journey>-<milestone>". Some milestones change more than
+// the dot on the timeline: filing an I-140 starts the green-card process (Visa
+// Bulletin tracker, new next action), OPT or H-1B approval changes your status,
+// and the green card itself moves you onto the citizenship track.
+function stageMilestone(stageId){
+  var m = /^(s|o|w|a|fi|e|fp)-(.+)$/.exec(stageId || '');
+  if(!m) return null;
+  var j = m[1], k = m[2];
+  var petType = (j === 'fi' || j === 'fp') ? 'family' : j === 'a' ? 'asylum' : 'employment';
+  if(k === 'opt-active') return {type:'phase', phase:'opt', stage:'o-active'};
+  if(k === 'h1b')        return {type:'phase', phase:'workvisa', stage:'w-active'};
+  if(k === 'perm')       return {type:'gcPetition', pet:petType, stage:'perm'};
+  if(k === 'i140')       return {type:'gcPetition', pet:petType, stage:'i140'};
+  if(k === 'petition')   return {type:'gcPetition', pet:petType, stage:'i130'};
+  if(k === 'approve')    return {type:'gcPetition', pet:petType, stage:'approved'};
+  if(k === 'priority')   return {type:'gcPetition', pet:petType, stage:'priority'};
+  if(k === 'i485' || k === 'biom') return {type:'gcPetition', pet:petType, stage:'i485'};
+  if(k === 'gc')         return {type:'greenCard', currentStageId:'permanent-resident'};
+  if(k === 'residency')  return {type:'greenCard', currentStageId:'residency-met'};
+  if(k === 'n400')       return {type:'greenCard', currentStageId:'file-n400'};
+  if(k === 'interview2' || (k === 'interview' && j !== 'a')) return {type:'greenCard', currentStageId:'interview'};
+  if(k === 'oath')       return {type:'greenCard', currentStageId:'oath'};
+  return null;
+}
+
+function pathStageIndex(journey, stageId){
+  if(!journey) return -1;
+  for(var i=0;i<journey.stages.length;i++) if(journey.stages[i].id === stageId) return i;
+  return -1;
+}
+
+function updatePathProgress(stageId){
+  var journey = userPathJourney();
+  var idx = pathStageIndex(journey, stageId);
+  if(idx === -1) return;
+  var stage = journey.stages[idx];
+  var ms = stageMilestone(stageId);
+
+  if(ms && ms.type === 'greenCard'){
+    // Needs a green card date for the 3/5-year math — ask, then promote.
+    openGreenCardSheet(ms.currentStageId, stage);
+    return;
+  }
+
   user.pathCurrentStage = stageId;
+  if(ms && ms.type === 'phase'){
+    user.phase = ms.phase;
+    user.pathCurrentStage = ms.stage;
+    user.gcPetition = null;
+  } else if(ms && ms.type === 'gcPetition'){
+    user.gcPetition = {type: ms.pet, stage: ms.stage, at: todayISO()};
+    if(ms.pet === 'employment' && !user.petitionType) user.petitionType = 'employment';
+  } else {
+    // Stepping back before any green-card filing clears the in-progress marker.
+    var firstGc = -1;
+    for(var i=0;i<journey.stages.length;i++){ var mm = stageMilestone(journey.stages[i].id); if(mm && mm.type === 'gcPetition'){ firstGc = i; break; } }
+    if(firstGc !== -1 && idx < firstGc) user.gcPetition = null;
+  }
   saveUser();
   try { renderAll(); } catch(e){}
+  try { renderVisaPaths(); } catch(e){}
+  closeProgressSheet();
+  var msg = (ms && ms.type === 'phase')
+    ? (lang==='es' ? 'Tu estatus cambió a: ' : 'Your status is now: ') + PHASES[ms.phase].label[lang]
+    : (ms && ms.type === 'gcPetition')
+      ? (lang==='es' ? 'Proceso de residencia en marcha · ' : 'Green card process under way · ') + stage.name[lang]
+      : (lang==='es' ? 'Progreso actualizado · ' : 'Progress updated · ') + stage.name[lang];
+  toast(msg, ms ? 'flag' : 'check');
+}
+
+// Green card received: move to the citizenship track (Home strip, N-400 journey,
+// eligibility math) — the whole app re-keys off user.phase === 'hasGC'.
+function promoteToGreenCard(dateISO, currentStageId){
+  user.phase = 'hasGC';
+  user.greenCardDate = dateISO || todayISO();
+  user.currentStageId = currentStageId || 'permanent-resident';
+  user.pathCurrentStage = null;
+  user.gcPetition = null;
+  user.eligibility = null;
+  if(!user.immigrationGoal || user.immigrationGoal === 'greenCard') user.immigrationGoal = 'citizenship';
+  saveUser();
+  closeProgressSheet();
+  try { renderAll(); } catch(e){}
+  go('home');
+  toast(lang==='es' ? '¡Felicidades! Tu camino ahora es la ciudadanía.' : 'Congratulations! Your path is now citizenship.', 'trophy');
+}
+
+// Bottom sheet: pick the latest milestone you have reached.
+function openProgressSheet(){
+  var sheet = document.getElementById('progressSheet');
+  var card = document.getElementById('progressSheetCard');
+  if(!sheet || !card) return;
+  var rows = '';
+  var title, sub;
+  if(isOnGCPath()){
+    var curIdx = stageIndex(user.currentStageId);
+    title = lang==='es' ? '¿En qué etapa estás?' : 'Which stage are you at?';
+    sub = lang==='es' ? 'Tu camino a la ciudadanía' : 'Your path to citizenship';
+    STAGES.forEach(function(st, i){
+      var cls = i < curIdx ? ' done' : i === curIdx ? ' cur' : '';
+      rows += '<button type="button" class="progRow'+cls+'" onclick="setGcTrackStage(\''+st.id+'\')">'
+        + '<div class="progDot">'+(i < curIdx ? '✓' : (i+1))+'</div>'
+        + '<div class="progMain"><div class="progName">'+st.name[lang]+'</div>'
+        + (i === curIdx ? '<div class="progMeta">'+(lang==='es'?'Estás aquí':'You are here')+'</div>' : '')
+        + '</div></button>';
+    });
+  } else {
+    var journey = userPathJourney();
+    if(!journey){ go('visaPaths'); return; }
+    var cur = pathStageIndex(journey, user.pathCurrentStage); if(cur < 0) cur = 0;
+    title = lang==='es' ? '¿Cuál es tu último hito?' : "What's your latest milestone?";
+    sub = journey.title[lang];
+    journey.stages.forEach(function(st, i){
+      var ms = stageMilestone(st.id);
+      var note = '';
+      if(ms && ms.type === 'greenCard') note = lang==='es' ? 'Pasa al camino de ciudadanía' : 'Moves you to the citizenship track';
+      else if(ms && ms.type === 'phase') note = lang==='es' ? 'Cambia tu estatus' : 'Changes your status';
+      else if(ms && ms.type === 'gcPetition') note = lang==='es' ? 'Activa el seguimiento de residencia' : 'Starts green-card tracking';
+      var cls = i < cur ? ' done' : i === cur ? ' cur' : '';
+      rows += '<button type="button" class="progRow'+cls+'" onclick="updatePathProgress(\''+st.id+'\')">'
+        + '<div class="progDot">'+(i < cur ? '✓' : (i+1))+'</div>'
+        + '<div class="progMain"><div class="progName">'+st.name[lang]+'</div>'
+        + (i === cur ? '<div class="progMeta">'+(lang==='es'?'Estás aquí':'You are here')+'</div>' : (note ? '<div class="progMeta">'+note+'</div>' : ''))
+        + '</div></button>';
+    });
+  }
+  card.innerHTML = '<div class="purchaseSheetHandle"></div>'
+    + '<div class="progHead"><div class="progTitle">'+title+'</div><div class="progSub">'+sub+'</div></div>'
+    + '<div class="progList">'+rows+'</div>'
+    + '<button class="purchaseSheetCancel" onclick="closeProgressSheet()">'+(lang==='es'?'Cancelar':'Cancel')+'</button>';
+  sheet.style.display = '';
+  setTimeout(function(){ card.classList.add('purchaseSheetIn'); }, 10);
+}
+
+function setGcTrackStage(stageId){
+  if(stageIndex(stageId) < 0) return;
+  user.currentStageId = stageId;
+  user.recentStageChange = null;
+  saveUser();
+  try { renderAll(); } catch(e){}
+  try { renderVisaPaths(); } catch(e){}
+  closeProgressSheet();
+  toast((lang==='es' ? 'Etapa actual: ' : 'Current stage: ') + STAGES[stageIndex(stageId)].name[lang], 'check');
+}
+
+function openGreenCardSheet(currentStageId, stage){
+  var sheet = document.getElementById('progressSheet');
+  var card = document.getElementById('progressSheetCard');
+  if(!sheet || !card){ promoteToGreenCard(todayISO(), currentStageId); return; }
+  card.innerHTML = '<div class="purchaseSheetHandle"></div>'
+    + '<div class="progHead">'
+    +   '<div class="progCelebrate">'+iconSVG('trophy','#ffc83d',40)+'</div>'
+    +   '<div class="progTitle">'+(lang==='es'?'¡Felicidades!':'Congratulations!')+'</div>'
+    +   '<div class="progSub">'+(lang==='es'
+          ? 'Tu camino pasa a la ciudadanía. ¿Cuándo te hiciste residente permanente? Una fecha aproximada sirve — la usamos para tus 3 o 5 años.'
+          : 'Your path moves to citizenship. When did you become a permanent resident? A rough date is fine — we use it for your 3- or 5-year math.')+'</div>'
+    + '</div>'
+    + '<div class="onbBig"><input class="onbDateBig" type="date" id="progGcDate" value="'+todayISO()+'" max="'+todayISO()+'" /></div>'
+    + privacyChipHTML()
+    + '<button class="cta" style="margin-top:14px" onclick="promoteToGreenCard(document.getElementById(\'progGcDate\').value, \''+currentStageId+'\')">'+(lang==='es'?'Continuar a ciudadanía':'Continue to citizenship')+' →</button>'
+    + '<button class="purchaseSheetCancel" onclick="closeProgressSheet()">'+(lang==='es'?'Cancelar':'Cancel')+'</button>';
+  sheet.style.display = '';
+  setTimeout(function(){ card.classList.add('purchaseSheetIn'); }, 10);
+}
+
+function closeProgressSheet(){
+  var sheet = document.getElementById('progressSheet');
+  var card = document.getElementById('progressSheetCard');
+  if(!sheet || !card) return;
+  card.classList.remove('purchaseSheetIn');
+  setTimeout(function(){ sheet.style.display = 'none'; }, 220);
+}
+
+// Human summary of where the user is, for the Home card and the Paths screen.
+function pathProgressSummary(){
+  if(isOnGCPath()){
+    var ci = stageIndex(user.currentStageId);
+    if(ci < 0) return null;
+    return {idx: ci, total: STAGES.length, name: STAGES[ci].name[lang], gc: null};
+  }
+  var journey = userPathJourney();
+  if(!journey) return null;
+  var i = pathStageIndex(journey, user.pathCurrentStage); if(i < 0) i = 0;
+  var gp = user.gcPetition;
+  var gcLbl = null;
+  if(gp){
+    var map = {perm:{en:'PERM filed',es:'PERM presentado'}, i140:{en:'I-140 filed',es:'I-140 presentado'}, i130:{en:'I-130 filed',es:'I-130 presentado'},
+      approved:{en:'Petition approved',es:'Petición aprobada'}, priority:{en:'Priority date current',es:'Fecha de prioridad vigente'}, i485:{en:'I-485 pending',es:'I-485 pendiente'}};
+    gcLbl = (lang==='es' ? 'Residencia en proceso · ' : 'Green card in progress · ') + ((map[gp.stage] && map[gp.stage][lang]) || gp.stage);
+  }
+  return {idx: i, total: journey.stages.length, name: journey.stages[i].name[lang], gc: gcLbl};
+}
+
+function visaBulletinAction(){
+  return document.getElementById('visaBulletin')
+    ? "go('visaBulletin')"
+    : "openExternal('https://travel.state.gov/content/travel/en/legal/visa-law0/visa-bulletin.html')";
 }
 
 function renderPathJourney(el){
@@ -8450,39 +8647,180 @@ var VISA_CATEGORIES = [
 
 var openVisaPath = null;
 
+// ===== PATHS SCREEN — personal first, catalog second ==========================
+// A work-visa holder should not be handed student visas. The default view is
+// built from the user's status: where they are now, what their profile says
+// they may qualify for, and the usual next moves from that status. The full
+// 27-guide catalog stays one tap away behind "Browse all paths".
+var visaBrowseAll = false;
+
+function openVisaPaths(browseAll){
+  visaBrowseAll = !!browseAll;
+  go('visaPaths');
+  renderVisaPaths();
+}
+function toggleVisaBrowseAll(){
+  visaBrowseAll = !visaBrowseAll;
+  renderVisaPaths();
+}
+
+// Typical next moves from each status. Order = what most people in that
+// situation look at first. Country-gated entries are filtered by pathApplies().
+var NEXT_FROM = {
+  student:  ['cpt','opt','h1b','tn','e3h1b1','o1','eb2'],
+  opt:      ['h1b','tn','e3h1b1','o1','l1','eb2','eb1'],
+  workvisa: ['eb2','eb3','eb1','o1','l1','tn','e3h1b1','family-spouse'],
+  preGC:    ['eb2','eb3','eb1','family-spouse','family-pref'],
+  asylum:   ['asylum','tps','uvisa','family-spouse'],
+  other:    ['family-spouse','family-pref','h1b','o1','eb2','e2','eb5','asylum','dv']
+};
+
+// Hard gates that make a guide pointless for this person — nationality for the
+// treaty visas, and status for student-only paths.
+function pathApplies(id, u){
+  var c = u.countryOfBirth;
+  if(id === 'tn') return c === 'Canada' || c === 'Mexico';
+  if(id === 'e3h1b1') return c === 'Australia' || c === 'Chile' || c === 'Singapore';
+  if(id === 'e2') return E2_TREATY_COUNTRIES.indexOf(c) !== -1;
+  if(id === 'cuban') return c === 'Cuba';
+  if((id === 'student' || id === 'cpt') && u.phase && u.phase !== 'student' && u.phase !== 'other') return false;
+  if(id === 'opt' && u.phase && u.phase !== 'student' && u.phase !== 'opt' && u.phase !== 'other') return false;
+  return true;
+}
+
 function renderVisaPaths(){
   var head = document.getElementById('visaHeadSub');
-  if(head) head.textContent = lang==='es'
-    ? 'Camino te ayuda en cada vía hacia la inmigración a EE.UU.'
-    : 'Camino helps you on every path toward U.S. immigration.';
   var list = document.getElementById('visaList');
   if(!list) return;
   var html = '';
-  // Personalised shortlist first (from education / field / job offer / evidence).
-  var sugg = suggestVisaPaths(user);
-  if(sugg.length){
-    html += '<div class="visaCatHead">'+(lang==='es'?'Recomendadas para ti':'Recommended for you')+'</div>';
-    sugg.forEach(function(sg){ var v = findVisaPath(sg.id); if(v) html += visaCardHtml(v, sg); });
-    html += '<div class="visaSuggNote">'+(lang==='es'
-      ? 'Según tus respuestas en Yo → Tu camino. Es una guía educativa, no asesoría legal — confirma con un abogado de inmigración o representante acreditado por el DOJ.'
-      : 'Based on your answers under Me → Your path. Educational guidance, not legal advice — confirm with an immigration attorney or DOJ-accredited representative.')+'</div>';
+  var phase = user.phase;
+  var phaseInfo = phase ? PHASES[phase] : null;
+  var personal = !!(user.onboarded && phaseInfo);
+
+  if(!personal){
+    // Not onboarded yet: the catalog is the only sensible view.
+    if(head) head.textContent = lang==='es'
+      ? 'Camino te ayuda en cada vía hacia la inmigración a EE.UU.'
+      : 'Camino helps you on every path toward U.S. immigration.';
+    list.innerHTML = visaCatalogHtml();
+    populateIcons();
+    return;
   }
-  VISA_CATEGORIES.forEach(function(cat){
-    var inCat = VISA_PATHS.filter(function(v){return v.cat === cat.id;});
-    if(!inCat.length) return;
-    html += '<div class="visaCatHead">'+cat.label[lang]+'</div>';
-    inCat.forEach(function(v){ html += visaCardHtml(v, null); });
-  });
+
+  if(head) head.textContent = lang==='es'
+    ? 'Según tu perfil. Edita tus respuestas en Yo → Tu camino.'
+    : 'Built from your profile. Edit your answers under Me → Your path.';
+
+  var shown = {};
+  function card(v, sg, badge){
+    shown[v.id] = true;
+    return visaCardHtml(v, sg, badge);
+  }
+
+  // 1. Where you are
+  var curId = userVisaPathId();
+  var cur = curId ? findVisaPath(curId) : null;
+  html += '<div class="visaCatHead">'+(lang==='es'?'Dónde estás':'Where you are')+'</div>';
+  if(cur){
+    html += card(cur, null, lang==='es' ? 'Tu vía actual' : 'Your current path');
+  } else if(phase === 'hasGC'){
+    html += '<div class="visaStatusCard" onclick="go(\'journey\')">'
+      + '<div class="visaStatusIco" style="background:rgba(255,200,61,.22)">'+iconSVG('flag','#ffc83d',22)+'</div>'
+      + '<div class="visaStatusMain">'
+      +   '<div class="visaStatusTitle">'+(lang==='es'?'Residente permanente → ciudadanía':'Permanent resident → citizenship')+'</div>'
+      +   '<div class="visaStatusSub">'+(lang==='es'?'Tu camino es el N-400. Toca para ver tus etapas y fechas.':'Your path is the N-400. Tap to see your stages and dates.')+'</div>'
+      + '</div><div class="chev">›</div></div>';
+  } else {
+    html += '<div class="visaStatusCard">'
+      + '<div class="visaStatusIco" style="background:'+(phaseInfo.iconColor||'#84807a')+'22">'+iconSVG(phaseInfo.iconName||'globe', phaseInfo.iconColor||'#84807a', 22)+'</div>'
+      + '<div class="visaStatusMain">'
+      +   '<div class="visaStatusTitle">'+phaseInfo.label[lang]+'</div>'
+      +   '<div class="visaStatusSub">'+(phaseInfo.sub ? phaseInfo.sub[lang] : '')+'</div>'
+      + '</div></div>';
+  }
+
+  var prog = pathProgressSummary();
+  if(prog){
+    html += '<div class="visaProgressRow">'
+      + '<div class="visaProgressMain">'
+      +   '<div class="visaProgressLbl">'+(lang==='es'?'Etapa':'Stage')+' '+(prog.idx+1)+' / '+prog.total+(prog.gc ? ' · <span class="visaProgressGc">'+prog.gc+'</span>' : '')+'</div>'
+      +   '<div class="visaProgressName">'+prog.name+'</div>'
+      + '</div>'
+      + '<button type="button" class="visaProgressBtn" onclick="openProgressSheet()">'+iconSVG('flag','#fff',14)+(lang==='es'?'Actualizar progreso':'Update progress')+'</button>'
+      + '</div>';
+  }
+
+  // 2. What your profile says you may qualify for
+  var sugg = suggestVisaPaths(user).filter(function(sg){ return !shown[sg.id] && pathApplies(sg.id, user); });
+  if(sugg.length){
+    html += '<div class="visaCatHead">'+(lang==='es'?'Podrías calificar para':'You may qualify for')+'</div>';
+    sugg.forEach(function(sg){ var v = findVisaPath(sg.id); if(v) html += card(v, sg, null); });
+  }
+
+  // 3. Usual next steps from this status (de-duplicated, gated)
+  var nextIds = (NEXT_FROM[phase] || []).filter(function(id){ return !shown[id] && pathApplies(id, user); });
+  if(phase === 'hasGC'){
+    // A resident's "next steps" are about family: petition for a spouse or children now.
+    nextIds = ['family-pref'].filter(function(id){ return !shown[id]; });
+  }
+  if(nextIds.length){
+    var nextLbl = phase === 'hasGC'
+      ? (lang==='es' ? 'Traer a tu familia' : 'Bring your family')
+      : user.gcPetition
+        ? (lang==='es' ? 'Tu proceso de residencia' : 'Your green card process')
+        : (lang==='es' ? 'Siguientes pasos habituales' : 'Usual next steps');
+    html += '<div class="visaCatHead">'+nextLbl+'</div>';
+    nextIds.forEach(function(id){
+      var v = findVisaPath(id); if(!v) return;
+      var why = null;
+      if(phase === 'hasGC' && id === 'family-pref') why = {strength:'strong', why:{en:'As a permanent resident you can petition now for your spouse and unmarried children (F2A / F2B)', es:'Como residente puedes pedir ya a tu cónyuge e hijos solteros (F2A / F2B)'}};
+      html += card(v, why, null);
+    });
+  }
+
+  html += '<div class="visaSuggNote">'+(lang==='es'
+    ? 'Guía educativa a partir de tus respuestas, no asesoría legal. Confirma con un abogado de inmigración o representante acreditado por el DOJ.'
+    : 'Educational guidance from your answers, not legal advice. Confirm with an immigration attorney or DOJ-accredited representative.')+'</div>';
+
+  // 4. Everything else, on request
+  var hiddenCount = VISA_PATHS.filter(function(v){ return !shown[v.id]; }).length;
+  html += '<button type="button" class="visaBrowseBtn'+(visaBrowseAll?' visaBrowseOpen':'')+'" onclick="toggleVisaBrowseAll()">'
+    + '<span class="visaBrowseIco">'+iconSVG('map','#00b4a8',18)+'</span>'
+    + '<span class="visaBrowseTxt">'+(visaBrowseAll
+        ? (lang==='es' ? 'Ocultar el resto de las vías' : 'Hide the other paths')
+        : (lang==='es' ? 'Ver las otras '+hiddenCount+' vías' : 'Browse the other '+hiddenCount+' paths'))+'</span>'
+    + '<span class="visaBrowseChev">'+(visaBrowseAll?'▴':'▾')+'</span>'
+    + '</button>';
+  if(visaBrowseAll){
+    html += '<div class="visaBrowseNote">'+(lang==='es'
+      ? 'Todas las vías, incluidas las que no aplican a tu situación — útil si tu caso cambia o buscas para alguien más.'
+      : 'Every path, including ones that do not fit your situation — useful if your case changes or you are looking for someone else.')+'</div>';
+    html += visaCatalogHtml(shown);
+  }
+
   list.innerHTML = html;
   populateIcons();
 }
 
+// The full catalog by category. `skip` hides ids already shown above it.
+function visaCatalogHtml(skip){
+  var html = '';
+  VISA_CATEGORIES.forEach(function(cat){
+    var inCat = VISA_PATHS.filter(function(v){ return v.cat === cat.id && !(skip && skip[v.id]); });
+    if(!inCat.length) return;
+    html += '<div class="visaCatHead">'+cat.label[lang]+'</div>';
+    inCat.forEach(function(v){ html += visaCardHtml(v, null, null); });
+  });
+  return html;
+}
+
 // One expandable visa card. `sg` (optional) is a suggestion entry — adds the
 // "why this fits you" line under the summary.
-function visaCardHtml(v, sg){
+function visaCardHtml(v, sg, badge){
   var html = '';
   (function(){
       var expanded = openVisaPath === v.id;
+      var badgeHtml = badge ? '<span class="visaYouBadge">'+badge+'</span>' : '';
       var eligList = '';
       var tipList = '';
       if(expanded){
@@ -8496,7 +8834,7 @@ function visaCardHtml(v, sg){
         + '<div class="visaCardTop">'
         +   '<div class="visaIco" style="background:'+v.color+'1a">'+iconSVG(v.iconName, v.color, 22)+'</div>'
         +   '<div class="visaCardMain">'
-        +     '<div class="visaCardTitle">'+v.title[lang]+'</div>'
+        +     '<div class="visaCardTitle">'+badgeHtml+v.title[lang]+'</div>'
         +     '<div class="visaCardSummary">'+v.summary[lang]+'</div>'
         +     whyHtml
         +   '</div>'
@@ -8580,7 +8918,8 @@ function renderHomeVisaRow(){
   // Visa Bulletin row (pre-GC employment / family-pref only)
   var vbRow = document.getElementById('homeVisaBulletinRow');
   if(vbRow){
-    var showVB = user.phase === 'preGC' && (user.petitionType === 'employment' || user.petitionType === 'family-pref' || user.petitionType === 'family-lpr');
+    var showVB = (user.phase === 'preGC' && (user.petitionType === 'employment' || user.petitionType === 'family-pref' || user.petitionType === 'family-lpr'))
+      || (!!user.gcPetition && user.phase !== 'hasGC' && (user.gcPetition.type === 'employment' || (user.gcPetition.type === 'family' && user.petitionType !== 'family-ir')));
     vbRow.style.display = showVB ? '' : 'none';
     if(showVB){
       var vbIco = vbRow.querySelector('.rIco');
@@ -8622,7 +8961,7 @@ function renderHomeVisaRow(){
       }
       if(t) t.textContent = (lang==='es'?'Tu vía: ':'Your path: ') + visa.name[lang];
       if(sub && visa.sub && visa.sub[lang]) sub.textContent = visa.sub[lang];
-      el.onclick = function(){ toggleVisaPath(pathId); go('visaPaths'); };
+      el.onclick = function(){ openVisaPath = pathId; openVisaPaths(false); };
     } else {
       // hasGC user — citizenship path
       if(ico){
@@ -10261,6 +10600,43 @@ function pathNextAction(){
   if(!phase) return null;
   var goal = user.immigrationGoal;
 
+  // Once a green-card filing is under way, that is THE next thing — regardless
+  // of the visa the person is standing on.
+  var gp = user.gcPetition;
+  if(gp && phase !== 'hasGC' && phase !== 'preGC'){
+    if(gp.stage === 'perm' || gp.stage === 'i140' || gp.stage === 'i130' || gp.stage === 'approved'){
+      return {
+        title: lang==='es' ? 'Sigue tu fecha de prioridad' : 'Track your priority date',
+        sub: lang==='es'
+          ? 'Tu petición está en marcha. Cada mes, compara tu fecha de prioridad con el Boletín de Visas — cuando esté vigente, puedes presentar el I-485.'
+          : 'Your petition is under way. Each month, compare your priority date with the Visa Bulletin — when it is current you can file Form I-485.',
+        ctaLabel: lang==='es' ? 'Abrir Boletín de Visas' : 'Open Visa Bulletin',
+        ctaAction: visaBulletinAction()
+      };
+    }
+    if(gp.stage === 'priority'){
+      return {
+        title: lang==='es' ? 'Fecha vigente — presenta el I-485' : 'Your date is current — file Form I-485',
+        sub: lang==='es'
+          ? 'Adjusta tu estatus ahora: I-485 con I-765 (permiso de trabajo) e I-131 (viaje). Reúne el examen médico (I-693) y tus documentos.'
+          : 'Adjust status now: Form I-485 with I-765 (work permit) and I-131 (travel). Line up the medical exam (I-693) and your documents.',
+        ctaLabel: lang==='es' ? 'Ver documentos' : 'See documents',
+        ctaAction: "go('docs')",
+        urgent: true
+      };
+    }
+    if(gp.stage === 'i485'){
+      return {
+        title: lang==='es' ? 'I-485 pendiente — biométricos y entrevista' : 'I-485 pending — biometrics and interview',
+        sub: lang==='es'
+          ? 'Espera la cita de biométricos (6-10 semanas), luego el EAD/AP y una posible entrevista. Marca "Residencia" aquí cuando llegue la tarjeta.'
+          : 'Expect biometrics (6-10 weeks), then your EAD/AP card and possibly an interview. Mark "Green card" here when the card arrives.',
+        ctaLabel: lang==='es' ? 'Actualizar mi progreso' : 'Update my progress',
+        ctaAction: "openProgressSheet()"
+      };
+    }
+  }
+
   // Goal-driven overrides: when the user has citizenship as their long-term goal,
   // emphasize the bridge to a green card path earlier in their journey.
   if(goal === 'citizenship' && phase === 'student'){
@@ -10431,6 +10807,18 @@ function renderHomeSituationCard(){
   var visaLookup = {student:'student', opt:'opt', workvisa:'h1b', asylum:'asylum', other:null};
   var visaId = visaLookup[user.phase];
   var next = pathNextAction();
+
+  // Where exactly on the path — with a one-tap way to move forward.
+  var prog = pathProgressSummary();
+  var stageLine = prog
+    ? '<div class="situationStageRow">'
+      + '<div class="situationStageMain">'
+      +   '<div class="situationStageLbl">'+(lang==='es'?'Etapa':'Stage')+' '+(prog.idx+1)+' / '+prog.total+(prog.gc ? ' · <span class="situationStageGc">'+prog.gc+'</span>' : '')+'</div>'
+      +   '<div class="situationStageName">'+prog.name+'</div>'
+      + '</div>'
+      + '<button type="button" class="situationStageBtn" onclick="openProgressSheet()">'+(lang==='es'?'Avancé':'I moved forward')+'</button>'
+      + '</div>'
+    : '';
   var urgentCls = next && next.urgent ? ' situationNextUrgent' : '';
 
   var goalInfo = user.immigrationGoal ? IMMIGRATION_GOALS[user.immigrationGoal] : null;
@@ -10468,6 +10856,7 @@ function renderHomeSituationCard(){
     +   '<div class="situationSub">'+p.sub[lang]+'</div>'
     + '</div>'
     + '</div>'
+    + stageLine
     + goalRow
     + docsLine
     + (next
@@ -10478,7 +10867,7 @@ function renderHomeSituationCard(){
           + '<button class="situationNextBtn" onclick="'+next.ctaAction+'">'+next.ctaLabel+' →</button>'
           + '</div>'
         : '')
-    + '<button class="situationDetailBtn" onclick="'+(visaId ? 'toggleVisaPath(\''+visaId+'\'); go(\'visaPaths\')' : 'go(\'visaPaths\')')+'">'+(lang==='es'?'Ver mi vía en detalle':'See my path in detail')+' →</button>';
+    + '<button class="situationDetailBtn" onclick="'+(visaId ? 'openVisaPath=\''+visaId+'\'; openVisaPaths(false)' : 'openVisaPaths(false)')+'">'+(lang==='es'?'Ver mi vía en detalle':'See my path in detail')+' →</button>';
 }
 
 function renderHomeNext(){
@@ -14293,6 +14682,7 @@ function toast(msg, icon){
     user.familyTies = stored.familyTies || null;
     user.situations = Array.isArray(stored.situations) ? stored.situations : [];
     user.pathCurrentStage = stored.pathCurrentStage || null;
+    user.gcPetition = stored.gcPetition || null;
     user.anthropicApiKey = CAMI_AVAILABLE ? (stored.anthropicApiKey || null) : null;
     user.camiChatHistory = CAMI_AVAILABLE ? (stored.camiChatHistory || []) : [];
     user.camiMessagesTodayCount = stored.camiMessagesTodayCount || 0;

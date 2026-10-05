@@ -136,7 +136,7 @@
               <div class="rMain"><div class="rTitle"></div><div class="rSub"></div></div>
               <div class="chev"></div>
             </div>
-            <div class="row" id="homeAdditionalPathsRow" onclick="go('visaPaths')">
+            <div class="row" id="homeAdditionalPathsRow" onclick="openVisaPaths(true)">
               <div class="rIco rIcoSky" data-icon="globe"></div>
               <div class="rMain"><div class="rTitle"></div><div class="rSub"></div></div>
               <div class="chev"></div>
@@ -466,6 +466,10 @@
     <div id="purchaseSheet" class="purchaseSheet" style="display:none;">
       <div class="purchaseSheetBg" onclick="closePurchaseSheet()"></div>
       <div class="purchaseSheetCard" id="purchaseSheetCard"></div>
+    </div>
+    <div id="progressSheet" class="purchaseSheet" style="display:none;">
+      <div class="purchaseSheetBg" onclick="closeProgressSheet()"></div>
+      <div class="purchaseSheetCard" id="progressSheetCard"></div>
     </div>
 
     <!-- ===== CAMINO PLUS (UPGRADE) ===== -->
