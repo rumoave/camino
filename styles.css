@@ -1759,13 +1759,34 @@ select:focus-visible,
 .cta.ctaCoral:active{box-shadow:0 1px 0 var(--coralDark);}
 
 /* lesson card */
-.lesson{
-  background:linear-gradient(150deg, #1ad0c2 0%, #00b4a8 100%);color:#fff;border-radius:22px;padding:18px;
-  box-shadow:0 5px 0 var(--greenDark);
-  cursor:pointer;transition:transform .08s, box-shadow .08s;
+/* ===== Home action cards — paper, ink outline, one accent per card =====
+   Shared anatomy (built by homeCardHtml): icon tile + kicker, serif title,
+   sub, optional accent progress bar, meta + "Start" chip. The accent lives in
+   --acc / --accDark / --accSoft so each card differs by colour only. */
+.lesson, .mockCard, .flashcardCard, .interviewCard, .reviewCard{
+  --acc:var(--teal); --accDark:var(--tealDark); --accSoft:var(--greenSoft);
+  background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:20px;padding:16px 16px 14px;
+  box-shadow:0 4px 0 var(--acc);cursor:pointer;margin-top:10px;
+  transition:transform .08s, box-shadow .08s;
 }
-.lesson:active{transform:translateY(3px);box-shadow:0 2px 0 var(--greenDark);}
-.lesson .pill{background:rgba(255,255,255,.24);color:#fff;}
+.lesson, .mockCard{margin-top:0;}
+.mockCard{--acc:var(--plum); --accDark:var(--plumDark); --accSoft:rgba(140,77,209,.13);}
+.flashcardCard{--acc:var(--rose); --accDark:var(--roseDark); --accSoft:rgba(236,79,147,.13);}
+.interviewCard{--acc:var(--sky); --accDark:var(--skyDark); --accSoft:var(--skySoft);}
+.reviewCard{--acc:var(--coral); --accDark:var(--coralDark); --accSoft:var(--coralSoft);}
+.lesson:active, .mockCard:active, .flashcardCard:active, .interviewCard:active, .reviewCard:active{transform:translateY(3px);box-shadow:0 1px 0 var(--acc);}
+.actHead{display:flex;align-items:center;gap:10px;}
+.actIco{flex:none;width:38px;height:38px;border-radius:12px;background:var(--accSoft);display:flex;align-items:center;justify-content:center;}
+.actIco svg{display:block;}
+.actKick{font-size:11px;font-weight:850;letter-spacing:.6px;text-transform:uppercase;color:var(--accDark);}
+.actTitle{font-family:'Fraunces','Nunito',Georgia,serif;font-weight:700;font-size:21px;letter-spacing:-.3px;line-height:1.2;color:var(--ink);margin:12px 0 4px;}
+.actSub{font-size:14px;color:var(--ink2);font-weight:600;line-height:1.4;}
+.actBar{height:6px;background:var(--hair);border-radius:6px;margin-top:14px;overflow:hidden;}
+.actFill{height:100%;background:var(--acc);border-radius:6px;}
+.actFoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;}
+.actMeta{font-size:12.5px;font-weight:700;color:var(--muted);min-width:0;}
+.actMeta .inlIco{vertical-align:-2px;}
+.actGo{flex:none;font-size:12.5px;font-weight:850;color:var(--accDark);background:var(--accSoft);padding:7px 12px;border-radius:999px;white-space:nowrap;}
 .lessonTitle{font-size:20px;font-weight:850;margin:12px 0 4px;letter-spacing:-.3px;}
 .lessonSub{font-size:14px;opacity:.96;font-weight:600;}
 .xpbar{height:8px;background:rgba(255,255,255,.28);border-radius:6px;margin-top:14px;overflow:hidden;}
@@ -2326,14 +2347,7 @@ select:focus-visible,
 }
 
 /* home flashcard card */
-.flashcardCard{
-  background:linear-gradient(150deg, #ec4f93 0%, #d83a7d 100%);color:#fff;border-radius:22px;padding:18px;
-  box-shadow:0 5px 0 var(--roseDark);cursor:pointer;margin-top:10px;
-  transition:transform .08s, box-shadow .08s;
-}
-.flashcardCard:active{transform:translateY(3px);box-shadow:0 2px 0 var(--roseDark);}
-.flashcardCard .pill{background:rgba(255,255,255,.24);color:#fff;}
-.flashcardCard .lessonTitle{font-size:20px;font-weight:800;margin:12px 0 4px;letter-spacing:-.3px;}
+/* .flashcardCard — see the shared Home action card rules near .lesson */
 .flashcardCard .lessonSub{font-size:14px;opacity:.95;}
 .flashcardCard .lessonMeta{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-top:12px;opacity:.95;}
 
@@ -3025,15 +3039,7 @@ select:focus-visible,
 }
 
 /* home interview card */
-.interviewCard{
-  background:linear-gradient(150deg, #1cb0f6 0%, #1791ca 100%);color:#fff;border-radius:22px;padding:18px;
-  box-shadow:0 5px 0 #126f99;cursor:pointer;margin-top:10px;
-  transition:transform .08s, box-shadow .08s;
-}
-.interviewCard:active{transform:translateY(3px);box-shadow:0 2px 0 #126f99;}
-.interviewCard .pill{background:rgba(255,255,255,.24);color:#fff;}
-.interviewCard .lessonTitle{font-size:20px;font-weight:800;margin:12px 0 4px;letter-spacing:-.3px;}
-.interviewCard .lessonSub{font-size:14px;opacity:.95;}
+/* .interviewCard — see the shared Home action card rules near .lesson */
 .interviewCard .lessonMeta{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-top:12px;opacity:.95;}
 
 /* ===== MOCK TEST ===== */
@@ -3163,27 +3169,7 @@ select:focus-visible,
 }
 
 /* home review card */
-.reviewCard{
-  background:linear-gradient(150deg, #ff7a5a 0%, #ff4d3a 100%);color:#fff;border-radius:22px;padding:18px;
-  box-shadow:0 5px 0 var(--coralDark);cursor:pointer;margin-top:10px;
-  transition:transform .08s, box-shadow .08s;
-}
-.reviewCard:active{transform:translateY(3px);box-shadow:0 2px 0 var(--coralDark);}
-.reviewCard .pill{background:rgba(255,255,255,.24);color:#fff;}
-.reviewCard .lessonTitle{font-size:20px;font-weight:800;margin:12px 0 4px;letter-spacing:-.3px;}
-.reviewCard .lessonSub{font-size:14px;opacity:.95;}
-.reviewCard .lessonMeta{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-top:12px;opacity:.95;}
-
-/* home mock card */
-.mockCard{
-  background:linear-gradient(150deg, #9c5fe0 0%, #8c4dd1 100%);color:#fff;border-radius:22px;padding:18px;
-  box-shadow:0 5px 0 var(--plumDark);cursor:pointer;
-  transition:transform .08s, box-shadow .08s;
-}
-.mockCard:active{transform:translateY(3px);box-shadow:0 2px 0 var(--plumDark);}
-.mockCard .pill{background:rgba(255,255,255,.24);color:#fff;}
-.mockCard .lessonTitle{font-size:20px;font-weight:800;margin:12px 0 4px;letter-spacing:-.3px;}
-.mockCard .lessonSub{font-size:14px;opacity:.95;}
+/* .reviewCard / .mockCard — see the shared Home action card rules near .lesson */
 .mockCard .lessonMeta{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-top:12px;opacity:.95;}
 
 /* ===== ME / PROFILE ===== */

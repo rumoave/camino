@@ -2436,19 +2436,16 @@ function renderHomeFlashcardCard(){
     titleTxt = lang==='es' ? '¡Hecho por hoy!' : 'Done for today!';
     subTxt = lang==='es' ? 'Vuelve mañana — el set cambia cada día' : 'Come back tomorrow — set changes every day';
     metaLeft = inlineIcon('flame','#ff4d3a',13) + streak + ' ' + (lang==='es' ? 'día'+(streak===1?'':'s') : 'day'+(streak===1?'':'s'));
-    metaRight = (lang==='es' ? 'Repasar' : 'Replay') + ' →';
+    metaRight = (lang==='es' ? 'Repasar' : 'Replay');
   } else {
     titleTxt = lang==='es' ? 'Tus 15 cartas de hoy' : "Today's 15 cards";
     subTxt = streak > 0
       ? (lang==='es' ? 'Mantén tu racha de '+streak+' · +8 XP' : 'Keep your '+streak+'-day streak · +8 XP')
       : (lang==='es' ? 'Cambia cada día · +8 XP' : 'Changes every day · +8 XP');
     metaLeft = '~3 ' + (lang==='es' ? 'min' : 'min') + ' · 15 ' + (lang==='es' ? 'cartas' : 'cards');
-    metaRight = (lang==='es' ? 'Empezar' : 'Start') + ' →';
+    metaRight = (lang==='es' ? 'Empezar' : 'Start');
   }
-  el.innerHTML = '<span class="pill">'+pillTxt+'</span>'
-    + '<div class="lessonTitle">'+titleTxt+'</div>'
-    + '<div class="lessonSub">'+subTxt+'</div>'
-    + '<div class="lessonMeta"><span>'+metaLeft+'</span><span>'+metaRight+'</span></div>';
+  el.innerHTML = homeCardHtml({icon:'cards', color:'#ec4f93', kicker: pillTxt, title: titleTxt, sub: subTxt, meta: metaLeft, go: metaRight});
 }
 
 // ===== INTERVIEW SIMULATOR =====
@@ -4522,16 +4519,17 @@ function renderHomeInterviewCard(){
   var metaLeft, metaRight;
   if(best != null){
     metaLeft = (lang==='es'?'Mejor: ':'Best: ')+best+'% · '+masteredTotal+'/'+CIVICS.length+' '+(lang==='es'?'dominadas':'mastered');
-    metaRight = (lang==='es'?'Practicar':'Practice')+' →';
+    metaRight = (lang==='es'?'Practicar':'Practice');
   } else {
     metaLeft = '~5 '+(lang==='es'?'min':'min')+' · 10 '+(lang==='es'?'preguntas':'questions');
-    metaRight = (lang==='es'?'Empezar':'Start')+' →';
+    metaRight = (lang==='es'?'Empezar':'Start');
   }
 
-  el.innerHTML = '<span class="pill">'+(lang==='es' ? 'Simulador de entrevista' : 'Interview simulator')+'</span>'
-    + '<div class="lessonTitle">'+titleTxt+'</div>'
-    + '<div class="lessonSub">'+subTxt+'</div>'
-    + '<div class="lessonMeta"><span>'+metaLeft+'</span><span>'+metaRight+'</span></div>';
+  el.innerHTML = homeCardHtml({icon:'mic', color:'#1cb0f6',
+    kicker: lang==='es' ? 'Simulador de entrevista' : 'Interview simulator',
+    title: titleTxt, sub: subTxt,
+    progress: best != null ? Math.round(masteredTotal / CIVICS.length * 100) : undefined,
+    meta: metaLeft, go: metaRight});
 }
 
 // ===== LEGAL DISCLAIMER SYSTEM =====
@@ -13271,10 +13269,11 @@ function renderHomeReviewCard(){
   if(missed.length === 0){ el.style.display = 'none'; return; }
   el.style.display = 'block';
   var count = missed.length;
-  el.innerHTML = '<span class="pill">'+(lang==='es'?'Para repasar':'To review')+'</span>'
-    + '<div class="lessonTitle">'+count+' '+(lang==='es'?('pregunta'+(count>1?'s':'')+' por repasar'):('question'+(count>1?'s':'')+' to review'))+'</div>'
-    + '<div class="lessonSub">'+(lang==='es'?'Refuerza lo que fallaste · +5 XP':'Drill the ones you got wrong · +5 XP')+'</div>'
-    + '<div class="lessonMeta"><span>'+(lang==='es'?'Sin tiempo':'No timer')+'</span><span>'+(lang==='es'?'Empezar':'Start')+' →</span></div>';
+  el.innerHTML = homeCardHtml({icon:'refresh', color:'#ff4d3a',
+    kicker: lang==='es' ? 'Para repasar' : 'To review',
+    title: count + ' ' + (lang==='es' ? ('pregunta'+(count>1?'s':'')+' por repasar') : ('question'+(count>1?'s':'')+' to review')),
+    sub: lang==='es' ? 'Refuerza lo que fallaste · +5 XP' : 'Drill the ones you got wrong · +5 XP',
+    meta: lang==='es' ? 'Sin tiempo' : 'No timer', go: lang==='es' ? 'Empezar' : 'Start'});
 }
 
 function renderHomeStreakRisk(){
@@ -13584,17 +13583,18 @@ function renderHomeMockCard(){
   var scores = (user.progress && user.progress.mockScores) || [];
   var head = (lang==='es' ? 'Examen de práctica' : 'Mock test');
   if(scores.length === 0){
-    el.innerHTML = '<span class="pill">'+head+'</span>'
-      + '<div class="lessonTitle">'+(lang==='es'?'Toma tu primer examen':'Take your first test')+'</div>'
-      + '<div class="lessonSub">'+(lang==='es'?'10 preguntas al azar · USCIS aprueba en 6/10':'10 random questions · USCIS passes at 6/10')+'</div>'
-      + '<div class="lessonMeta"><span>'+(lang==='es'?'Sin tiempo límite':'No time limit')+'</span><span>'+(lang==='es'?'Empezar':'Start')+' →</span></div>';
+    el.innerHTML = homeCardHtml({icon:'target', color:'#8c4dd1', kicker: head,
+      title: lang==='es' ? 'Toma tu primer examen' : 'Take your first test',
+      sub: lang==='es' ? '10 preguntas al azar · USCIS aprueba en 6/10' : '10 random questions · USCIS passes at 6/10',
+      meta: lang==='es' ? 'Sin tiempo límite' : 'No time limit', go: lang==='es' ? 'Empezar' : 'Start'});
   } else {
     var best = scores.reduce(function(m, s){ return s.score > m ? s.score : m; }, 0);
     var last = scores[scores.length - 1];
-    el.innerHTML = '<span class="pill">'+head+'</span>'
-      + '<div class="lessonTitle">'+(lang==='es'?'Mejor: ':'Best: ')+best+' / 10</div>'
-      + '<div class="lessonSub">'+(lang==='es'?'Último: ':'Last: ')+last.score+'/10 · '+last.takenAt+(last.passed?(lang==='es'?' · ✓ Aprobado':' · ✓ Pass'):(lang==='es'?' · Sigue':' · Keep going'))+'</div>'
-      + '<div class="lessonMeta"><span>'+(lang==='es'?'Intentos: ':'Attempts: ')+scores.length+'</span><span>'+(lang==='es'?'Intentar de nuevo':'Try again')+' →</span></div>';
+    el.innerHTML = homeCardHtml({icon:'target', color:'#8c4dd1', kicker: head,
+      title: (lang==='es' ? 'Mejor: ' : 'Best: ') + best + ' / 10',
+      sub: (lang==='es' ? 'Último: ' : 'Last: ') + last.score + '/10 · ' + last.takenAt + (last.passed ? (lang==='es' ? ' · ✓ Aprobado' : ' · ✓ Pass') : (lang==='es' ? ' · Sigue' : ' · Keep going')),
+      progress: Math.round(best * 10),
+      meta: (lang==='es' ? 'Intentos: ' : 'Attempts: ') + scores.length, go: lang==='es' ? 'Intentar de nuevo' : 'Try again'});
   }
 }
 
@@ -13724,25 +13724,45 @@ function renderLearnPath(){
   }
 }
 
+// One markup for every Home action card (lesson, mock test, flashcards,
+// interview, review). The card's accent colour comes from its CSS class;
+// o = {icon, color, kicker, title, sub, meta, go, progress (0-100 | undefined)}
+function homeCardHtml(o){
+  return '<div class="actHead">'
+    +   '<span class="actIco">'+iconSVG(o.icon, o.color, 22)+'</span>'
+    +   '<span class="actKick">'+o.kicker+'</span>'
+    + '</div>'
+    + '<div class="actTitle">'+o.title+'</div>'
+    + (o.sub ? '<div class="actSub">'+o.sub+'</div>' : '')
+    + (typeof o.progress === 'number' ? '<div class="actBar"><div class="actFill" style="width:'+Math.max(0, Math.min(100, o.progress))+'%"></div></div>' : '')
+    + '<div class="actFoot">'
+    +   '<span class="actMeta">'+(o.meta || '')+'</span>'
+    +   '<span class="actGo">'+o.go+' →</span>'
+    + '</div>';
+}
+
 function renderHomeLessonCard(){
   var el = document.getElementById('homeLessonCard');
   if(!el) return;
   var lid = getCurrentLessonId();
   if(!lid){
-    el.innerHTML = '<span class="pill">'+inlineIcon('trophy','#ffc83d',12)+(lang==='es'?'¡Completado!':'Done!')+'</span>'
-      + '<div class="lessonTitle">'+(lang==='es'?'Unidad 1 completa':'Unit 1 complete')+'</div>'
-      + '<div class="lessonSub">'+(lang==='es'?'Repasa para mantener tu racha':'Review to keep your streak')+'</div>';
+    el.innerHTML = homeCardHtml({icon:'trophy', color:'#00b4a8',
+      kicker: lang==='es' ? 'Cívica · completado' : 'Civics · done',
+      title: lang==='es' ? 'Unidad 1 completa' : 'Unit 1 complete',
+      sub: lang==='es' ? 'Repasa para mantener tu racha' : 'Review to keep your streak',
+      meta: '+15 XP', go: lang==='es' ? 'Repasar' : 'Review'});
     return;
   }
   var l = findLesson(lid);
   var idx = -1;
   for(var i=0;i<LESSONS.length;i++){ if(LESSONS[i].id===lid){ idx=i+1; break; } }
   var doneCount = user.progress.completedLessons.length;
-  el.innerHTML = '<span class="pill">'+(lang==='es'?'Cívica · Lección ':'Civics · Lesson ')+idx+'</span>'
-    + '<div class="lessonTitle">'+l.title[lang]+'</div>'
-    + '<div class="lessonSub">'+l.qIds.length+' '+(lang==='es'?'preguntas · mantén tu racha':'questions · keep your streak alive')+'</div>'
-    + '<div class="xpbar"><div class="xpfill" style="width:'+Math.min(100, doneCount*16)+'%"></div></div>'
-    + '<div class="lessonMeta"><span>+15 XP</span><span>'+(lang==='es'?'Empezar':'Start')+' →</span></div>';
+  el.innerHTML = homeCardHtml({icon:'book', color:'#00b4a8',
+    kicker: (lang==='es' ? 'Cívica · Lección ' : 'Civics · Lesson ') + idx,
+    title: l.title[lang],
+    sub: l.qIds.length + ' ' + (lang==='es' ? 'preguntas · mantén tu racha' : 'questions · keep your streak alive'),
+    progress: Math.min(100, doneCount*16),
+    meta: '+15 XP', go: lang==='es' ? 'Empezar' : 'Start'});
 }
 
 function renderHomeStats(){
