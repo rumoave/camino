@@ -9,7 +9,7 @@
   --hair:#ebe7dc;         /* warm hairline */
   --hair2:#d9d3c4;
 
-  /* Brand — deep teal (jade-water, journey-coded, distinctively not-Duolingo) */
+  /* Brand: deep teal (jade-water, journey-coded, distinctively not-Duolingo) */
   --green:#00b4a8;        /* primary teal (alias kept for legacy var names) */
   --greenDark:#008a7e;    /* shadow side */
   --greenSoft:#c5f0ec;    /* soft tint for backgrounds */
@@ -60,7 +60,7 @@ body{
   overflow:hidden;
 }
 
-/* Display headlines use Fraunces — warm editorial serif for hero, big numbers, celebrations */
+/* Display headlines use Fraunces: warm editorial serif for hero, big numbers, celebrations */
 .heroName, .nextTitle, .lessonTitle, .completeTitle, .unitCompleteTitle, .failedTitle,
 .intvScoreNum, .mtScoreNum, .flashAText, .flashResultTitle, .docsTitleBig, .helpTitleBig,
 .datesTitleBig, .jbigTitle, .onbStepTitle, .meName, .onbHi{
@@ -74,9 +74,9 @@ body{
   width:100%;height:100vh;max-width:430px;
 }
 
-/* Removed the desktop scale-down rules — the app now fills its container directly */
+/* Removed the desktop scale-down rules: the app now fills its container directly */
 
-/* Flat container — no simulated iPhone frame */
+/* Flat container: no simulated iPhone frame */
 .phone{
   position:relative;width:100%;height:100%;border-radius:0;
   background:var(--bg);padding:0;
@@ -94,7 +94,7 @@ body{
   padding:18px 30px 0;font-size:15px;font-weight:600;color:var(--ink);
   pointer-events:none;
 }
-/* Hide the simulated iOS time/battery — the REAL device status bar (or nothing,
+/* Hide the simulated iOS time/battery: the REAL device status bar (or nothing,
    on web) sits here. The .status div stays as an invisible 54px spacer only.
    Note: keep these hide rules at higher specificity than any .status child rule. */
 .status > *, .status .ico, .status svg { display: none !important; }
@@ -107,14 +107,14 @@ body{
 .pad{padding:0 20px;}
 
 /* hero header */
-/* Home hero — fills to the very top of the device so the teal gradient extends
+/* Home hero: fills to the very top of the device so the teal gradient extends
    behind the iPhone notch / status area instead of sitting in a white frame. */
 #home > .body{ padding-top: 0 !important; }
 .hero{
   position:relative;overflow:hidden;
   background:linear-gradient(160deg, #1ad0c2 0%, #00b4a8 50%, #008a7e 100%);
   color:#fff;
-  /* Hard 72px floor — clears iPhone 14/15 Pro Dynamic Island (~50px) plus the .status overlay */
+  /* Hard 72px floor: clears iPhone 14/15 Pro Dynamic Island (~50px) plus the .status overlay */
   padding:max(72px, calc(44px + env(safe-area-inset-top, 0px))) 20px 30px;
   border-radius:0 0 34px 34px;
 }
@@ -961,20 +961,20 @@ select:focus-visible,
   transform: translate(-50%, 0);
 }
 .tutCallout-bottom{
-  /* Card is below the target — arrow points UP at the target's bottom edge from card */
+  /* Card is below the target: arrow points UP at the target's bottom edge from card */
   border-left:9px solid transparent;
   border-right:9px solid transparent;
   border-top:10px solid var(--green);
   margin-top:6px;
 }
 .tutCallout-top{
-  /* Card is above the target — arrow points DOWN from card to the target's top edge */
+  /* Card is above the target: arrow points DOWN from card to the target's top edge */
   border-left:9px solid transparent;
   border-right:9px solid transparent;
   border-bottom:10px solid var(--green);
   margin-top:-16px;
 }
-/* Compact card variant used when spotlight is on — no big Cami art, just a small avatar */
+/* Compact card variant used when spotlight is on: no big Cami art, just a small avatar */
 .tutOverlay.tutOverlaySpot .tutCard{
   border-radius:18px;
   margin:14px;
@@ -1004,7 +1004,7 @@ select:focus-visible,
   box-shadow:0 -10px 40px rgba(0,0,0,.25);
   animation:tutSlideUp .32s cubic-bezier(.2,.8,.2,1);
 }
-/* Offer card variant — Cami popping in before the tour starts */
+/* Offer card variant: Cami popping in before the tour starts */
 .tutOfferCard{
   padding-top:28px;
   text-align:center;
@@ -1521,7 +1521,7 @@ select:focus-visible,
   margin-top:14px;line-height:1.5;font-weight:600;
 }
 
-/* Path Journey — outlined roadmap for non-GC users */
+/* Path Journey: outlined roadmap for non-GC users */
 .pathJourneyHint{
   font-size:12px;color:var(--muted);font-weight:700;
   text-align:center;font-style:italic;
@@ -1569,7 +1569,7 @@ select:focus-visible,
 }
 .situationGoalVal{font-weight:850;}
 
-/* Live progress strip in situation card — updates reactively when docs are checked */
+/* Live progress strip in situation card: updates reactively when docs are checked */
 .situationProgressRow{
   display:flex;align-items:center;gap:10px;
   margin-top:12px;padding:12px 14px;
@@ -1703,7 +1703,7 @@ select:focus-visible,
 .statIco{display:flex;align-items:center;justify-content:center;width:24px;height:24px;margin-bottom:4px;}
 .statIco svg{display:block;}
 
-/* next step card — soft tinted background instead of marigold border accent */
+/* next step card: soft tinted background instead of marigold border accent */
 .next{
   background:linear-gradient(165deg, #fff8eb 0%, var(--card) 60%);
   border-radius:22px;padding:18px;
@@ -1715,8 +1715,8 @@ select:focus-visible,
   font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.5px;padding:5px 11px;border-radius:20px;
 }
 
-/* Passport-stamp style — used on cream/white card backgrounds (.next).
-   Outlined, slightly rotated, no background fill — feels like an official stamp. */
+/* Passport-stamp style: used on cream/white card backgrounds (.next).
+   Outlined, slightly rotated, no background fill: feels like an official stamp. */
 .next .pill, .stamp{
   background:transparent;
   color:var(--marigoldDark);
@@ -1764,7 +1764,7 @@ select:focus-visible,
    kicker, Fraunces title, muted body, black pill button. Built by homeCardHtml.
    --acc is the kicker/progress colour, --accLine the border tint, --accTint
    the top-left wash. */
-.lesson, .mockCard, .flashcardCard, .interviewCard, .reviewCard{
+.lesson, .mockCard, .flashcardCard, .interviewCard, .reviewCard, .englishCard{
   --acc:var(--tealDark); --accLine:#9fe3dc; --accTint:#eefaf8;
   background:linear-gradient(150deg, var(--accTint) 0%, #fff 70%);color:var(--ink);
   border:1.5px solid var(--accLine);border-radius:14px;padding:14px 16px;
@@ -1776,7 +1776,7 @@ select:focus-visible,
 .flashcardCard{--acc:var(--roseDark); --accLine:#f4b4cf; --accTint:#fdeef4;}
 .interviewCard{--acc:var(--skyDark); --accLine:#a9ddf8; --accTint:#edf7fd;}
 .reviewCard{--acc:var(--coralDark); --accLine:#ffc1b8; --accTint:#fff0ed;}
-.lesson:active, .mockCard:active, .flashcardCard:active, .interviewCard:active, .reviewCard:active{transform:translateY(1px);box-shadow:0 1px 0 var(--accLine);}
+.lesson:active, .mockCard:active, .flashcardCard:active, .interviewCard:active, .reviewCard:active, .englishCard:active{transform:translateY(1px);box-shadow:0 1px 0 var(--accLine);}
 .actKick{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--acc);margin-bottom:6px;}
 .actKick svg{display:block;}
 .actTitle{font-family:'Fraunces','Nunito',Georgia,serif;font-weight:700;font-size:17px;letter-spacing:-.2px;line-height:1.25;color:var(--ink);}
@@ -1786,7 +1786,7 @@ select:focus-visible,
 .actFoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;}
 .actBtn{flex:none;display:inline-block;background:#1d1d22;color:#fff;border-radius:11px;padding:10px 15px;
   font-family:'Nunito',sans-serif;font-weight:850;font-size:12.5px;letter-spacing:.3px;box-shadow:0 2px 0 #0a0a0d;}
-.lesson:active .actBtn, .mockCard:active .actBtn, .flashcardCard:active .actBtn, .interviewCard:active .actBtn, .reviewCard:active .actBtn{transform:translateY(1px);box-shadow:0 1px 0 #0a0a0d;}
+.lesson:active .actBtn, .mockCard:active .actBtn, .flashcardCard:active .actBtn, .interviewCard:active .actBtn, .reviewCard:active .actBtn, .englishCard:active .actBtn{transform:translateY(1px);box-shadow:0 1px 0 #0a0a0d;}
 .actMeta{font-size:12px;font-weight:700;color:var(--muted);text-align:right;min-width:0;}
 .actMeta .inlIco{vertical-align:-2px;}
 .lessonTitle{font-size:20px;font-weight:850;margin:12px 0 4px;letter-spacing:-.3px;}
@@ -2120,7 +2120,7 @@ select:focus-visible,
 }
 .unitBanner.unitPlusLocked::after{opacity:.05;}
 
-/* Learn view — clean civics-themed backdrop: warm cream wash + a subtle star pattern
+/* Learn view: clean civics-themed backdrop: warm cream wash + a subtle star pattern
    echoing the American flag. No more muddy US-outline silhouette. */
 #learn .body{
   background-color: #fafaf7;
@@ -2349,7 +2349,7 @@ select:focus-visible,
 }
 
 /* home flashcard card */
-/* .flashcardCard — see the shared Home action card rules near .lesson */
+/* .flashcardCard: see the shared Home action card rules near .lesson */
 .flashcardCard .lessonSub{font-size:14px;opacity:.95;}
 .flashcardCard .lessonMeta{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-top:12px;opacity:.95;}
 
@@ -2512,7 +2512,7 @@ select:focus-visible,
 .intvMicHint{margin-top:18px;font-size:14px;color:var(--muted);font-weight:800;letter-spacing:.2px;}
 .intvMicHintActive{color:#cc2010;}
 
-/* Audio-driven level meter — 5 bars, scaled from real mic amplitude */
+/* Audio-driven level meter: 5 bars, scaled from real mic amplitude */
 .intvMicLevel{
   display:flex;align-items:flex-end;justify-content:center;
   gap:4px;height:34px;margin-top:14px;
@@ -2597,7 +2597,7 @@ select:focus-visible,
 }
 .intvHandsFreeLbl{font-size:11.5px;}
 
-/* Session streak badge — appears in officer header at 2+ in a row */
+/* Session streak badge: appears in officer header at 2+ in a row */
 .intvStreakBadge{
   display:inline-flex;align-items:center;gap:4px;
   background:linear-gradient(135deg, #ff7a3a 0%, #ff4d3a 100%);
@@ -2619,7 +2619,7 @@ select:focus-visible,
 }
 .intvStreakPulse{ animation: intvStreakPulse .6s cubic-bezier(.34,1.56,.64,1) 1; }
 
-/* "Hear it spoken" — small teal action under the OFFICIAL ANSWER row */
+/* "Hear it spoken": small teal action under the OFFICIAL ANSWER row */
 .intvHearItBtn{
   display:inline-flex;align-items:center;gap:6px;
   margin-top:6px;margin-bottom:4px;
@@ -3041,7 +3041,7 @@ select:focus-visible,
 }
 
 /* home interview card */
-/* .interviewCard — see the shared Home action card rules near .lesson */
+/* .interviewCard: see the shared Home action card rules near .lesson */
 .interviewCard .lessonMeta{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-top:12px;opacity:.95;}
 
 /* ===== MOCK TEST ===== */
@@ -3130,7 +3130,7 @@ select:focus-visible,
 .mtReviewWhyLabel{font-size:10px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;}
 .mtReviewWhyText{font-size:13px;color:var(--ink2);margin-top:4px;line-height:1.5;font-weight:500;}
 
-/* undo banner — appears after a recent stage advance */
+/* undo banner: appears after a recent stage advance */
 .undoBanner{
   display:flex;align-items:center;gap:12px;background:linear-gradient(165deg, #e9f6ff 0%, #fff 70%);
   border:1.5px solid var(--hair);border-radius:18px;padding:12px 14px;margin-top:18px;
@@ -3171,7 +3171,7 @@ select:focus-visible,
 }
 
 /* home review card */
-/* .reviewCard / .mockCard — see the shared Home action card rules near .lesson */
+/* .reviewCard / .mockCard: see the shared Home action card rules near .lesson */
 .mockCard .lessonMeta{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-top:12px;opacity:.95;}
 
 /* ===== ME / PROFILE ===== */
@@ -3206,9 +3206,9 @@ select:focus-visible,
   text-transform:uppercase;letter-spacing:.4px;
 }
 
-/* ===== CAMINO PLUS — Subscription UI ===== */
+/* ===== CAMINO PLUS: Subscription UI ===== */
 
-/* Plus badge — small gold pill used inline next to gated feature names */
+/* Plus badge: small gold pill used inline next to gated feature names */
 .plusBadge{
   display:inline-flex;align-items:center;justify-content:center;
   background:linear-gradient(135deg,#ffe199 0%,#ffc83d 55%,#f5a623 100%);
@@ -3759,7 +3759,7 @@ select:focus-visible,
 .onbStepSub{font-size:14.5px;color:var(--ink2);line-height:1.5;padding:10px 24px 0;font-weight:600;text-align:center;}
 .onbTaglineEs{font-size:13px;color:var(--ink2);opacity:.75;line-height:1.4;padding:4px 24px 0;font-weight:600;text-align:center;font-style:italic;}
 
-/* "What is Camino" onboarding screen — static feature rows (same look as
+/* "What is Camino" onboarding screen: static feature rows (same look as
    onbBigCard, minus the button affordances) */
 .onbAboutRows{display:flex;flex-direction:column;gap:12px;padding:22px 20px 0;}
 .onbAboutRow{
@@ -3768,7 +3768,7 @@ select:focus-visible,
   color:var(--ink);
 }
 
-/* Tappable privacy reassurance chip (onboarding) — opens the privacy modal */
+/* Tappable privacy reassurance chip (onboarding): opens the privacy modal */
 .privacyChip{
   display:flex;align-items:center;gap:8px;width:calc(100% - 40px);
   margin:16px 20px 0;padding:9px 12px;
@@ -3853,14 +3853,14 @@ select:focus-visible,
 
 /* ===== SUBTLE ANIMATIONS ===== */
 
-/* View entrance — quick fade on every view show */
+/* View entrance: quick fade on every view show */
 .view.show{ animation: camViewIn .26s ease-out; }
 @keyframes camViewIn{
   0%{ opacity:.4; }
   100%{ opacity:1; }
 }
 
-/* Card tap feedback — gentle press-in scale on all primary cards */
+/* Card tap feedback: gentle press-in scale on all primary cards */
 .lesson, .mockCard, .interviewCard, .flashcardCard, .reviewCard, .next, .jstrip,
 .row, .docRow, .helpCard, .stepCard, .dateCard, .onbBigCard, .lnode, .opt{
   transition: transform .12s ease-out, box-shadow .15s ease-out;
@@ -3871,14 +3871,14 @@ select:focus-visible,
   transform: scale(0.987);
 }
 
-/* Section labels — tiny slide-in */
+/* Section labels: tiny slide-in */
 .sec{ animation: camSecIn .26s ease-out; }
 @keyframes camSecIn{
   0%{ opacity:0; transform:translateX(-4px); }
   100%{ opacity:1; transform:translateX(0); }
 }
 
-/* List rows in mini blocks — staggered fade-in */
+/* List rows in mini blocks: staggered fade-in */
 .mini > .row{ animation: camRowIn .3s ease-out backwards; }
 .mini > .row:nth-child(1){ animation-delay: .03s; }
 .mini > .row:nth-child(2){ animation-delay: .08s; }
@@ -3890,7 +3890,7 @@ select:focus-visible,
   100%{ opacity:1; transform:translateY(0); }
 }
 
-/* Option selection — gentle bounce */
+/* Option selection: gentle bounce */
 @keyframes camOptSel{
   0%{ transform: scale(1); }
   45%{ transform: scale(1.018); }
@@ -3898,7 +3898,7 @@ select:focus-visible,
 }
 .opt.sel{ animation: camOptSel .24s ease-out; }
 
-/* Correct answer reveal — green ring pulse */
+/* Correct answer reveal: green ring pulse */
 @keyframes camOptRight{
   0%{ transform: scale(1); box-shadow: 0 0 0 0 rgba(52,199,89,0); }
   40%{ transform: scale(1.015); box-shadow: 0 0 0 5px rgba(52,199,89,.18); }
@@ -3906,7 +3906,7 @@ select:focus-visible,
 }
 .opt.right{ animation: camOptRight .45s ease-out; }
 
-/* Wrong answer — micro shake */
+/* Wrong answer: micro shake */
 @keyframes camOptWrong{
   0%, 100%{ transform: translateX(0); }
   20%{ transform: translateX(-3px); }
@@ -3916,7 +3916,7 @@ select:focus-visible,
 }
 .opt.wrong{ animation: camOptWrong .35s ease-out; }
 
-/* Check button — pulse when it un-dims to "ready" */
+/* Check button: pulse when it un-dims to "ready" */
 @keyframes camBtnReady{
   0%{ transform: scale(1); }
   45%{ transform: scale(1.022); }
@@ -3926,7 +3926,7 @@ select:focus-visible,
 .checkbtn:not(.dim){ animation: camBtnReady .3s ease-out; }
 .checkbtn:active{ transform: scale(0.985); }
 
-/* Hearts on losing one — micro shake */
+/* Hearts on losing one: micro shake */
 @keyframes camHeartShake{
   0%, 100%{ transform: translateX(0) scale(1); }
   20%{ transform: translateX(-3px) scale(1.04); }
@@ -3936,7 +3936,7 @@ select:focus-visible,
 }
 .hearts.heartLost{ animation: camHeartShake .4s ease-out; color: var(--red); }
 
-/* Streak flame on stat cards — continuous gentle pulse */
+/* Streak flame on stat cards: continuous gentle pulse */
 @keyframes camFlamePulse{
   0%, 100%{ transform: scale(1); }
   50%{ transform: scale(1.1); }
@@ -3947,7 +3947,7 @@ select:focus-visible,
   transform-origin: center 70%;
 }
 
-/* Tab bar — gentle highlight on tap */
+/* Tab bar: gentle highlight on tap */
 .tab{ transition: color .15s ease-out; }
 .tab:active svg{ transform: scale(.94); transition: transform .1s; }
 
@@ -3959,7 +3959,7 @@ select:focus-visible,
   transition: width .45s cubic-bezier(.2,.8,.2,1);
 }
 
-/* Achievement unlock — subtle glow */
+/* Achievement unlock: subtle glow */
 @keyframes camAchUnlock{
   0%{ transform: scale(.96); }
   60%{ transform: scale(1.04); }
@@ -3967,10 +3967,10 @@ select:focus-visible,
 }
 .achBadge.achUnlocked{ animation: camAchUnlock .35s ease-out; }
 
-/* Toast — slight bounce on enter (existing has fade, add subtle bounce) */
+/* Toast: slight bounce on enter (existing has fade, add subtle bounce) */
 .toast{ transition: opacity .3s, transform .3s cubic-bezier(.2,1.4,.4,1); }
 
-/* Stat cards on home — fade-in on first render */
+/* Stat cards on home: fade-in on first render */
 .streakCard{ animation: camStatIn .35s ease-out backwards; }
 .streakCard:nth-child(1){ animation-delay: .05s; }
 .streakCard:nth-child(2){ animation-delay: .1s; }
@@ -4096,3 +4096,60 @@ select:focus-visible,
 .trialDiag{display:flex;align-items:flex-start;gap:7px;margin:10px 18px 0;padding:10px 12px;border-radius:12px;background:var(--marigoldSoft);color:#7a4a00;font-size:12.5px;line-height:1.4;font-weight:700;text-align:left;}
 .trialDiag svg{flex:none;margin-top:2px;}
 .trialHero .trialDiag{background:rgba(255,255,255,.9);}
+
+/* ===== Citizenship countdown + today's plan ===== */
+.englishCard{--acc:var(--marigoldDark); --accLine:#f5d49a; --accTint:#fff6e6;}
+.cdCard{background:#fff;border:1px solid var(--hair);border-radius:20px;padding:16px 16px 14px;margin:4px 0 6px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.cdTop{display:flex;align-items:center;gap:14px;cursor:pointer;}
+.cdMain{flex:1;min-width:0;}
+.cdKick{font-size:10.5px;font-weight:900;letter-spacing:1px;color:var(--marigoldDark);}
+.cdBig{font-family:'Fraunces','Nunito',Georgia,serif;font-weight:700;font-size:34px;line-height:1.05;color:var(--ink);letter-spacing:-.6px;margin-top:4px;}
+.cdUnit{font-size:16px;font-weight:700;color:var(--muted);letter-spacing:0;font-family:'Nunito',sans-serif;margin-left:2px;}
+.cdSub{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:5px;line-height:1.4;}
+.cdRing{flex:none;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.cdRingSvg{display:block;}
+.cdRingTxt{font-family:'Nunito',sans-serif;font-size:14px;font-weight:900;fill:var(--ink);}
+.cdRingLbl{font-size:9.5px;font-weight:850;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);}
+.cdPlanKick{font-size:11px;font-weight:850;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;}
+.cdPlan{display:flex;flex-direction:column;gap:6px;}
+.cdItem{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--cardWarm);border:1px solid var(--hair);border-radius:12px;padding:9px 11px;font-family:inherit;color:var(--ink);}
+.cdItem:active{transform:translateY(1px);}
+.cdItem.cdDone{opacity:.62;}
+.cdItem.cdDone .cdItemLbl{text-decoration:line-through;}
+.cdItemIco{flex:none;width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
+.cdItemIco svg{display:block;}
+.cdItemLbl{flex:1;font-size:13.5px;font-weight:750;}
+.cdItemState{font-size:12px;font-weight:800;color:var(--muted);display:inline-flex;align-items:center;}
+.cdCta{margin-top:12px;width:100%;}
+.cdCtaDone{background:var(--muted);box-shadow:0 5px 0 #6e6862;opacity:.85;}
+
+/* English drill */
+.engCard{background:#fff;border:1px solid var(--hair);border-radius:20px;padding:20px 18px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.engKick{font-size:10.5px;font-weight:900;letter-spacing:1px;color:var(--marigoldDark);text-transform:uppercase;}
+.engSentence{font-family:'Fraunces','Nunito',Georgia,serif;font-weight:700;font-size:26px;line-height:1.3;color:var(--ink);margin:14px 0 12px;letter-spacing:-.3px;}
+.engHelp{font-size:13px;color:var(--muted);line-height:1.5;font-weight:600;}
+.engHear{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:var(--skySoft);border:0;border-radius:12px;padding:10px 14px;font-family:inherit;font-size:13px;font-weight:850;color:var(--skyDark);}
+.engHear svg{display:block;}
+.engDictate{display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 0 14px;}
+.engPlay{width:72px;height:72px;border-radius:50%;border:0;background:var(--marigold);box-shadow:0 5px 0 var(--marigoldDark);display:flex;align-items:center;justify-content:center;}
+.engPlay:active{transform:translateY(3px);box-shadow:0 2px 0 var(--marigoldDark);}
+.engPlay svg{display:block;}
+.engPlayLbl{font-size:12.5px;color:var(--muted);font-weight:700;text-align:center;line-height:1.4;}
+.engSlow{background:transparent;border:1.5px solid var(--hair);border-radius:999px;padding:7px 14px;font-family:inherit;font-size:12.5px;font-weight:800;color:var(--ink);}
+.engInput{margin-top:8px;}
+.engTyped{font-size:14px;color:var(--ink2);margin-top:4px;font-weight:600;}
+.engTyped em{font-style:normal;font-weight:800;color:var(--ink);}
+.engFeedback{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13.5px;font-weight:750;line-height:1.4;}
+.engFeedback.engOk{background:var(--greenSoft);color:#0f6b62;}
+.engFeedback.engMiss{background:var(--coralSoft);color:#a1281b;}
+.engRateRow{display:flex;gap:10px;width:100%;}
+.engRateBtn{flex:1;border:0;border-radius:14px;padding:14px 10px;font-family:inherit;font-size:14px;font-weight:850;}
+.engRateMiss{background:var(--coralSoft);color:#a1281b;box-shadow:0 4px 0 #f0b1a8;}
+.engRateOk{background:var(--teal);color:#fff;box-shadow:0 4px 0 var(--tealDark);}
+.engRateBtn:active{transform:translateY(2px);}
+.engFooter{display:flex;gap:10px;}
+.engResultList{display:flex;flex-direction:column;gap:6px;margin:14px 0 6px;text-align:left;}
+.engResultRow{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.35;padding:8px 10px;border-radius:10px;background:var(--cardWarm);}
+.engResultIco{flex:none;margin-top:1px;}
+.engResultKind{flex:none;font-size:10.5px;font-weight:850;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);margin-top:2px;width:58px;}
+.engResultTxt{flex:1;font-weight:700;color:var(--ink);}

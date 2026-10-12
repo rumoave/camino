@@ -371,6 +371,7 @@ var user = {
   officialRep: '',
   officialGovernor: '',
   hearts: null,              // {date, left}: free-plan daily heart pool (5/day, +1 per review session)
+  interviewDate: null,       // ISO date of the USCIS naturalization interview; the Home countdown keys off it
   badges: null,              // {achievementId: ISO date unlocked}; never revoked
   reminderIds: [],           // local-notification ids we scheduled (so we can cancel/replace)
   planLapsedAt: null,        // set when a trial/plus entitlement ends; drives the one-time "Plus ended" modal
@@ -748,6 +749,19 @@ function getImportantDates(u){
       status: gcD <= now ? 'past' : 'future',
       stageId: 'permanent-resident',
       note: {en:'Your green-card start date. The clock begins here.', es:'Tu fecha de residencia. El reloj empieza aquí.'}
+    });
+  }
+
+  if(u.interviewDate){
+    var ivD = parseISO(u.interviewDate);
+    var ivDays = daysBetweenISO(todayISO(), u.interviewDate);
+    dates.push({
+      title: {en:'USCIS naturalization interview', es:'Entrevista de naturalización USCIS'},
+      date: ivD,
+      status: ivD < now ? 'past' : 'future',
+      stageId: 'interview',
+      urgent: ivDays >= 0 && ivDays <= 14,
+      note: {en:'Bring your green card, passport, state ID, and the interview notice. Arrive early.', es:'Lleva tu residencia, pasaporte, identificación estatal y el aviso de la entrevista. Llega temprano.'}
     });
   }
 
@@ -12013,8 +12027,351 @@ function populateIcons(){
   });
 }
 
+// ===== CITIZENSHIP FOCUS: the one date everything points at ======================
+// For the green-card track, Home opens with the thing the person actually asks:
+// how long until my interview, and am I ready. The rest of the screen becomes
+// today's plan for that date.
+function onInterviewDateChanged(){
+  if(!user.interviewDate) return;
+  // Having a date means the N-400 was filed: move the journey to the interview stage.
+  if(stageIndex(user.currentStageId) < stageIndex('interview') && stageIndex('interview') >= 0){
+    user.currentStageId = 'interview';
+  }
+  saveUser();
+  try { Reminders.scheduleDateAlerts(); } catch(e){}
+  try { renderAll(); } catch(e){}
+}
+
+function citizenshipFocus(){
+  var today = todayISO();
+  if(user.interviewDate){
+    var d = daysBetweenISO(today, user.interviewDate);
+    if(d >= 0) return {kind:'interview', days:d, date:user.interviewDate};
+    if(stageIndex(user.currentStageId) >= stageIndex('oath')) return {kind:'oath'};
+    return {kind:'after-interview', date:user.interviewDate};
+  }
+  if(user.currentStageId === 'oath') return {kind:'oath'};
+  if(user.currentStageId === 'interview') return {kind:'filed'};
+  var earliest = earliestFiling(user);
+  var days = daysBetweenISO(today, earliest.toISOString().slice(0,10));
+  if(days <= 0) return {kind:'window-open'};
+  return {kind:'window', days:days, date:earliest.toISOString().slice(0,10)};
+}
+
+// Today's prescribed session for the citizenship track. Order = what the real
+// interview tests, most to least weighted for this person.
+function todaysSession(){
+  var today = todayISO();
+  var p = user.progress || {};
+  var eng = p.english || {};
+  var lastIntv = (p.interviewAttempts || []).length ? p.interviewAttempts[p.interviewAttempts.length - 1].takenAt : null;
+  var items = [
+    {id:'civics', icon:'book',  color:'#00b4a8', label:{en:'Civics lesson or review', es:'Lección o repaso de cívica'}, minutes:4, done:p.lastCivicsDate === today, start:'startDailyActivity()'},
+    {id:'english', icon:'pencil', color:'#ff9b21', label:{en:'Reading & writing', es:'Lectura y escritura'}, minutes:3, done:eng.lastDone === today, start:'startEnglishDrill()'},
+    {id:'flash', icon:'cards', color:'#ec4f93', label:{en:'Flashcards', es:'Tarjetas'}, minutes:3, done:!!(p.dailyFlashcards && p.dailyFlashcards.lastCompleted === today), start:'startFlashcards()'}
+  ];
+  var intvDue = !lastIntv || daysBetweenISO(lastIntv, today) >= 7;
+  items.push({id:'interview', icon:'mic', color:'#1cb0f6', label:{en:'Interview rehearsal (weekly)', es:'Ensayo de entrevista (semanal)'}, minutes:6, done:!intvDue, start:'startInterview()', weekly:true});
+  return items;
+}
+function startTodaysSession(){
+  var next = todaysSession().filter(function(i){ return !i.done; })[0];
+  if(!next){ toast(lang==='es' ? 'Sesión de hoy completa. Vuelve mañana.' : "Today's session is done. See you tomorrow.", 'check'); return; }
+  try { eval(next.start); } catch(e){}
+}
+
+function readinessRingSVG(pct, size){
+  size = size || 64;
+  var r = (size/2) - 5, c = 2 * Math.PI * r;
+  var off = c * (1 - Math.max(0, Math.min(100, pct)) / 100);
+  return '<svg class="cdRingSvg" width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" aria-hidden="true">'
+    + '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--hair)" stroke-width="6"/>'
+    + '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--teal)" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/>'
+    + '<text x="50%" y="52%" text-anchor="middle" dominant-baseline="middle" class="cdRingTxt">'+pct+'%</text>'
+    + '</svg>';
+}
+
+function renderHomeCountdown(){
+  var el = document.getElementById('homeCountdown');
+  if(!el) return;
+  if(!isOnGCPath() || !user.onboarded){ el.style.display = 'none'; return; }
+  el.style.display = '';
+  var f = citizenshipFocus();
+  var kick, big, sub, tap = "openEditField('interviewDate')";
+  if(f.kind === 'interview'){
+    kick = lang==='es' ? 'ENTREVISTA USCIS' : 'USCIS INTERVIEW';
+    big = f.days === 0 ? (lang==='es' ? 'Hoy' : 'Today') : f.days + ' <span class="cdUnit">' + (lang==='es' ? (f.days===1?'día':'días') : (f.days===1?'day':'days')) + '</span>';
+    sub = fmtDate(f.date, lang) + ' · ' + (lang==='es' ? 'toca para cambiar' : 'tap to change');
+  } else if(f.kind === 'filed'){
+    kick = lang==='es' ? 'N-400 PRESENTADO' : 'N-400 FILED';
+    big = lang==='es' ? 'Entrevista pendiente' : 'Interview pending';
+    sub = lang==='es' ? 'Toca para poner la fecha cuando llegue el aviso' : 'Tap to set the date when the notice arrives';
+  } else if(f.kind === 'window-open'){
+    kick = lang==='es' ? 'VENTANA DE PRESENTACIÓN' : 'N-400 FILING WINDOW';
+    big = lang==='es' ? 'Abierta' : 'Open now';
+    sub = lang==='es' ? '¿Ya presentaste? Toca para poner la fecha de entrevista' : 'Filed already? Tap to set your interview date';
+  } else if(f.kind === 'window'){
+    kick = lang==='es' ? 'VENTANA DE PRESENTACIÓN' : 'N-400 FILING WINDOW';
+    big = f.days + ' <span class="cdUnit">' + (lang==='es' ? 'días' : 'days') + '</span>';
+    sub = (lang==='es' ? 'Se abre el ' : 'Opens ') + fmtDate(f.date, lang) + (lang==='es' ? ' · 90 días antes de tu marca de residencia' : ' · 90 days before your residency mark');
+    tap = "go('journey')";
+  } else if(f.kind === 'oath'){
+    kick = lang==='es' ? 'JURAMENTO' : 'OATH CEREMONY';
+    big = lang==='es' ? 'Casi ciudadano/a' : 'Almost a citizen';
+    sub = lang==='es' ? 'Lleva tu residencia y el aviso del juramento' : 'Bring your green card and the oath notice';
+    tap = "go('journey')";
+  } else {
+    kick = lang==='es' ? 'ENTREVISTA' : 'INTERVIEW';
+    big = lang==='es' ? '¿Cómo te fue?' : 'How did it go?';
+    sub = lang==='es' ? 'Toca para actualizar tu etapa' : 'Tap to update your stage';
+    tap = "openProgressSheet()";
+  }
+  var items = todaysSession();
+  var left = items.filter(function(i){ return !i.done; });
+  var mins = left.reduce(function(a, i){ return a + i.minutes; }, 0);
+  var rows = items.map(function(i){
+    return '<button type="button" class="cdItem'+(i.done?' cdDone':'')+'" onclick="'+i.start+'">'
+      + '<span class="cdItemIco" style="background:'+i.color+'1f">'+iconSVG(i.icon, i.color, 16)+'</span>'
+      + '<span class="cdItemLbl">'+i.label[lang]+'</span>'
+      + '<span class="cdItemState">'+(i.done ? iconSVG('check','#00b4a8',16) : '~'+i.minutes+' min')+'</span>'
+      + '</button>';
+  }).join('');
+  var ctaTxt = left.length
+    ? (lang==='es' ? 'Empezar la sesión de hoy' : "Start today's session") + ' · ~' + mins + ' min'
+    : (lang==='es' ? 'Sesión de hoy completa' : "Today's session done");
+  el.innerHTML = '<div class="cdCard">'
+    + '<div class="cdTop" onclick="'+tap+'">'
+    +   '<div class="cdMain">'
+    +     '<div class="cdKick">'+kick+'</div>'
+    +     '<div class="cdBig">'+big+'</div>'
+    +     '<div class="cdSub">'+sub+'</div>'
+    +   '</div>'
+    +   '<div class="cdRing">'+readinessRingSVG(readinessPct(), 68)+'<div class="cdRingLbl">'+(lang==='es'?'cívica lista':'civics ready')+'</div></div>'
+    + '</div>'
+    + '<div class="cdPlanKick">'+(lang==='es' ? 'Plan de hoy' : "Today's plan")+'</div>'
+    + '<div class="cdPlan">'+rows+'</div>'
+    + '<button class="cta cdCta'+(left.length?'':' cdCtaDone')+'" onclick="startTodaysSession()">'+ctaTxt+(left.length?' →':'')+'</button>'
+    + '</div>';
+}
+
+// ===== ENGLISH TEST: reading + writing =========================================
+// The naturalization test also checks English: read one of three sentences
+// aloud, write one of three dictated sentences. USCIS publishes the vocabulary,
+// not the sentences; every sentence below is built only from those word lists.
+var ENGLISH_READING = [
+  'Who was the first President?','What is the capital of the United States?','Who elects Congress?','When is Independence Day?',
+  'Where is the White House?','Why do people come to America?','How many states do we have?','What country is north of the United States?',
+  'Who lives in the White House?','What is the largest state?','Name one right in the Bill of Rights.','When is Memorial Day?',
+  'When is Flag Day?','When is Labor Day?','When is Columbus Day?','When is Thanksgiving?','When is Presidents\' Day?',
+  'Who is the Father of Our Country?','What do we pay to the government?','Who can vote?','What colors are on the American flag?',
+  'Who was Abraham Lincoln?','Who was George Washington?','Where does Congress meet?','What is one right of a citizen?',
+  'When do we vote for President?','Who is on the dollar bill?','How many Senators do we have?','What is the second largest state?',
+  'Who lived here first?','What city is the capital of the United States?','Who elects the President?','Where do people vote?',
+  'What state has the most people?','What does the President do?'
+].map(function(t, i){ return {id:'r'+(i+1), text:t}; });
+var ENGLISH_WRITING = [
+  'Washington is the Father of Our Country.','Lincoln was the President during the Civil War.','The White House is in Washington, D.C.',
+  'Citizens can vote.','Congress meets in Washington, D.C.','Independence Day is in July.','Columbus Day is in October.',
+  'Thanksgiving is in November.','Memorial Day is in May.','Flag Day is in June.','Labor Day is in September.','Presidents\' Day is in February.',
+  'The flag is red, white, and blue.','Alaska is the largest state.','Delaware was the first state.','Canada is north of the United States.',
+  'Mexico is south of the United States.','New York City was the first capital.','We have fifty states.','People want to be free.',
+  'Citizens have the right to vote.','We pay taxes.','Adams was the second President.','Washington was the first President.',
+  'The President lives in the White House.','American Indians lived here first.','Freedom of speech is a right.','California has the most people.',
+  'We elect Senators.','Citizens elect Congress.','Washington is on the dollar bill.','The capital of the United States is Washington, D.C.',
+  'We have one hundred Senators.','People come to the United States to be free.','Lincoln lived in the White House.','The United States has fifty states.'
+].map(function(t, i){ return {id:'w'+(i+1), text:t}; });
+
+var englishState = null;
+function englishProgress(){
+  if(!user.progress.english) user.progress.english = {read:{}, write:{}, lastDone:null, sessions:0};
+  return user.progress.english;
+}
+function englishPassedCounts(){
+  var e = englishProgress();
+  var r = ENGLISH_READING.filter(function(x){ return e.read[x.id] && e.read[x.id].ok; }).length;
+  var w = ENGLISH_WRITING.filter(function(x){ return e.write[x.id] && e.write[x.id].ok; }).length;
+  return {read:r, write:w, total: ENGLISH_READING.length + ENGLISH_WRITING.length, passed: r + w};
+}
+// Pick 3 + 3: not-yet-passed first, then least recently seen.
+function pickEnglishItems(){
+  var e = englishProgress();
+  function pick(bank, rec){
+    var arr = shuffleArr(bank.slice());
+    arr.sort(function(a, b){
+      var ra = rec[a.id] || {}, rb = rec[b.id] || {};
+      var ka = (ra.ok ? 2 : 0) + (ra.last ? 1 : 0), kb = (rb.ok ? 2 : 0) + (rb.last ? 1 : 0);
+      return ka - kb;
+    });
+    return arr.slice(0, 3);
+  }
+  var items = pick(ENGLISH_READING, e.read).map(function(x){ return {kind:'read', id:x.id, text:x.text}; })
+    .concat(pick(ENGLISH_WRITING, e.write).map(function(x){ return {kind:'write', id:x.id, text:x.text}; }));
+  return items;
+}
+function startEnglishDrill(){
+  englishState = {items: pickEnglishItems(), idx: 0, results: [], phase: 'item', revealed: false};
+  go('english');
+  renderEnglish();
+}
+function exitEnglishDrill(){
+  stopOfficerSpeaking();
+  englishState = null;
+  go('home');
+}
+function englishSpeak(text, slow){
+  stopOfficerSpeaking();
+  speakOfficerLegacy(text, {rate: slow ? 0.8 : 0.92});
+}
+// Writing is graded the way an officer would: meaning must be clear. Case and
+// punctuation never count; one small misspelling is fine; a missing or wrong
+// content word is not.
+function normalizeEnglishWriting(t){
+  return String(t || '').toLowerCase()
+    .replace(/d\.c\./g, 'dc').replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\b50\b/g, 'fifty').replace(/\b100\b/g, 'one hundred')
+    .replace(/\s+/g, ' ').trim();
+}
+function gradeEnglishWriting(typed, expected){
+  var a = normalizeEnglishWriting(typed).split(' ').filter(Boolean);
+  var b = normalizeEnglishWriting(expected).split(' ').filter(Boolean);
+  if(a.join(' ') === b.join(' ')) return {ok:true, minor:false};
+  if(a.length !== b.length) return {ok:false, minor:false};
+  var slips = 0;
+  for(var i=0;i<b.length;i++){
+    if(a[i] === b[i]) continue;
+    if(levenshteinIntv(a[i], b[i]) <= 2 && b[i].length >= 4) slips++;
+    else return {ok:false, minor:false};
+  }
+  return {ok: slips <= 1, minor: slips === 1};
+}
+function englishAnswer(ok, detail){
+  if(!englishState) return;
+  var it = englishState.items[englishState.idx];
+  var e = englishProgress();
+  var rec = (it.kind === 'read' ? e.read : e.write);
+  var prev = rec[it.id] || {ok:false, n:0, last:null};
+  rec[it.id] = {ok: !!ok || (prev.ok && it.kind === 'read'), n: (prev.n||0) + 1, last: todayISO()};
+  englishState.results.push({kind: it.kind, text: it.text, ok: !!ok, detail: detail || null});
+  englishState.phase = 'feedback';
+  saveUser();
+  renderEnglish();
+}
+function englishNext(){
+  if(!englishState) return;
+  stopOfficerSpeaking();
+  if(englishState.idx >= englishState.items.length - 1){ return finishEnglishDrill(); }
+  englishState.idx++;
+  englishState.phase = 'item';
+  englishState.revealed = false;
+  renderEnglish();
+}
+function englishCheckWriting(){
+  if(!englishState) return;
+  var inp = document.getElementById('engInput');
+  var typed = inp ? inp.value : '';
+  if(!typed.trim()){ toast(lang==='es' ? 'Escribe lo que oíste' : 'Write what you heard'); return; }
+  var it = englishState.items[englishState.idx];
+  var g = gradeEnglishWriting(typed, it.text);
+  englishAnswer(g.ok, {typed: typed, minor: g.minor});
+}
+function finishEnglishDrill(){
+  var e = englishProgress();
+  var first = e.lastDone !== todayISO();
+  e.lastDone = todayISO(); e.sessions = (e.sessions || 0) + 1;
+  addXP(first ? 6 : 2);
+  markActiveToday();
+  saveUser();
+  sfxComplete();
+  englishState.phase = 'done';
+  renderEnglish();
+  try { renderAll(); } catch(err){}
+}
+function renderEnglish(){
+  if(!englishState) return;
+  var it = englishState.items[englishState.idx];
+  var counter = document.getElementById('engCounter');
+  var fill = document.getElementById('engProgressFill');
+  var wrap = document.getElementById('engQwrap');
+  var foot = document.getElementById('engFooter');
+  if(!wrap) return;
+  var n = englishState.items.length;
+  if(counter) counter.textContent = (englishState.phase === 'done' ? (lang==='es'?'Resultados':'Results') : (englishState.idx+1) + ' / ' + n);
+  if(fill) fill.style.width = (englishState.phase === 'done' ? 100 : (englishState.idx / n * 100)) + '%';
+  var html = '', footHtml = '';
+  if(englishState.phase === 'done'){
+    var r = englishState.results, okN = r.filter(function(x){ return x.ok; }).length;
+    var pc = englishPassedCounts();
+    html = '<div class="completePanel">'
+      + '<div class="completeCami">'+camiSVG(okN >= 4 ? 'celebrate' : 'happy')+'</div>'
+      + '<div class="completeTitle">'+(okN === n ? (lang==='es'?'¡Perfecto!':'Perfect!') : (lang==='es'?'Lectura y escritura':'Reading & writing'))+'</div>'
+      + '<div class="completeName">'+okN+' / '+n+' '+(lang==='es'?'correctas':'correct')+'</div>'
+      + '<div class="engResultList">'
+      + r.map(function(x){ return '<div class="engResultRow'+(x.ok?' engOk':' engMiss')+'"><span class="engResultIco">'+iconSVG(x.ok?'check':'x', x.ok?'#00b4a8':'#ff4d3a', 14)+'</span><span class="engResultKind">'+(x.kind==='read' ? (lang==='es'?'Lectura':'Reading') : (lang==='es'?'Escritura':'Writing'))+'</span><span class="engResultTxt">'+esc(x.text)+'</span></div>'; }).join('')
+      + '</div>'
+      + '<div class="visaSuggNote">'+(lang==='es'
+          ? 'Dominadas: '+pc.passed+' de '+pc.total+' oraciones. En la entrevista lees una de tres y escribes una de tres; el oficial acepta pequeños errores de ortografía si el significado está claro.'
+          : 'Mastered: '+pc.passed+' of '+pc.total+' sentences. At the interview you read one of three and write one of three; the officer accepts small spelling slips if the meaning is clear.')+'</div>'
+      + '<button class="cta completeNext" onclick="startEnglishDrill()">'+inlineIcon('refresh','#fff',16)+(lang==='es'?'Otra ronda':'Another round')+'</button>'
+      + '<button class="completeExit" onclick="exitEnglishDrill()">'+(lang==='es'?'Volver a Hoy':'Back to Today')+'</button>'
+      + '</div>';
+  } else if(it.kind === 'read'){
+    var fb = englishState.phase === 'feedback' ? englishState.results[englishState.results.length-1] : null;
+    html = '<div class="engCard">'
+      + '<div class="engKick">'+(lang==='es'?'LECTURA':'READING')+' · '+(lang==='es'?'lee en voz alta':'read it out loud')+'</div>'
+      + '<div class="engSentence">'+esc(it.text)+'</div>'
+      + '<div class="engHelp">'+(lang==='es'?'En la entrevista el oficial te muestra una oración y la lees en inglés. Léela entera, sin pausas largas. Luego califícate con honestidad.':'At the interview the officer shows you a sentence and you read it in English. Read the whole thing without long pauses, then rate yourself honestly.')+'</div>'
+      + '<button type="button" class="engHear" onclick="englishSpeak('+JSON.stringify(it.text).replace(/"/g,'&quot;')+', false)">'+iconSVG('speaker','#1cb0f6',16)+' '+(lang==='es'?'Escuchar cómo suena':'Hear how it sounds')+'</button>'
+      + (fb ? '<div class="engFeedback '+(fb.ok?'engOk':'engMiss')+'">'+(fb.ok ? (lang==='es'?'Marcada como leída con claridad.':'Marked as read clearly.') : (lang==='es'?'Sin problema. Vuelve a aparecer hasta que salga bien.':'No problem. It comes back until it is smooth.'))+'</div>' : '')
+      + '</div>';
+    footHtml = fb
+      ? '<button class="cta" onclick="englishNext()">'+(lang==='es'?'Siguiente':'Next')+' →</button>'
+      : '<div class="engRateRow"><button class="engRateBtn engRateMiss" onclick="englishAnswer(false)">'+(lang==='es'?'Me trabé':'I stumbled')+'</button><button class="engRateBtn engRateOk" onclick="englishAnswer(true)">'+(lang==='es'?'La leí con claridad':'I read it clearly')+'</button></div>';
+  } else {
+    var fb2 = englishState.phase === 'feedback' ? englishState.results[englishState.results.length-1] : null;
+    html = '<div class="engCard">'
+      + '<div class="engKick">'+(lang==='es'?'ESCRITURA':'WRITING')+' · '+(lang==='es'?'escribe lo que oyes':'write what you hear')+'</div>'
+      + (fb2
+          ? '<div class="engSentence">'+esc(it.text)+'</div>'
+            + '<div class="engTyped">'+(lang==='es'?'Escribiste: ':'You wrote: ')+'<em>'+esc(fb2.detail && fb2.detail.typed || '')+'</em></div>'
+            + '<div class="engFeedback '+(fb2.ok?'engOk':'engMiss')+'">'+(fb2.ok ? (fb2.detail && fb2.detail.minor ? (lang==='es'?'Correcta. Un pequeño error de ortografía; el oficial lo aceptaría.':'Correct. One small spelling slip; an officer would accept it.') : (lang==='es'?'Correcta.':'Correct.')) : (lang==='es'?'Falta o cambia una palabra importante. Compárala con la oración.':'A key word is missing or wrong. Compare it with the sentence.'))+'</div>'
+          : '<div class="engDictate">'
+            + '<button type="button" class="engPlay" onclick="englishSpeak('+JSON.stringify(it.text).replace(/"/g,'&quot;')+', false)">'+iconSVG('speaker','#fff',22)+'</button>'
+            + '<div class="engPlayLbl">'+(lang==='es'?'Toca para oír la oración · toca de nuevo para repetirla':'Tap to hear the sentence · tap again to repeat')+'</div>'
+            + '<button type="button" class="engSlow" onclick="englishSpeak('+JSON.stringify(it.text).replace(/"/g,'&quot;')+', true)">'+(lang==='es'?'Más despacio':'Slower')+'</button>'
+            + '</div>'
+            + '<input type="text" id="engInput" class="intvFallbackInput engInput" placeholder="'+(lang==='es'?'Escribe la oración en inglés…':'Write the sentence in English…')+'" autocomplete="off" autocapitalize="sentences" onkeydown="if(event.key===\'Enter\'){event.preventDefault();englishCheckWriting();}" />'
+            + '<div class="engHelp">'+(lang==='es'?'Mayúsculas y puntuación no cuentan. Importa que cada palabra esté.':'Capitals and punctuation do not count. Every word does.')+'</div>')
+      + '</div>';
+    footHtml = fb2
+      ? '<button class="cta" onclick="englishNext()">'+(lang==='es'?'Siguiente':'Next')+' →</button>'
+      : '<button class="cta" onclick="englishCheckWriting()">'+(lang==='es'?'Revisar':'Check')+'</button>';
+  }
+  wrap.innerHTML = html;
+  if(foot) foot.innerHTML = footHtml;
+  if(englishState.phase === 'item' && it && it.kind === 'write'){
+    setTimeout(function(){ englishSpeak(it.text, false); }, 350);
+  }
+}
+
+function renderHomeEnglishCard(){
+  var el = document.getElementById('homeEnglishCard');
+  if(!el) return;
+  var pc = englishPassedCounts();
+  var e = englishProgress();
+  var doneToday = e.lastDone === todayISO();
+  el.innerHTML = homeCardHtml({icon:'pencil', color:'#ff9b21',
+    kicker: lang==='es' ? 'Examen de inglés' : 'English test',
+    title: doneToday ? (lang==='es' ? 'Lectura y escritura · hecho hoy' : 'Reading & writing · done today') : (lang==='es' ? 'Lee 3, escribe 3' : 'Read 3, write 3'),
+    sub: lang==='es' ? 'Oraciones del vocabulario oficial de USCIS. Las otras dos partes del examen.' : 'Sentences from the official USCIS vocabulary. The other two parts of the test.',
+    progress: pc.total ? Math.round(pc.passed / pc.total * 100) : 0,
+    meta: pc.passed + ' / ' + pc.total + (lang==='es' ? ' dominadas' : ' mastered'),
+    go: doneToday ? (lang==='es' ? 'Otra ronda' : 'Another round') : (lang==='es' ? 'Empezar' : 'Start')});
+}
+
 function renderAll(){
   try { checkBadges(false); } catch(e){}
+  renderHomeCountdown();
+  renderHomeEnglishCard();
   renderHomeStrip();
   renderHomeNext();
   renderJourney();
@@ -12185,7 +12542,7 @@ function go(id){
     }
   }
   var tabbar = document.querySelector('.tabbar');
-  if(tabbar) tabbar.classList.toggle('hidden', id === 'onboarding' || id === 'eligibility' || id === 'mockTest' || id === 'n400' || id === 'n400Form' || id === 'docDetail' || id === 'editField' || id === 'interview' || id === 'flashcards' || id === 'lesson' || id === 'upgrade' || id === 'trialOffer' || id === 'eligWiz');
+  if(tabbar) tabbar.classList.toggle('hidden', id === 'onboarding' || id === 'eligibility' || id === 'mockTest' || id === 'n400' || id === 'n400Form' || id === 'docDetail' || id === 'editField' || id === 'interview' || id === 'flashcards' || id === 'lesson' || id === 'upgrade' || id === 'trialOffer' || id === 'eligWiz' || id === 'english');
   if(id === 'home') renderAll();  // streak/XP/ready chips + cards must reflect activity from other views
   if(id === 'n400Form') renderN400FormView();
   if(id === 'docs') renderDocs(); // legacy direct call, still supported
@@ -13760,6 +14117,7 @@ function completeLesson(){
     syncMasteredCount();
     markActiveToday();
     earnHeart();
+    p.lastCivicsDate = todayISO();
     saveUser();
     var earned = lessonState.correct;
     var totalR = lessonState.qIds.length;
@@ -13782,6 +14140,7 @@ function completeLesson(){
   addXP(15);
   syncMasteredCount();
   markActiveToday();
+  p.lastCivicsDate = todayISO();
   saveUser();
   // Don't clear lessonState yet. Celebration screen reads it
   var l = findLesson(lid);
@@ -14899,7 +15258,23 @@ function renderHomeStats(){
   var sN = document.getElementById('streakN');
   if(sN) sN.textContent = user.progress.streak;
   var xN = document.getElementById('xpN');
-  if(xN) xN.textContent = user.progress.xp;
+  var xpTile = (xN && typeof xN.closest === 'function') ? xN.closest('.streakCard') : null;
+  if(xN){
+    if(isOnGCPath()){
+      var f = citizenshipFocus();
+      var days = (f.kind === 'interview' || f.kind === 'window') ? f.days : null;
+      xN.textContent = days === null ? '–' : String(days);
+      var lbl = xpTile ? xpTile.querySelector('.lbl') : null;
+      if(lbl){
+        var en = f.kind === 'interview' ? 'Days to interview' : f.kind === 'window' ? 'Days to filing' : f.kind === 'filed' ? 'Interview pending' : 'Next milestone';
+        var es = f.kind === 'interview' ? 'Días a la entrevista' : f.kind === 'window' ? 'Días para presentar' : f.kind === 'filed' ? 'Entrevista pendiente' : 'Próximo hito';
+        lbl.textContent = lang==='es' ? es : en; lbl.setAttribute('data-en', en); lbl.setAttribute('data-es', es);
+      }
+      var xpIco0 = document.getElementById('xpIco'); if(xpIco0){ xpIco0.innerHTML = iconSVG('calendar', '#ffc83d', 20); xpIco0.dataset.set = '1'; }
+    } else {
+      xN.textContent = user.progress.xp;
+    }
+  }
   var rN = document.getElementById('readyN');
   if(rN){
     rN.textContent = readinessPct() + '%';
@@ -14931,6 +15306,7 @@ var ME_FIELDS = {
   achievements:     {label:{en:'O-1 / EB-1 evidence',  es:'Evidencia O-1 / EB-1'},    type:'achievements'},
   familyTies:       {label:{en:'Family with U.S. status', es:'Familia con estatus en EE.UU.'}, type:'familyTies'},
   situations:       {label:{en:'Special situations',   es:'Situaciones especiales'},  type:'situations'},
+  interviewDate:    {label:{en:'USCIS interview date', es:'Fecha de la entrevista USCIS'}, type:'date'},
   state:            {label:{en:'Your state',           es:'Tu estado'},               type:'state'},
   officialSenators: {label:{en:'Your U.S. senators',   es:'Tus senadores'},           type:'text'},
   officialRep:      {label:{en:'Your U.S. representative', es:'Tu representante'},    type:'text'},
@@ -14977,6 +15353,7 @@ function saveEditField(){
   }
   user[key] = v;
   if(key === 'marriedToCitizen' && !v){ user.marriageDate = null; }
+  if(key === 'interviewDate') onInterviewDateChanged();
   saveUser();
   applyHeroName();
   closeEditField();
@@ -15012,7 +15389,8 @@ function renderEditField(){
       + (ph ? '<div class="visaSuggNote">'+(lang==='es'?'Búscalo en usa.gov/elected-officials. Lo que guardes aquí es la respuesta que el simulador espera.':'Look it up at usa.gov/elected-officials. What you save here is the answer the interview expects.')+'</div>' : '');
     showFooter = true;
   } else if(field.type === 'date'){
-    html = '<div class="onbBig"><input class="onbDateBig" type="date" id="editFieldDate" value="'+(current || '2020-01-01')+'" /></div>';
+    html = '<div class="onbBig"><input class="onbDateBig" type="date" id="editFieldDate" value="'+(current || (key === 'interviewDate' ? isoDaysAgo(-30) : '2020-01-01'))+'" /></div>'
+      + (key === 'interviewDate' ? '<div class="visaSuggNote">'+(lang==='es'?'La fecha está en tu aviso I-797C de entrevista. Camino organiza tu plan diario alrededor de ella y te recuerda 7 días y 1 día antes.':'The date is on your I-797C interview notice. Camino builds your daily plan around it and reminds you 7 days and 1 day before.')+'</div>' : '');
     showFooter = true;
   } else if(field.type === 'yesno'){
     html = '<div class="onbCards">'
@@ -15215,6 +15593,7 @@ function renderMe(){
     html += '<div class="row" onclick="openEditField(\'situations\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Situaciones especiales':'Special situations')+'</div><div class="rSub">'+(sitN ? sitN+' '+(lang==='es'?'marcada(s)':'checked') : (lang==='es'?'Ninguna':'None'))+'</div></div><div class="chev">›</div></div>';
   }
   html += '<div class="row" onclick="openEditField(\'petitionType\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Vía de patrocinio':'Sponsorship path')+'</div><div class="rSub">'+(user.petitionType ? petitionLabel(user.petitionType, lang) : '–')+'</div></div><div class="chev">›</div></div>';
+  if(isOnGCPath()) html += '<div class="row" onclick="openEditField(\'interviewDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Fecha de la entrevista USCIS':'USCIS interview date')+'</div><div class="rSub">'+(user.interviewDate ? fmtDate(user.interviewDate, lang) : (lang==='es'?'Aún sin fecha · toca cuando llegue el aviso':'No date yet · tap when the notice arrives'))+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'greenCardDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Fecha de residencia':'Green card date')+'</div><div class="rSub">'+(user.greenCardDate ? fmtDate(user.greenCardDate, lang) : '–')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'marriedToCitizen\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Casado/a con ciudadano':'Married to citizen')+'</div><div class="rSub">'+(user.marriedToCitizen ? (lang==='es'?'Sí · regla de 3 años':'Yes · 3-year rule') : (lang==='es'?'No · regla de 5 años':'No · 5-year rule'))+'</div></div><div class="chev">›</div></div>';
   if(user.marriedToCitizen) html += '<div class="row" onclick="openEditField(\'marriageDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Casado/a desde':'Married since')+'</div><div class="rSub">'+(user.marriageDate ? fmtDate(user.marriageDate, lang) : '–')+'</div></div><div class="chev">›</div></div>';
@@ -15467,6 +15846,17 @@ var Reminders = {
     var self = this; var old = user.reminderIds || [];
     this._cancel(old).then(function(){
       var list = []; var ids = []; var n = 0;
+      // Interview: a week out and the day before.
+      if(user.interviewDate){
+        [7, 1].forEach(function(days){
+          var at = self._at(user.interviewDate, 9, 0); at.setDate(at.getDate() - days);
+          if(at.getTime() < Date.now()) return;
+          var id = self.IDS.dateBase + (n++);
+          ids.push(id);
+          list.push({ id: id, title: 'Camino', body: (lang==='es' ? 'Tu entrevista USCIS es en '+days+(days===1?' día':' días')+'. Repasa cívica, lectura y escritura hoy.' : 'Your USCIS interview is in '+days+(days===1?' day':' days')+'. Review civics, reading and writing today.'),
+            schedule: { at: at, allowWhileIdle: true }, sound: null });
+        });
+      }
       var entries = user.expirationDates || {};
       Object.keys(entries).forEach(function(key){
         var e = entries[key]; if(!e || !e.date) return;
@@ -15970,6 +16360,8 @@ function toast(msg, icon){
       user.progress.lastStreak = stored.progress.lastStreak || 0;
       user.progress.streakLostAt = stored.progress.streakLostAt || null;
       user.progress.frozenDates = stored.progress.frozenDates || [];
+      user.progress.english = stored.progress.english || {read:{}, write:{}, lastDone:null, sessions:0};
+      user.progress.lastCivicsDate = stored.progress.lastCivicsDate || null;
     }
     user.documents = stored.documents || {};
     user.eligibility = stored.eligibility || null;
@@ -15991,6 +16383,7 @@ function toast(msg, icon){
     user.intvHandsFree = !!stored.intvHandsFree;
     user.pendingTrialOffer = !!stored.pendingTrialOffer;
     user.hearts = stored.hearts || null;
+    user.interviewDate = stored.interviewDate || null;
     user.badges = stored.badges || null;
     user.reminderIds = Array.isArray(stored.reminderIds) ? stored.reminderIds : [];
     user.planLapsedAt = stored.planLapsedAt || null;

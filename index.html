@@ -90,6 +90,7 @@
         <div class="pad">
           <div class="undoBanner" id="undoBanner" style="display:none;"></div>
           <div class="streakBanner" id="homeStreakRisk" style="display:none;"></div>
+          <div id="homeCountdown" style="display:none;"></div>
           <div class="sec" data-en="Where you are" data-es="Dónde estás" data-zh="你所在的位置" data-vi="Bạn đang ở đâu">Where you are</div>
           <div class="jstrip" id="homeJStrip" onclick="go('journey')"></div>
           <div class="situationCard" id="homeSituationCard" style="display:none;"></div>
@@ -97,7 +98,7 @@
           <div class="sec" data-en="Your next step" data-es="Tu próximo paso" data-zh="你的下一步" data-vi="Bước tiếp theo">Your next step</div>
           <div class="next" id="homeNext"></div>
 
-          <div class="sec" data-en="5 minutes while you wait" data-es="5 minutos mientras esperas" data-zh="等待时的5分钟学习" data-vi="5 phút trong khi chờ">5 minutes while you wait</div>
+          <div class="sec" data-en="Today's practice" data-es="Práctica de hoy" data-zh="今日练习" data-vi="Luyện tập hôm nay">Today's practice</div>
           <div class="lesson" id="homeLessonCard" onclick="startCurrentLesson()"></div>
 
           <div class="sec" data-en="Test yourself" data-es="Pruébate" data-zh="自我测试" data-vi="Tự kiểm tra">Test yourself</div>
@@ -106,6 +107,8 @@
           <div class="flashcardCard" id="homeFlashcardCard" onclick="startFlashcards()"></div>
 
           <div class="interviewCard" id="homeInterviewCard" onclick="startInterview()"></div>
+
+          <div class="englishCard" id="homeEnglishCard" onclick="startEnglishDrill()"></div>
 
           <div class="reviewCard" id="homeReviewCard" onclick="startReviewSession()" style="display:none;"></div>
 
@@ -293,6 +296,21 @@
         <div class="qwrap" id="mtQwrap"></div>
       </div>
       <div class="checkbar"><button class="checkbtn dim" id="mtNext">Next</button></div>
+    </div>
+
+    <!-- ===== ENGLISH TEST: reading + writing ===== -->
+    <div class="view" id="english">
+      <div class="status"><span>9:41</span></div>
+      <div class="mtHead">
+        <button class="mtClose" onclick="exitEnglishDrill()" type="button" aria-label="Exit English practice">✕</button>
+        <div class="mtMode" data-en="ENGLISH TEST" data-es="EXAMEN DE INGLÉS">ENGLISH TEST</div>
+        <div class="mtCounter" id="engCounter">1 / 6</div>
+      </div>
+      <div class="mtProgress"><div class="mtProgressFill" id="engProgressFill"></div></div>
+      <div class="body" style="padding-top:118px;padding-bottom:140px;">
+        <div class="qwrap" id="engQwrap"></div>
+      </div>
+      <div class="checkbar engFooter" id="engFooter"></div>
     </div>
 
     <!-- ===== N-400 WALKTHROUGH ===== -->

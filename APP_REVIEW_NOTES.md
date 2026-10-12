@@ -61,8 +61,12 @@ No login or credentials are needed. Nothing needs to be downloaded or imported.
   work. The final screen lists immigration paths the profile may qualify for
   (for example a family petition, TN, O-1, E-2, or TPS); this is educational
   guidance only and is labeled as such.
-- **Today** tab: streak, "civics readiness," and today's lesson. Tap the lesson
-  card to play a civics lesson.
+- **Today** tab: for permanent residents, a countdown to the N-400 filing window
+  or the USCIS interview (set the date under Me) with a readiness ring and
+  today's plan: civics, English reading and writing, flashcards, and a weekly
+  interview rehearsal. Tap the lesson card to play a civics lesson; tap
+  "Read 3, write 3" for the English drill (the app reads sentences aloud with the
+  device voice and you type what you hear).
 - **Journey** tab: the stage map for the selected path; tap any stage for the
   plain-English guide and the USCIS forms involved.
 - **Learn** tab: the full civics path, flashcards, and mock tests (free plan:

@@ -37,6 +37,8 @@ DAILY CIVICS PREP
 • Study the 2025 USCIS civics questions in bite-size lessons
 • Build a streak, earn XP, and see how "civics ready" you are
 • Flashcards and mock tests to lock it in
+• Reading and writing practice built from the official USCIS vocabulary, the other two parts of the test
+• A countdown to your filing window or interview date, with a daily plan sized to it
 
 KNOW YOUR PATH
 • A stage-by-stage map from where you are today to the oath
