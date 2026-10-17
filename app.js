@@ -4987,10 +4987,12 @@ function camiSuggestions(){
 
 // ===== CAMINO PLUS (SUBSCRIPTION) =====
 var PLUS_PRICING = {
-  // $7.99/mo lands below the $15.99 market median while above Citizen Now's $3.99.
-  // Annual $49.99 ≈ $4.17/mo, ~48% off monthly. Strong anchor without race-to-bottom feel.
-  monthly:{price:7.99,  period:{en:'month',es:'mes'}, code:'monthly'},
-  annual: {price:49.99, period:{en:'year', es:'año'}, code:'annual', monthlyEquiv:4.17, savePct:48}
+  // $2.99/mo: below Citizen Now's $3.99 and far below the $15.99 market median, so
+  // price is never the reason someone skips prep. Partner (B2B) revenue carries the rest.
+  // Annual $19.99 ≈ $1.67/mo, ~44% off monthly. The real prices come from App Store
+  // Connect on iOS; these are the fallback when StoreKit hasn't answered (and the web).
+  monthly:{price:2.99,  period:{en:'month',es:'mes'}, code:'monthly'},
+  annual: {price:19.99, period:{en:'year', es:'año'}, code:'annual', monthlyEquiv:1.67, savePct:44}
 };
 
 // ===== STORE / IN-APP PURCHASES ============================================
@@ -5087,14 +5089,14 @@ var Store = {
     if(!this.isNative() || this.trialAvailable(planCode)) return null;
     if(!this._offerings) return {code:'loading', en:'Checking App Store prices…', es:'Consultando precios de App Store…'};
     var pkg = this._packageFor(planCode);
-    if(!pkg || !pkg.product) return {code:'no-package', en:'This plan is not in the current RevenueCat offering, so the App Store price is shown.', es:'Este plan no está en la oferta actual de RevenueCat, así que se muestra el precio de App Store.'};
+    if(!pkg || !pkg.product) return {code:'no-package', en:'The free trial isn\'t available for this plan right now. The App Store sheet shows the real price.', es:'La prueba gratis no está disponible para este plan ahora. La hoja de App Store muestra el precio real.'};
     var ip = pkg.product.introPrice;
-    if(!ip) return {code:'no-intro', en:'No free trial is attached to this subscription in App Store Connect. You will be charged the full price.', es:'Esta suscripción no tiene prueba gratis configurada en App Store Connect. Se cobrará el precio completo.'};
+    if(!ip) return {code:'no-intro', en:'This plan doesn\'t include a free trial right now. You\'ll be charged the price shown.', es:'Este plan no incluye prueba gratis ahora. Se cobrará el precio indicado.'};
     if(ip.price !== 0) return {code:'paid-intro', en:'This subscription has an introductory price, not a free trial.', es:'Esta suscripción tiene un precio introductorio, no una prueba gratis.'};
     var e = this._introElig ? this._introElig[STORE_CONFIG.products[planCode]] : null;
     if(!e) return {code:'check-failed', en:'Apple could not confirm trial eligibility. The App Store sheet shows the real price.', es:'Apple no pudo confirmar la elegibilidad. La hoja de App Store muestra el precio real.'};
-    if(e.status === 1) return {code:'used', en:'This Apple ID has already used its free trial, so the full price applies. (Sandbox testers: Settings › App Store › Sandbox Account › Manage › Reset Eligibility.)', es:'Este Apple ID ya usó su prueba gratis, así que aplica el precio completo. (Cuentas sandbox: Ajustes › App Store › Cuenta Sandbox › Gestionar › Restablecer elegibilidad.)'};
-    if(e.status === 3) return {code:'no-intro', en:'No free trial is attached to this subscription in App Store Connect. You will be charged the full price.', es:'Esta suscripción no tiene prueba gratis configurada en App Store Connect. Se cobrará el precio completo.'};
+    if(e.status === 1) return {code:'used', en:'This Apple ID has already used its free trial, so the full price applies.', es:'Este Apple ID ya usó su prueba gratis, así que aplica el precio completo.'};
+    if(e.status === 3) return {code:'no-intro', en:'This plan doesn\'t include a free trial right now. You\'ll be charged the price shown.', es:'Este plan no incluye prueba gratis ahora. Se cobrará el precio indicado.'};
     return {code:'unknown', en:'Apple could not confirm trial eligibility on this device. The App Store sheet shows the real price.', es:'Apple no pudo confirmar la elegibilidad en este dispositivo. La hoja de App Store muestra el precio real.'};
   },
 
@@ -5142,18 +5144,33 @@ var Store = {
   entitled: function(){ return this.isNative() ? this._entitled : null; },
 
   // Localized price string; falls back to hardcoded PLUS_PRICING off-device.
-  priceString: function(planCode){
-    var fallback = '$' + PLUS_PRICING[planCode].price.toFixed(2);
-    if(!this.isNative() || !this._offerings) return fallback;
+  // The StoreKit product for a plan, once RevenueCat has loaded offerings (native only).
+  _product: function(planCode){
+    if(!this.isNative() || !this._offerings) return null;
     try {
       var want = STORE_CONFIG.products[planCode];
       var pkgs = this._offerings.availablePackages || [];
       for(var i=0;i<pkgs.length;i++){
         var p = pkgs[i].product;
-        if(p && p.identifier === want && p.priceString) return p.priceString;
+        if(p && p.identifier === want) return p;
       }
     } catch(e){}
-    return fallback;
+    return null;
+  },
+  priceString: function(planCode){
+    var p = this._product(planCode);
+    return (p && p.priceString) || ('$' + PLUS_PRICING[planCode].price.toFixed(2));
+  },
+  // "Save N%" and the per-month figure follow the live App Store prices, so the
+  // badges stay right whatever prices are set in App Store Connect.
+  savePct: function(){
+    var m = this._product('monthly'), a = this._product('annual');
+    var mp = (m && m.price) || PLUS_PRICING.monthly.price, ap = (a && a.price) || PLUS_PRICING.annual.price;
+    return Math.max(0, Math.round((1 - ap / (mp * 12)) * 100));
+  },
+  annualPerMonth: function(){
+    var a = this._product('annual');
+    return (a && a.pricePerMonthString) || ('$' + PLUS_PRICING.annual.monthlyEquiv.toFixed(2));
   },
 
   _packageFor: function(planCode){
@@ -6452,8 +6469,8 @@ var FAQ_ENTRIES = [
   },
   {
     q:{en:'How much does Camino Plus cost?', es:'¿Cuánto cuesta Camino Plus?'},
-    a:{en:'$7.99/month or $49.99/year (saves ~48% vs. monthly) in the U.S.; your App Store shows the price in your currency. New subscribers get a 7-day free trial. Cancel anytime.',
-       es:'$7.99/mes o $49.99/año (~48% de descuento vs. mensual) en EE. UU.; tu App Store muestra el precio en tu moneda. Los nuevos suscriptores tienen 7 días de prueba gratis. Cancela cuando quieras.'}
+    a:{en:'$2.99/month or $19.99/year (saves ~44% vs. monthly) in the U.S.; your App Store shows the price in your currency. New subscribers get a 7-day free trial. Cancel anytime.',
+       es:'$2.99/mes o $19.99/año (~44% de descuento vs. mensual) en EE. UU.; tu App Store muestra el precio en tu moneda. Los nuevos suscriptores tienen 7 días de prueba gratis. Cancela cuando quieras.'}
   }
 ];
 
@@ -6567,10 +6584,10 @@ function renderTrialOffer(){
   var pricingHtml = ''
     + '<div class="trialPlanSwitch">'
     +   '<button class="trialPlanBtn'+(trialOfferSelectedPlan==='annual'?' trialPlanSel':'')+'" onclick="trialOfferSelectPlan(\'annual\')">'
-    +     '<span class="trialPlanTag">'+(lang==='es'?'AHORRA 48%':'SAVE 48%')+'</span>'
+    +     '<span class="trialPlanTag">'+(lang==='es'?'AHORRA ':'SAVE ')+Store.savePct()+'%'+'</span>'
     +     '<div class="trialPlanLbl">'+(lang==='es'?'Anual':'Annual')+'</div>'
     +     '<div class="trialPlanPrice">'+Store.priceString('annual')+'<span class="trialPlanPer">/'+PLUS_PRICING.annual.period[lang]+'</span></div>'
-    +     '<div class="trialPlanEquiv">~$'+PLUS_PRICING.annual.monthlyEquiv.toFixed(2)+' / '+(lang==='es'?'mes':'mo')+'</div>'
+    +     '<div class="trialPlanEquiv">~'+Store.annualPerMonth()+' / '+(lang==='es'?'mes':'mo')+'</div>'
     +   '</button>'
     +   '<button class="trialPlanBtn'+(trialOfferSelectedPlan==='monthly'?' trialPlanSel':'')+'" onclick="trialOfferSelectPlan(\'monthly\')">'
     +     '<div class="trialPlanLbl">'+(lang==='es'?'Mensual':'Monthly')+'</div>'
@@ -6797,7 +6814,7 @@ function showTermsModal(){
   modal.className = 'disclaimerOverlay';
   var text = lang==='es'
     ? [
-        'Camino Plus es una suscripción auto-renovable: **$7.99/mes** o **$49.99/año**, con 7 días de prueba gratis para nuevos suscriptores.',
+        'Camino Plus es una suscripción auto-renovable: **$2.99/mes** o **$19.99/año**, con 7 días de prueba gratis para nuevos suscriptores.',
         'El pago se carga a tu cuenta de Apple al confirmar la compra. La suscripción se **renueva automáticamente** salvo que la canceles al menos 24 horas antes del fin del periodo.',
         'Administra o cancela en cualquier momento en Ajustes → [tu nombre] → Suscripciones. Los reembolsos los gestiona Apple en reportaproblem.apple.com.',
         'Camino es **software de autoayuda educativo**. No es un bufete, **no da asesoría legal**, no determina elegibilidad, y usarlo **no crea una relación abogado-cliente**. Sus herramientas de documentos solo registran tus propias respuestas, textualmente, bajo tu dirección.',
@@ -6807,7 +6824,7 @@ function showTermsModal(){
         'Preguntas: **cruiz@rumostrategies.com**'
       ]
     : [
-        'Camino Plus is an auto-renewable subscription: **$7.99/month** or **$49.99/year**, with a 7-day free trial for new subscribers.',
+        'Camino Plus is an auto-renewable subscription: **$2.99/month** or **$19.99/year**, with a 7-day free trial for new subscribers.',
         'Payment is charged to your Apple account at purchase confirmation. The subscription **renews automatically** unless cancelled at least 24 hours before the period ends.',
         'Manage or cancel anytime in Settings → [your name] → Subscriptions. Refunds are handled by Apple at reportaproblem.apple.com.',
         'Camino is **educational self-help software**. It is not a law firm, **does not provide legal advice**, does not determine eligibility, and using it **does not create an attorney-client relationship**. Its document tools only record your own answers, verbatim, at your direction.',
@@ -6891,13 +6908,13 @@ function renderUpgrade(){
     +     '<div class="upgPricePer">/ '+PLUS_PRICING.monthly.period[lang]+'</div>'
     +   '</div>'
     +   '<div class="upgPriceCard upgPricePopular'+(upgradeSelected==='annual'?' upgPriceSel':'')+'" onclick="selectUpgradePlan(\'annual\')">'
-    +     '<div class="upgPriceTag">'+(lang==='es'?'AHORRA 48%':'SAVE 48%')+'</div>'
+    +     '<div class="upgPriceTag">'+(lang==='es'?'AHORRA ':'SAVE ')+Store.savePct()+'%'+'</div>'
     +     '<div class="upgPriceLbl">'+(lang==='es'?'Anual':'Annual')+'</div>'
     +     '<div class="upgPriceNum">'+Store.priceString('annual')+'</div>'
     +     '<div class="upgPricePer">/ '+PLUS_PRICING.annual.period[lang]+'</div>'
     // The "~$/mo" equivalent is derived from the USD list price; only show it when we
     // are NOT displaying a localized StoreKit price (App Store 3.1.2: prices must match).
-    +     (Store.isNative() && Store._offerings ? '' : '<div class="upgPriceEquiv">~$'+PLUS_PRICING.annual.monthlyEquiv.toFixed(2)+'/'+(lang==='es'?'mes':'mo')+'</div>')
+    +     (Store.isNative() && Store._offerings ? '' : '<div class="upgPriceEquiv">~'+Store.annualPerMonth()+'/'+(lang==='es'?'mes':'mo')+'</div>')
     +   '</div>'
     + '</div>';
 

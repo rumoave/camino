@@ -36,7 +36,7 @@ Private by design: no account, no sign-up, and your personal information stays o
 DAILY CIVICS PREP
 • Study the 2025 USCIS civics questions in bite-size lessons
 • Build a streak, earn XP, and see how "civics ready" you are
-• Flashcards and mock tests to lock it in
+• Flashcards, plus mock tests for both the 2008 (100-question) and 2025 (128-question) versions
 • Reading and writing practice built from the official USCIS vocabulary, the other two parts of the test
 • A countdown to your filing window or interview date, with a daily plan sized to it
 
@@ -95,8 +95,8 @@ v1 has no accounts and no analytics. Data is on-device. The only external SDK is
 *(Follow RevenueCat's official privacy-label guidance to confirm before submitting.)*
 
 ## In-App Purchases to create (auto-renewable, one Subscription Group "Camino Plus")
-- `camino_plus_annual`: $49.99/year, **7-day free trial** introductory offer
-- `camino_plus_monthly`: $7.99/month, **7-day free trial** introductory offer
+- `camino_plus_annual`: $19.99/year, **7-day free trial** introductory offer
+- `camino_plus_monthly`: $2.99/month, **7-day free trial** introductory offer
 - These IDs must match `STORE_CONFIG.products` in app.js. Each needs a display name, a review screenshot, and a description before it can be submitted.
 
 ---
