@@ -67,6 +67,9 @@ IMPORTANT
 Camino is an educational study and preparation app. It is not a law firm and does not provide legal advice. Immigration outcomes depend on your specific situation. For advice about your case, consult a licensed immigration attorney or a BIA-accredited representative. Camino is not affiliated with USCIS or any government agency.
 
 Your data stays on your device. We don't sell or share your personal information.
+
+Terms of Use: https://rumoave.github.io/camino/terms.html
+Privacy Policy: https://rumoave.github.io/camino/privacy.html
 ```
 
 ---
