@@ -6947,7 +6947,7 @@ function renderUpgrade(){
           : (lang==='es'?'Cancela cuando quieras en los Ajustes de App Store.':'Cancel anytime in App Store settings.'))+'</div>'
       + trialDiagHtml(upgHasTrial, upgradeSelected);
   } else {
-    ctaHtml = '<button class="cta upgCtaBig" disabled style="opacity:.6;background:var(--muted);box-shadow:0 5px 0 #6e6862;">'
+    ctaHtml = '<button class="cta upgCtaBig" disabled style="opacity:.6;background:var(--muted);box-shadow:none;">'
       + (lang==='es' ? '✓ Ya estás en Plus' : '✓ You\'re on Plus')
       + '</button>'
       + '<button class="upgManageBtn" onclick="cancelPlus()">'+(lang==='es'?'Cancelar Plus':'Cancel Plus')+'</button>';
@@ -10554,7 +10554,7 @@ function renderHomeCountdown(){
       + '</button>';
   }).join('');
   var ctaTxt = left.length
-    ? (lang==='es' ? 'Empezar la sesión de hoy' : "Start today's session") + ' · ~' + mins + ' min'
+    ? (lang==='es' ? 'Empezar sesión' : 'Start session') + ' · ~' + mins + ' min'
     : (lang==='es' ? 'Sesión de hoy completa' : "Today's session done");
   el.innerHTML = '<div class="cdCard">'
     + '<div class="cdTop" onclick="'+tap+'">'
