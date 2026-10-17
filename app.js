@@ -392,11 +392,71 @@ var user = {
 };
 
 var STORAGE_KEY = 'camino.user.v1';
+// N-400 answers that live only in memory: typed for the PDF, never written to
+// storage, backups or exports (localStorage is plain text and goes into iCloud backups).
+var N400_SESSION_ONLY = ['p_ssn'];
+function n400ForStorage(n400){
+  if(!n400 || !n400.answers) return n400;
+  var answers = Object.assign({}, n400.answers);
+  N400_SESSION_ONLY.forEach(function(k){ delete answers[k]; });
+  return Object.assign({}, n400, { answers: answers });
+}
 function saveUser(){
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.assign({}, user, {lang: lang}))); } catch(e){}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.assign({}, user, {lang: lang, n400: n400ForStorage(user.n400)}))); } catch(e){}
 }
 function loadUser(){
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch(e){ return null; }
+  try { return sanitizeStoredUser(JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null')); } catch(e){ return null; }
+}
+
+// Saved fields end up inside innerHTML in many places, and "Import data" accepts
+// a backup file someone else may have crafted. So everything is cleaned on the way
+// in: free text loses < > and control characters, dates must be ISO, enums must
+// be known values. Screens still esc() what they render; this is the second layer.
+function cleanText(s, max){
+  if(typeof s !== 'string') return '';
+  return s.replace(/[<>\u0000-\u001f\u007f]/g, '').trim().slice(0, max || 200);
+}
+function isISODate(s){ return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s); }
+function sanitizeStoredUser(s){
+  if(!s || typeof s !== 'object' || Array.isArray(s)) return null;
+  if(s.n400 && s.n400.answers) s.n400 = n400ForStorage(s.n400);   // drops an SSN saved by older builds
+  for(var k in s){
+    if(typeof s[k] === 'string') s[k] = cleanText(s[k], 300);
+  }
+  s.name = cleanText(s.name, 60);
+  ['officialSenators','officialRep','officialGovernor'].forEach(function(k){ s[k] = cleanText(s[k], 120); });
+  var dm = parseInt(s.dailyMinutes, 10);
+  s.dailyMinutes = (dm > 0 && dm <= 120) ? dm : 5;
+  if(s.uscisReceipt != null && !/^[A-Z]{3}\d{10}$/.test(s.uscisReceipt)) s.uscisReceipt = null;
+  if(s.vbPriorityDate != null && !isISODate(s.vbPriorityDate)) s.vbPriorityDate = null;
+  var vb = (typeof VISA_BULLETIN !== 'undefined') ? VISA_BULLETIN : null;
+  if(vb && s.vbCategory != null && !(s.vbCategory in vb.employment) && !(s.vbCategory in vb.family)) s.vbCategory = null;
+  if(vb && s.vbCountry != null && ['India','China','Mexico','Philippines','Other'].indexOf(s.vbCountry) === -1) s.vbCountry = null;
+  s.customDates = (Array.isArray(s.customDates) ? s.customDates : []).filter(function(d){
+    return d && typeof d === 'object' && isISODate(d.date);
+  }).map(function(d){
+    return { id: cleanText(String(d.id || ''), 40), title: cleanText(d.title, 80), date: d.date, note: cleanText(d.note, 300) };
+  });
+  var exp = {};
+  if(s.expirationDates && typeof s.expirationDates === 'object'){
+    for(var ek in s.expirationDates){
+      var e = s.expirationDates[ek];
+      if(/^[\w-]{1,40}$/.test(ek) && e && isISODate(e.date)) exp[ek] = { date: e.date, label: cleanText(e.label, 80) };
+    }
+  }
+  s.expirationDates = exp;
+  if(s.eligWizardResults && typeof s.eligWizardResults === 'object'){
+    for(var wk in s.eligWizardResults){
+      var r = s.eligWizardResults[wk];
+      if(!r || !r.result || ['likely','unsure','not_eligible'].indexOf(r.result.verdict) === -1){ delete s.eligWizardResults[wk]; continue; }
+      ['reasons','flags'].forEach(function(f){
+        r.result[f] = (Array.isArray(r.result[f]) ? r.result[f] : []).map(function(x){
+          return { en: cleanText(x && x.en, 400), es: cleanText(x && x.es, 400) };
+        });
+      });
+    }
+  }
+  return s;
 }
 
 var MONTHS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -2864,9 +2924,9 @@ function renderDocDetail(){
 
   var askCamiBtn = '';
   if(CAMI_AVAILABLE){
-    askCamiBtn = '<button class="askCamiBtn" onclick="askCami(\''
-      + (lang==='es' ? 'Cuéntame más sobre: '+doc.name.en : 'Tell me more about: '+doc.name.en).replace(/'/g, "\\'")
-      + '\')">'
+    askCamiBtn = '<button class="askCamiBtn" onclick="askCami('
+      + jsArg(lang==='es' ? 'Cuéntame más sobre: '+doc.name.en : 'Tell me more about: '+doc.name.en)
+      + ')">'
       + iconSVG('chevron','#fff',12) + ' '
       + (lang==='es' ? 'Pregúntale a Cami' : 'Ask Cami about this')
       + '</button>';
@@ -3070,7 +3130,7 @@ function renderFlashcard(){
     body.innerHTML = '<div class="flashCardContainer">'
       + '<div class="flashCard flashBack">'
       +   '<div class="flashSide flashSideA">'+(lang==='es' ? 'RESPUESTA' : 'ANSWER')+'</div>'
-      +   '<div class="flashAText">'+answerText+'</div>'
+      +   '<div class="flashAText">'+esc(answerText)+'</div>'
       +   '<div class="flashQRef">'+q.q[lang]+'</div>'
       + '</div>'
       + (expText ? '<div class="flashExplain"><div class="flashExpLabel">'+iconSVG('lightbulb','#ff9b21',14)+' '+(lang==='es' ? 'Por qué' : 'Why')+'</div><div class="flashExpText">'+expText+'</div></div>' : '')
@@ -4537,7 +4597,7 @@ function renderCamiChat(){
       +     '<li>'+(lang==='es'?'Crea una clave API en "API Keys"':'Create an API key under "API Keys"')+'</li>'
       +     '<li>'+(lang==='es'?'Pégala abajo':'Paste it below')+'</li>'
       +   '</ol>'
-      +   '<input type="password" class="camiKeyInput" id="camiKeyInput" placeholder="sk-ant-..." value="'+(user.anthropicApiKey||'')+'" autocomplete="off" />'
+      +   '<input type="password" class="camiKeyInput" id="camiKeyInput" placeholder="sk-ant-..." value="'+esc(user.anthropicApiKey||'')+'" autocomplete="off" />'
       +   '<div class="camiSetupBtnRow">'
       +     '<button class="cta camiSetupSave" onclick="camiSaveKeyFromInput()">'+(lang==='es'?'Guardar y empezar':'Save and start')+'</button>'
       +     (user.anthropicApiKey ? '<button class="camiSetupCancel" onclick="camiHideKeySetup()">'+(lang==='es'?'Cancelar':'Cancel')+'</button>' : '')
@@ -4556,15 +4616,14 @@ function renderCamiChat(){
     var suggestions = camiSuggestions();
     var chips = suggestions.map(function(s){
       var txt = s[lang] || s.en;
-      var safe = txt.replace(/'/g,"\\'");
-      return '<button class="camiChip" onclick="camiSubmitChip(\''+safe+'\')">'+txt+'</button>';
+      return '<button class="camiChip" onclick="camiSubmitChip('+jsArg(txt)+')">'+esc(txt)+'</button>';
     }).join('');
     var demoBadge = camiInDemoMode()
       ? '<div class="camiDemoBadge" onclick="camiShowKeySetup()" title="'+(lang==='es'?'Conectar clave para Cami completo':'Connect your key for full Cami')+'">'+(lang==='es'?'MODO DEMO · respuestas guardadas':'DEMO MODE · curated answers')+'</div>'
       : '';
     messagesHtml = '<div class="camiWelcome">'
       + '<div class="camiWelcomeCami">'+camiSVG('happy')+'</div>'
-      + '<div class="camiWelcomeTitle">'+(lang==='es'?'Hola, '+ (user.name||'amigo/a') +'.':'Hi, '+(user.name||'friend')+'.')+'</div>'
+      + '<div class="camiWelcomeTitle">'+(lang==='es'?'Hola, '+ esc(user.name||'amigo/a') +'.':'Hi, '+esc(user.name||'friend')+'.')+'</div>'
       + '<div class="camiWelcomeSub">'+(lang==='es'?'Pregúntame lo que sea sobre cívica o inmigración.':'Ask me anything about civics or your immigration path.')+'</div>'
       + demoBadge
       + '<div class="camiChips">'+chips+'</div>'
@@ -4577,7 +4636,6 @@ function renderCamiChat(){
         var isLast = idx === camiState.messages.length - 1;
         var actions = '';
         if(isLast && !camiState.isLoading){
-          var safeContent = m.content.replace(/'/g, "\\'").replace(/\n/g,' ');
           actions = '<div class="camiBubbleActions">'
             + '<button class="camiBubbleActionBtn" onclick="camiSpeakLast()" title="'+(lang==='es'?'Escuchar':'Listen')+'">'+iconSVG('speaker','#84807a',13)+'</button>'
             + '</div>';
@@ -4595,7 +4653,7 @@ function renderCamiChat(){
         + '</div>';
     }
     if(camiState.error){
-      messagesHtml += '<div class="camiError">'+(lang==='es'?'Error: ':'Error: ')+camiState.error+'</div>';
+      messagesHtml += '<div class="camiError">'+(lang==='es'?'Error: ':'Error: ')+esc(camiState.error)+'</div>';
     }
     // Follow-up suggestion chips after last assistant reply
     if(!camiState.isLoading && !camiState.error && camiState.messages.length >= 2){
@@ -4610,8 +4668,7 @@ function renderCamiChat(){
         if(fups.length){
           var fupHtml = fups.map(function(f){
             var t = f[lang] || f.en;
-            var safe = t.replace(/'/g,"\\'");
-            return '<button class="camiFollowupChip" onclick="camiSubmitChip(\''+safe+'\')">'+t+'</button>';
+            return '<button class="camiFollowupChip" onclick="camiSubmitChip('+jsArg(t)+')">'+esc(t)+'</button>';
           }).join('');
           messagesHtml += '<div class="camiFollowups">'
             + '<div class="camiFollowupsLbl">'+(lang==='es'?'Continuar con:':'Continue with:')+'</div>'
@@ -4973,7 +5030,9 @@ var Store = {
     var rc = this._rc();
     if(!rc){ console.error('RevenueCat plugin missing from build (revenuecat.js not bundled?)'); return; }
     try {
-      await rc.configure({ apiKey: STORE_CONFIG.revenueCatApiKey });
+      // INFORMATIONAL signs RevenueCat's responses; _applyCustomerInfo refuses a
+      // response that fails the check (a proxy app rewriting it to unlock Plus).
+      await rc.configure({ apiKey: STORE_CONFIG.revenueCatApiKey, entitlementVerificationMode: 'INFORMATIONAL' });
       await this._refresh();
       if(rc.addCustomerInfoUpdateListener){
         rc.addCustomerInfoUpdateListener(function(info){ Store._applyCustomerInfo(info && info.customerInfo ? info.customerInfo : info); });
@@ -4988,8 +5047,13 @@ var Store = {
 
   _refresh: async function(){
     var rc = this._rc(); if(!rc) return;
+    // Entitlement first: once RevenueCat has answered, isPlus() stops trusting the cached plan.
+    try {
+      var c = await rc.getCustomerInfo();
+      this._applyCustomerInfo(c && c.customerInfo ? c.customerInfo : c);
+      this._entitlementKnown = true;
+    } catch(e){}
     try { var o = await rc.getOfferings(); this._offerings = (o && o.current) || null; } catch(e){}
-    try { var c = await rc.getCustomerInfo(); this._applyCustomerInfo(c && c.customerInfo ? c.customerInfo : c); } catch(e){}
     // Ask StoreKit whether THIS Apple ID still qualifies for the intro offer.
     // Apple grants one intro offer per subscription group per Apple ID, so a
     // returning (or previously-tested) account is charged full price even though
@@ -5052,6 +5116,7 @@ var Store = {
   _applyCustomerInfo: function(ci){
     if(!ci || !user) return;
     var active = ci.entitlements && ci.entitlements.active ? ci.entitlements.active[STORE_CONFIG.entitlementId] : null;
+    if(active && (active.verification === 'FAILED' || ci.entitlements.verification === 'FAILED')) active = null;
     this._entitled = !!active;
     var prevPlan = user.plan;
     if(active){
@@ -5158,7 +5223,7 @@ document.addEventListener('click', function(ev){
 
 function isPlus(){
   if(!user) return false;
-  if(Store.isNative() && Store.ready) return Store.entitled() === true;  // native: RevenueCat is source of truth
+  if(Store.isNative() && (Store.ready || Store._entitlementKnown)) return Store.entitled() === true;  // native: RevenueCat is source of truth
   if(Store.isNative()){
     // RevenueCat not up yet (offline, slow start): honour the cached plan only
     // through its last known expiry plus a 3-day grace, never forever.
@@ -5237,8 +5302,8 @@ function showTutorialOffer(){
     +   '</div>'
     +   '<div class="tutBody">'
     +     (lang==='es'
-        ? 'Hola ' + name + '. Soy Cami. Puedo mostrarte cómo funciona la app en unos 60 segundos.'
-        : 'Hi ' + name + '. I\'m Cami. I can show you how everything works in about 60 seconds.')
+        ? 'Hola ' + esc(name) + '. Soy Cami. Puedo mostrarte cómo funciona la app en unos 60 segundos.'
+        : 'Hi ' + esc(name) + '. I\'m Cami. I can show you how everything works in about 60 seconds.')
     +   '</div>'
     +   '<div class="tutBtnRow">'
     +     '<button class="cta tutPrimary" onclick="tutorialOfferAccept()">'
@@ -5513,16 +5578,20 @@ function limitHint(avail){
   return ' · ' + (lang==='es' ? avail+' de 3 hoy' : avail+' of 3 left today');
 }
 
+// Daily free allowances refill only when the date moves forward, so turning the
+// device clock back doesn't hand out another set.
+function isNewDay(savedISO){ return !savedISO || todayISO() > savedISO; }
+
 function todayMockTestsAvailable(){
   // Free users: 3 mock tests per day. Plus: unlimited.
   if(isPlus()) return Infinity;
-  if(user.mockTestsTodayDate !== todayISO()) return 3;
+  if(isNewDay(user.mockTestsTodayDate)) return 3;
   return Math.max(0, 3 - (user.mockTestsTodayCount || 0));
 }
 
 function recordMockTestStart(){
   if(isPlus()) return;
-  if(user.mockTestsTodayDate !== todayISO()){
+  if(isNewDay(user.mockTestsTodayDate)){
     user.mockTestsTodayCount = 0;
     user.mockTestsTodayDate = todayISO();
   }
@@ -5560,15 +5629,49 @@ var VISA_BULLETIN = {
 
 // Refresh the snapshot from a small static JSON (no user data is sent; a plain
 // GET like the audio manifest). Shape: {month, monthEs, asOf, employment, family}.
+// The file changes without App Review, so it is untrusted: anything that doesn't
+// match the bundled shape exactly is ignored and the bundled snapshot stays.
 var VISA_BULLETIN_URL = 'https://rumoave.github.io/camino/visa-bulletin.json';
+var VB_ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
+var VB_MONTH_RE = /^[A-Za-zÁÉÍÓÚáéíóúñÑ]{3,12} \d{4}$/;
+function vbValidDate(v){ return typeof v === 'string' && VB_ISO_RE.test(v) && !isNaN(parseISO(v).getTime()); }
+// Same categories and countries as the bundled table; each cutoff is a date or null (current).
+function vbCleanTable(remote, bundled){
+  if(!remote || typeof remote !== 'object') return null;
+  var out = {};
+  for(var cat in bundled){
+    var r = remote[cat];
+    if(!r || typeof r !== 'object') return null;
+    out[cat] = {};
+    for(var country in bundled[cat]){
+      if(!(country in r)) return null;
+      var v = r[country];
+      if(v !== null && !vbValidDate(v)) return null;
+      out[cat][country] = v;
+    }
+  }
+  return out;
+}
+function vbCleanRemote(j){
+  if(!j || typeof j !== 'object') return null;
+  if(typeof j.month !== 'string' || !VB_MONTH_RE.test(j.month)) return null;
+  if(j.monthEs != null && (typeof j.monthEs !== 'string' || !VB_MONTH_RE.test(j.monthEs))) return null;
+  if(!vbValidDate(j.asOf) || j.asOf > todayISO()) return null;
+  var employment = vbCleanTable(j.employment, VISA_BULLETIN.employment);
+  var family = vbCleanTable(j.family, VISA_BULLETIN.family);
+  if(!employment || !family) return null;
+  return { month: j.month, monthEs: j.monthEs || j.month, asOf: j.asOf, approximate: j.approximate === true,
+           employment: employment, family: family };
+}
 function loadVisaBulletinRemote(){
   if(typeof fetch !== 'function') return;
   try {
     fetch(VISA_BULLETIN_URL, {cache: 'no-store'}).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
-      if(!j || !j.month || !j.employment || !j.family) return;
-      VISA_BULLETIN.month = j.month; VISA_BULLETIN.monthEs = j.monthEs || j.month;
-      VISA_BULLETIN.asOf = j.asOf || todayISO(); VISA_BULLETIN.approximate = !!j.approximate;
-      VISA_BULLETIN.employment = j.employment; VISA_BULLETIN.family = j.family;
+      var vb = vbCleanRemote(j);
+      if(!vb) return;
+      VISA_BULLETIN.month = vb.month; VISA_BULLETIN.monthEs = vb.monthEs;
+      VISA_BULLETIN.asOf = vb.asOf; VISA_BULLETIN.approximate = vb.approximate;
+      VISA_BULLETIN.employment = vb.employment; VISA_BULLETIN.family = vb.family;
       try { renderVisaBulletin(); renderHomeVisaRow(); } catch(e){}
     }).catch(function(){});
   } catch(e){}
@@ -5650,7 +5753,7 @@ function renderVisaBulletin(){
   body.innerHTML = ''
     + '<div class="vbHead">'
     +   '<div class="vbKick">'+(lang==='es'?'BOLETÍN DE VISAS':'VISA BULLETIN')+'</div>'
-    +   '<div class="vbTitle">'+monthLabel+'</div>'
+    +   '<div class="vbTitle">'+esc(monthLabel)+'</div>'
     +   '<div class="vbSub">'+(lang==='es'?'Datos aproximados del ciclo reciente. Confirma siempre en':'Approximate from recent cycle. Always verify at')+' <a href="'+VISA_BULLETIN.link+'" target="_blank" rel="noopener">travel.state.gov</a></div>'
     + '</div>'
     + '<div class="vbForm">'
@@ -5659,7 +5762,7 @@ function renderVisaBulletin(){
     +   '<label class="vbLbl">'+(lang==='es'?'País de cargabilidad':'Country of chargeability')+'</label>'
     +   '<select class="vbSelect" id="vbCountry" onchange="saveVBSettings()">'+countryOpts+'</select>'
     +   '<label class="vbLbl">'+(lang==='es'?'Tu fecha de prioridad (PD)':'Your priority date (PD)')+'</label>'
-    +   '<input type="date" class="vbInput" id="vbPriorityDate" value="'+savedPD+'" onchange="saveVBSettings()" />'
+    +   '<input type="date" class="vbInput" id="vbPriorityDate" value="'+esc(savedPD)+'" onchange="saveVBSettings()" />'
     + '</div>'
     + '<div class="vbResult">'
     +   '<div class="vbResultRow"><div class="vbResultKey">'+(lang==='es'?'Categoría':'Category')+'</div><div class="vbResultVal">'+savedCat+' · '+savedCountry+'</div></div>'
@@ -6228,7 +6331,7 @@ function renderEligWizardResult(){
 
   var askCamiCtx = (lang==='es'
     ? 'Me hicieron un test de elegibilidad para ' + wiz.title.en + ' y el resultado fue: ' + r.verdict + '. ¿Qué debería saber?'
-    : 'I just took the ' + wiz.title.en + ' eligibility check and the result was: ' + r.verdict + '. What should I know?').replace(/'/g, "\\'");
+    : 'I just took the ' + wiz.title.en + ' eligibility check and the result was: ' + r.verdict + '. What should I know?');
 
   body.innerHTML = ''
     + '<div class="eligVerdictCard '+verdictClass+'">'
@@ -6241,7 +6344,7 @@ function renderEligWizardResult(){
     + nextStepsHtml
     + attorneyClose
     + (CAMI_AVAILABLE
-        ? '<button class="askCamiBtn eligAskCami" onclick="askCami(\''+askCamiCtx+'\')">'+iconSVG('chevron','#fff',12)+' '+(lang==='es'?'Hablarle a Cami sobre esto':'Talk to Cami about this')+'</button>'
+        ? '<button class="askCamiBtn eligAskCami" onclick="askCami('+jsArg(askCamiCtx)+')">'+iconSVG('chevron','#fff',12)+' '+(lang==='es'?'Hablarle a Cami sobre esto':'Talk to Cami about this')+'</button>'
         : '');
 
   if(footer){
@@ -6374,7 +6477,7 @@ function renderHelpFAQ(){
       + '</div>';
   });
   if(CAMI_AVAILABLE){
-    html += '<button class="askCamiBtn helpAskCami" onclick="askCami(\''+(lang==='es'?'Tengo una pregunta sobre la app':'I have a question about the app').replace(/'/g,"\\'")+'\')">'
+    html += '<button class="askCamiBtn helpAskCami" onclick="askCami('+jsArg(lang==='es'?'Tengo una pregunta sobre la app':'I have a question about the app')+')">'
       + iconSVG('chevron','#fff',12) + ' ' + (lang==='es'?'Preguntarle a Cami':'Ask Cami')
       + '</button>';
   }
@@ -6492,7 +6595,7 @@ function renderTrialOffer(){
     + '<div class="trialHero">'
     +   '<div class="trialCami">'+camiPlusSVG()+'</div>'
     +   '<div class="trialBrandRow"><span class="trialBrand">Camino</span><span class="trialPlusTag">PLUS</span></div>'
-    +   '<div class="trialHeadline">'+(lang==='es'?('Bienvenido/a, '+name):('Welcome, '+name))+'</div>'
+    +   '<div class="trialHeadline">'+(lang==='es'?('Bienvenido/a, '+esc(name)):('Welcome, '+esc(name)))+'</div>'
     +   '<div class="trialTagline">'+(lang==='es'?'Tu camino de inmigración, completo.':'Your immigration journey, in one app.')+'</div>'
     +   '<div class="trialSubhead">'+(hasTrial
           ? (lang==='es' ? 'Empieza tu prueba gratis de '+trialDays+' días · cancela cuando quieras' : 'Start your '+trialDays+'-day free trial · cancel anytime')
@@ -6532,10 +6635,20 @@ function skipTrialOffer(){
 }
 
 // ===== iOS-STYLE PURCHASE CONFIRMATION SHEET =====
+// The web build has no real payments: its purchase sheet is a mock that grants a
+// local trial. Keep it to local previews so the public site can't hand out Plus.
+function webMockStoreAllowed(){
+  var h = location.hostname;
+  return location.protocol === 'file:' || h === 'localhost' || h === '127.0.0.1' || h === '';
+}
 function openPurchaseSheet(){
   // On iOS, StoreKit shows Apple's real confirmation sheet; drawing a look-alike
   // first is a double confirmation and an App Review risk.
   if(Store.isNative()){ confirmTrialPurchase(); return; }
+  if(!webMockStoreAllowed()){
+    toast(lang==='es' ? 'Camino Plus está disponible en la app de iPhone' : 'Camino Plus is available in the iPhone app');
+    return;
+  }
   var sheet = document.getElementById('purchaseSheet');
   var card = document.getElementById('purchaseSheetCard');
   if(!sheet || !card) return;
@@ -6593,6 +6706,7 @@ function closePurchaseSheet(){
 function confirmTrialPurchase(){
   closePurchaseSheet();
   if(!Store.isNative()){
+    if(!webMockStoreAllowed()) return;
     // Web preview. Mock: Face-ID-style flash, then grant a local trial (unchanged behavior).
     showConfirmedFlash();
     setTimeout(function(){ startFreeTrial(trialOfferSelectedPlan); }, 800);
@@ -8687,6 +8801,9 @@ function renderHomeN400Row(){
 //  - nothing is filed; output is a summary the user transfers to the official
 //    form themselves. All data stays in localStorage (user.n400). No network.
 
+// A string argument for an inline handler: onclick="fn('+jsArg(text)+')". JSON
+// quoting keeps it a JS string; esc() keeps the quotes from ending the attribute.
+function jsArg(s){ return esc(JSON.stringify(String(s == null ? '' : s))); }
 function esc(s){
   return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
@@ -8745,7 +8862,7 @@ var N400_SCHEMA = [
        help:{en:'On your green card; starts with "A".', es:'En tu green card; empieza con "A".'}},
       {id:'p_ssn', type:'text', required:false,
        label:{en:'Social Security number', es:'Número de Seguro Social'},
-       help:{en:'Optional to save here. You can add it directly on the official form if you prefer.', es:'Opcional guardarlo aquí. Puedes ponerlo directamente en el formulario oficial si prefieres.'}}
+       help:{en:'Never saved. Type it right before you make the PDF draft, or write it on the official form yourself.', es:'Nunca se guarda. Escríbelo justo antes de crear el borrador PDF, o ponlo tú en el formulario oficial.'}}
     ]
   },
   {
@@ -9370,6 +9487,7 @@ function n400FH_summaryText(){
         var v = st.answers[q.id];
         if(v != null && String(v).trim() !== ''){
           var shown = (typeof q.type === 'string' && q.type === 'date') ? n400FH_usDate(v) : v;
+          if(N400_SESSION_ONLY.indexOf(q.id) !== -1) shown = '•••-••-' + String(v).replace(/[^0-9]/g, '').slice(-4);
           lines.push('  '+q.label[lang]+': '+shown);
         }
       }
@@ -9379,13 +9497,21 @@ function n400FH_summaryText(){
   return lines.join('\n');
 }
 
+// Asked before a file with N-400 answers leaves the app (share sheet or download).
+function confirmSensitiveShare(){
+  return window.confirm(lang==='es'
+    ? 'Este archivo tiene tus datos personales (Número A, dirección y respuestas del N-400). Compártelo solo contigo o con alguien de confianza, como tu abogado.'
+    : 'This file has your personal details (A-Number, address and N-400 answers). Share it only with yourself or someone you trust, like your attorney.');
+}
+
 function n400FH_print(){
   if(Store.isNative()){
+    if(!confirmSensitiveShare()) return;
     // WKWebView has no reliable window.print. Share the summary as a text file.
     var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
     if(fs && share && fs.writeFile){
       fs.writeFile({ path: 'camino-n400-summary.txt', data: n400FH_summaryText(), directory: (dir && dir.Cache) || 'CACHE', encoding: (enc && enc.UTF8) || 'utf8' })
-        .then(function(res){ return share.share({ title: 'N-400 summary', url: res.uri }); })
+        .then(function(res){ return share.share({ title: 'N-400 summary', url: res.uri }).finally(function(){ removeCacheFile('camino-n400-summary.txt'); }); })
         .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es'?'No se pudo compartir':'Could not share'); });
     } else {
       toast(lang==='es'?'Compartir no disponible':'Sharing unavailable');
@@ -9402,7 +9528,7 @@ function shareOrDownloadJSON(filename, data, title){
     var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
     if(fs && share && fs.writeFile){
       fs.writeFile({ path: filename, data: data, directory: (dir && dir.Cache) || 'CACHE', encoding: (enc && enc.UTF8) || 'utf8' })
-        .then(function(res){ return share.share({ title: title, url: res.uri }); })
+        .then(function(res){ return share.share({ title: title, url: res.uri }).finally(function(){ removeCacheFile(filename); }); })
         .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es'?'No se pudo exportar':'Could not export'); });
       return;
     }
@@ -9418,7 +9544,8 @@ function shareOrDownloadJSON(filename, data, title){
   toast(lang==='es'?'Respaldo descargado':'Backup downloaded');
 }
 function exportAllData(){
-  var snapshot = JSON.parse(JSON.stringify(Object.assign({}, user, {lang: lang})));
+  if(!confirmSensitiveShare()) return;
+  var snapshot = JSON.parse(JSON.stringify(Object.assign({}, user, {lang: lang, n400: n400ForStorage(user.n400)})));
   delete snapshot.anthropicApiKey; delete snapshot.camiChatHistory;
   var data = JSON.stringify({ caminoBackup: 1, exportedAt: new Date().toISOString(), user: snapshot }, null, 2);
   shareOrDownloadJSON('camino-backup.json', data, 'Camino backup');
@@ -9434,7 +9561,15 @@ function importAllData(input){
       if(!data || data.caminoBackup !== 1 || !data.user || typeof data.user !== 'object') throw new Error('not a camino backup');
       var msg = lang==='es' ? '¿Reemplazar los datos de este dispositivo con el respaldo? Esto no se puede deshacer.' : 'Replace the data on this device with the backup? This cannot be undone.';
       if(!window.confirm(msg)) return;
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data.user)); } catch(e){ toast(lang==='es'?'No se pudo guardar':'Could not save'); return; }
+      var imported = sanitizeStoredUser(data.user);
+      if(!imported) throw new Error('not a camino backup');
+      // Subscription and trial state belong to this device and the App Store, never to a file.
+      var PLAN_KEYS = ['plan','trialStartedAt','trialEndsAt','planSelected','planRenewsAt','planLapsedAt','planLapsedShown',
+                       'trialReminderShown','trialReminderScheduledFor','pendingTrialOffer','cancelHistory'];
+      var current = loadUser() || {};
+      PLAN_KEYS.forEach(function(k){ if(k in current) imported[k] = current[k]; else delete imported[k]; });
+      delete imported.anthropicApiKey; delete imported.camiChatHistory;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(imported)); } catch(e){ toast(lang==='es'?'No se pudo guardar':'Could not save'); return; }
       location.reload();
     } catch(e){
       toast(lang==='es' ? 'Ese archivo no es un respaldo de Camino' : 'That file is not a Camino backup');
@@ -9445,13 +9580,14 @@ function importAllData(input){
 }
 
 function n400FH_exportJSON(){
+  if(!confirmSensitiveShare()) return;
   var st = n400FH_state();
-  var data = JSON.stringify({ caminoN400Backup: 1, exportedAt: new Date().toISOString(), n400: st }, null, 2);
+  var data = JSON.stringify({ caminoN400Backup: 1, exportedAt: new Date().toISOString(), n400: n400ForStorage(st) }, null, 2);
   if(Store.isNative()){
     var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
     if(fs && share && fs.writeFile){
       fs.writeFile({ path: 'camino-n400-backup.json', data: data, directory: (dir && dir.Cache) || 'CACHE', encoding: (enc && enc.UTF8) || 'utf8' })
-        .then(function(res){ return share.share({ title: 'Camino N-400 backup', url: res.uri }); })
+        .then(function(res){ return share.share({ title: 'Camino N-400 backup', url: res.uri }).finally(function(){ removeCacheFile('camino-n400-backup.json'); }); })
         .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es'?'No se pudo exportar':'Could not export'); });
       return;
     }
@@ -9617,6 +9753,8 @@ async function n400FH_buildPdf(){
   text('#subform[1].P2_Line10_CountryOfBirth[0]', a.p_birthCountry);
   text('#subform[1].P2_Line11_CountryOfNationality[0]', a.p_citCountry);
   text('#subform[1].Line12b_SSN[0]', (a.p_ssn || '').replace(/[^0-9]/g, ''));
+  // The SSN is never stored, so it's only here if typed since the app opened.
+  if(!a.p_ssn) skipped.push(lang==='es' ? 'Número de Seguro Social (no se guarda; escríbelo en el formulario)' : 'Social Security number (never saved; write it on the form)');
   // Name change. Verified: [0]=No, [1]=Yes
   if(a.p_nameChange === 'yes') checkBox('#subform[1].P2_Line34_NameChange[1]');
   if(a.p_nameChange === 'no')  checkBox('#subform[1].P2_Line34_NameChange[0]');
@@ -9794,6 +9932,7 @@ function n400FH_pdfEntry(){
 var n400FH_generating = false;
 async function n400FH_generatePDF(){
   if(n400FH_generating) return;
+  if(!confirmSensitiveShare()) return;
   n400FH_generating = true;
   toast(lang==='es' ? 'Generando tu PDF…' : 'Generating your PDF…');
   var bytes, result;
@@ -9823,7 +9962,7 @@ async function n400FH_generatePDF(){
       }
       var b64 = btoa(bin);
       fs.writeFile({ path: 'camino-n400-draft.pdf', data: b64, directory: (dir && dir.Cache) || 'CACHE' })
-        .then(function(res){ return share.share({ title: 'N-400 draft (review, complete & sign)', url: res.uri }); })
+        .then(function(res){ return share.share({ title: 'N-400 draft (review, complete & sign)', url: res.uri }).finally(function(){ removeCacheFile('camino-n400-draft.pdf'); }); })
         .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es'?'No se pudo compartir':'Could not share'); });
     } else {
       toast(lang==='es' ? 'Compartir no disponible' : 'Sharing unavailable');
@@ -10336,7 +10475,9 @@ function todaysSession(){
 function startTodaysSession(){
   var next = todaysSession().filter(function(i){ return !i.done; })[0];
   if(!next){ toast(lang==='es' ? 'Sesión de hoy completa. Vuelve mañana.' : "Today's session is done. See you tomorrow.", 'check'); return; }
-  try { eval(next.start); } catch(e){}
+  // next.start is a fixed "fnName()" string (also used as the row's onclick); call it by name, no eval.
+  var fn = window[next.start.replace(/\(\)$/, '')];
+  if(typeof fn === 'function') try { fn(); } catch(e){}
 }
 
 function readinessRingSVG(pct, size){
@@ -11802,7 +11943,7 @@ function renderOnboarding(){
 
     html = '<div class="onbCamiTop">'+camiSVG('celebrate')+'</div>'
       + '<div class="onbStepTitle">'
-      + (lang==='es' ? ('¡Listo, '+name+'!') : ("You're set, "+name+'!'))
+      + (lang==='es' ? ('¡Listo, '+esc(name)+'!') : ("You're set, "+esc(name)+'!'))
       + '</div>'
       + '<div class="onbStepSub">'+(lang==='es'?'Así se ve tu camino:':"Here's what your path looks like:")+'</div>'
       + '<div class="onbSummary">'
@@ -11936,7 +12077,7 @@ var HEARTS_MAX = 5;
 function heartsLeft(){
   if(isPlus()) return Infinity;
   var h = user.hearts;
-  if(!h || h.date !== todayISO()){ user.hearts = {date: todayISO(), left: HEARTS_MAX}; h = user.hearts; }
+  if(!h || isNewDay(h.date)){ user.hearts = {date: todayISO(), left: HEARTS_MAX}; h = user.hearts; }
   return Math.max(0, h.left);
 }
 function spendHeart(){
@@ -13090,9 +13231,9 @@ function renderDates(){
     return '<div class="'+cls+'">'
       + '<div class="dateIcon">'+icon+'</div>'
       + '<div class="dateMain">'
-      +   '<div class="dateTitle">'+title+'</div>'
+      +   '<div class="dateTitle">'+esc(title)+'</div>'
       +   '<div class="dateText">'+dateText+'</div>'
-      + (note ? '<div class="dateNote">'+note+'</div>' : '')
+      + (note ? '<div class="dateNote">'+esc(note)+'</div>' : '')
       + '</div></div>';
   }
 
@@ -13216,7 +13357,7 @@ function showExpirationTracker(){
     return '<div class="expRow">'
       + '<div class="expRowMain">'
       +   '<div class="expRowTitle">'+f.label[lang]+' '+statusBadge+'</div>'
-      +   '<input type="date" class="expRowInput" data-key="'+f.key+'" value="'+(ed.date||'')+'" onchange="saveExpiration(\''+f.key+'\', this.value, \''+(f.label[lang].replace(/'/g,"\\'"))+'\')" />'
+      +   '<input type="date" class="expRowInput" data-key="'+f.key+'" value="'+esc(ed.date||'')+'" onchange="saveExpiration(\''+f.key+'\', this.value, '+jsArg(f.label[lang])+')" />'
       + '</div>'
       + '</div>';
   }).join('');
@@ -13292,8 +13433,8 @@ function exportDatesToICS(){
     ics.push('UID:' + uid(d.date, i));
     ics.push('DTSTAMP:' + fmt(todayISO()) + 'T000000Z');
     ics.push('DTSTART;VALUE=DATE:' + fmt(d.date));
-    ics.push('SUMMARY:' + title.replace(/[,;\\]/g, ' '));
-    if(note) ics.push('DESCRIPTION:' + note.replace(/[,;\\]/g, ' '));
+    ics.push('SUMMARY:' + title.replace(/[,;\\\r\n]/g, ' '));
+    if(note) ics.push('DESCRIPTION:' + note.replace(/[,;\\\r\n]/g, ' '));
     ics.push('END:VEVENT');
   });
   ics.push('END:VCALENDAR');
@@ -13305,7 +13446,7 @@ function exportDatesToICS(){
     var fs = window.CapFilesystem, share = window.CapShare, dir = window.CapFsDirectory, enc = window.CapFsEncoding;
     if(fs && share && fs.writeFile){
       fs.writeFile({ path: 'camino-dates.ics', data: content, directory: (dir && dir.Cache) || 'CACHE', encoding: (enc && enc.UTF8) || 'utf8' })
-        .then(function(res){ return share.share({ title: 'Camino dates', url: res.uri }); })
+        .then(function(res){ return share.share({ title: 'Camino dates', url: res.uri }).finally(function(){ removeCacheFile('camino-dates.ics'); }); })
         .catch(function(e){ if(!(e && /cancel/i.test(e.message||''))) toast(lang==='es' ? 'No se pudo exportar' : 'Could not export'); });
     } else {
       toast(lang==='es' ? 'Exportar no está disponible en esta versión' : 'Export is not available in this version');
@@ -13836,7 +13977,7 @@ function renderMe(){
 
   html += '<div class="sec">'+(lang==='es'?'Tu camino · toca para editar':'Your path · tap to edit')+'</div>';
   html += '<div class="mini">';
-  html += '<div class="row" onclick="openEditField(\'name\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Nombre':'Name')+'</div><div class="rSub">'+(user.name||'–')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'name\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Nombre':'Name')+'</div><div class="rSub">'+esc(user.name||'–')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'currentStageId\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Etapa actual':'Current stage')+'</div><div class="rSub">'+(curStage ? curStage.name[lang] : '–')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'countryOfBirth\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'País de nacimiento':'Country of birth')+'</div><div class="rSub">'+countryLabel(user.countryOfBirth, lang)+'</div></div><div class="chev">›</div></div>';
   if(user.phase !== 'hasGC'){
@@ -13856,7 +13997,7 @@ function renderMe(){
   if(user.marriedToCitizen) html += '<div class="row" onclick="openEditField(\'marriageDate\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Casado/a desde':'Married since')+'</div><div class="rSub">'+(user.marriageDate ? fmtDate(user.marriageDate, lang) : '–')+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'monthsOutside\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tiempo fuera de EE.UU.':'Time outside U.S.')+'</div><div class="rSub">'+monthsOutsideLabel(user.monthsOutside, lang)+'</div></div><div class="chev">›</div></div>';
   html += '<div class="row" onclick="openEditField(\'criminalHistory\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Antecedentes penales':'Criminal history')+'</div><div class="rSub">'+(user.criminalHistory ? (lang==='es'?'Sí · consulta legal':'Yes · legal consult') : (lang==='es'?'No':'No'))+'</div></div><div class="chev">›</div></div>';
-  html += '<div class="row" onclick="openEditField(\'dailyMinutes\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Compromiso diario':'Daily commitment')+'</div><div class="rSub">'+(user.dailyMinutes||5)+' '+(lang==='es'?'min':'min')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'dailyMinutes\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Compromiso diario':'Daily commitment')+'</div><div class="rSub">'+esc(user.dailyMinutes||5)+' '+(lang==='es'?'min':'min')+'</div></div><div class="chev">›</div></div>';
   if(timeline) html += '<div class="row"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tiempo estimado':'Estimated time')+'</div><div class="rSub">'+fmtMonthsTotal(timeline.totalMonthsLow, timeline.totalMonthsHigh, lang)+' '+(lang==='es'?'a la ciudadanía':'to citizenship')+'</div></div></div>';
   if(user.criminalHistory) html += '<div class="row"><div class="rIco" style="background:rgba(255,159,10,.16);">'+iconSVG('warning','#ff9b21',20)+'</div><div class="rMain"><div class="rTitle" style="color:var(--orange)">'+(lang==='es'?'Marcado para revisión':'Flagged for review')+'</div><div class="rSub">'+(lang==='es'?'Consulta con un abogado de inmigración antes de presentar':'Talk to an immigration lawyer before filing')+'</div></div></div>';
   html += '</div>';
@@ -13958,16 +14099,16 @@ function renderMe(){
     : 'Four test questions depend on where you live. Save your answers to see them on your flashcards; look them up at usa.gov/elected-officials.')+'</div>';
   html += '<div class="mini">';
   html += '<div class="row" onclick="openEditField(\'state\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Estado':'State')+'</div><div class="rSub">'+(stI ? stI.name + (stI.capital ? ' · '+(lang==='es'?'Capital: ':'Capital: ')+stI.capital : '') : '–')+'</div></div><div class="chev">›</div></div>';
-  html += '<div class="row" onclick="openEditField(\'officialSenators\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tus senadores':'Your U.S. senators')+'</div><div class="rSub">'+(user.officialSenators || '–')+'</div></div><div class="chev">›</div></div>';
-  html += '<div class="row" onclick="openEditField(\'officialRep\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tu representante':'Your U.S. representative')+'</div><div class="rSub">'+(user.officialRep || '–')+'</div></div><div class="chev">›</div></div>';
-  html += '<div class="row" onclick="openEditField(\'officialGovernor\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tu gobernador/a':'Your governor')+'</div><div class="rSub">'+(user.officialGovernor || '–')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'officialSenators\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tus senadores':'Your U.S. senators')+'</div><div class="rSub">'+esc(user.officialSenators || '–')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'officialRep\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tu representante':'Your U.S. representative')+'</div><div class="rSub">'+esc(user.officialRep || '–')+'</div></div><div class="chev">›</div></div>';
+  html += '<div class="row" onclick="openEditField(\'officialGovernor\')"><div class="rMain"><div class="rTitle">'+(lang==='es'?'Tu gobernador/a':'Your governor')+'</div><div class="rSub">'+esc(user.officialGovernor || '–')+'</div></div><div class="chev">›</div></div>';
   html += '</div>';
 
   // USCIS case-status section
   html += '<div class="sec">'+(lang==='es'?'Caso USCIS':'USCIS case status')+'</div>';
   html += '<div class="uscisBox">';
   html += '<div class="uscisLabel">'+(lang==='es'?'Número de recibo':'Receipt number')+'</div>';
-  html += '<input type="text" class="uscisInputField" id="uscisInput" maxlength="13" placeholder="MSC1234567890" value="'+(user.uscisReceipt||'')+'" autocomplete="off" />';
+  html += '<input type="text" class="uscisInputField" id="uscisInput" maxlength="13" placeholder="MSC1234567890" value="'+esc(user.uscisReceipt||'')+'" autocomplete="off" />';
   html += '<div class="uscisHint">'+(lang==='es'?'3 letras + 10 dígitos (ej. MSC, IOE, EAC, WAC, LIN, SRC)':'3 letters + 10 digits (e.g. MSC, IOE, EAC, WAC, LIN, SRC)')+'</div>';
   html += '<div class="uscisBtnRow">';
   html += '<button class="cta ctaSky uscisCheckBtn" onclick="checkUSCISStatus()">'+(lang==='es'?'Ver en USCIS.gov':'Check on USCIS.gov')+' ↗</button>';
@@ -14070,7 +14211,7 @@ var Reminders = {
     var self = this;
     this._cancel([this.IDS.daily]).then(function(){
       self._schedule([{ id: self.IDS.daily, title: 'Camino',
-        body: lang==='es' ? 'Cinco minutos de cívica hoy. Tu racha te espera.' : 'Five minutes of civics today. Your streak is waiting.',
+        body: lang==='es' ? 'Cinco minutos de práctica hoy. Tu racha te espera.' : 'Five minutes of practice today. Your streak is waiting.',
         schedule: { on: { hour: h, minute: m }, repeats: true, allowWhileIdle: true }, sound: null, smallIcon: 'ic_stat_icon' }]);
     });
   },
@@ -14103,6 +14244,7 @@ var Reminders = {
     var self = this; var old = user.reminderIds || [];
     this._cancel(old).then(function(){
       var list = []; var ids = []; var n = 0;
+      // Text stays generic: anyone glancing at a locked phone sees no immigration details.
       // Interview: a week out and the day before.
       if(user.interviewDate){
         [7, 1].forEach(function(days){
@@ -14110,7 +14252,7 @@ var Reminders = {
           if(at.getTime() < Date.now()) return;
           var id = self.IDS.dateBase + (n++);
           ids.push(id);
-          list.push({ id: id, title: 'Camino', body: (lang==='es' ? 'Tu entrevista USCIS es en '+days+(days===1?' día':' días')+'. Repasa cívica, lectura y escritura hoy.' : 'Your USCIS interview is in '+days+(days===1?' day':' days')+'. Review civics, reading and writing today.'),
+          list.push({ id: id, title: 'Camino', body: (lang==='es' ? 'Tienes una fecha importante en '+days+(days===1?' día':' días')+'. Abre Camino para prepararte.' : 'You have an important date in '+days+(days===1?' day':' days')+'. Open Camino to get ready.'),
             schedule: { at: at, allowWhileIdle: true }, sound: null });
         });
       }
@@ -14122,7 +14264,7 @@ var Reminders = {
           if(at.getTime() < Date.now()) return;
           var id = self.IDS.dateBase + (n++);
           ids.push(id);
-          list.push({ id: id, title: 'Camino', body: (e.label || key) + (lang==='es' ? ' vence en '+days+' días' : ' expires in '+days+' days'),
+          list.push({ id: id, title: 'Camino', body: (lang==='es' ? 'Una fecha de tus documentos llega en '+days+' días. Abre Camino para ver cuál.' : 'One of your document dates is in '+days+' days. Open Camino to see which.'),
             schedule: { at: at, allowWhileIdle: true }, sound: null });
         });
       });
@@ -14245,11 +14387,41 @@ function confirmRestartOnboarding(){
   go('onboarding');
 }
 
+// Files written to the cache so the share sheet can send them. The N-400 draft
+// carries the SSN and A-Number, so "Clear all data" has to remove these too.
+var CACHE_EXPORT_FILES = ['camino-n400-draft.pdf', 'camino-n400-summary.txt', 'camino-backup.json',
+                          'camino-n400-backup.json', 'camino-dates.ics'];
+// Called once the share sheet closes, so the file doesn't linger in the cache.
+function removeCacheFile(path){
+  var fs = window.CapFilesystem, dir = window.CapFsDirectory;
+  if(!fs || !fs.deleteFile) return;
+  fs.deleteFile({ path: path, directory: (dir && dir.Cache) || 'CACHE' }).catch(function(){});
+}
+async function wipeDeviceData(){
+  // Pending and delivered notifications name interview and expiration dates.
+  var ln = Reminders.plugin();
+  if(ln){
+    try {
+      var pending = await ln.getPending();
+      var list = (pending && pending.notifications) || [];
+      if(list.length) await ln.cancel({ notifications: list.map(function(n){ return { id: n.id }; }) });
+    } catch(e){}
+    try { await ln.removeAllDeliveredNotifications(); } catch(e){}
+  } else {
+    try { cancelDailyNotification(); } catch(e){}
+  }
+  var fs = window.CapFilesystem, dir = window.CapFsDirectory;
+  if(fs){
+    for(var i = 0; i < CACHE_EXPORT_FILES.length; i++){
+      try { await fs.deleteFile({ path: CACHE_EXPORT_FILES[i], directory: (dir && dir.Cache) || 'CACHE' }); } catch(e){}
+    }
+  }
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+}
 function confirmClearData(){
   var msg = lang==='es' ? '¿Borrar todos los datos? Esto no se puede deshacer.' : 'Clear all data? This cannot be undone.';
   if(!window.confirm(msg)) return;
-  try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
-  location.reload();
+  wipeDeviceData().then(function(){ location.reload(); });
 }
 
 function renderHomeDocsRow(){

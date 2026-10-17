@@ -82,10 +82,11 @@ No login or credentials are needed. Nothing needs to be downloaded or imported.
 - **Apple In-App Purchase (StoreKit)**: payment processing for Camino Plus.
 - **RevenueCat**: subscription entitlement management (receives purchase status
   and an anonymous app-user ID only).
-- No authentication provider, no analytics SDK, no ads, no data providers, and no
-  AI service is called by the app. All content (civics questions, guides,
-  checklists, audio for spoken questions) is bundled inside the app and works
-  offline. The N-400 draft feature fills the public-domain USCIS form entirely on
+- No authentication provider, no analytics SDK, no ads, and no AI service is
+  called by the app. All content (civics questions, guides, checklists, audio,
+  fonts) is bundled inside the app and works offline. The only other request is
+  a public JSON file of visa bulletin dates from https://rumoave.github.io at
+  launch; it sends no user data, and the bundled copy is used if it fails. The N-400 draft feature fills the public-domain USCIS form entirely on
   the device; nothing is uploaded.
 
 **6. Regional differences**

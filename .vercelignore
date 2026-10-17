@@ -5,3 +5,15 @@ config.local.js
 .git
 .gitignore
 node_modules
+# Build output and native project (the .ipa and xcarchive live in build/)
+build
+ios
+www
+# Tooling and sources the site doesn't serve
+scripts
+archive
+resources
+legal
+package.json
+package-lock.json
+revenuecat-shim.js

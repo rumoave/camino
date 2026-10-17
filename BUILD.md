@@ -10,16 +10,17 @@ just stages the web files into `www/`, which Capacitor copies into the native iO
 - Apple Developer Program membership (you have this).
 
 ## One-time setup (on the Mac)
+The native project `ios/` is in git (Info.plist, signing team, build number, the
+app-switcher blur in `SceneDelegate.swift`, the `PrivacyInfo.xcprivacy` manifest), so
+don't run `npx cap add ios`; it would regenerate the project and drop those changes.
 ```bash
-npm install
-npm run build              # stages web files into www/ + bundles revenuecat.js (fails loudly if missing)
-npx cap add ios --packagemanager CocoaPods   # generates the native ios/ project (Mac only)
-npm run assets             # generates all icon + splash sizes from resources/icon.png & splash.png
-npm run sync               # builds www/ + the plugin bundle, then copies into the ios/ project
+npm ci                     # exact versions from package-lock.json
+npm run sync               # builds www/ + the plugin bundle, copies into ios/, runs pod install
 npm run open:ios           # opens ios/App/App.xcworkspace in Xcode
 ```
 Always use `npm run sync`, never a bare `npx cap sync ios`: that ships the stale `www/`
-folder without the plugin bundle.
+folder without the plugin bundle. Run `npm run assets` only when the icon or splash art
+in `resources/` changes.
 
 No Info.plist usage strings are needed. The app asks for no microphone, camera,
 location or speech permissions. The voice interview (which needed the microphone and
@@ -48,6 +49,11 @@ branch at `https://rumoave.github.io/camino/visa-bulletin.json`:
   "family":     { "F1": {}, "F2A": {}, "F2B": {}, "F3": {}, "F4": {} } }
 ```
 Use the same category/country keys as `VISA_BULLETIN` in `app.js`; `null` means current.
+The app checks the file strictly (`vbCleanRemote`): every category and country in the
+bundled table must be present (fill in the family `{}` placeholders above), each cutoff
+must be `YYYY-MM-DD` or `null`, `asOf` is required and can't be in the future, and the
+month must look like "October 2026". If anything fails, the app silently keeps its
+bundled copy, so test the file before publishing.
 The app fetches it at launch (plain GET, no user data) and falls back to the bundled copy.
 
 ## In Xcode
@@ -76,7 +82,10 @@ npm run sync    # full build + cap sync ios  (then re-run in Xcode)
   questions, eye/hair) are intentionally never filled.
 
 ## Notes
-- `www/` and the generated `ios/` are gitignored (rebuilt from source).
+- `www/`, `ios/App/Pods/` and `ios/App/App/public/` are gitignored (rebuilt by `npm run sync`).
+- Fonts (Nunito, Fraunces) are bundled in `fonts/` under the SIL Open Font License, so the
+  app makes no Google Fonts request. The only network call besides Apple/RevenueCat is the
+  visa bulletin JSON.
 - `config.local.js` (dev Anthropic key) and `sw.js` (service worker) are intentionally
   excluded from the bundle. Cami is disabled in v1 and service workers aren't used natively.
 - Icon/splash sources live in `resources/` (`icon.png` 1024², `splash.png` 2732²).
@@ -118,9 +127,14 @@ Diagnose in one glance: on the paywall, if the CTA says **"Start 7-day free tria
 has confirmed eligibility and the Apple sheet will show "7 days free, then …". If it says
 **"Subscribe to Plus"**, StoreKit reported no offer / not eligible / unknown. Fix (1) or (2).
 
-From build 8 the paywall itself says why, in an orange line under the headline:
-"This Apple ID has already used its free trial" (sandbox: Settings › App Store ›
-Sandbox Account › Manage › Reset Eligibility, then relaunch), "No free trial is
-attached to this subscription in App Store Connect", "introductory price, not a free
-trial" (you created a paid intro offer), or "not in the current RevenueCat offering".
+From build 8 the paywall itself says why, in an orange line under the headline. From
+build 10 the wording is for customers, so map it back to the cause here:
+- "This Apple ID has already used its free trial" → the tester used the intro offer
+  (sandbox: Settings › App Store › Sandbox Account › Manage › Reset Eligibility, then relaunch).
+- "This plan doesn't include a free trial right now" → no free intro offer on the product
+  in App Store Connect (`no-intro`).
+- "starts at an introductory price instead of a free trial" → you created a paid intro offer.
+- "The free trial isn't available for this plan right now" → the product isn't in the
+  current RevenueCat offering (`no-package`).
+- "Apple could not confirm…" → StoreKit eligibility check failed or returned unknown.
 Builds before 8 cannot tell; they always promise the trial.

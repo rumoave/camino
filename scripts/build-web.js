@@ -24,6 +24,17 @@ for (const f of FILES) {
   else { console.error('  MISSING required file:', f); process.exit(1); }
 }
 
+// Bundled web fonts (no Google Fonts request at runtime).
+fs.cpSync(path.join(ROOT, 'fonts'), path.join(OUT, 'fonts'), { recursive: true });
+console.log('  copied fonts/');
+
+// The app build never loads config.local.js (dev keys), even if the file exists
+// when someone runs the build: drop its <script> tag from the shipped page.
+const indexOut = path.join(OUT, 'index.html');
+const html = fs.readFileSync(indexOut, 'utf8').replace(/<script src="config\.local\.js"[^>]*><\/script>\n?/, '');
+if (html.includes('config.local.js')) { console.error('FATAL: config.local.js is still referenced in www/index.html'); process.exit(1); }
+fs.writeFileSync(indexOut, html);
+
 // Pre-generated voice clips (scripts/generate-tts.js). Optional — the app falls
 // back to device speechSynthesis without them — but warn so a store build
 // doesn't silently ship with the robotic voice.

@@ -42,6 +42,12 @@ We do **not** sell or share your personal information with third parties. The on
 third parties involved are Apple (payments) and RevenueCat (subscription status),
 as described above.
 
+When it opens, the app also downloads one small public file with recent visa
+bulletin dates from our website, which is hosted on GitHub Pages. That request
+contains no personal information. As with any web request, GitHub can see your
+device's IP address. If the file can't be reached, the app uses the copy built
+into it.
+
 ## Tracking
 
 We do **not** track you across other apps or websites. Camino does not use
@@ -50,7 +56,12 @@ advertising identifiers.
 ## Deleting your data
 
 Because your data lives on your device, you can remove it any time from
-**Me → Clear all data**, or by deleting the app.
+**Me → Clear all data**, or by deleting the app. Clearing your data also cancels
+Camino's reminders and deletes any files the app created for sharing.
+
+Your Social Security number is never saved: you type it only when making the
+N-400 draft. If your device is backed up to iCloud or a computer, those backups
+may include the rest of Camino's data until they are replaced.
 
 ## Children
 
