@@ -106,8 +106,6 @@
 
           <div class="flashcardCard" id="homeFlashcardCard" onclick="startFlashcards()"></div>
 
-          <div class="interviewCard" id="homeInterviewCard" onclick="startInterview()"></div>
-
           <div class="englishCard" id="homeEnglishCard" onclick="startEnglishDrill()"></div>
 
           <div class="reviewCard" id="homeReviewCard" onclick="startReviewSession()" style="display:none;"></div>
@@ -260,24 +258,6 @@
         <div class="pad" id="flashBody"></div>
       </div>
       <div class="flashFooter" id="flashFooter"></div>
-    </div>
-
-    <!-- ===== INTERVIEW SIMULATOR ===== -->
-    <div class="view" id="interview">
-      <div class="status"><span>9:41</span><span class="ico">
-        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/><rect x="4.5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="9" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
-        <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2.5" y="2.5" width="16" height="8" rx="1.5" fill="currentColor"/></svg>
-      </span></div>
-      <div class="intvTopbar">
-        <button class="intvClose" onclick="exitInterview()" type="button" aria-label="Exit interview">✕</button>
-        <div class="intvMode" data-en="INTERVIEW MODE" data-es="MODO ENTREVISTA">INTERVIEW MODE</div>
-        <div class="intvCounter" id="intvCounter">1 / 12</div>
-      </div>
-      <div class="intvProgress"><div class="intvProgressFill" id="intvProgressFill"></div></div>
-      <div class="body" style="padding-top:118px;padding-bottom:140px;">
-        <div class="pad" id="intvBody"></div>
-      </div>
-      <div class="intvFooter" id="intvFooter"></div>
     </div>
 
     <!-- ===== MOCK TEST ===== -->

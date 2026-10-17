@@ -13,44 +13,28 @@ just stages the web files into `www/`, which Capacitor copies into the native iO
 ```bash
 npm install
 npm run build              # stages web files into www/ + bundles revenuecat.js (fails loudly if missing)
-npx cap add ios            # generates the native ios/ project (Mac only, needs CocoaPods)
+npx cap add ios --packagemanager CocoaPods   # generates the native ios/ project (Mac only)
 npm run assets             # generates all icon + splash sizes from resources/icon.png & splash.png
-npx cap sync ios           # copies web assets + installs native plugins into the ios/ project
+npm run sync               # builds www/ + the plugin bundle, then copies into the ios/ project
 npm run open:ios           # opens ios/App/App.xcworkspace in Xcode
 ```
+Always use `npm run sync`, never a bare `npx cap sync ios`: that ships the stale `www/`
+folder without the plugin bundle.
 
-## One-time after `cap add ios`: microphone permission string
-Capacitor's generated Info.plist has NO mic usage description, and iOS blocks
-microphone access without one (the interview mic meter + audio recording need it).
-From the repo root on the Mac:
-```bash
-/usr/libexec/PlistBuddy -c "Add :NSMicrophoneUsageDescription string Camino uses the microphone so you can practice answering interview questions out loud." ios/App/App/Info.plist
-```
-Note: remote Macs (MacinCloud) have no mic device, so the simulator will always
-show "mic blocked" there. That's environmental. Test voice input on a real iPhone.
+No Info.plist usage strings are needed. The app asks for no microphone, camera,
+location or speech permissions. The voice interview (which needed the microphone and
+speech recognition) is archived in `archive/interview/`; its README lists the plist
+keys to add back if it returns.
 
-## Speech recognition + reminders (added Oct 2026)
-Two native plugins were added to `package.json` and exposed through `revenuecat-shim.js`
-(`window.CapSpeech`, `window.CapLocalNotifications`). After pulling, run `npm install`
-on the Mac, then `npm run sync` (never a bare `npx cap sync ios`: that ships the stale
-`www/` folder without the shim bundle).
+## Reminders
+`@capacitor/local-notifications` schedules the daily nudge, the streak-at-risk alert,
+the trial-ends-in-2-days notice and the 90/30/7-day expiration alerts. No plist key is
+needed; the app asks for notification permission when the user turns reminders on
+(Me → Reminders, or the button on the first lesson-complete screen).
 
-- `@capacitor-community/speech-recognition` 6.0.1 drives voice answers in the interview
-  on iOS (WKWebView has no working Web Speech API; the app ignores it there). It needs a
-  second usage string:
-  ```bash
-  /usr/libexec/PlistBuddy -c "Add :NSSpeechRecognitionUsageDescription string Camino turns your spoken interview answers into text so it can grade them. Speech is processed by Apple's Speech framework." ios/App/App/Info.plist
-  ```
-  Without it, iOS terminates the app the first time the recognizer starts.
-- `@capacitor/local-notifications` 6.1.3 schedules the daily nudge, the streak-at-risk
-  alert, the trial-ends-in-2-days notice and the 90/30/7-day expiration alerts. No plist
-  key is needed; the app asks for notification permission when the user turns reminders
-  on (Me → Reminders, or the button on the first lesson-complete screen).
-
-Smoke-test on device: start an interview, tap the mic (two prompts: microphone, then
-speech recognition), say an answer, pause two seconds, and the verdict should appear.
-Then Me → Reminders → Enable, and confirm a notification is listed under Settings ›
-Notifications › Camino (schedule a test by setting the time a few minutes ahead).
+Smoke-test on device: Me → Reminders → Enable, and confirm a notification is listed
+under Settings › Notifications › Camino (schedule a test by setting the time a few
+minutes ahead).
 
 ## Visa Bulletin data
 The app ships an approximate snapshot (`VISA_BULLETIN.asOf`) and warns when it is older
@@ -140,8 +124,3 @@ Sandbox Account › Manage › Reset Eligibility, then relaunch), "No free trial
 attached to this subscription in App Store Connect", "introductory price, not a free
 trial" (you created a paid intro offer), or "not in the current RevenueCat offering".
 Builds before 8 cannot tell; they always promise the trial.
-
-## Decide before submission
-- **Voice interview claim:** iOS `WKWebView` has no Web Speech API, so the simulator falls back to
-  typed answers. Either soften the paywall "real voice simulation" copy, or add a native speech
-  plugin (`@capacitor-community/speech-recognition`).

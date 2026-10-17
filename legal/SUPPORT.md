@@ -11,7 +11,7 @@ _We usually reply within 2 business days._
 
 **What is Camino?**
 An educational study and preparation app for the U.S. immigration journey. 
-civics test prep, your legal path, interview practice, and document organization,
+civics test prep, your legal path, English test practice, and document organization,
 in English and Spanish. Camino is not a law firm and does not give legal advice.
 
 **How does the 7-day free trial work?**

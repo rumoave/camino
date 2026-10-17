@@ -5,7 +5,6 @@ import { Purchases } from '@revenuecat/purchases-capacitor';
 import { Browser } from '@capacitor/browser';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
-import { SpeechRecognition } from '@capacitor-community/speech-recognition';
 import { LocalNotifications } from '@capacitor/local-notifications';
 window.Purchases = Purchases;
 window.CapBrowser = Browser;
@@ -13,5 +12,4 @@ window.CapFilesystem = Filesystem;
 window.CapFsDirectory = Directory;
 window.CapFsEncoding = Encoding;
 window.CapShare = Share;
-window.CapSpeech = SpeechRecognition;              // on-device voice input for the interview (iOS Speech framework)
 window.CapLocalNotifications = LocalNotifications; // streak, trial and date reminders on iOS

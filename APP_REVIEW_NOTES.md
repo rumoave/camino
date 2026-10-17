@@ -17,20 +17,18 @@ Thank you for the review. Here is the requested information.
 **1. Screen recording**
 Attached: `[camino-review-demo.mp4]`, recorded on a physical iPhone running the
 latest iOS. It starts at app launch and walks through onboarding, the Today tab,
-a civics lesson, the Journey (visa path) map, the interview simulator (which
-triggers the microphone and speech recognition permission prompts), the Documents
-checklist, the Camino Plus paywall and the 7-day free-trial purchase flow
+a civics lesson, the English reading and writing drill, the Journey (visa path)
+map, the Documents checklist, the Camino Plus paywall and the 7-day free-trial purchase flow
 (sandbox), Restore Purchases, the optional reminders permission, and the
 English ⇄ Spanish toggle.
 
 Camino has no account registration, login, or account deletion. There are no
 accounts. There is no user-generated content shared with other users, so there
-are no reporting or blocking mechanisms. The app requests three optional system
-permissions, each only when the user chooses the feature: microphone and speech
-recognition (to answer interview questions out loud; typing is always available
-instead), and notifications (daily study reminders and date alerts, off by
-default). The app does not use App Tracking Transparency, location, contacts,
-camera, or photos.
+are no reporting or blocking mechanisms. The app requests one optional system
+permission, only when the user turns the feature on: notifications (daily study
+reminders and date alerts, off by default). The app does not use App Tracking
+Transparency, the microphone, speech recognition, location, contacts, camera, or
+photos.
 
 **2. Devices and OS tested**
 `[e.g. iPhone 15 Pro, iOS 18.x (physical); iPhone 13, iOS 18.x (physical);
@@ -46,7 +44,7 @@ The problem it solves: the USCIS civics test, the naturalization interview, and
 the N-400 paperwork are intimidating, and existing resources are scattered,
 English-only, and not engaging. Camino turns preparation into a short daily
 habit: bite-size lessons on the official USCIS civics questions, streaks and XP,
-flashcards and mock tests, a spoken-question interview simulator, a stage-by-stage
+flashcards and mock tests, English reading and writing practice, a stage-by-stage
 map of the legal path, and a document checklist. It is educational, self-help
 software. It does not give legal advice, does not file anything with USCIS, and
 tells users throughout to consult a licensed attorney or DOJ-accredited
@@ -63,18 +61,13 @@ No login or credentials are needed. Nothing needs to be downloaded or imported.
   guidance only and is labeled as such.
 - **Today** tab: for permanent residents, a countdown to the N-400 filing window
   or the USCIS interview (set the date under Me) with a readiness ring and
-  today's plan: civics, English reading and writing, flashcards, and a weekly
-  interview rehearsal. Tap the lesson card to play a civics lesson; tap
+  today's plan: civics, English reading and writing, and flashcards. Tap the lesson card to play a civics lesson; tap
   "Read 3, write 3" for the English drill (the app reads sentences aloud with the
   device voice and you type what you hear).
 - **Journey** tab: the stage map for the selected path; tap any stage for the
   plain-English guide and the USCIS forms involved.
 - **Learn** tab: the full civics path, flashcards, and mock tests (free plan:
   3 mock tests per day).
-- **Interview** (from the Today tab): the simulator reads a question aloud; tap
-  the mic to answer by voice (this triggers the microphone prompt, then the speech
-  recognition prompt) or type an answer in the box below the mic. Nine questions:
-  six civics, three N-400 review. Free plan: 3 practice sessions per day.
 - **Docs** tab: document checklist for the selected path, key dates, the
   educational N-400 walkthrough, and the N-400 organizer (Plus).
 - **Camino Plus**: any locked feature, or Profile → Upgrade, opens the paywall.
@@ -129,8 +122,7 @@ under ~3 minutes; no narration needed.
    so feedback shows); finish the lesson to show XP/streak.
 4. Journey tab: tap a stage, scroll the guide, back out.
 5. Learn tab: open Flashcards briefly; open Mock test, answer a couple.
-6. Interview: start a session; the microphone prompt appears → tap **Allow**;
-   answer one question by voice; answer one by typing.
+6. English drill (from the Today tab): play a sentence, write one sentence.
 7. Docs tab: check off a document; open the N-400 walkthrough; tap the N-400
    organizer → paywall appears.
 8. Paywall: show both plans and prices, tap Terms of Use, close; tap Privacy,
@@ -142,9 +134,6 @@ under ~3 minutes; no narration needed.
 
 ## Before you archive build 8
 
-- Confirm `NSMicrophoneUsageDescription` is in `ios/App/App/Info.plist`
-  (see BUILD.md). Without it the mic tap in step 6 crashes on device, which
-  would be a real 2.1 rejection.
 - Bump the build number in Xcode (1.0 (8)).
 - App Store Connect: both subscriptions must be **Ready to Submit** with the
   7-day introductory offer attached, and the Privacy Policy URL set.

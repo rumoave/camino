@@ -18,7 +18,7 @@ Civics test, N-400 & visas
 
 ## Promotional Text (max 170; editable anytime without review)
 ```
-Study for the 2025 civics test, map your visa path, practice the interview, and organize your N-400 documents. Free to start, in English or Spanish.
+Study for the 2025 civics test, practice reading and writing, map your visa path, and organize your N-400 documents. Free to start, in English or Spanish.
 ```
 
 ## Keywords (max 100, comma-separated, no spaces after commas)
@@ -29,7 +29,7 @@ naturalization,n-400,uscis,green card,visa,h1b,opt,interview,flashcards,study,bi
 
 ## Description (max 4000)
 ```
-Camino is your friendly companion through the U.S. immigration journey: civics test prep, your legal path, interview practice, and document organization, all in one app. In English and Spanish.
+Camino is your friendly companion through the U.S. immigration journey: civics test prep, your legal path, English test practice, and document organization, all in one app. In English and Spanish.
 
 Private by design: no account, no sign-up, and your personal information stays on your device. We have no servers that receive it.
 
@@ -46,9 +46,9 @@ KNOW YOUR PATH
 • Tell Camino about your family, education, work situation, and circumstances, and it points out the paths you may qualify for, many of which most people never hear about
 • Plain-English "how it works" for each step, with the exact USCIS forms
 
-PRACTICE THE INTERVIEW
-• A realistic USCIS interview simulator that asks questions and scores your answers
-• Hear questions read aloud; answer by voice or by typing
+PRACTICE FOR THE ENGLISH TEST
+• Read the official-style sentences and hear how they sound
+• Write what you hear and see what to fix
 • Optional daily reminders and streak alerts so practice becomes a habit
 
 GET ORGANIZED
@@ -61,7 +61,7 @@ BILINGUAL
 Every screen works in English and Spanish, with more languages on the way.
 
 CAMINO PLUS
-Start with a 7-day free trial. Plus unlocks unlimited interview practice, unlimited mock tests, the N-400 organizer, an extra civics unit, streak freezes, and more. Subscriptions renew automatically; manage or cancel anytime in your App Store settings.
+Start with a 7-day free trial. Plus unlocks unlimited mock tests, the N-400 organizer, an extra civics unit, streak freezes, and more. Subscriptions renew automatically; manage or cancel anytime in your App Store settings.
 
 IMPORTANT
 Camino is an educational study and preparation app. It is not a law firm and does not provide legal advice. Immigration outcomes depend on your specific situation. For advice about your case, consult a licensed immigration attorney or a BIA-accredited representative. Camino is not affiliated with USCIS or any government agency.
@@ -105,9 +105,9 @@ v1 has no accounts and no analytics. Data is on-device. The only external SDK is
 1. **1-home**: "By your side, every step of the journey"
 2. **2-path**: "Every step, mapped. With the exact forms"
 3. **3-lesson**: "Learn the 2025 civics test, one question at a time"
-4. **4-interview**: "Practice the real USCIS interview"
+4. **4-english**: "Practice reading and writing for the English test"
 5. **5-learn**: "A guided path from start to the oath"
 6. **6-docs**: "Organize your N-400 documents"
 7. **7-home-es**: "Completely bilingual. English & Spanish"
 
-Screenshots are in `Desktop/camino-appstore/` at 1290×2796 (6.9"). Apple auto-scales this size down for smaller devices, so this one set covers the required iPhone sizes.
+Screenshots are in `Desktop/camino-appstore/` at 1320×2868 (6.9"). Apple auto-scales this size down for smaller devices, so this one set covers the required iPhone sizes.
